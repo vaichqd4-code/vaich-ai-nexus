@@ -54,7 +54,7 @@ export function getProduct(slug: string): Product | undefined {
 const faDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
 
 export function toPersianDigits(value: string | number): string {
-  return String(value).replace(/\d/g, (d) => faDigits[Number(d)]);
+  return String(value).replace(/\d/g, (d) => faDigits[Number(d)] ?? d);
 }
 
 export function formatPrice(price: number): string {

@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import type { ComponentProps, ReactNode } from "react";
+import { createLink } from "@tanstack/react-router";
+import { forwardRef, type ComponentProps, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type Variant = "primary" | "outline" | "ghost";
@@ -22,7 +22,11 @@ const sizes: Record<Size, string> = {
   lg: "h-13 px-8 text-base",
 };
 
-export function neonButtonClass(variant: Variant = "primary", size: Size = "md", className?: string) {
+export function neonButtonClass(
+  variant: Variant = "primary",
+  size: Size = "md",
+  className?: string,
+) {
   return cn(base, variants[variant], sizes[size], className);
 }
 
@@ -40,11 +44,13 @@ export function NeonButton({ variant, size, className, children, ...props }: But
   );
 }
 
-type LinkProps = ComponentProps<typeof Link> & {
-  variant?: Variant;
-  size?: Size;
-};
+type AnchorProps = ComponentProps<"a"> & { variant?: Variant; size?: Size };
 
-export function NeonLink({ variant, size, className, ...props }: LinkProps) {
-  return <Link className={neonButtonClass(variant, size, className)} {...props} />;
-}
+const NeonAnchor = forwardRef<HTMLAnchorElement, AnchorProps>(
+  ({ variant, size, className, ...props }, ref) => (
+    <a ref={ref} className={neonButtonClass(variant, size, className)} {...props} />
+  ),
+);
+NeonAnchor.displayName = "NeonAnchor";
+
+export const NeonLink = createLink(NeonAnchor);
