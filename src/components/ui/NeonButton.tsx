@@ -1,0 +1,50 @@
+import { Link } from "@tanstack/react-router";
+import type { ComponentProps, ReactNode } from "react";
+import { cn } from "@/lib/utils";
+
+type Variant = "primary" | "outline" | "ghost";
+type Size = "sm" | "md" | "lg";
+
+const base =
+  "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50";
+
+const variants: Record<Variant, string> = {
+  primary:
+    "neon-gradient text-primary-foreground shadow-[0_0_30px_-12px_var(--neon-purple)] hover:shadow-[0_0_38px_-8px_var(--neon-blue)] hover:brightness-110 active:scale-[0.98]",
+  outline:
+    "border border-border bg-secondary/40 text-foreground backdrop-blur-sm hover:border-neon-blue/60 hover:bg-secondary/70 active:scale-[0.98]",
+  ghost: "text-muted-foreground hover:text-foreground",
+};
+
+const sizes: Record<Size, string> = {
+  sm: "h-9 px-4 text-sm",
+  md: "h-11 px-6 text-sm",
+  lg: "h-13 px-8 text-base",
+};
+
+export function neonButtonClass(variant: Variant = "primary", size: Size = "md", className?: string) {
+  return cn(base, variants[variant], sizes[size], className);
+}
+
+type ButtonProps = ComponentProps<"button"> & {
+  variant?: Variant;
+  size?: Size;
+  children: ReactNode;
+};
+
+export function NeonButton({ variant, size, className, children, ...props }: ButtonProps) {
+  return (
+    <button className={neonButtonClass(variant, size, className)} {...props}>
+      {children}
+    </button>
+  );
+}
+
+type LinkProps = ComponentProps<typeof Link> & {
+  variant?: Variant;
+  size?: Size;
+};
+
+export function NeonLink({ variant, size, className, ...props }: LinkProps) {
+  return <Link className={neonButtonClass(variant, size, className)} {...props} />;
+}
