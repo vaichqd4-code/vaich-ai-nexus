@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { Section } from "@/components/layout/Section";
 import { NeonButton } from "@/components/ui/NeonButton";
+import { ContactLinks } from "@/components/brand/ContactLinks";
 import { Faq } from "@/components/sections/Faq";
 
 export const Route = createFileRoute("/support")({
@@ -38,7 +39,13 @@ function SupportPage() {
         title="پشتیبانی"
         subtitle="سوالی دارید؟ تیم پشتیبانی VAICH آماده کمک به شماست."
       >
-        <form onSubmit={onSubmit} className="glass-panel grid max-w-2xl gap-4 rounded-4xl p-6 sm:p-8">
+        <div className="mx-auto mb-8 max-w-3xl">
+          <p className="mb-4 text-center text-sm text-muted-foreground">
+            سریع‌ترین راه‌های ارتباط با ما:
+          </p>
+          <ContactLinks />
+        </div>
+        <form onSubmit={onSubmit} className="glass-panel mx-auto grid max-w-2xl gap-4 rounded-4xl p-6 sm:p-8">
           <div>
             <label htmlFor="name" className="mb-2 block text-sm">
               نام
