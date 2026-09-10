@@ -8,8 +8,14 @@
 export type Product = {
   slug: string;
   name: string;
-  /** Price in Toman, stored as a number so a gateway can use it directly. */
+  /** Final price in Toman, stored as a number so a gateway can use it directly. */
   price: number;
+  /** Original/list price before discount, if applicable. */
+  originalPrice?: number;
+  /** Discount percentage, if applicable. */
+  discountPercent?: number;
+  /** Subscription duration shown to customers. */
+  duration?: string;
   description: string;
   purchaseInfo: string[];
 };
@@ -18,9 +24,13 @@ export const products: Product[] = [
   {
     slug: "gemini",
     name: "Gemini",
-    price: 250000,
-    description: "اشتراک سرویس هوش مصنوعی Gemini.",
+    price: 275000,
+    originalPrice: 392000,
+    discountPercent: 30,
+    duration: "۴۵ روزه",
+    description: "اشتراک سرویس هوش مصنوعی Gemini، ۴۵ روزه.",
     purchaseInfo: [
+      "اشتراک Gemini به مدت ۴۵ روز ارائه می‌شود.",
       "اطلاعات اشتراک پس از تأیید سفارش برای شما ارسال می‌شود.",
       "در صورت داشتن سؤال پیش از خرید، با پشتیبانی VAICH در ارتباط باشید.",
     ],
