@@ -1,24 +1,96 @@
 import { createFileRoute } from "@tanstack/react-router";
+import heroImage from "@/assets/hero-ai.jpg";
+import { Section } from "@/components/layout/Section";
+import { ProductCard } from "@/components/product/ProductCard";
+import { Features } from "@/components/sections/Features";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { Trust } from "@/components/sections/Trust";
+import { Faq } from "@/components/sections/Faq";
+import { SupportCta } from "@/components/sections/SupportCta";
+import { NeonLink } from "@/components/ui/NeonButton";
+import { products } from "@/lib/products";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "VAICH | خرید اشتراک هوش مصنوعی" },
+      {
+        name: "description",
+        content:
+          "VAICH ارائه‌دهنده اشتراک سرویس‌های هوش مصنوعی Gemini، ChatGPT و Claude با پشتیبانی و قیمت شفاف.",
+      },
+      { property: "og:title", content: "VAICH | خرید اشتراک هوش مصنوعی" },
+      {
+        property: "og:description",
+        content: "اشتراک سرویس‌های قدرتمند هوش مصنوعی را با VAICH تجربه کنید.",
+      },
+    ],
+  }),
+  component: Home,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Hero() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <section className="aurora relative overflow-hidden">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-14 pb-8 sm:px-6 sm:pt-20 lg:grid-cols-2 lg:pt-24">
+        <div className="rise-in">
+          <span className="glass-panel inline-flex items-center rounded-full px-4 py-1.5 text-xs text-muted-foreground">
+            فروشگاه اشتراک‌های هوش مصنوعی
+          </span>
+          <h1 className="mt-6 text-3xl leading-[1.5] font-extrabold sm:text-5xl sm:leading-[1.35]">
+            دنیای هوش مصنوعی، <span className="gradient-text">یک قدم نزدیک‌تر</span>
+          </h1>
+          <p className="mt-5 max-w-xl text-sm leading-8 text-muted-foreground sm:text-base">
+            اشتراک سرویس‌های قدرتمند هوش مصنوعی را با VAICH تجربه کنید.
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <NeonLink to="/products" size="lg">
+              مشاهده محصولات
+            </NeonLink>
+            <NeonLink to="/support" variant="outline" size="lg">
+              پشتیبانی
+            </NeonLink>
+          </div>
+        </div>
+
+        <div className="relative">
+          <div className="float-slow glow-strong overflow-hidden rounded-4xl border border-border">
+            <img
+              src={heroImage}
+              alt="تصویر انتزاعی از جریان انرژی هوش مصنوعی با نور نئون آبی و بنفش"
+              width={1536}
+              height={1152}
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Home() {
+  return (
+    <>
+      <Hero />
+
+      <Section
+        id="products"
+        title="اشتراک‌های هوش مصنوعی"
+        subtitle="سرویس مورد نظر خود را انتخاب کنید."
+      >
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {products.map((p) => (
+            <ProductCard key={p.slug} product={p} />
+          ))}
+        </div>
+      </Section>
+
+      <Features />
+      <HowItWorks />
+      <Trust />
+      <Faq />
+      <SupportCta />
+    </>
   );
 }
