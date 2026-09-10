@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { Section } from "@/components/layout/Section";
 import { NeonButton } from "@/components/ui/NeonButton";
+import { ContactLinks } from "@/components/brand/ContactLinks";
 import { Faq } from "@/components/sections/Faq";
 
 export const Route = createFileRoute("/support")({
