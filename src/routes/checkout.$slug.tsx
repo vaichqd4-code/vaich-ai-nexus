@@ -45,17 +45,38 @@ function Checkout() {
     note: "",
   });
   const [discountCode, setDiscountCode] = useState("");
-  const [orderId, setOrderId] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const startPayment = useServerFn(requestPayment);
 
   const set = (key: keyof CustomerInfo) => (value: string) =>
     setCustomer((c) => ({ ...c, [key]: value }));
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // Placeholder: no gateway connected yet, so the order is only prepared locally.
-    const order = createOrder({ productSlug: product.slug, amount: product.price, customer, discountCode });
-    setOrderId(order.id);
+    setError(null);
+    setSubmitting(true);
+    try {
+      const { paymentUrl } = await startPayment({
+        data: {
+          slug: product.slug,
+          fullName: customer.fullName,
+          email: customer.email,
+          phone: customer.phone,
+          ...(customer.note ? { note: customer.note } : {}),
+        },
+      });
+      window.location.href = paymentUrl;
+    } catch (err) {
+      setSubmitting(false);
+      setError(
+        err instanceof Error && err.message
+          ? err.message
+          : "انتقال به درگاه پرداخت انجام نشد. لطفاً دوباره تلاش کنید.",
+      );
+    }
   };
+
 
   return (
     <Section className="aurora" title="ثبت سفارش" subtitle="اطلاعات زیر را تکمیل کنید تا سفارش شما آماده شود.">
