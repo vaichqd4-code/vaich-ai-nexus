@@ -66,4 +66,4 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
     </article>
   );
-        }}
+}
