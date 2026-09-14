@@ -1,10 +1,13 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useState, type FormEvent } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { Section } from "@/components/layout/Section";
 import { NeonButton, NeonLink } from "@/components/ui/NeonButton";
 import { formatPrice, getProduct } from "@/lib/products";
-import { createOrder, paymentGatewayConnected, type CustomerInfo } from "@/lib/payment";
+import { type CustomerInfo } from "@/lib/payment";
+import { requestPayment } from "@/lib/payment.functions";
+
 
 export const Route = createFileRoute("/checkout/$slug")({
   loader: ({ params }) => {
