@@ -3,8 +3,8 @@
 @import "tw-animate-css";
 
 /*
- * VAICH design system — premium dark AI brand.
- * All colors in oklch. Semantic tokens only; never hardcode colors in components.
+ * VAICH design system — premium dark/light AI brand.
+ * All colors use semantic CSS variables.
  */
 
 @theme inline {
@@ -42,26 +42,39 @@
   --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
 }
 
+/* =========================
+   DARK THEME — پیش‌فرض
+   ========================= */
+
 :root {
   --radius: 1.25rem;
 
   --background: oklch(0.13 0.03 275);
   --foreground: oklch(0.97 0.005 275);
+
   --surface: oklch(0.18 0.035 275);
+
   --card: oklch(0.19 0.038 275);
   --card-foreground: oklch(0.97 0.005 275);
+
   --popover: oklch(0.17 0.035 275);
   --popover-foreground: oklch(0.97 0.005 275);
+
   --primary: oklch(0.62 0.24 296);
   --primary-foreground: oklch(0.99 0 0);
+
   --secondary: oklch(0.24 0.04 275);
   --secondary-foreground: oklch(0.97 0.005 275);
+
   --muted: oklch(0.24 0.035 275);
   --muted-foreground: oklch(0.72 0.025 275);
+
   --accent: oklch(0.68 0.19 250);
   --accent-foreground: oklch(0.99 0 0);
+
   --destructive: oklch(0.62 0.22 22);
   --destructive-foreground: oklch(0.99 0 0);
+
   --border: oklch(0.32 0.04 275 / 60%);
   --input: oklch(0.3 0.04 275 / 70%);
   --ring: oklch(0.62 0.24 296);
@@ -69,15 +82,85 @@
   --neon-blue: oklch(0.72 0.19 248);
   --neon-purple: oklch(0.62 0.26 300);
 
-  --gradient-neon: linear-gradient(120deg, var(--neon-blue), var(--neon-purple));
+  --gradient-neon: linear-gradient(
+    120deg,
+    var(--neon-blue),
+    var(--neon-purple)
+  );
+
   --gradient-surface: linear-gradient(
     160deg,
     color-mix(in oklab, var(--surface) 90%, transparent),
     color-mix(in oklab, var(--background) 92%, transparent)
   );
-  --glow-soft: 0 0 40px -12px color-mix(in oklab, var(--neon-purple) 70%, transparent);
-  --glow-strong: 0 0 60px -10px color-mix(in oklab, var(--neon-blue) 75%, transparent);
+
+  --glow-soft: 0 0 40px -12px
+    color-mix(in oklab, var(--neon-purple) 70%, transparent);
+
+  --glow-strong: 0 0 60px -10px
+    color-mix(in oklab, var(--neon-blue) 75%, transparent);
 }
+
+/* =========================
+   LIGHT THEME
+   ========================= */
+
+[data-theme="light"] {
+  --background: oklch(0.975 0.008 275);
+  --foreground: oklch(0.20 0.025 275);
+
+  --surface: oklch(0.99 0.004 275);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.20 0.025 275);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.20 0.025 275);
+
+  --primary: oklch(0.55 0.24 296);
+  --primary-foreground: oklch(0.99 0 0);
+
+  --secondary: oklch(0.94 0.018 275);
+  --secondary-foreground: oklch(0.25 0.025 275);
+
+  --muted: oklch(0.94 0.015 275);
+  --muted-foreground: oklch(0.48 0.025 275);
+
+  --accent: oklch(0.58 0.19 250);
+  --accent-foreground: oklch(0.99 0 0);
+
+  --destructive: oklch(0.58 0.22 22);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.86 0.025 275);
+  --input: oklch(0.90 0.02 275);
+  --ring: oklch(0.55 0.24 296);
+
+  --neon-blue: oklch(0.60 0.19 248);
+  --neon-purple: oklch(0.55 0.25 300);
+
+  --gradient-neon: linear-gradient(
+    120deg,
+    var(--neon-blue),
+    var(--neon-purple)
+  );
+
+  --gradient-surface: linear-gradient(
+    160deg,
+    color-mix(in oklab, var(--surface) 96%, transparent),
+    color-mix(in oklab, var(--background) 98%, transparent)
+  );
+
+  --glow-soft: 0 0 40px -16px
+    color-mix(in oklab, var(--neon-purple) 35%, transparent);
+
+  --glow-strong: 0 0 60px -14px
+    color-mix(in oklab, var(--neon-blue) 40%, transparent);
+}
+
+/* =========================
+   BASE
+   ========================= */
 
 @layer base {
   * {
@@ -95,12 +178,23 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    transition:
+      background-color 250ms ease,
+      color 250ms ease;
   }
 
   ::selection {
-    background: color-mix(in oklab, var(--neon-purple) 45%, transparent);
+    background: color-mix(
+      in oklab,
+      var(--neon-purple) 45%,
+      transparent
+    );
   }
 }
+
+/* =========================
+   UTILITIES
+   ========================= */
 
 @utility gradient-text {
   background-image: var(--gradient-neon);
@@ -115,7 +209,8 @@
 @utility glass-panel {
   background: color-mix(in oklab, var(--surface) 55%, transparent);
   backdrop-filter: blur(18px) saturate(140%);
-  border: 1px solid color-mix(in oklab, var(--neon-purple) 18%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--neon-purple) 18%, transparent);
 }
 
 @utility glow-soft {
@@ -126,14 +221,20 @@
   box-shadow: var(--glow-strong);
 }
 
+/* =========================
+   AURORA
+   ========================= */
+
 @utility aurora {
   position: relative;
   isolation: isolate;
+
   &::before {
     content: "";
     position: absolute;
     inset: -20% -10% auto -10%;
     height: 70%;
+
     background:
       radial-gradient(
         40% 60% at 20% 30%,
@@ -145,17 +246,23 @@
         color-mix(in oklab, var(--neon-purple) 26%, transparent),
         transparent 70%
       );
+
     filter: blur(40px);
     z-index: -1;
     pointer-events: none;
   }
 }
 
+/* =========================
+   ANIMATIONS
+   ========================= */
+
 @keyframes float-slow {
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-14px);
   }
@@ -170,6 +277,7 @@
     opacity: 0;
     transform: translateY(16px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -179,6 +287,10 @@
 @utility rise-in {
   animation: rise-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+/* =========================
+   REDUCED MOTION
+   ========================= */
 
 @media (prefers-reduced-motion: reduce) {
   *,
