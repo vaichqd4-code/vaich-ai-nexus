@@ -3,12 +3,16 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 
 import { Section } from "@/components/layout/Section";
-import { NeonLink } from "@/components/ui/NeonButton";
+import { NeonLink, neonButtonClass } from "@/components/ui/NeonButton";
 import { CONTACT_PHONE, CONTACT_PHONE_PERSIAN, CONTACT_TELEGRAM_URL } from "@/components/brand/ContactLinks";
 import { formatPrice, toPersianDigits } from "@/lib/products";
 import { verifyPayment } from "@/lib/payment.functions";
 
-type Search = { Authority?: string; Status?: string; slug?: string };
+type Search = {
+  Authority?: string | undefined;
+  Status?: string | undefined;
+  slug?: string | undefined;
+};
 
 export const Route = createFileRoute("/payment/result")({
   validateSearch: (search: Record<string, unknown>): Search => ({
@@ -44,12 +48,17 @@ function PaymentResult() {
 
   const support = (
     <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-      <NeonLink href={CONTACT_TELEGRAM_URL} target="_blank" rel="noopener noreferrer">
+      <a
+        href={CONTACT_TELEGRAM_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={neonButtonClass("primary", "md")}
+      >
         ارسال پیام در تلگرام
-      </NeonLink>
-      <NeonLink href={`tel:${CONTACT_PHONE}`} variant="outline">
+      </a>
+      <a href={`tel:${CONTACT_PHONE}`} className={neonButtonClass("outline", "md")}>
         تماس: {CONTACT_PHONE_PERSIAN}
-      </NeonLink>
+      </a>
     </div>
   );
 
@@ -118,9 +127,14 @@ function PaymentResult() {
               ) : (
                 <NeonLink to="/products">مشاهده اشتراک‌ها</NeonLink>
               )}
-              <NeonLink href={CONTACT_TELEGRAM_URL} target="_blank" rel="noopener noreferrer" variant="outline">
+              <a
+                href={CONTACT_TELEGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={neonButtonClass("outline", "md")}
+              >
                 پشتیبانی در تلگرام
-              </NeonLink>
+              </a>
             </div>
           </>
         )}
