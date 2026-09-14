@@ -189,23 +189,23 @@ function Checkout() {
           </div>
 
           <p className="rounded-2xl border border-border bg-background/50 p-4 text-xs leading-6 text-muted-foreground">
-            درگاه پرداخت آنلاین هنوز متصل نیست. با ثبت سفارش، اطلاعات شما برای هماهنگی پرداخت آماده
-            می‌شود.
+            پرداخت از طریق درگاه امن زرین‌پال انجام می‌شود. پس از پرداخت موفق، کد رهگیری نمایش داده
+            می‌شود و اشتراک توسط پشتیبانی برای شما ارسال می‌گردد.
           </p>
 
-          <NeonButton type="submit" size="lg" className="w-full">
-            {paymentGatewayConnected ? "پرداخت" : "ثبت سفارش و ادامه پرداخت"}
+          <NeonButton type="submit" size="lg" className="w-full" disabled={submitting}>
+            {submitting ? "در حال انتقال به درگاه..." : "پرداخت و ادامه"}
           </NeonButton>
 
-          {orderId ? (
+          {error ? (
             <div
-              role="status"
-              className="rounded-2xl border border-neon-purple/40 bg-background/60 p-4 text-sm leading-7"
+              role="alert"
+              className="rounded-2xl border border-destructive/50 bg-background/60 p-4 text-sm leading-7 text-foreground"
             >
-              سفارش شما با شناسه <span dir="ltr">{orderId}</span> آماده شد. برای هماهنگی پرداخت با
-              پشتیبانی در ارتباط باشید.
+              {error}
             </div>
           ) : null}
+
 
           <NeonLink to="/support" variant="outline" className="w-full">
             پشتیبانی
