@@ -1,10 +1,13 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useState, type FormEvent } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { Section } from "@/components/layout/Section";
 import { NeonButton, NeonLink } from "@/components/ui/NeonButton";
 import { formatPrice, getProduct } from "@/lib/products";
-import { createOrder, paymentGatewayConnected, type CustomerInfo } from "@/lib/payment";
+import { type CustomerInfo } from "@/lib/payment";
+import { requestPayment } from "@/lib/payment.functions";
+
 
 export const Route = createFileRoute("/checkout/$slug")({
   loader: ({ params }) => {
@@ -42,17 +45,38 @@ function Checkout() {
     note: "",
   });
   const [discountCode, setDiscountCode] = useState("");
-  const [orderId, setOrderId] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const startPayment = useServerFn(requestPayment);
 
   const set = (key: keyof CustomerInfo) => (value: string) =>
     setCustomer((c) => ({ ...c, [key]: value }));
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // Placeholder: no gateway connected yet, so the order is only prepared locally.
-    const order = createOrder({ productSlug: product.slug, amount: product.price, customer, discountCode });
-    setOrderId(order.id);
+    setError(null);
+    setSubmitting(true);
+    try {
+      const { paymentUrl } = await startPayment({
+        data: {
+          slug: product.slug,
+          fullName: customer.fullName,
+          email: customer.email,
+          phone: customer.phone,
+          ...(customer.note ? { note: customer.note } : {}),
+        },
+      });
+      window.location.href = paymentUrl;
+    } catch (err) {
+      setSubmitting(false);
+      setError(
+        err instanceof Error && err.message
+          ? err.message
+          : "انتقال به درگاه پرداخت انجام نشد. لطفاً دوباره تلاش کنید.",
+      );
+    }
   };
+
 
   return (
     <Section className="aurora" title="ثبت سفارش" subtitle="اطلاعات زیر را تکمیل کنید تا سفارش شما آماده شود.">
@@ -165,23 +189,23 @@ function Checkout() {
           </div>
 
           <p className="rounded-2xl border border-border bg-background/50 p-4 text-xs leading-6 text-muted-foreground">
-            درگاه پرداخت آنلاین هنوز متصل نیست. با ثبت سفارش، اطلاعات شما برای هماهنگی پرداخت آماده
-            می‌شود.
+            پرداخت از طریق درگاه امن زرین‌پال انجام می‌شود. پس از پرداخت موفق، کد رهگیری نمایش داده
+            می‌شود و اشتراک توسط پشتیبانی برای شما ارسال می‌گردد.
           </p>
 
-          <NeonButton type="submit" size="lg" className="w-full">
-            {paymentGatewayConnected ? "پرداخت" : "ثبت سفارش و ادامه پرداخت"}
+          <NeonButton type="submit" size="lg" className="w-full" disabled={submitting}>
+            {submitting ? "در حال انتقال به درگاه..." : "پرداخت و ادامه"}
           </NeonButton>
 
-          {orderId ? (
+          {error ? (
             <div
-              role="status"
-              className="rounded-2xl border border-neon-purple/40 bg-background/60 p-4 text-sm leading-7"
+              role="alert"
+              className="rounded-2xl border border-destructive/50 bg-background/60 p-4 text-sm leading-7 text-foreground"
             >
-              سفارش شما با شناسه <span dir="ltr">{orderId}</span> آماده شد. برای هماهنگی پرداخت با
-              پشتیبانی در ارتباط باشید.
+              {error}
             </div>
           ) : null}
+
 
           <NeonLink to="/support" variant="outline" className="w-full">
             پشتیبانی
