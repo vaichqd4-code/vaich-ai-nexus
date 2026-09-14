@@ -1,10 +1,10 @@
 /**
- * Payment / order layer — placeholder.
+ * Payment / order layer.
  *
- * No payment gateway is connected yet. `createOrder` currently only builds an
- * order object locally. When an Iranian gateway (زرین‌پال، آیدی‌پی، ...) is
- * added, implement `startPayment` to create a transaction on the server and
- * redirect the customer, keeping this same interface.
+ * Payments are processed by Zarinpal. The transaction is created on the server
+ * (see `payment.functions.ts`), where the amount is read from the product
+ * catalogue — never from client input — and the customer is redirected to the
+ * gateway. Orders are not persisted yet; the Zarinpal panel is the record.
  */
 
 export type CustomerInfo = {
@@ -24,7 +24,7 @@ export type Order = {
   createdAt: string;
 };
 
-export const paymentGatewayConnected = false;
+export const paymentGatewayConnected = true;
 
 export function createOrder(input: {
   productSlug: string;
@@ -38,8 +38,4 @@ export function createOrder(input: {
     createdAt: new Date().toISOString(),
     ...input,
   };
-}
-
-export async function startPayment(_order: Order): Promise<never> {
-  throw new Error("درگاه پرداخت هنوز متصل نشده است.");
 }
