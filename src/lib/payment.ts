@@ -1,11 +1,14 @@
 /**
- * Payment / order layer.
+ * Manual (card-to-card) payment details.
  *
- * Payments are processed by Zarinpal. The transaction is created on the server
- * (see `payment.functions.ts`), where the amount is read from the product
- * catalogue — never from client input — and the customer is redirected to the
- * gateway. Orders are not persisted yet; the Zarinpal panel is the record.
+ * There is no online payment gateway. The customer transfers the exact product
+ * price to the card below and then sends the receipt image to support on
+ * Telegram for manual verification.
  */
+
+export const CARD_NUMBER = "6219861452374472";
+export const CARD_NUMBER_GROUPED = "6219 8614 5237 4472";
+export const CARD_HOLDER = "Younes Hayati";
 
 export type CustomerInfo = {
   fullName: string;
@@ -13,29 +16,3 @@ export type CustomerInfo = {
   phone: string;
   note?: string;
 };
-
-export type Order = {
-  id: string;
-  productSlug: string;
-  amount: number;
-  discountCode?: string;
-  customer: CustomerInfo;
-  status: "draft" | "awaiting_payment" | "paid" | "delivered";
-  createdAt: string;
-};
-
-export const paymentGatewayConnected = true;
-
-export function createOrder(input: {
-  productSlug: string;
-  amount: number;
-  customer: CustomerInfo;
-  discountCode?: string;
-}): Order {
-  return {
-    id: `VA-${Date.now().toString(36).toUpperCase()}`,
-    status: "draft",
-    createdAt: new Date().toISOString(),
-    ...input,
-  };
-}

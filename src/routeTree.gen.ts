@@ -16,7 +16,6 @@ import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WhyRouteImport } from './routes/why'
 import { Route as CheckoutSlugRouteImport } from './routes/checkout.$slug'
-import { Route as PaymentResultRouteImport } from './routes/payment.result'
 import { Route as ProductsIndexRouteImport } from './routes/products.index'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
 
@@ -55,11 +54,6 @@ const CheckoutSlugRoute = CheckoutSlugRouteImport.update({
   path: '/checkout/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PaymentResultRoute = PaymentResultRouteImport.update({
-  id: '/payment/result',
-  path: '/payment/result',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ProductsIndexRoute = ProductsIndexRouteImport.update({
   id: '/products/',
   path: '/products/',
@@ -79,7 +73,6 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
-  '/payment/result': typeof PaymentResultRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/products/': typeof ProductsIndexRoute
 }
@@ -91,7 +84,6 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
-  '/payment/result': typeof PaymentResultRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/products': typeof ProductsIndexRoute
 }
@@ -104,7 +96,6 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
-  '/payment/result': typeof PaymentResultRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/products/': typeof ProductsIndexRoute
 }
@@ -118,7 +109,6 @@ export interface FileRouteTypes {
     | '/terms'
     | '/why'
     | '/checkout/$slug'
-    | '/payment/result'
     | '/products/$slug'
     | '/products/'
   fileRoutesByTo: FileRoutesByTo
@@ -130,7 +120,6 @@ export interface FileRouteTypes {
     | '/terms'
     | '/why'
     | '/checkout/$slug'
-    | '/payment/result'
     | '/products/$slug'
     | '/products'
   id:
@@ -142,7 +131,6 @@ export interface FileRouteTypes {
     | '/terms'
     | '/why'
     | '/checkout/$slug'
-    | '/payment/result'
     | '/products/$slug'
     | '/products/'
   fileRoutesById: FileRoutesById
@@ -155,7 +143,6 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   WhyRoute: typeof WhyRoute
   CheckoutSlugRoute: typeof CheckoutSlugRoute
-  PaymentResultRoute: typeof PaymentResultRoute
   ProductsSlugRoute: typeof ProductsSlugRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
 }
@@ -211,13 +198,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckoutSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/payment/result': {
-      id: '/payment/result'
-      path: '/payment/result'
-      fullPath: '/payment/result'
-      preLoaderRoute: typeof PaymentResultRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/products/': {
       id: '/products/'
       path: '/products'
@@ -243,7 +223,6 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   WhyRoute: WhyRoute,
   CheckoutSlugRoute: CheckoutSlugRoute,
-  PaymentResultRoute: PaymentResultRoute,
   ProductsSlugRoute: ProductsSlugRoute,
   ProductsIndexRoute: ProductsIndexRoute,
 }
