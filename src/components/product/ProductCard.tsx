@@ -59,6 +59,7 @@ export function ProductCard({ product }: { product: Product }) {
         <NeonLink
           to="/checkout/$slug"
           params={{ slug: product.slug }}
+          size="lg"
           className="flex-1"
         >
           خرید
