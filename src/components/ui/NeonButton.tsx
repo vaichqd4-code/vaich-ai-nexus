@@ -3,7 +3,7 @@ import { forwardRef, type ComponentProps, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type Variant = "primary" | "outline" | "ghost";
-type Size = "sm" | "md" | "lg";
+type Size = "sm" | "md" | "lg" | "xl";
 
 const base =
   "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50";
@@ -18,8 +18,9 @@ const variants: Record<Variant, string> = {
 
 const sizes: Record<Size, string> = {
   sm: "h-10 px-5 text-sm",
-  md: "h-12 px-7 text-sm",
-  lg: "h-14 px-9 text-base",
+  md: "h-13 px-8 text-sm",
+  lg: "h-14 px-10 text-base",
+  xl: "h-16 px-10 text-lg",
 };
 
 export function neonButtonClass(
