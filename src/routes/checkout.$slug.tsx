@@ -164,6 +164,7 @@ function Checkout() {
               <div className="flex flex-col gap-3 sm:flex-row">
                 <NeonButton
                   type="button"
+                  size="lg"
                   className="flex-1"
                   onClick={() => galleryRef.current?.click()}
                 >
@@ -172,6 +173,7 @@ function Checkout() {
                 <NeonButton
                   type="button"
                   variant="outline"
+                  size="lg"
                   className="flex-1"
                   onClick={() => cameraRef.current?.click()}
                 >
