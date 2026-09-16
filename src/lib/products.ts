@@ -12,14 +12,14 @@ export type Product = {
 export const products: Product[] = [
   {
     slug: "gemini",
-    name: "Gemini",
+    name: "Gemini pro",
     price: 275000,
     originalPrice: 392000,
     discountPercent: 30,
-    duration: "۴۵ روزه",
+    duration: "60 روزه",
     description: "اشتراک سرویس هوش مصنوعی Gemini، ۴۵ روزه.",
     purchaseInfo: [
-      "اشتراک Gemini به مدت ۴۵ روز ارائه می‌شود.",
+      "اشتراک Gemini به مدت 60 روز ارائه می‌شود.",
       "اطلاعات اشتراک پس از تأیید سفارش برای شما ارسال می‌شود.",
       "در صورت داشتن سؤال پیش از خرید، با پشتیبانی VAICH در ارتباط باشید.",
     ],
@@ -30,7 +30,7 @@ export const products: Product[] = [
     price: 399000,
     originalPrice: 1200000,
     duration: "۱۸ ماهه",
-    description: "اشتراک Gemini pro به مدت ۱۸ ماه.",
+    description: "اشتراک Gemini pro ۱۸ ماهه.",
     purchaseInfo: [
       "اشتراک Gemini pro به مدت ۱۸ ماه ارائه می‌شود.",
       "اطلاعات اشتراک پس از تأیید سفارش برای شما ارسال می‌شود.",
@@ -38,9 +38,10 @@ export const products: Product[] = [
     ],
   },
   {
-    slug: "chatgpt",
-    name: "ChatGPT",
+    slug: "اشتراک chatgpt plus شخصی",
+    name: "ChatGPT plus",
     price: 4750000,
+    duration: "۱ ماهه",
     description: "اشتراک سرویس هوش مصنوعی ChatGPT.",
     purchaseInfo: [
       "اطلاعات اشتراک پس از تأیید سفارش برای شما ارسال می‌شود.",
@@ -51,6 +52,7 @@ export const products: Product[] = [
     slug: "claude",
     name: "Claude",
     price: 5000000,
+    duration: "۱ ماهه",
     description: "اشتراک سرویس هوش مصنوعی Claude.",
     purchaseInfo: [
       "اطلاعات اشتراک پس از تأیید سفارش برای شما ارسال می‌شود.",
