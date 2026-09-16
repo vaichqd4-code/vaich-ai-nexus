@@ -251,19 +251,13 @@ function Checkout() {
 
   setSubmitted(true);
 
-  const message = encodeURIComponent(orderMessage);
+const message = encodeURIComponent(orderMessage);
 
-  if (platform === "telegram") {
-    window.location.href = `https://t.me/youneshayati?text=${message}`;
-  } else {
-    window.location.href = `https://wa.me/989193872172?text=${message}`;
-  }
-};
-
-  return (
-    <Section
-      className="aurora"
-      title="پرداخت دستی (کارت به کارت)"
+if (platform === "telegram") {
+  window.open(`https://t.me/youneshayati?text=${message}`, "_blank");
+} else {
+  window.open(`https://wa.me/989193872172?text=${message}`, "_blank");
+}
       subtitle="مبلغ دقیق زیر را به کارت اعلام‌شده واریز کنید و سپس رسید پرداخت را برای ما بفرستید."
     >
       <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
