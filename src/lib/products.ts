@@ -1,20 +1,9 @@
-/**
- * Product catalogue.
- * Currently a static source of truth. When a backend (product & price
- * management) is added later, replace these helpers with data fetching —
- * the UI only depends on the `Product` shape below.
- */
-
 export type Product = {
   slug: string;
   name: string;
-  /** Final price in Toman, stored as a number so a gateway can use it directly. */
   price: number;
-  /** Original/list price before discount, if applicable. */
   originalPrice?: number;
-  /** Discount percentage, if applicable. */
   discountPercent?: number;
-  /** Subscription duration shown to customers. */
   duration?: string;
   description: string;
   purchaseInfo: string[];
@@ -31,6 +20,19 @@ export const products: Product[] = [
     description: "اشتراک سرویس هوش مصنوعی Gemini، ۴۵ روزه.",
     purchaseInfo: [
       "اشتراک Gemini به مدت ۴۵ روز ارائه می‌شود.",
+      "اطلاعات اشتراک پس از تأیید سفارش برای شما ارسال می‌شود.",
+      "در صورت داشتن سؤال پیش از خرید، با پشتیبانی VAICH در ارتباط باشید.",
+    ],
+  },
+  {
+    slug: "gemini-pro",
+    name: "Gemini pro",
+    price: 399000,
+    originalPrice: 1200000,
+    duration: "۱۸ ماهه",
+    description: "اشتراک Gemini pro به مدت ۱۸ ماه.",
+    purchaseInfo: [
+      "اشتراک Gemini pro به مدت ۱۸ ماه ارائه می‌شود.",
       "اطلاعات اشتراک پس از تأیید سفارش برای شما ارسال می‌شود.",
       "در صورت داشتن سؤال پیش از خرید، با پشتیبانی VAICH در ارتباط باشید.",
     ],
