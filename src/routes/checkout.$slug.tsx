@@ -668,3 +668,104 @@ function Checkout() {
                     }`}
                   >
                     
+                    ارسال رسید در تلگرام
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      void shareReceipt("whatsapp")
+                    }
+                    className={`${neonButtonClass(
+                      "outline",
+                      "xl",
+                      "w-full flex-1 border-transparent bg-neon-green text-background hover:bg-neon-green/90 hover:text-background",
+                    )} ${
+                      isReady ? "" : "opacity-50"
+                    }`}
+                  >
+                    ارسال رسید در واتساپ
+                  </button>
+                </div>
+
+                <p className="mt-4 rounded-2xl border border-border bg-background/50 p-4 text-xs leading-7 text-muted-foreground">
+                  با انتخاب دکمه ارسال، اطلاعات سفارش و تصویر رسید برای اشتراک‌گذاری آماده می‌شود.
+                  <span dir="ltr">
+                    {" "}@{CONTACT_TELEGRAM_ID}
+                  </span>
+                </p>
+
+                {submitted ? (
+                  <p
+                    role="status"
+                    className="mt-5 rounded-2xl border border-neon-blue/50 bg-background/60 p-4 text-sm leading-8"
+                  >
+                    اطلاعات سفارش آماده ارسال شد.
+                  </p>
+                ) : null}
+              </div>
+            </>
+          ) : null}
+        </div>
+
+        <aside className="h-fit space-y-4 rounded-3xl border border-border bg-card/70 p-6 lg:sticky lg:top-24">
+          <h2 className="text-base font-bold">
+            خلاصه سفارش
+          </h2>
+
+          <dl className="space-y-3 text-sm">
+            <div className="flex items-center justify-between gap-4">
+              <dt className="text-muted-foreground">
+                محصول
+              </dt>
+
+              <dd className="font-medium">
+                اشتراک {product.name}
+              </dd>
+            </div>
+
+            {product.duration ? (
+              <div className="flex items-center justify-between gap-4">
+                <dt className="text-muted-foreground">
+                  مدت
+                </dt>
+
+                <dd className="font-medium">
+                  {product.duration}
+                </dd>
+              </div>
+            ) : null}
+
+            <div className="flex items-center justify-between gap-4">
+              <dt className="text-muted-foreground">
+                به نام
+              </dt>
+
+              <dd className="font-medium">
+                {CARD_HOLDER}
+              </dd>
+            </div>
+          </dl>
+
+          <div className="flex items-center justify-between gap-4 border-t border-border pt-4">
+            <span className="text-sm text-muted-foreground">
+              مبلغ نهایی
+            </span>
+
+            <span className="gradient-text text-xl font-extrabold">
+              {formatPrice(product.price)}
+            </span>
+          </div>
+
+          <NeonLink
+            to="/support"
+            variant="outline"
+            className="w-full"
+          >
+            پشتیبانی
+          </NeonLink>
+        </aside>
+      </div>
+    </Section>
+  );
+}
