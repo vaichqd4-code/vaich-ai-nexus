@@ -245,47 +245,20 @@ function Checkout() {
   };
 
   const shareReceipt = async (platform: "telegram" | "whatsapp") => {
-    if (!validateBeforeSend()) {
-      return;
-    }
+  if (!validateBeforeSend()) {
+    return;
+  }
 
-    setSubmitted(true);
+  setSubmitted(true);
 
-    if (receiptFile && navigator.share) {
-      try {
-        const shareData: ShareData = {
-          text: orderMessage,
-          files: [receiptFile],
-        };
+  const message = encodeURIComponent(orderMessage);
 
-        if (
-          !navigator.canShare ||
-          navigator.canShare({ files: [receiptFile] })
-        ) {
-          await navigator.share(shareData);
-          return;
-        }
-      } catch {
-        // If file sharing is not supported, continue to the app link.
-      }
-    }
-
-    await copyMessage();
-
-    if (platform === "telegram") {
-      window.open(
-        CONTACT_TELEGRAM_URL,
-        "_blank",
-        "noopener,noreferrer",
-      );
-    } else {
-      window.open(
-        whatsappUrlWithText(orderMessage),
-        "_blank",
-        "noopener,noreferrer",
-      );
-    }
-  };
+  if (platform === "telegram") {
+    window.location.href = `https://t.me/youneshayati?text=${message}`;
+  } else {
+    window.location.href = `https://wa.me/989193872172?text=${message}`;
+  }
+};
 
   return (
     <Section
