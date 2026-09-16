@@ -8,7 +8,7 @@
 
 export const CARD_NUMBER = "6219861452374472";
 export const CARD_NUMBER_GROUPED = "6219 8614 5237 4472";
-export const CARD_HOLDER = "Younes Hayati";
+export const CARD_HOLDER = "یونس حیاتی";
 
 export type CustomerInfo = {
   fullName: string;
