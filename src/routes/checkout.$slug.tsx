@@ -4,14 +4,9 @@ import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { Section } from "@/components/layout/Section";
 import {
   NeonButton,
-  NeonLink,
   neonButtonClass,
 } from "@/components/ui/NeonButton";
-import {
-  CONTACT_TELEGRAM_ID,
-  CONTACT_TELEGRAM_URL,
-  whatsappUrlWithText,
-} from "@/components/brand/ContactLinks";
+import { CONTACT_TELEGRAM_ID } from "@/components/brand/ContactLinks";
 import { formatPrice, getProduct } from "@/lib/products";
 import {
   buildOrderMessage,
@@ -91,7 +86,6 @@ function Checkout() {
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
-  const receiptSectionRef = useRef<HTMLDivElement>(null);
 
   const orderMessage = buildOrderMessage(product, customer);
 
@@ -110,16 +104,10 @@ function Checkout() {
       ? "ایمیل خود را وارد کنید"
       : null;
 
-  const receiptError =
-    attempted && !receiptFile
-      ? "تصویر رسید را انتخاب کنید"
-      : null;
-
   const isReady =
     customer.fullName.trim().length > 0 &&
     customer.phone.trim().length > 0 &&
-    customer.email.trim().length > 0 &&
-    Boolean(receiptFile);
+    customer.email.trim().length > 0;
 
   const setField =
     (key: keyof CustomerInfo) =>
@@ -170,17 +158,6 @@ function Checkout() {
     if (customer.email.trim().length === 0) {
       vibrate();
       goToField(emailRef.current);
-      return false;
-    }
-
-    if (!receiptFile) {
-      vibrate();
-
-      receiptSectionRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-
       return false;
     }
 
@@ -236,38 +213,6 @@ function Checkout() {
 
       return URL.createObjectURL(file);
     });
-  };
-
-  const shareReceipt = async (
-    platform: "telegram" | "whatsapp",
-  ) => {
-    if (!validateBeforeSend() || !receiptFile) {
-      return;
-    }
-
-    setSubmitted(false);
-
-    try {
-      const formData = new FormData();
-      formData.append("platform", platform);
-      formData.append("message", orderMessage);
-      formData.append("receipt", receiptFile);
-
-      const response = await fetch("/api/send-receipt", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("ارسال رسید ناموفق بود");
-      }
-
-      setSubmitted(true);
-    } catch {
-      setSubmitted(false);
-      vibrate();
-      window.alert("ارسال رسید انجام نشد. دوباره تلاش کنید.");
-    }
   };
 
   return (
@@ -438,7 +383,6 @@ function Checkout() {
             </div>
           </div>
 
-          {/* اطلاعات پرداخت — فقط جابه‌جا شده و قبل از رسید قرار گرفته */}
           <aside className="h-fit space-y-4 rounded-3xl border border-border bg-card/70 p-6">
             <h2 className="text-base font-bold">
               اطلاعات پرداخت
@@ -502,10 +446,7 @@ function Checkout() {
             </div>
           </aside>
 
-          <div
-            ref={receiptSectionRef}
-            className="glass-panel rounded-3xl p-6"
-          >
+          <div className="glass-panel rounded-3xl p-6">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <h2 className="text-lg font-bold">
@@ -569,12 +510,6 @@ function Checkout() {
               </div>
             ) : null}
 
-            {receiptError ? (
-              <p className="mt-3 text-xs text-red-500">
-                {receiptError}
-              </p>
-            ) : null}
-
             {fileError ? (
               <p className="mt-3 text-xs text-red-500">
                 {fileError}
@@ -599,11 +534,7 @@ function Checkout() {
               <button
                 type="button"
                 onClick={() => setShowUpload(true)}
-                className={`mt-5 flex min-h-32 w-full items-center justify-center rounded-2xl border border-dashed p-5 text-sm text-muted-foreground transition-colors hover:border-neon-blue/60 ${
-                  receiptError
-                    ? "border-red-500"
-                    : "border-border"
-                }`}
+                className="mt-5 flex min-h-32 w-full items-center justify-center rounded-2xl border border-dashed border-border p-5 text-sm text-muted-foreground transition-colors hover:border-neon-blue/60"
               >
                 برای انتخاب تصویر رسید اینجا بزنید
               </button>
@@ -615,55 +546,41 @@ function Checkout() {
             </h2>
 
             <p className="mt-2 text-sm text-muted-foreground">
-              اطلاعات سفارش و رسید پرداخت را برای پشتیبانی ارسال کنید.
+              برای ارسال رسید، وارد ربات تلگرام VAICH شوید.
             </p>
 
             {!isReady ? (
               <p className="mt-4 rounded-2xl border border-border bg-background/50 p-4 text-xs leading-7 text-muted-foreground">
-                نام، شماره تماس، ایمیل و تصویر رسید را وارد کنید.
+                ابتدا نام، شماره تماس و ایمیل خود را وارد کنید.
               </p>
             ) : null}
 
-            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-4">
               <button
                 type="button"
-                onClick={() =>
-                  void shareReceipt("telegram")
-                }
-                className={`${neonButtonClass(
-                  "outline",
-                  "xl",
-                  "w-full flex-1 border-transparent bg-neon-blue text-background hover:bg-neon-blue/90 hover:text-background",
-                )} ${
-                  isReady
-                    ? ""
-                    : "opacity-50"
-                }`}
-              >
-                ارسال رسید در تلگرام
-              </button>
+                onClick={() => {
+                  if (!validateBeforeSend()) return;
 
-              <button
-                type="button"
-                onClick={() =>
-                  void shareReceipt("whatsapp")
-                }
+                  window.open(
+                    "https://t.me/vaich_receipt_bot",
+                    "_blank",
+                    "noopener,noreferrer",
+                  );
+                }}
                 className={`${neonButtonClass(
                   "outline",
                   "xl",
-                  "w-full flex-1 border-transparent bg-neon-green text-background hover:bg-neon-green/90 hover:text-background",
+                  "w-full border-transparent bg-purple-600 text-white hover:bg-purple-700 hover:text-white",
                 )} ${
-                  isReady
-                    ? ""
-                    : "opacity-50"
+                  isReady ? "" : "opacity-50"
                 }`}
               >
-                ارسال رسید در واتساپ
+                🤖 ارسال رسید در ربات
               </button>
             </div>
 
             <p className="mt-4 rounded-2xl border border-border bg-background/50 p-4 text-xs leading-7 text-muted-foreground">
-              با انتخاب دکمه ارسال، اطلاعات سفارش برای پشتیبانی آماده می‌شود.
+              با انتخاب این دکمه وارد ربات تلگرام VAICH شوید و رسید پرداخت را در ربات ارسال کنید.
               <span dir="ltr">
                 {" "}@{CONTACT_TELEGRAM_ID}
               </span>
@@ -682,4 +599,4 @@ function Checkout() {
       </div>
     </Section>
   );
-}
+                      }
