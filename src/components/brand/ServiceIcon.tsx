@@ -16,15 +16,15 @@ export function ServiceIcon({
   return (
     <span
       className={cn(
-        "grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-border bg-secondary/60 shadow-[0_0_28px_-16px_var(--neon-blue)]",
+        "grid h-14 w-14 shrink-0 place-items-center rounded-full border border-border bg-secondary/60 shadow-[0_0_28px_-16px_var(--neon-blue)]",
         className,
       )}
     >
       {logo ? (
         <img
           src={logo}
-          alt={slug}
-          className="h-10 w-10 object-contain"
+          alt="Gemini"
+          className="h-10 w-10 rounded-full object-cover"
         />
       ) : (
         <span className="text-neon-blue text-2xl font-bold">
