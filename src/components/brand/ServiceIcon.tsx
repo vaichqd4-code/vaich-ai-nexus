@@ -9,6 +9,7 @@ export function ServiceIcon({
 }) {
   const logos: Record<string, string> = {
     gemini: "/file_000000007ea4822f9eac5c00be6be9eb.png",
+    chatgpt: "/ChatGPT-Logo-500x281.jpg",
   };
 
   const logo = logos[slug];
@@ -23,12 +24,12 @@ export function ServiceIcon({
       {logo ? (
         <img
           src={logo}
-          alt="Gemini"
+          alt={slug}
           className="h-10 w-10 rounded-full object-cover"
         />
       ) : (
         <span className="text-neon-blue text-2xl font-bold">
-          {slug === "chatgpt" ? "✦" : "A"}
+          A
         </span>
       )}
     </span>
