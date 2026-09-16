@@ -11,6 +11,7 @@ export function ServiceIcon({
     gemini: "/file_000000007ea4822f9eac5c00be6be9eb.png",
     "gemini-pro": "/file_00000000377481f6b667af886cd18fb6.png",
     chatgpt: "/ChatGPT-Logo-500x281.jpg",
+    "chatgpt-plus": "/ChatGPT-Logo-500x281.jpg",
     claude: "/Claude-.webp",
   };
 
