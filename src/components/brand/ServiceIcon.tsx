@@ -12,6 +12,7 @@ export function ServiceIcon({
     "gemini-pro": "/file_00000000377481f6b667af886cd18fb6.png",
     chatgpt: "/ChatGPT-Logo-500x281.jpg",
     "chatgpt-plus": "/ChatGPT-Logo-500x281.jpg",
+    "اشتراک chatgpt plus شخصی": "/ChatGPT-Logo-500x281.jpg",
     claude: "/Claude-.webp",
   };
 
