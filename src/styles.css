@@ -38,6 +38,7 @@
   --color-surface: var(--surface);
   --color-neon-blue: var(--neon-blue);
   --color-neon-purple: var(--neon-purple);
+  --color-neon-green: var(--neon-green);
 
   --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
 }
@@ -81,6 +82,7 @@
 
   --neon-blue: oklch(0.72 0.19 248);
   --neon-purple: oklch(0.62 0.26 300);
+  --neon-green: oklch(0.72 0.18 155);
 
   --gradient-neon: linear-gradient(
     120deg,
@@ -138,6 +140,7 @@
 
   --neon-blue: oklch(0.60 0.19 248);
   --neon-purple: oklch(0.55 0.25 300);
+  --neon-green: oklch(0.58 0.16 155);
 
   --gradient-neon: linear-gradient(
     120deg,
