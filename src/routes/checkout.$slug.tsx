@@ -42,57 +42,40 @@ export const Route = createFileRoute("/checkout/$slug")({
       };
     }
 
-    const title = `پرداخت اشتراک ${loaderData.product.name} | VAICH`;
-
     return {
       meta: [
-        { title },
+        {
+          title: `پرداخت ${loaderData.product.name} | VAICH`,
+        },
         {
           name: "description",
-          content: `پرداخت کارت به کارت اشتراک ${loaderData.product.name} در VAICH.`,
+          content: `پرداخت اشتراک ${loaderData.product.name} در VAICH`,
         },
-        { property: "og:title", content: title },
-        {
-          property: "og:description",
-          content: `پرداخت کارت به کارت اشتراک ${loaderData.product.name}.`,
-        },
-        { name: "robots", content: "noindex" },
       ],
     };
   },
 
-  component: Checkout,
+  component: CheckoutPage,
 });
 
-const ACCEPTED = "image/jpeg,image/jpg,image/png";
-
-const fieldClass =
-  "mt-2 w-full rounded-2xl border border-border bg-background/60 px-4 py-3 text-sm outline-none transition-colors focus:border-neon-blue/70";
-
-function Checkout() {
+function CheckoutPage() {
   const { product } = Route.useLoaderData();
-
-  const [copied, setCopied] = useState(false);
-  const [msgCopied, setMsgCopied] = useState(false);
-  const [showUpload, setShowUpload] = useState(false);
-
-  const [preview, setPreview] = useState<string | null>(null);
-  const [receiptFile, setReceiptFile] = useState<File | null>(null);
-  const [fileName, setFileName] = useState<string | null>(null);
-  const [fileError, setFileError] = useState<string | null>(null);
-
-  const [submitted, setSubmitted] = useState(false);
-  const [attempted, setAttempted] = useState(false);
 
   const [customer, setCustomer] = useState<CustomerInfo>({
     fullName: "",
-    email: "",
     phone: "",
+    email: "",
     note: "",
   });
 
-  const galleryRef = useRef<HTMLInputElement>(null);
-  const cameraRef = useRef<HTMLInputElement>(null);
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [fileName, setFileName] = useState("");
+  const [fileError, setFileError] = useState<string | null>(null);
+  const [attempted, setAttempted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [msgCopied, setMsgCopied] = useState(false);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
@@ -244,20 +227,36 @@ function Checkout() {
     });
   };
 
-  const shareReceipt = async (platform: "telegram" | "whatsapp") => {
-  if (!validateBeforeSend()) {
-    return;
-  }
+  const shareReceipt = async (
+    platform: "telegram" | "whatsapp",
+  ) => {
+    if (!validateBeforeSend()) {
+      return;
+    }
 
-  setSubmitted(true);
+    setSubmitted(true);
 
-const message = encodeURIComponent(orderMessage);
+    const message = encodeURIComponent(orderMessage);
 
-if (platform === "telegram") {
-  window.open(`https://t.me/youneshayati?text=${message}`, "_blank");
-} else {
-  window.open(`https://wa.me/989193872172?text=${message}`, "_blank");
-}
+    if (platform === "telegram") {
+      window.open(
+        `${CONTACT_TELEGRAM_URL}?text=${message}`,
+        "_blank",
+        "noopener,noreferrer",
+      );
+    } else {
+      window.open(
+        whatsappUrlWithText(orderMessage),
+        "_blank",
+        "noopener,noreferrer",
+      );
+    }
+  };
+
+  return (
+    <Section
+      className="aurora"
+      title="پرداخت دستی (کارت به کارت)"
       subtitle="مبلغ دقیق زیر را به کارت اعلام‌شده واریز کنید و سپس رسید پرداخت را برای ما بفرستید."
     >
       <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
@@ -311,417 +310,372 @@ if (platform === "telegram") {
                 {CARD_NUMBER_GROUPED}
               </p>
 
-              <div className="mt-4 flex items-center justify-between gap-4 border-t border-border pt-4 text-sm">
-                <span className="text-muted-foreground">
-                  به نام
-                </span>
-
-                <span className="font-bold">
-                  {CARD_HOLDER}
-                </span>
-              </div>
-
-              <div className="mt-3 flex items-center justify-between gap-4 text-sm">
-                <span className="text-muted-foreground">
-                  مبلغ
-                </span>
-
-                <span className="font-bold">
-                  {formatPrice(product.price)}
-                </span>
-              </div>
-
-              <NeonButton
+              <button
                 type="button"
-                variant="outline"
-                className="mt-5 w-full"
                 onClick={copyCard}
+                className={`${neonButtonClass(
+                  "outline",
+                  "md",
+                  "mt-4 w-full",
+                )}`}
               >
                 {copied
                   ? "شماره کارت کپی شد ✓"
                   : "کپی شماره کارت"}
-              </NeonButton>
-            </div>
+              </button>
 
-            <p className="mt-4 rounded-2xl border border-border bg-background/50 p-4 text-xs leading-7 text-muted-foreground">
-              پس از واریز مبلغ دقیق، لطفاً رسید پرداخت خود را برای بررسی و تأیید دستی ارسال کنید.
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                <div>
+                  <p className="text-xs text-muted-foreground">
+                    به نام
+                  </p>
+                  <p className="mt-1 font-bold">
+                    {CARD_HOLDER}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-xs text-muted-foreground">
+                    مبلغ
+                  </p>
+                  <p className="mt-1 font-bold">
+                    {formatPrice(product.price)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Customer */}
+          <div className="rounded-3xl border border-border bg-card/70 p-6">
+            <h2 className="mb-4 text-base font-bold">
+              ۳. اطلاعات خریدار
+            </h2>
+
+            <div className="space-y-4">
+              <div>
+                <label
+                  htmlFor="fullName"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  نام و نام خانوادگی
+                </label>
+
+                <input
+                  ref={nameRef}
+                  id="fullName"
+                  type="text"
+                  value={customer.fullName}
+                  onChange={(event) =>
+                    setField("fullName")(event.target.value)
+                  }
+                  placeholder="نام و نام خانوادگی"
+                  className={`w-full rounded-2xl border bg-background/60 px-4 py-3 outline-none transition ${
+                    nameError
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-border focus:border-neon-blue"
+                  }`}
+                />
+
+                {nameError ? (
+                  <p className="mt-2 text-xs text-red-500">
+                    {nameError}
+                  </p>
+                ) : null}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="phone"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  شماره تماس
+                </label>
+
+                <input
+                  ref={phoneRef}
+                  id="phone"
+                  type="tel"
+                  inputMode="tel"
+                  value={customer.phone}
+                  onChange={(event) =>
+                    setField("phone")(event.target.value)
+                  }
+                  placeholder="مثلاً ۰۹۱۲۱۲۳۴۵۶۷"
+                  dir="ltr"
+                  className={`w-full rounded-2xl border bg-background/60 px-4 py-3 text-right outline-none transition ${
+                    phoneError
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-border focus:border-neon-blue"
+                  }`}
+                />
+
+                {phoneError ? (
+                  <p className="mt-2 text-xs text-red-500">
+                    {phoneError}
+                  </p>
+                ) : null}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="email"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  ایمیل
+                </label>
+
+                <input
+                  ref={emailRef}
+                  id="email"
+                  type="email"
+                  value={customer.email}
+                  onChange={(event) =>
+                    setField("email")(event.target.value)
+                  }
+                  placeholder="example@email.com"
+                  dir="ltr"
+                  className={`w-full rounded-2xl border bg-background/60 px-4 py-3 outline-none transition ${
+                    emailError
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-border focus:border-neon-blue"
+                  }`}
+                />
+
+                {emailError ? (
+                  <p className="mt-2 text-xs text-red-500">
+                    {emailError}
+                  </p>
+                ) : null}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="note"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  توضیحات (اختیاری)
+                </label>
+
+                <textarea
+                  id="note"
+                  value={customer.note}
+                  onChange={(event) =>
+                    setField("note")(event.target.value)
+                  }
+                  placeholder="اگر توضیحی دارید اینجا بنویسید..."
+                  rows={4}
+                  className="w-full resize-none rounded-2xl border border-border bg-background/60 px-4 py-3 outline-none transition focus:border-neon-blue"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Receipt */}
+          <div
+            ref={receiptSectionRef}
+            className="rounded-3xl border border-border bg-card/70 p-6"
+          >
+            <h2 className="mb-2 text-base font-bold">
+              ۴. بارگذاری رسید پرداخت
+            </h2>
+
+            <p className="mb-4 text-xs leading-7 text-muted-foreground">
+              تصویر رسید کارت‌به‌کارت خود را انتخاب کنید.
             </p>
 
-            {!showUpload ? (
-              <NeonButton
-                type="button"
-                size="xl"
-                className="mt-5 w-full"
-                onClick={() => setShowUpload(true)}
-              >
-                پرداخت کردم — ارسال رسید
-              </NeonButton>
+            <label
+              htmlFor="receipt"
+              className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-8 text-center transition ${
+                receiptError || fileError
+                  ? "border-red-500"
+                  : "border-border hover:border-neon-blue"
+              }`}
+            >
+              <span className="text-sm font-bold">
+                انتخاب تصویر رسید
+              </span>
+
+              <span className="mt-2 text-xs text-muted-foreground">
+                JPG، JPEG یا PNG
+              </span>
+
+              <input
+                id="receipt"
+                type="file"
+                accept="image/jpeg,image/jpg,image/png"
+                className="hidden"
+                onChange={(event) =>
+                  onPick(event.target.files?.[0])
+                }
+              />
+            </label>
+
+            {fileError ? (
+              <p className="mt-2 text-xs text-red-500">
+                {fileError}
+              </p>
+            ) : null}
+
+            {receiptError ? (
+              <p className="mt-2 text-xs text-red-500">
+                {receiptError}
+              </p>
+            ) : null}
+
+            {preview ? (
+              <div className="mt-5">
+                <p className="mb-2 text-sm text-muted-foreground">
+                  پیش‌نمایش رسید انتخاب‌شده:
+                </p>
+
+                <img
+                  src={preview}
+                  alt={`پیش‌نمایش رسید پرداخت اشتراک ${product.name}`}
+                  className="max-h-96 w-full rounded-2xl border border-border bg-background/60 object-contain"
+                />
+
+                {fileName ? (
+                  <p
+                    className="mt-2 truncate text-xs text-muted-foreground"
+                    dir="ltr"
+                  >
+                    {fileName}
+                  </p>
+                ) : null}
+              </div>
             ) : null}
           </div>
 
-          {/* Customer info + receipt */}
-          {showUpload ? (
-            <>
-              <div className="rounded-3xl border border-border bg-card/70 p-6">
-                <h2 className="mb-1 text-base font-bold">
-                  ۳. اطلاعات شما
-                </h2>
+          {/* Send */}
+          <div className="rounded-3xl border border-border bg-card/70 p-6">
+            <h2 className="mb-1 text-base font-bold">
+              ۵. ارسال رسید و اطلاعات سفارش
+            </h2>
 
-                <p className="mb-4 text-xs leading-7 text-muted-foreground">
-                  این اطلاعات همراه رسید برای پشتیبانی ارسال می‌شود تا سفارش شما تأیید و تحویل شود.
-                </p>
+            <p className="mb-4 text-xs leading-7 text-muted-foreground">
+              اطلاعات سفارش به‌صورت خودکار از روی محصول انتخابی ساخته می‌شود.
+            </p>
 
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {/* Name */}
-                  <label className="block text-sm">
-                    <span className="text-muted-foreground">
-                      نام و نام خانوادگی *
-                    </span>
+            <pre className="max-h-64 overflow-auto whitespace-pre-wrap rounded-2xl border border-border bg-background/60 p-4 text-xs leading-7">
+              {orderMessage}
+            </pre>
 
-                    <input
-                      ref={nameRef}
-                      className={`${fieldClass} ${
-                        nameError
-                          ? "border-red-500 focus:border-red-500"
-                          : ""
-                      }`}
-                      value={customer.fullName}
-                      onChange={(e) =>
-                        setField("fullName")(e.target.value)
-                      }
-                      placeholder="مثلاً علی رضایی"
-                    />
+            <NeonButton
+              type="button"
+              variant="outline"
+              className="mt-4 w-full"
+              onClick={copyMessage}
+            >
+              {msgCopied
+                ? "متن سفارش کپی شد ✓"
+                : "کپی متن کامل سفارش"}
+            </NeonButton>
 
-                    {nameError ? (
-                      <p
-                        role="alert"
-                        className="mt-2 text-xs text-red-500"
-                      >
-                        {nameError}
-                      </p>
-                    ) : null}
-                  </label>
+            {!isReady ? (
+              <p className="mt-4 rounded-2xl border border-border bg-background/50 p-4 text-xs leading-7 text-muted-foreground">
+                نام، شماره تماس، ایمیل و تصویر رسید را وارد کنید.
+              </p>
+            ) : null}
 
-                  {/* Phone */}
-                  <label className="block text-sm">
-                    <span className="text-muted-foreground">
-                      شماره تماس *
-                    </span>
+            {submitted ? (
+              <p className="mt-4 rounded-2xl border border-neon-green/30 bg-neon-green/10 p-4 text-xs leading-7 text-neon-green">
+                اطلاعات سفارش آماده ارسال شد.
+              </p>
+            ) : null}
 
-                    <input
-                      ref={phoneRef}
-                      className={`${fieldClass} ${
-                        phoneError
-                          ? "border-red-500 focus:border-red-500"
-                          : ""
-                      }`}
-                      dir="ltr"
-                      inputMode="tel"
-                      value={customer.phone}
-                      onChange={(e) =>
-                        setField("phone")(e.target.value)
-                      }
-                      placeholder="09xxxxxxxxx"
-                    />
-
-                    {phoneError ? (
-                      <p
-                        role="alert"
-                        className="mt-2 text-xs text-red-500"
-                      >
-                        {phoneError}
-                      </p>
-                    ) : null}
-                  </label>
-
-                  {/* Email */}
-                  <label className="block text-sm sm:col-span-2">
-                    <span className="text-muted-foreground">
-                      ایمیل *
-                    </span>
-
-                    <input
-                      ref={emailRef}
-                      className={`${fieldClass} ${
-                        emailError
-                          ? "border-red-500 focus:border-red-500"
-                          : ""
-                      }`}
-                      dir="ltr"
-                      inputMode="email"
-                      value={customer.email}
-                      onChange={(e) =>
-                        setField("email")(e.target.value)
-                      }
-                      placeholder="you@example.com"
-                    />
-
-                    {emailError ? (
-                      <p
-                        role="alert"
-                        className="mt-2 text-xs text-red-500"
-                      >
-                        {emailError}
-                      </p>
-                    ) : null}
-                  </label>
-
-                  {/* Note */}
-                  <label className="block text-sm sm:col-span-2">
-                    <span className="text-muted-foreground">
-                      توضیحات (اختیاری)
-                    </span>
-
-                    <textarea
-                      className={`${fieldClass} min-h-24 resize-y`}
-                      value={customer.note ?? ""}
-                      onChange={(e) =>
-                        setField("note")(e.target.value)
-                      }
-                      placeholder="در صورت نیاز توضیح بنویسید"
-                    />
-                  </label>
-                </div>
-              </div>
-
-              {/* Receipt */}
-              <div
-                ref={receiptSectionRef}
-                className="rounded-3xl border border-border bg-card/70 p-6"
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+              {/* Telegram */}
+              <button
+                type="button"
+                onClick={() =>
+                  void shareReceipt("telegram")
+                }
+                className={`${neonButtonClass(
+                  "outline",
+                  "xl",
+                  "w-full flex-1 border-transparent bg-neon-blue text-background hover:bg-neon-blue/90 hover:text-background",
+                )} ${
+                  isReady ? "" : "opacity-50"
+                }`}
               >
-                <h2 className="mb-1 text-base font-bold">
-                  ۴. بارگذاری رسید پرداخت
-                </h2>
+                ارسال رسید در تلگرام
+              </button>
 
-                <p className="mb-4 text-xs leading-7 text-muted-foreground">
-                  تصویر رسید را از گالری انتخاب کنید یا همین حالا از رسید عکس بگیرید. فرمت‌های مجاز:
-                  JPG، JPEG و PNG.
-                </p>
-
-                <input
-                  ref={galleryRef}
-                  type="file"
-                  accept={ACCEPTED}
-                  className="sr-only"
-                  onChange={(e) =>
-                    onPick(e.target.files?.[0])
-                  }
-                />
-
-                <input
-                  ref={cameraRef}
-                  type="file"
-                  accept={ACCEPTED}
-                  capture="environment"
-                  className="sr-only"
-                  onChange={(e) =>
-                    onPick(e.target.files?.[0])
-                  }
-                />
-
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <NeonButton
-                    type="button"
-                    size="xl"
-                    className="w-full flex-1"
-                    onClick={() =>
-                      galleryRef.current?.click()
-                    }
-                  >
-                    انتخاب از گالری
-                  </NeonButton>
-
-                  <NeonButton
-                    type="button"
-                    variant="outline"
-                    size="xl"
-                    className="w-full flex-1"
-                    onClick={() =>
-                      cameraRef.current?.click()
-                    }
-                  >
-                    گرفتن عکس با دوربین
-                  </NeonButton>
-                </div>
-
-                {fileError ? (
-                  <p
-                    role="alert"
-                    className="mt-4 rounded-2xl border border-red-500/50 bg-background/60 p-4 text-sm text-red-500"
-                  >
-                    {fileError}
-                  </p>
-                ) : null}
-
-                {receiptError ? (
-                  <p
-                    role="alert"
-                    className="mt-4 rounded-2xl border border-red-500/50 bg-background/60 p-4 text-sm text-red-500"
-                  >
-                    {receiptError}
-                  </p>
-                ) : null}
-
-                {preview ? (
-                  <div className="mt-5">
-                    <p className="mb-2 text-sm text-muted-foreground">
-                      پیش‌نمایش رسید انتخاب‌شده:
-                    </p>
-
-                    <img
-                      src={preview}
-                      alt={`پیش‌نمایش رسید پرداخت اشتراک ${product.name}`}
-                      className="max-h-96 w-full rounded-2xl border border-border bg-background/60 object-contain"
-                    />
-
-                    {fileName ? (
-                      <p
-                        className="mt-2 truncate text-xs text-muted-foreground"
-                        dir="ltr"
-                      >
-                        {fileName}
-                      </p>
-                    ) : null}
-                  </div>
-                ) : null}
-              </div>
-
-              {/* Send */}
-              <div className="rounded-3xl border border-border bg-card/70 p-6">
-                <h2 className="mb-1 text-base font-bold">
-                  ۵. ارسال رسید و اطلاعات سفارش
-                </h2>
-
-                <p className="mb-4 text-xs leading-7 text-muted-foreground">
-                  اطلاعات سفارش به‌صورت خودکار از روی محصول انتخابی ساخته می‌شود.
-                </p>
-
-                <pre className="max-h-64 overflow-auto whitespace-pre-wrap rounded-2xl border border-border bg-background/60 p-4 text-xs leading-7">
-                  {orderMessage}
-                </pre>
-
-                <NeonButton
-                  type="button"
-                  variant="outline"
-                  className="mt-4 w-full"
-                  onClick={copyMessage}
-                >
-                  {msgCopied
-                    ? "متن سفارش کپی شد ✓"
-                    : "کپی متن کامل سفارش"}
-                </NeonButton>
-
-                {!isReady ? (
-                  <p className="mt-4 rounded-2xl border border-border bg-background/50 p-4 text-xs leading-7 text-muted-foreground">
-                    نام، شماره تماس، ایمیل و تصویر رسید را وارد کنید.
-                  </p>
-                ) : null}
-
-                <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-                  {/* Telegram */}
-                  <button
-                    type="button"
-                    onClick={() =>
-                      void shareReceipt("telegram")
-                    }
-                    className={`${neonButtonClass(
-                      "outline",
-                      "xl",
-                      "w-full flex-1 border-transparent bg-neon-blue text-background hover:bg-neon-blue/90 hover:text-background",
-                    )} ${
-                      isReady
-                        ? ""
-                        : "opacity-50"
-                    }`}
-                  >
-                    
-                    ارسال رسید در تلگرام
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      void shareReceipt("whatsapp")
-                    }
-                    className={`${neonButtonClass(
-                      "outline",
-                      "xl",
-                      "w-full flex-1 border-transparent bg-neon-green text-background hover:bg-neon-green/90 hover:text-background",
-                    )} ${
-                      isReady ? "" : "opacity-50"
-                    }`}
-                  >
-                    ارسال رسید در واتساپ
-                  </button>
-                </div>
-
-                <p className="mt-4 rounded-2xl border border-border bg-background/50 p-4 text-xs leading-7 text-muted-foreground">
-                  با انتخاب دکمه ارسال، اطلاعات سفارش و تصویر رسید برای اشتراک‌گذاری آماده می‌شود.
-                  <span dir="ltr">
-                    {" "}@{CONTACT_TELEGRAM_ID}
-                  </span>
-                </p>
-
-                {submitted ? (
-                  <p
-                    role="status"
-                    className="mt-5 rounded-2xl border border-neon-blue/50 bg-background/60 p-4 text-sm leading-8"
-                  >
-                    اطلاعات سفارش آماده ارسال شد.
-                  </p>
-                ) : null}
-              </div>
-            </>
-          ) : null}
-        </div>
-
-        <aside className="h-fit space-y-4 rounded-3xl border border-border bg-card/70 p-6 lg:sticky lg:top-24">
-          <h2 className="text-base font-bold">
-            خلاصه سفارش
-          </h2>
-
-          <dl className="space-y-3 text-sm">
-            <div className="flex items-center justify-between gap-4">
-              <dt className="text-muted-foreground">
-                محصول
-              </dt>
-
-              <dd className="font-medium">
-                اشتراک {product.name}
-              </dd>
+              {/* WhatsApp */}
+              <button
+                type="button"
+                onClick={() =>
+                  void shareReceipt("whatsapp")
+                }
+                className={`${neonButtonClass(
+                  "outline",
+                  "xl",
+                  "w-full flex-1 border-transparent bg-neon-green text-background hover:bg-neon-green/90 hover:text-background",
+                )} ${
+                  isReady ? "" : "opacity-50"
+                }`}
+              >
+                ارسال رسید در واتساپ
+              </button>
             </div>
 
-            {product.duration ? (
+            <p className="mt-4 text-center text-xs leading-7 text-muted-foreground">
+              با انتخاب هر گزینه، چت مستقیم پشتیبانی باز می‌شود و متن سفارش آماده ارسال خواهد بود.
+            </p>
+          </div>
+        </div>
+
+        {/* Summary */}
+        <aside className="h-fit space-y-6 lg:sticky lg:top-24">
+          <div className="rounded-3xl border border-border bg-card/70 p-6">
+            <h2 className="mb-5 text-base font-bold">
+              خلاصه سفارش
+            </h2>
+
+            <dl className="space-y-4 text-sm">
               <div className="flex items-center justify-between gap-4">
                 <dt className="text-muted-foreground">
-                  مدت
+                  محصول
                 </dt>
 
                 <dd className="font-medium">
-                  {product.duration}
+                  {product.name}
                 </dd>
               </div>
-            ) : null}
 
-            <div className="flex items-center justify-between gap-4">
-              <dt className="text-muted-foreground">
-                به نام
-              </dt>
+              {product.duration ? (
+                <div className="flex items-center justify-between gap-4">
+                  <dt className="text-muted-foreground">
+                    مدت
+                  </dt>
 
-              <dd className="font-medium">
-                {CARD_HOLDER}
-              </dd>
+                  <dd className="font-medium">
+                    {product.duration}
+                  </dd>
+                </div>
+              ) : null}
+
+              <div className="flex items-center justify-between gap-4">
+                <dt className="text-muted-foreground">
+                  به نام
+                </dt>
+
+                <dd className="font-medium">
+                  {CARD_HOLDER}
+                </dd>
+              </div>
+            </dl>
+
+            <div className="mt-5 flex items-center justify-between gap-4 border-t border-border pt-4">
+              <span className="text-sm text-muted-foreground">
+                مبلغ نهایی
+              </span>
+
+              <span className="gradient-text text-xl font-extrabold">
+                {formatPrice(product.price)}
+              </span>
             </div>
-          </dl>
-
-          <div className="flex items-center justify-between gap-4 border-t border-border pt-4">
-            <span className="text-sm text-muted-foreground">
-              مبلغ نهایی
-            </span>
-
-            <span className="gradient-text text-xl font-extrabold">
-              {formatPrice(product.price)}
-            </span>
           </div>
 
           <NeonLink
@@ -732,7 +686,4 @@ if (platform === "telegram") {
             پشتیبانی
           </NeonLink>
         </aside>
-      </div>
-    </Section>
-  );
-}
+    
