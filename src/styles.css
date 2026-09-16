@@ -38,6 +38,7 @@
   --color-surface: var(--surface);
   --color-neon-blue: var(--neon-blue);
   --color-neon-purple: var(--neon-purple);
+  --color-neon-green: var(--neon-green);
 
   --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
 }
