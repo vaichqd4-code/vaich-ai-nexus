@@ -19,7 +19,7 @@ export function Logo({
       className={cn("group flex items-center gap-2.5", className)}
     >
       <img
-        src="/vaich-logo.png"
+        src="/file_0000000019fc81f8a45fc2a27ebaa579.png"
         alt="لوگوی VAICH"
         width={size}
         height={size}
