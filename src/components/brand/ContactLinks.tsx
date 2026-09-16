@@ -5,6 +5,12 @@ export const CONTACT_PHONE_PERSIAN = toPersianDigits(CONTACT_PHONE);
 export const CONTACT_TELEGRAM_ID = "youneshayati";
 export const CONTACT_TELEGRAM_URL = `https://t.me/${CONTACT_TELEGRAM_ID}`;
 export const CONTACT_INSTAGRAM_URL = "https://www.instagram.com/youneshayati.ai?stkn=Y2x4bnQ1Z2JneTMz";
+/** شمارهٔ واتساپ پشتیبانی به فرمت بین‌المللی (بدون + و بدون صفر ابتدایی). */
+export const CONTACT_WHATSAPP_NUMBER = "989193872172";
+export const CONTACT_WHATSAPP_URL = `https://wa.me/${CONTACT_WHATSAPP_NUMBER}`;
+export function whatsappUrlWithText(text: string) {
+  return `${CONTACT_WHATSAPP_URL}?text=${encodeURIComponent(text)}`;
+}
 
 const contactMethods = [
   {
