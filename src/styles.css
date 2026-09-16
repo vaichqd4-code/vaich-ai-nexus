@@ -82,6 +82,7 @@
 
   --neon-blue: oklch(0.72 0.19 248);
   --neon-purple: oklch(0.62 0.26 300);
+  --neon-green: oklch(0.72 0.18 155);
 
   --gradient-neon: linear-gradient(
     120deg,
