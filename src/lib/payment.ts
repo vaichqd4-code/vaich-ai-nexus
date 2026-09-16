@@ -6,6 +6,8 @@
  * Telegram for manual verification.
  */
 
+import { formatPrice, type Product } from "@/lib/products";
+
 export const CARD_NUMBER = "6219861452374472";
 export const CARD_NUMBER_GROUPED = "6219 8614 5237 4472";
 export const CARD_HOLDER = "یونس حیاتی";
