@@ -10,6 +10,7 @@ export function ServiceIcon({
   const logos: Record<string, string> = {
     gemini: "/file_000000007ea4822f9eac5c00be6be9eb.png",
     chatgpt: "/ChatGPT-Logo-500x281.jpg",
+    claude: "/Claude-.webp",
   };
 
   const logo = logos[slug];
