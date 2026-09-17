@@ -15,6 +15,8 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WhyRouteImport } from './routes/why'
+import { Route as ApiCreateOrderRouteImport } from './routes/api.create-order'
+import { Route as ApiSendReceiptRouteImport } from './routes/api.send-receipt'
 import { Route as CheckoutSlugRouteImport } from './routes/checkout.$slug'
 import { Route as ProductsIndexRouteImport } from './routes/products.index'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
@@ -49,6 +51,16 @@ const WhyRoute = WhyRouteImport.update({
   path: '/why',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCreateOrderRoute = ApiCreateOrderRouteImport.update({
+  id: '/api/create-order',
+  path: '/api/create-order',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSendReceiptRoute = ApiSendReceiptRouteImport.update({
+  id: '/api/send-receipt',
+  path: '/api/send-receipt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CheckoutSlugRoute = CheckoutSlugRouteImport.update({
   id: '/checkout/$slug',
   path: '/checkout/$slug',
@@ -72,6 +84,8 @@ export interface FileRoutesByFullPath {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
+  '/api/create-order': typeof ApiCreateOrderRoute
+  '/api/send-receipt': typeof ApiSendReceiptRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/products/': typeof ProductsIndexRoute
@@ -83,6 +97,8 @@ export interface FileRoutesByTo {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
+  '/api/create-order': typeof ApiCreateOrderRoute
+  '/api/send-receipt': typeof ApiSendReceiptRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/products': typeof ProductsIndexRoute
@@ -95,6 +111,8 @@ export interface FileRoutesById {
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
+  '/api/create-order': typeof ApiCreateOrderRoute
+  '/api/send-receipt': typeof ApiSendReceiptRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/products/': typeof ProductsIndexRoute
@@ -108,6 +126,8 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/why'
+    | '/api/create-order'
+    | '/api/send-receipt'
     | '/checkout/$slug'
     | '/products/$slug'
     | '/products/'
@@ -119,6 +139,8 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/why'
+    | '/api/create-order'
+    | '/api/send-receipt'
     | '/checkout/$slug'
     | '/products/$slug'
     | '/products'
@@ -130,6 +152,8 @@ export interface FileRouteTypes {
     | '/support'
     | '/terms'
     | '/why'
+    | '/api/create-order'
+    | '/api/send-receipt'
     | '/checkout/$slug'
     | '/products/$slug'
     | '/products/'
@@ -142,6 +166,8 @@ export interface RootRouteChildren {
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
   WhyRoute: typeof WhyRoute
+  ApiCreateOrderRoute: typeof ApiCreateOrderRoute
+  ApiSendReceiptRoute: typeof ApiSendReceiptRoute
   CheckoutSlugRoute: typeof CheckoutSlugRoute
   ProductsSlugRoute: typeof ProductsSlugRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
@@ -191,6 +217,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WhyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/create-order': {
+      id: '/api/create-order'
+      path: '/api/create-order'
+      fullPath: '/api/create-order'
+      preLoaderRoute: typeof ApiCreateOrderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/send-receipt': {
+      id: '/api/send-receipt'
+      path: '/api/send-receipt'
+      fullPath: '/api/send-receipt'
+      preLoaderRoute: typeof ApiSendReceiptRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/checkout/$slug': {
       id: '/checkout/$slug'
       path: '/checkout/$slug'
@@ -222,6 +262,8 @@ const rootRouteChildren: RootRouteChildren = {
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
   WhyRoute: WhyRoute,
+  ApiCreateOrderRoute: ApiCreateOrderRoute,
+  ApiSendReceiptRoute: ApiSendReceiptRoute,
   CheckoutSlugRoute: CheckoutSlugRoute,
   ProductsSlugRoute: ProductsSlugRoute,
   ProductsIndexRoute: ProductsIndexRoute,
