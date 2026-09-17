@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import heroImage from "@/assets/hero-ai.jpg";
 import { Section } from "@/components/layout/Section";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Features } from "@/components/sections/Features";
@@ -56,8 +55,8 @@ function Hero() {
         <div className="relative">
           <div className="float-slow glow-strong overflow-hidden rounded-4xl border border-border">
             <img
-              src={heroImage}
-              alt="تصویر انتزاعی از جریان انرژی هوش مصنوعی با نور نئون آبی و بنفش"
+              src="/317630163_1789657188376603.jpg"
+              alt="پلتفرم اشتراک هوش مصنوعی VAICH"
               width={1536}
               height={1152}
               className="h-full w-full object-cover"
