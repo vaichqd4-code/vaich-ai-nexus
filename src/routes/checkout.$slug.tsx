@@ -71,6 +71,7 @@ function Checkout() {
   const [fileError, setFileError] = useState<string | null>(null);
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [attempted, setAttempted] = useState(false);
 
   const [customer, setCustomer] = useState<CustomerInfo>({
@@ -558,24 +559,65 @@ function Checkout() {
             <div className="mt-4">
               <button
                 type="button"
-                onClick={() => {
+                disabled={isSubmitting}
+                onClick={async () => {
                   if (!validateBeforeSend()) return;
+                  if (isSubmitting) return;
 
-                  window.open(
-                    "https://t.me/vaich_receipt_bot",
-                    "_blank",
-                    "noopener,noreferrer",
-                  );
+                  setIsSubmitting(true);
+                  try {
+                    const response = await fetch("/api/create-order", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        customerName: customer.fullName,
+                        customerPhone: customer.phone,
+                        customerEmail: customer.email,
+                        notes: customer.note,
+                        product: {
+                          name: product.name,
+                          service: product.service,
+                          duration: product.duration,
+                          price: product.price,
+                        },
+                      }),
+                    });
+
+                    const data = await response.json();
+                    if (data.success && data.orderToken) {
+                      setSubmitted(true);
+                      window.open(
+                        data.telegramUrl || `https://t.me/vaich_receipt_bot?start=${data.orderToken}`,
+                        "_blank",
+                        "noopener,noreferrer",
+                      );
+                    } else {
+                      window.open(
+                        "https://t.me/vaich_receipt_bot",
+                        "_blank",
+                        "noopener,noreferrer",
+                      );
+                    }
+                  } catch (err) {
+                    console.error("Failed to create order:", err);
+                    window.open(
+                      "https://t.me/vaich_receipt_bot",
+                      "_blank",
+                      "noopener,noreferrer",
+                    );
+                  } finally {
+                    setIsSubmitting(false);
+                  }
                 }}
                 className={`${neonButtonClass(
                   "outline",
                   "xl",
                   "w-full border-transparent bg-purple-600 text-white hover:bg-purple-700 hover:text-white",
                 )} ${
-                  isReady ? "" : "opacity-50"
+                  isReady && !isSubmitting ? "" : "opacity-50"
                 }`}
               >
-                🤖 ارسال رسید در ربات
+                {isSubmitting ? "در حال ثبت و اتصال به ربات..." : "🤖 ارسال رسید در ربات"}
               </button>
             </div>
 
