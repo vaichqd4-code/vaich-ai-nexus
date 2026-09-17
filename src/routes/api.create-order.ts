@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import crypto from "crypto";
 
+const BOT_USERNAME = "vaich_receipt_bot";
+
 function generateOrderToken(): string {
-  return crypto.randomBytes(20).toString("base64url");
+  return crypto.randomBytes(16).toString("base64url");
 }
 
 export const Route = createFileRoute("/api/create-order")({
@@ -10,10 +12,29 @@ export const Route = createFileRoute("/api/create-order")({
     handlers: {
       POST: async ({ request }) => {
         try {
-          const body = await request.json();
-          const { customerName, customerPhone, customerEmail, notes, product } = body || {};
+          const body = (await request.json()) as {
+            customerName?: string;
+            customerPhone?: string;
+            customerEmail?: string;
+            notes?: string;
+            orderMessage?: string;
+            product?: {
+              slug?: string;
+              name?: string;
+              price?: number;
+            };
+          };
 
-          if (!customerName || !customerPhone || !customerEmail || !product) {
+          const {
+            customerName,
+            customerPhone,
+            customerEmail,
+            notes,
+            orderMessage,
+            product,
+          } = body || {};
+
+          if (!customerName || !customerPhone || !product?.name || !orderMessage) {
             return Response.json(
               { success: false, message: "اطلاعات سفارش ناقص است." },
               { status: 400 },
@@ -23,53 +44,44 @@ export const Route = createFileRoute("/api/create-order")({
           const orderToken = generateOrderToken();
           const orderNumber = `VAICH-${Date.now().toString().slice(-6)}`;
 
-          const supabaseUrl = process.env.SUPABASE_URL || "https://wrbfczahtddhnlesorld.supabase.co";
-          const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+          const { supabaseAdmin } = await import(
+            "@/integrations/supabase/client.server"
+          );
 
-          if (serviceRoleKey) {
-            const res = await fetch(`${supabaseUrl}/rest/v1/orders`, {
-              method: "POST",
-              headers: {
-                "apikey": serviceRoleKey,
-                "Authorization": `Bearer ${serviceRoleKey}`,
-                "Content-Type": "application/json",
-                "Prefer": "return=representation",
-              },
-              body: JSON.stringify({
-                order_number: orderNumber,
-                customer_name: customerName,
-                customer_phone: customerPhone,
-                customer_email: customerEmail || null,
-                service: product.service || "سرویس",
-                product: product.name,
-                plan: product.name,
-                duration: product.duration || "یک ماهه",
-                final_amount: product.price || 0,
-                notes: notes || null,
-                order_token: orderToken,
-                status: "pending_receipt",
-              }),
-            });
+          const { error } = await supabaseAdmin.from("orders").insert({
+            order_token: orderToken,
+            order_number: orderNumber,
+            order_message: orderMessage,
+            product_slug: product.slug ?? null,
+            product_name: product.name,
+            amount: Math.round(Number(product.price ?? 0)),
+            customer_name: customerName,
+            customer_phone: customerPhone,
+            customer_email: customerEmail || null,
+            notes: notes || null,
+            status: "pending_receipt",
+          });
 
-            if (!res.ok) {
-              const err = await res.text();
-              console.error("Supabase insert order error:", err);
-            }
-          } else {
-            console.warn("SUPABASE_SERVICE_ROLE_KEY is not defined. Order token generated without direct DB persistence.");
+          if (error) {
+            console.error("Failed to store order:", error.message);
+            return Response.json(
+              { success: false, message: "ثبت سفارش انجام نشد." },
+              { status: 500 },
+            );
           }
 
           return Response.json({
             success: true,
             orderToken,
-            telegramUrl: `https://t.me/vaich_receipt_bot?start=${orderToken}`,
+            orderNumber,
+            telegramUrl: `https://t.me/${BOT_USERNAME}?start=${orderToken}`,
           });
         } catch (error) {
           console.error("Error creating order:", error);
           return Response.json(
             {
               success: false,
-              message: error instanceof Error ? error.message : "خطا در ثبت سفارش.",
+              message: "خطا در ثبت سفارش.",
             },
             { status: 500 },
           );

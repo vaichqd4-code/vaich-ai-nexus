@@ -228,9 +228,9 @@ function Checkout() {
           <div className="glass-panel rounded-3xl p-6">
             <div className="flex items-center gap-4">
               <ServiceIcon
-                service={product.service}
-                size="lg"
+                slug={product.slug}
               />
+
 
               <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">
@@ -574,14 +574,15 @@ function Checkout() {
                         customerPhone: customer.phone,
                         customerEmail: customer.email,
                         notes: customer.note,
+                        orderMessage,
                         product: {
+                          slug: product.slug,
                           name: product.name,
-                          service: product.service,
-                          duration: product.duration,
                           price: product.price,
                         },
                       }),
                     });
+
 
                     const data = await response.json();
                     if (data.success && data.orderToken) {
