@@ -574,14 +574,15 @@ function Checkout() {
                         customerPhone: customer.phone,
                         customerEmail: customer.email,
                         notes: customer.note,
+                        orderMessage,
                         product: {
+                          slug: product.slug,
                           name: product.name,
-                          service: product.service,
-                          duration: product.duration,
                           price: product.price,
                         },
                       }),
                     });
+
 
                     const data = await response.json();
                     if (data.success && data.orderToken) {
