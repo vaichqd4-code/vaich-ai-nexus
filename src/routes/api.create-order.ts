@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import crypto from "crypto";
 
 const BOT_USERNAME = "vaich_receipt_bot";
 
+// استفاده از Web Crypto API که با Cloudflare Workers کاملاً سازگار است
 function generateOrderToken(): string {
-  return crypto.randomBytes(16).toString("base64url");
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
+  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
 export const Route = createFileRoute("/api/create-order")({
@@ -22,6 +24,7 @@ export const Route = createFileRoute("/api/create-order")({
               slug?: string;
               name?: string;
               price?: number;
+              service?: string;
             };
           };
 
@@ -42,30 +45,34 @@ export const Route = createFileRoute("/api/create-order")({
           }
 
           const orderToken = generateOrderToken();
-          const orderNumber = `VAICH-${Date.now().toString().slice(-6)}`;
 
           const { supabaseAdmin } = await import(
             "@/integrations/supabase/client.server"
           );
 
+          // ترکیب پیام سفارش و یادداشت‌های مشتری برای ذخیره در یک ستون
+          const combinedNotes = notes 
+            ? `${orderMessage}\n\nتوضیحات مشتری: ${notes}` 
+            : orderMessage;
+
+          // درج اطلاعات با نام‌های دقیق ستون‌ها در دیتابیس ربات
           const { error } = await supabaseAdmin.from("orders").insert({
             order_token: orderToken,
-            order_number: orderNumber,
-            order_message: orderMessage,
-            product_slug: product.slug ?? null,
-            product_name: product.name,
-            amount: Math.round(Number(product.price ?? 0)),
             customer_name: customerName,
             customer_phone: customerPhone,
             customer_email: customerEmail || null,
-            notes: notes || null,
+            service_name: product.service || "سرویس VAICH", 
+            plan_name: product.name,
+            price: product.price || 0,
+            final_price: product.price || 0,
+            order_notes: combinedNotes,
             status: "pending_receipt",
           });
 
           if (error) {
-            console.error("Failed to store order:", error.message);
+            console.error("Failed to store order in Supabase:", error.message, error.details);
             return Response.json(
-              { success: false, message: "ثبت سفارش انجام نشد." },
+              { success: false, message: "ثبت سفارش در دیتابیس انجام نشد." },
               { status: 500 },
             );
           }
@@ -73,16 +80,12 @@ export const Route = createFileRoute("/api/create-order")({
           return Response.json({
             success: true,
             orderToken,
-            orderNumber,
             telegramUrl: `https://t.me/${BOT_USERNAME}?start=${orderToken}`,
           });
         } catch (error) {
           console.error("Error creating order:", error);
           return Response.json(
-            {
-              success: false,
-              message: "خطا در ثبت سفارش.",
-            },
+            { success: false, message: "خطای داخلی سرور در ثبت سفارش." },
             { status: 500 },
           );
         }
