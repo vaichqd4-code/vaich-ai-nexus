@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+const LOVABLE_ORDER_ENDPOINT = "https://project--41625677-6d09-42e4-bd38-90e55f9ea2d1.lovable.app/api/public/orders";
 const BOT_USERNAME = "vaich_receipt_bot";
 
-// استفاده از Web Crypto API که با Cloudflare Workers کاملاً سازگار است
-function generateOrderToken(): string {
+function generateSecureToken(): string {
   const array = new Uint8Array(16);
   crypto.getRandomValues(array);
-  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+  return Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
 export const Route = createFileRoute("/api/create-order")({
@@ -44,48 +44,55 @@ export const Route = createFileRoute("/api/create-order")({
             );
           }
 
-          const orderToken = generateOrderToken();
+          const orderToken = generateSecureToken();
+          const apiKey = process.env.VAICH_ORDER_API_KEY || "vaich_secret_key_987654321_secure_api";
 
-          const { supabaseAdmin } = await import(
-            "@/integrations/supabase/client.server"
-          );
-
-          // ترکیب پیام سفارش و یادداشت‌های مشتری برای ذخیره در یک ستون
-          const combinedNotes = notes 
-            ? `${orderMessage}\n\nتوضیحات مشتری: ${notes}` 
-            : orderMessage;
-
-          // درج اطلاعات با نام‌های دقیق ستون‌ها در دیتابیس ربات
-          const { error } = await supabaseAdmin.from("orders").insert({
-            order_token: orderToken,
-            customer_name: customerName,
-            customer_phone: customerPhone,
-            customer_email: customerEmail || null,
-            service_name: product.service || "سرویس VAICH", 
-            plan_name: product.name,
-            price: product.price || 0,
-            final_price: product.price || 0,
-            order_notes: combinedNotes,
-            status: "pending_receipt",
+          const response = await fetch(LOVABLE_ORDER_ENDPOINT, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": apiKey,
+            },
+            body: JSON.stringify({
+              customer_name: customerName,
+              customer_phone: customerPhone,
+              customer_email: customerEmail || "",
+              service: product.service || "سرویس هوش مصنوعی",
+              product: product.name,
+              plan: product.name,
+              duration: "ماهانه",
+              final_amount: Math.round(Number(product.price ?? 0)),
+              notes: notes ? `${orderMessage}\n\nتوضیحات مشتری: ${notes}` : orderMessage,
+              order_token: orderToken,
+            }),
           });
 
-          if (error) {
-            console.error("Failed to store order in Supabase:", error.message, error.details);
+          if (!response.ok) {
+            const errData = await response.text();
+            console.error("Lovable API Error:", response.status, errData);
             return Response.json(
-              { success: false, message: "ثبت سفارش در دیتابیس انجام نشد." },
+              { success: false, message: "ثبت سفارش در سرور ربات با خطا مواجه شد." },
               { status: 500 },
             );
           }
 
+          const result = (await response.json()) as {
+            ok: boolean;
+            order_number?: string;
+            order_token?: string;
+            telegram_link?: string;
+          };
+
           return Response.json({
             success: true,
-            orderToken,
-            telegramUrl: `https://t.me/${BOT_USERNAME}?start=${orderToken}`,
+            orderToken: result.order_token || orderToken,
+            orderNumber: result.order_number,
+            telegramUrl: result.telegram_link || `https://t.me/${BOT_USERNAME}?start=${orderToken}`,
           });
         } catch (error) {
-          console.error("Error creating order:", error);
+          console.error("Error connecting to order endpoint:", error);
           return Response.json(
-            { success: false, message: "خطای داخلی سرور در ثبت سفارش." },
+            { success: false, message: "خطای سرور در ثبت سفارش." },
             { status: 500 },
           );
         }
@@ -93,3 +100,4 @@ export const Route = createFileRoute("/api/create-order")({
     },
   },
 });
+            
