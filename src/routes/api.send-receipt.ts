@@ -27,8 +27,9 @@ export const Route = createFileRoute("/api/send-receipt")({
 
           // فقط تست تلگرام
           if (platform === "telegram") {
-            const token = process.env.TELEGRAM_BOT_TOKEN;
-            const chatId = process.env.TELEGRAM_CHAT_ID;
+            const token = process.env["TELEGRAM_BOT_TOKEN"];
+            const chatId = process.env["TELEGRAM_CHAT_ID"];
+
 
             if (!token || !chatId) {
               return Response.json(

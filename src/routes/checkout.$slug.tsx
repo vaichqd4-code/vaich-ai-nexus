@@ -228,9 +228,9 @@ function Checkout() {
           <div className="glass-panel rounded-3xl p-6">
             <div className="flex items-center gap-4">
               <ServiceIcon
-                service={product.service}
-                size="lg"
+                slug={product.slug}
               />
+
 
               <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">
