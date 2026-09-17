@@ -97,7 +97,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap",
       },
-      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "icon", type: "image/png", href: "/IMG_20260917_205116.png" },
     ],
   }),
   shellComponent: RootShell,
@@ -128,11 +128,10 @@ function RootComponent() {
       <div className="flex min-h-screen flex-col">
         <Header />
         <main className="flex-1">
-          {/* Required: nested routes render here. */}
           <Outlet />
         </main>
         <Footer />
       </div>
     </QueryClientProvider>
   );
-}
+    }
