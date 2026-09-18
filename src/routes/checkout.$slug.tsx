@@ -231,7 +231,6 @@ function Checkout() {
                 slug={product.slug}
               />
 
-
               <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">
                   سرویس
@@ -541,7 +540,8 @@ function Checkout() {
               </button>
             )}
           </div>
-                    <div className="glass-panel rounded-3xl p-6">
+
+          <div className="glass-panel rounded-3xl p-6">
             <h2 className="text-lg font-bold">
               ارسال رسید
             </h2>
@@ -566,7 +566,12 @@ function Checkout() {
 
                   setIsSubmitting(true);
                   try {
-                    const response = await fetch("/api/create-order", {
+                    // کپی کردن خودکار متن فاکتور در کلیپ‌بورد کاربر
+                    try {
+                      await navigator.clipboard.writeText(orderMessage);
+                    } catch {}
+
+                    await fetch("/api/create-order", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({
@@ -583,29 +588,15 @@ function Checkout() {
                       }),
                     });
 
+                    setSubmitted(true);
 
-                    const data = await response.json();
-                    if (data.success && data.orderToken) {
-                      setSubmitted(true);
-                      window.open(
-                        data.telegramUrl || `https://t.me/vaich_receipt_bot?start=${data.orderToken}`,
-                        "_blank",
-                        "noopener,noreferrer",
-                      );
-                    } else {
-                      window.open(
-                        "https://t.me/vaich_receipt_bot",
-                        "_blank",
-                        "noopener,noreferrer",
-                      );
-                    }
+                    // باز کردن مستقیم صفحه گفتگوی ربات جدید همراه با قرار گرفتن خودکار متن در کادر پیام
+                    const encodedText = encodeURIComponent(orderMessage);
+                    window.location.href = `https://t.me/vaich_new_receipt_bot?text=${encodedText}`;
                   } catch (err) {
                     console.error("Failed to create order:", err);
-                    window.open(
-                      "https://t.me/vaich_receipt_bot",
-                      "_blank",
-                      "noopener,noreferrer",
-                    );
+                    const encodedText = encodeURIComponent(orderMessage);
+                    window.location.href = `https://t.me/vaich_new_receipt_bot?text=${encodedText}`;
                   } finally {
                     setIsSubmitting(false);
                   }
@@ -642,4 +633,4 @@ function Checkout() {
       </div>
     </Section>
   );
-                      }
+                    }
