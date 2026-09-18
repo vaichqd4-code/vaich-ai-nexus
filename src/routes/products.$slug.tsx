@@ -57,10 +57,6 @@ function ProductDetail() {
                     {info}
                   </li>
                 ))}
-                <li className="rounded-2xl border border-border bg-background/40 px-4 py-3 text-sm leading-7 text-muted-foreground">
-                  درگاه پرداخت آنلاین هنوز متصل نشده است؛ پس از ثبت سفارش، پرداخت از طریق پشتیبانی
-                  هماهنگ می‌شود.
-                </li>
               </ul>
             </div>
           </div>
