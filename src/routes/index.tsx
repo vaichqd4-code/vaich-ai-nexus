@@ -1,88 +1,94 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Section } from "@/components/layout/Section";
+import { useEffect, useState } from "react";
+import { Search } from "lucide-react";
+import { products } from "@/lib/products";
 import { ProductCard } from "@/components/product/ProductCard";
+import { Section } from "@/components/layout/Section";
 import { Features } from "@/components/sections/Features";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { Trust } from "@/components/sections/Trust";
 import { Faq } from "@/components/sections/Faq";
 import { SupportCta } from "@/components/sections/SupportCta";
-import { NeonLink } from "@/components/ui/NeonButton";
-import { products } from "@/lib/products";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "VAICH | خرید اشتراک هوش مصنوعی" },
-      {
-        name: "description",
-        content:
-          "VAICH ارائه‌دهنده اشتراک سرویس‌های هوش مصنوعی Gemini، ChatGPT و Claude با پشتیبانی و قیمت شفاف.",
-      },
-      { property: "og:title", content: "VAICH | خرید اشتراک هوش مصنوعی" },
-      {
-        property: "og:description",
-        content: "اشتراک سرویس‌های قدرتمند هوش مصنوعی را با VAICH تجربه کنید.",
-      },
-    ],
-  }),
-  component: Home,
+  component: IndexPage,
 });
 
-function Hero() {
+function IndexPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // دریافت همگام جستجو از کادر هدر بالای سایت
+  useEffect(() => {
+    const handleHeaderSearch = (event: Event) => {
+      const customEvent = event as CustomEvent<string>;
+      setSearchQuery(customEvent.detail || "");
+    };
+
+    window.addEventListener("header-search", handleHeaderSearch);
+    return () => {
+      window.removeEventListener("header-search", handleHeaderSearch);
+    };
+  }, []);
+
+  // فیلتر کاملاً داینامیک روی آرایه محصولات (پشتیبانی خودکار از محصولات جدید)
+  const filteredProducts = products.filter((product) => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return true;
+
+    return (
+      product.name.toLowerCase().includes(query) ||
+      (product.service && product.service.toLowerCase().includes(query)) ||
+      (product.description && product.description.toLowerCase().includes(query)) ||
+      (product.duration && product.duration.toLowerCase().includes(query))
+    );
+  });
+
   return (
-    <section className="aurora relative overflow-hidden">
-      <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-14 pb-8 sm:px-6 sm:pt-20 lg:grid-cols-2 lg:pt-24">
-        <div className="rise-in">
-          <span className="glass-panel inline-flex items-center rounded-full px-4 py-1.5 text-xs text-muted-foreground">
-            فروشگاه اشتراک‌های هوش مصنوعی
-          </span>
-          <h1 className="mt-6 text-3xl leading-[1.5] font-extrabold sm:text-5xl sm:leading-[1.35]">
-            دنیای هوش مصنوعی، <span className="gradient-text">یک قدم نزدیک‌تر</span>
+    <div className="flex flex-col gap-12 pb-16">
+      {/* بخش اصلی معرفی سایت */}
+      <section className="relative overflow-hidden py-16 text-center">
+        <div className="container mx-auto max-w-4xl px-4">
+          <h1 className="text-3xl font-black tracking-tight sm:text-5xl">
+            دسترسی سریع و امن به <span className="text-neon-blue">سرویس‌های هوش مصنوعی</span>
           </h1>
-          <p className="mt-5 max-w-xl text-sm leading-8 text-muted-foreground sm:text-base">
-            اشتراک سرویس‌های قدرتمند هوش مصنوعی را با VAICH تجربه کنید.
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+            خرید اشتراک معتبر و اختصاصی ChatGPT، Gemini، Claude و برترین ابزارهای هوش مصنوعی با پشتیبانی دائمی VAICH.
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <NeonLink to="/products" size="lg">
-              مشاهده محصولات
-            </NeonLink>
-            <NeonLink to="/support" variant="outline" size="lg">
-              پشتیبانی
-            </NeonLink>
-          </div>
         </div>
+      </section>
 
-        <div className="relative">
-          <div className="float-slow glow-strong overflow-hidden rounded-4xl border border-border">
-            <img
-              src="/317630163_1789657188376603.jpg"
-              alt="پلتفرم اشتراک هوش مصنوعی VAICH"
-              width={1536}
-              height={1152}
-              className="h-full w-full object-cover"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Home() {
-  return (
-    <>
-      <Hero />
-
+      {/* بخش محصولات با کادر سرچ دائمی و شیک */}
       <Section
         id="products"
-        title="اشتراک‌های هوش مصنوعی"
-        subtitle="سرویس مورد نظر خود را انتخاب کنید."
+        title="محصولات و اشتراک‌ها"
+        subtitle="پلن مورد نظر خود را انتخاب کرده و سفارش را ثبت نمایید"
       >
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {products.map((p) => (
-            <ProductCard key={p.slug} product={p} />
-          ))}
+        <div className="mx-auto mb-8 max-w-md">
+          <div className="relative flex items-center">
+            <input
+              type="text"
+              placeholder="جستجو در تمام محصولات و سرویس‌ها..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full rounded-2xl border border-border bg-background/60 py-3 pl-10 pr-4 text-sm outline-none transition-colors focus:border-neon-blue/70"
+            />
+            <Search className="absolute left-3.5 h-4 w-4 text-muted-foreground pointer-events-none" />
+          </div>
         </div>
+
+        {filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredProducts.map((product) => (
+              <ProductCard key={product.slug} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-3xl border border-border/60 bg-card/40 p-8 text-center">
+            <p className="text-sm text-muted-foreground">
+              هیچ محصولی مطابق با عبارت «{searchQuery}» پیدا نشد.
+            </p>
+          </div>
+        )}
       </Section>
 
       <Features />
@@ -90,6 +96,6 @@ function Home() {
       <Trust />
       <Faq />
       <SupportCta />
-    </>
+    </div>
   );
 }
