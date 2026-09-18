@@ -73,6 +73,7 @@ function Checkout() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [attempted, setAttempted] = useState(false);
+  const [instructionBanner, setInstructionBanner] = useState(false);
 
   const [customer, setCustomer] = useState<CustomerInfo>({
     fullName: "",
@@ -119,15 +120,13 @@ function Checkout() {
       }));
     };
 
-  const vibrate = () => {
+  const vibrate = (pattern: number | number[] = 200) => {
     if ("vibrate" in navigator) {
-      navigator.vibrate(200);
+      navigator.vibrate(pattern);
     }
   };
 
-  const goToField = (
-    element: HTMLElement | null,
-  ) => {
+  const goToField = (element: HTMLElement | null) => {
     if (!element) return;
 
     element.scrollIntoView({
@@ -145,19 +144,19 @@ function Checkout() {
     setSubmitted(false);
 
     if (customer.fullName.trim().length === 0) {
-      vibrate();
+      vibrate(200);
       goToField(nameRef.current);
       return false;
     }
 
     if (customer.phone.trim().length === 0) {
-      vibrate();
+      vibrate(200);
       goToField(phoneRef.current);
       return false;
     }
 
     if (customer.email.trim().length === 0) {
-      vibrate();
+      vibrate(200);
       goToField(emailRef.current);
       return false;
     }
@@ -169,10 +168,7 @@ function Checkout() {
     try {
       await navigator.clipboard.writeText(CARD_NUMBER);
       setCopied(true);
-
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
+      setTimeout(() => setCopied(false), 2000);
     } catch {
       setCopied(false);
     }
@@ -182,10 +178,7 @@ function Checkout() {
     try {
       await navigator.clipboard.writeText(orderMessage);
       setMsgCopied(true);
-
-      setTimeout(() => {
-        setMsgCopied(false);
-      }, 2500);
+      setTimeout(() => setMsgCopied(false), 2500);
     } catch {
       setMsgCopied(false);
     }
@@ -195,9 +188,7 @@ function Checkout() {
     if (!file) return;
 
     if (!/^image\/(jpeg|jpg|png)$/i.test(file.type)) {
-      setFileError(
-        "لطفاً فقط تصویر با فرمت JPG، JPEG یا PNG انتخاب کنید.",
-      );
+      setFileError("لطفاً فقط تصویر با فرمت JPG، JPEG یا PNG انتخاب کنید.");
       setReceiptFile(null);
       return;
     }
@@ -208,10 +199,7 @@ function Checkout() {
     setSubmitted(false);
 
     setPreview((old) => {
-      if (old) {
-        URL.revokeObjectURL(old);
-      }
-
+      if (old) URL.revokeObjectURL(old);
       return URL.createObjectURL(file);
     });
   };
@@ -224,158 +212,86 @@ function Checkout() {
     >
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
         <div className="space-y-5">
-
           <div className="glass-panel rounded-3xl p-6">
             <div className="flex items-center gap-4">
-              <ServiceIcon
-                slug={product.slug}
-              />
+              <ServiceIcon slug={product.slug} />
 
               <div className="min-w-0">
-                <p className="text-xs text-muted-foreground">
-                  سرویس
-                </p>
-
-                <h1 className="truncate text-xl font-bold">
-                  {product.name}
-                </h1>
-
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {product.duration}
-                </p>
+                <p className="text-xs text-muted-foreground">سرویس</p>
+                <h1 className="truncate text-xl font-bold">{product.name}</h1>
+                <p className="mt-1 text-sm text-muted-foreground">{product.duration}</p>
               </div>
 
               <div className="mr-auto text-left">
-                <p className="text-xs text-muted-foreground">
-                  مبلغ
-                </p>
-
-                <p className="text-lg font-bold text-neon-blue">
-                  {formatPrice(product.price)}
-                </p>
+                <p className="text-xs text-muted-foreground">مبلغ</p>
+                <p className="text-lg font-bold text-neon-blue">{formatPrice(product.price)}</p>
               </div>
             </div>
           </div>
 
           <div className="glass-panel rounded-3xl p-6">
-            <h2 className="text-lg font-bold">
-              اطلاعات مشتری
-            </h2>
+            <h2 className="text-lg font-bold">اطلاعات مشتری</h2>
 
             <div className="mt-5 space-y-4">
               <div>
-                <label
-                  htmlFor="fullName"
-                  className="text-sm font-medium"
-                >
+                <label htmlFor="fullName" className="text-sm font-medium">
                   نام و نام خانوادگی
                 </label>
-
                 <input
                   ref={nameRef}
                   id="fullName"
                   type="text"
                   value={customer.fullName}
-                  onChange={(event) =>
-                    setField("fullName")(event.target.value)
-                  }
-                  className={`${fieldClass} ${
-                    nameError
-                      ? "border-red-500 focus:border-red-500"
-                      : ""
-                  }`}
+                  onChange={(e) => setField("fullName")(e.target.value)}
+                  className={`${fieldClass} ${nameError ? "border-red-500 focus:border-red-500" : ""}`}
                   placeholder="نام و نام خانوادگی"
                 />
-
-                {nameError ? (
-                  <p className="mt-2 text-xs text-red-500">
-                    {nameError}
-                  </p>
-                ) : null}
+                {nameError ? <p className="mt-2 text-xs text-red-500">{nameError}</p> : null}
               </div>
 
               <div>
-                <label
-                  htmlFor="phone"
-                  className="text-sm font-medium"
-                >
+                <label htmlFor="phone" className="text-sm font-medium">
                   شماره تماس
                 </label>
-
                 <input
                   ref={phoneRef}
                   id="phone"
                   type="tel"
                   inputMode="tel"
                   value={customer.phone}
-                  onChange={(event) =>
-                    setField("phone")(event.target.value)
-                  }
-                  className={`${fieldClass} ${
-                    phoneError
-                      ? "border-red-500 focus:border-red-500"
-                      : ""
-                  }`}
+                  onChange={(e) => setField("phone")(e.target.value)}
+                  className={`${fieldClass} ${phoneError ? "border-red-500 focus:border-red-500" : ""}`}
                   placeholder="0912..."
                   dir="ltr"
                 />
-
-                {phoneError ? (
-                  <p className="mt-2 text-xs text-red-500">
-                    {phoneError}
-                  </p>
-                ) : null}
+                {phoneError ? <p className="mt-2 text-xs text-red-500">{phoneError}</p> : null}
               </div>
 
               <div>
-                <label
-                  htmlFor="email"
-                  className="text-sm font-medium"
-                >
+                <label htmlFor="email" className="text-sm font-medium">
                   ایمیل
                 </label>
-
                 <input
                   ref={emailRef}
                   id="email"
                   type="email"
                   value={customer.email}
-                  onChange={(event) =>
-                    setField("email")(event.target.value)
-                  }
-                  className={`${fieldClass} ${
-                    emailError
-                      ? "border-red-500 focus:border-red-500"
-                      : ""
-                  }`}
+                  onChange={(e) => setField("email")(e.target.value)}
+                  className={`${fieldClass} ${emailError ? "border-red-500 focus:border-red-500" : ""}`}
                   placeholder="example@email.com"
                   dir="ltr"
                 />
-
-                {emailError ? (
-                  <p className="mt-2 text-xs text-red-500">
-                    {emailError}
-                  </p>
-                ) : null}
+                {emailError ? <p className="mt-2 text-xs text-red-500">{emailError}</p> : null}
               </div>
 
               <div>
-                <label
-                  htmlFor="note"
-                  className="text-sm font-medium"
-                >
-                  توضیحات
-                  <span className="mr-1 text-xs text-muted-foreground">
-                    (اختیاری)
-                  </span>
+                <label htmlFor="note" className="text-sm font-medium">
+                  توضیحات <span className="mr-1 text-xs text-muted-foreground">(اختیاری)</span>
                 </label>
-
                 <textarea
                   id="note"
                   value={customer.note}
-                  onChange={(event) =>
-                    setField("note")(event.target.value)
-                  }
+                  onChange={(e) => setField("note")(e.target.value)}
                   className={`${fieldClass} min-h-24 resize-y`}
                   placeholder="اگر توضیحی دارید بنویسید..."
                 />
@@ -384,64 +300,31 @@ function Checkout() {
           </div>
 
           <aside className="h-fit space-y-4 rounded-3xl border border-border bg-card/70 p-6">
-            <h2 className="text-base font-bold">
-              اطلاعات پرداخت
-            </h2>
+            <h2 className="text-base font-bold">اطلاعات پرداخت</h2>
 
             <div className="rounded-2xl border border-border bg-background/50 p-4">
-              <p className="text-xs text-muted-foreground">
-                مبلغ قابل پرداخت
-              </p>
-
-              <p className="mt-2 text-2xl font-bold text-neon-blue">
-                {formatPrice(product.price)}
-              </p>
+              <p className="text-xs text-muted-foreground">مبلغ قابل پرداخت</p>
+              <p className="mt-2 text-2xl font-bold text-neon-blue">{formatPrice(product.price)}</p>
             </div>
 
             <div className="rounded-2xl border border-border bg-background/50 p-4">
-              <p className="text-xs text-muted-foreground">
-                شماره کارت
-              </p>
-
-              <p
-                className="mt-2 text-lg font-bold tracking-wider"
-                dir="ltr"
-              >
+              <p className="text-xs text-muted-foreground">شماره کارت</p>
+              <p className="mt-2 text-lg font-bold tracking-wider" dir="ltr">
                 {CARD_NUMBER_GROUPED}
               </p>
-
-              <p className="mt-2 text-sm text-muted-foreground">
-                به نام {CARD_HOLDER}
-              </p>
-
-              <NeonButton
-                variant="outline"
-                size="sm"
-                className="mt-4 w-full"
-                onClick={copyCard}
-              >
+              <p className="mt-2 text-sm text-muted-foreground">به نام {CARD_HOLDER}</p>
+              <NeonButton variant="outline" size="sm" className="mt-4 w-full" onClick={copyCard}>
                 {copied ? "شماره کارت کپی شد ✓" : "کپی شماره کارت"}
               </NeonButton>
             </div>
 
             <div className="rounded-2xl border border-border bg-background/50 p-4">
-              <p className="text-xs text-muted-foreground">
-                متن سفارش
-              </p>
-
+              <p className="text-xs text-muted-foreground">متن سفارش</p>
               <pre className="mt-3 whitespace-pre-wrap text-xs leading-6 text-muted-foreground">
                 {orderMessage}
               </pre>
-
-              <NeonButton
-                variant="outline"
-                size="sm"
-                className="mt-4 w-full"
-                onClick={copyMessage}
-              >
-                {msgCopied
-                  ? "متن سفارش کپی شد ✓"
-                  : "کپی متن کامل سفارش"}
+              <NeonButton variant="outline" size="sm" className="mt-4 w-full" onClick={copyMessage}>
+                {msgCopied ? "متن سفارش کپی شد ✓" : "کپی متن کامل سفارش"}
               </NeonButton>
             </div>
           </aside>
@@ -449,18 +332,13 @@ function Checkout() {
           <div className="glass-panel rounded-3xl p-6">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <h2 className="text-lg font-bold">
-                  تصویر رسید پرداخت
-                </h2>
-
-                <p className="mt-1 text-xs text-muted-foreground">
-                  JPG، JPEG یا PNG
-                </p>
+                <h2 className="text-lg font-bold">تصویر رسید پرداخت</h2>
+                <p className="mt-1 text-xs text-muted-foreground">JPG، JPEG یا PNG</p>
               </div>
 
               <button
                 type="button"
-                onClick={() => setShowUpload((value) => !value)}
+                onClick={() => setShowUpload((v) => !v)}
                 className="text-sm text-neon-blue"
               >
                 {showUpload ? "بستن" : "انتخاب تصویر"}
@@ -490,9 +368,9 @@ function Checkout() {
                   type="file"
                   accept={ACCEPTED}
                   className="hidden"
-                  onChange={(event) => {
-                    onPick(event.target.files?.[0]);
-                    event.target.value = "";
+                  onChange={(e) => {
+                    onPick(e.target.files?.[0]);
+                    e.target.value = "";
                   }}
                 />
 
@@ -502,19 +380,15 @@ function Checkout() {
                   accept={ACCEPTED}
                   capture="environment"
                   className="hidden"
-                  onChange={(event) => {
-                    onPick(event.target.files?.[0]);
-                    event.target.value = "";
+                  onChange={(e) => {
+                    onPick(e.target.files?.[0]);
+                    e.target.value = "";
                   }}
                 />
               </div>
             ) : null}
 
-            {fileError ? (
-              <p className="mt-3 text-xs text-red-500">
-                {fileError}
-              </p>
-            ) : null}
+            {fileError ? <p className="mt-3 text-xs text-red-500">{fileError}</p> : null}
 
             {preview ? (
               <div className="mt-5 overflow-hidden rounded-2xl border border-border">
@@ -523,7 +397,6 @@ function Checkout() {
                   alt="پیش‌نمایش رسید پرداخت"
                   className="max-h-[420px] w-full object-contain"
                 />
-
                 {fileName ? (
                   <p className="border-t border-border p-3 text-xs text-muted-foreground">
                     {fileName}
@@ -542,9 +415,7 @@ function Checkout() {
           </div>
 
           <div className="glass-panel rounded-3xl p-6">
-            <h2 className="text-lg font-bold">
-              ارسال رسید
-            </h2>
+            <h2 className="text-lg font-bold">ارسال رسید</h2>
 
             <p className="mt-2 text-sm text-muted-foreground">
               برای ارسال رسید، وارد ربات تلگرام VAICH شوید.
@@ -554,6 +425,12 @@ function Checkout() {
               <p className="mt-4 rounded-2xl border border-border bg-background/50 p-4 text-xs leading-7 text-muted-foreground">
                 ابتدا نام، شماره تماس و ایمیل خود را وارد کنید.
               </p>
+            ) : null}
+
+            {instructionBanner ? (
+              <div className="mt-4 animate-pulse rounded-2xl border-2 border-red-500 bg-red-950/40 p-4 text-center text-sm font-bold text-red-200">
+                🚨 متن سفارش کپی شد! در ربات دکمه Start را بزنید و سپس متن را Paste (جای‌گذاری) کنید.
+              </div>
             ) : null}
 
             <div className="mt-4">
@@ -566,10 +443,16 @@ function Checkout() {
 
                   setIsSubmitting(true);
                   try {
-                    // کپی کردن خودکار متن فاکتور در کلیپ‌بورد کاربر
+                    // ویبره برای جلب توجه کاربر
+                    vibrate([100, 50, 200]);
+
+                    // کپی کردن خودکار فاکتور در حافظه گوشی کاربر
                     try {
                       await navigator.clipboard.writeText(orderMessage);
                     } catch {}
+
+                    // نمایش پیام هشدار قرمز راهنما
+                    setInstructionBanner(true);
 
                     await fetch("/api/create-order", {
                       method: "POST",
@@ -590,13 +473,13 @@ function Checkout() {
 
                     setSubmitted(true);
 
-                    // باز کردن مستقیم صفحه گفتگوی ربات جدید همراه با قرار گرفتن خودکار متن در کادر پیام
-                    const encodedText = encodeURIComponent(orderMessage);
-                    window.location.href = `https://t.me/vaich_new_receipt_bot?text=${encodedText}`;
+                    // ریدایرکت مستقیم و تمیز به چت ربات
+                    setTimeout(() => {
+                      window.location.href = "https://t.me/vaich_new_receipt_bot";
+                    }, 1200);
                   } catch (err) {
                     console.error("Failed to create order:", err);
-                    const encodedText = encodeURIComponent(orderMessage);
-                    window.location.href = `https://t.me/vaich_new_receipt_bot?text=${encodedText}`;
+                    window.location.href = "https://t.me/vaich_new_receipt_bot";
                   } finally {
                     setIsSubmitting(false);
                   }
@@ -605,19 +488,15 @@ function Checkout() {
                   "outline",
                   "xl",
                   "w-full border-transparent bg-purple-600 text-white hover:bg-purple-700 hover:text-white",
-                )} ${
-                  isReady && !isSubmitting ? "" : "opacity-50"
-                }`}
+                )} ${isReady && !isSubmitting ? "" : "opacity-50"}`}
               >
-                {isSubmitting ? "در حال ثبت و اتصال به ربات..." : "🤖 ارسال رسید در ربات"}
+                {isSubmitting ? "در حال کپی و انتقال به ربات..." : "🤖 ارسال رسید در ربات"}
               </button>
             </div>
 
             <p className="mt-4 rounded-2xl border border-border bg-background/50 p-4 text-xs leading-7 text-muted-foreground">
-              با انتخاب این دکمه وارد ربات تلگرام VAICH شوید و رسید پرداخت را در ربات ارسال کنید.
-              <span dir="ltr">
-                {" "}@{CONTACT_TELEGRAM_ID}
-              </span>
+              با انتخاب این دکمه متن فاکتور کپی شده و مستقیماً وارد ربات تلگرام VAICH می‌شوید.
+              <span dir="ltr"> @{CONTACT_TELEGRAM_ID}</span>
             </p>
 
             {submitted ? (
@@ -625,7 +504,7 @@ function Checkout() {
                 role="status"
                 className="mt-5 rounded-2xl border border-neon-blue/50 bg-background/60 p-4 text-sm leading-8"
               >
-                اطلاعات سفارش با موفقیت ارسال شد.
+                اطلاعات با موفقیت آماده شد و در حال انتقال به تلگرام هستید...
               </p>
             ) : null}
           </div>
@@ -633,4 +512,4 @@ function Checkout() {
       </div>
     </Section>
   );
-                    }
+    }
