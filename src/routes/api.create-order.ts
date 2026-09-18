@@ -45,49 +45,90 @@ export const Route = createFileRoute("/api/create-order")({
           }
 
           const orderToken = generateSecureToken();
+          const fullNotes = notes
+            ? `${orderMessage}\n\nتوضیحات مشتری: ${notes}`
+            : orderMessage;
           const apiKey = process.env["VAICH_ORDER_API_KEY"] || "vaich_secret_key_987654321_secure_api";
 
-          const response = await fetch(LOVABLE_ORDER_ENDPOINT, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-api-key": apiKey,
-            },
-            body: JSON.stringify({
-              customer_name: customerName,
-              customer_phone: customerPhone,
-              customer_email: customerEmail || "",
-              service: product.service || "سرویس هوش مصنوعی",
-              product: product.name,
-              plan: product.name,
-              duration: "ماهانه",
-              final_amount: Math.round(Number(product.price ?? 0)),
-              notes: notes ? `${orderMessage}\n\nتوضیحات مشتری: ${notes}` : orderMessage,
-              order_token: orderToken,
-            }),
+          const orderNumber = `VA-${Date.now().toString().slice(-8)}`;
+
+          // 1) Always persist locally so the VAICH receipt bot can identify the order.
+          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+          const { error: dbError } = await supabaseAdmin.from("orders").insert({
+            order_token: orderToken,
+            order_number: orderNumber,
+            order_message: fullNotes,
+            product_slug: product.slug ?? null,
+            product_name: product.name,
+            amount: Math.round(Number(product.price ?? 0)),
+            customer_name: customerName,
+            customer_phone: customerPhone,
+            customer_email: customerEmail || null,
+            notes: notes || null,
+            status: "pending_receipt",
           });
 
-          if (!response.ok) {
-            const errData = await response.text();
-            console.error("Lovable API Error:", response.status, errData);
+          if (dbError) {
+            console.error("Order insert failed:", dbError.message);
             return Response.json(
-              { success: false, message: "ثبت سفارش در سرور ربات با خطا مواجه شد." },
+              { success: false, message: "ثبت سفارش با خطا مواجه شد." },
               { status: 500 },
             );
           }
 
-          const result = (await response.json()) as {
-            ok: boolean;
-            order_number?: string;
-            order_token?: string;
-            telegram_link?: string;
-          };
+          // 2) Best-effort mirror to the external bot endpoint; never blocks the user.
+          let externalOrderNumber: string | undefined;
+          let externalTelegramLink: string | undefined;
+
+          try {
+            const response = await fetch(LOVABLE_ORDER_ENDPOINT, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-api-key": apiKey,
+              },
+              body: JSON.stringify({
+                customer_name: customerName,
+                customer_phone: customerPhone,
+                customer_email: customerEmail || "",
+                service: product.service || "سرویس هوش مصنوعی",
+                product: product.name,
+                plan: product.name,
+                plan_name: product.name,
+                duration: "ماهانه",
+                final_amount: Math.round(Number(product.price ?? 0)),
+                notes: fullNotes,
+                order_notes: fullNotes,
+                order_message: orderMessage,
+                order_token: orderToken,
+              }),
+            });
+
+            if (response.ok) {
+              const result = (await response.json()) as {
+                order_number?: string;
+                telegram_link?: string;
+              };
+              externalOrderNumber = result.order_number;
+              externalTelegramLink = result.telegram_link;
+            } else {
+              console.error(
+                "External order endpoint error:",
+                response.status,
+                await response.text(),
+              );
+            }
+          } catch (mirrorError) {
+            console.error("External order endpoint unreachable:", mirrorError);
+          }
 
           return Response.json({
             success: true,
-            orderToken: result.order_token || orderToken,
-            orderNumber: result.order_number,
-            telegramUrl: result.telegram_link || `https://t.me/${BOT_USERNAME}?start=${orderToken}`,
+            orderToken,
+            orderNumber: externalOrderNumber || orderNumber,
+            telegramUrl:
+              externalTelegramLink || `https://t.me/${BOT_USERNAME}?start=${orderToken}`,
           });
         } catch (error) {
           console.error("Error connecting to order endpoint:", error);
