@@ -49,7 +49,7 @@ export const Route = createFileRoute("/api/create-order")({
             ? `${orderMessage}\n\nتوضیحات مشتری: ${notes}`
             : orderMessage;
 
-          // ذخیره محلی سفارش در دیتابیس
+          // ذخیره در جدول orders تا ربات بتواند با توکن سفارش را فراخوانی کند
           try {
             const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
             await supabaseAdmin.from("orders").insert({
@@ -69,8 +69,8 @@ export const Route = createFileRoute("/api/create-order")({
             console.error("Local order insert warning:", dbErr);
           }
 
-          // انتقال مستقیم به صفحه گفتگوی ربات به همراه توکن سفارش
-          const telegramUrl = `https://t.me/${BOT_USERNAME}?start=new_order_${orderToken}`;
+          // هدایت مستقیم کاربر به چت ربات با پارامتر اختصاصی سفارش
+          const telegramUrl = `https://t.me/${BOT_USERNAME}?start=${orderToken}`;
 
           return Response.json({
             success: true,
@@ -89,3 +89,4 @@ export const Route = createFileRoute("/api/create-order")({
     },
   },
 });
+              
