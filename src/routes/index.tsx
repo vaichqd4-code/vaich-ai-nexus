@@ -1,43 +1,86 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { products } from "@/lib/products";
-import { ProductCard } from "@/components/product/ProductCard";
 import { Section } from "@/components/layout/Section";
+import { ProductCard } from "@/components/product/ProductCard";
 import { Features } from "@/components/sections/Features";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { Trust } from "@/components/sections/Trust";
 import { Faq } from "@/components/sections/Faq";
 import { SupportCta } from "@/components/sections/SupportCta";
+import { NeonLink } from "@/components/ui/NeonButton";
+import { products } from "@/lib/products";
 
 export const Route = createFileRoute("/")({
-  component: IndexPage,
+  head: () => ({
+    meta: [
+      { title: "VAICH | خرید اشتراک هوش مصنوعی" },
+      {
+        name: "description",
+        content:
+          "VAICH ارائه‌دهنده اشتراک سرویس‌های هوش مصنوعی Gemini، ChatGPT و Claude با پشتیبانی و قیمت شفاف.",
+      },
+      { property: "og:title", content: "VAICH | خرید اشتراک هوش مصنوعی" },
+      {
+        property: "og:description",
+        content: "اشتراک سرویس‌های قدرتمند هوش مصنوعی را با VAICH تجربه کنید.",
+      },
+    ],
+  }),
+  component: Home,
 });
 
-function IndexPage() {
+function Hero() {
   return (
-    <div className="flex flex-col gap-12 pb-16">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-16 text-center">
-        <div className="container mx-auto max-w-4xl px-4">
-          <h1 className="text-3xl font-black tracking-tight sm:text-5xl">
-            دسترسی سریع و امن به{" "}
-            <span className="text-neon-blue">سرویس‌های هوش مصنوعی</span>
+    <section className="aurora relative overflow-hidden">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-14 pb-8 sm:px-6 sm:pt-20 lg:grid-cols-2 lg:pt-24">
+        <div className="rise-in">
+          <span className="glass-panel inline-flex items-center rounded-full px-4 py-1.5 text-xs text-muted-foreground">
+            فروشگاه اشتراک‌های هوش مصنوعی
+          </span>
+          <h1 className="mt-6 text-3xl leading-[1.5] font-extrabold sm:text-5xl sm:leading-[1.35]">
+            دنیای هوش مصنوعی، <span className="gradient-text">یک قدم نزدیک‌تر</span>
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-            خرید اشتراک معتبر و اختصاصی ChatGPT، Gemini، Claude و برترین
-            ابزارهای هوش مصنوعی با پشتیبانی دائمی VAICH.
+          <p className="mt-5 max-w-xl text-sm leading-8 text-muted-foreground sm:text-base">
+            اشتراک سرویس‌های قدرتمند هوش مصنوعی را با VAICH تجربه کنید.
           </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <NeonLink to="/products" size="lg">
+              مشاهده محصولات
+            </NeonLink>
+            <NeonLink to="/support" variant="outline" size="lg">
+              پشتیبانی
+            </NeonLink>
+          </div>
         </div>
-      </section>
 
-      {/* Products Section */}
+        <div className="relative">
+          <div className="float-slow glow-strong overflow-hidden rounded-4xl border border-border">
+            <img
+              src="/317630163_1789657188376603.jpg"
+              alt="پلتفرم اشتراک هوش مصنوعی VAICH"
+              width={1536}
+              height={1152}
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Home() {
+  return (
+    <>
+      <Hero />
+
       <Section
         id="products"
-        title="محصولات و اشتراک‌ها"
-        subtitle="پلن مورد نظر خود را انتخاب کرده و سفارش را ثبت نمایید"
+        title="اشتراک‌های هوش مصنوعی"
+        subtitle="سرویس مورد نظر خود را انتخاب کنید."
       >
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
-            <ProductCard key={product.slug} product={product} />
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {products.map((p) => (
+            <ProductCard key={p.slug} product={p} />
           ))}
         </div>
       </Section>
@@ -47,6 +90,6 @@ function IndexPage() {
       <Trust />
       <Faq />
       <SupportCta />
-    </div>
+    </>
   );
 }
