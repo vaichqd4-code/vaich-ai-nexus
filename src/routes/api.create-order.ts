@@ -45,7 +45,7 @@ export const Route = createFileRoute("/api/create-order")({
           }
 
           const orderToken = generateSecureToken();
-          const apiKey = process.env.VAICH_ORDER_API_KEY || "vaich_secret_key_987654321_secure_api";
+          const apiKey = process.env["VAICH_ORDER_API_KEY"] || "vaich_secret_key_987654321_secure_api";
 
           const response = await fetch(LOVABLE_ORDER_ENDPOINT, {
             method: "POST",
