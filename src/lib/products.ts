@@ -53,7 +53,7 @@ export const products: Product[] = [
     ],
   },
   {
-    slug: "claude",
+    slug: "اشتراک claude pro شخصی",
     name: "Claude",
     price: 5000000,
     duration: "۱ ماهه",
