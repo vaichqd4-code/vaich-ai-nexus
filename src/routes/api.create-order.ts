@@ -45,6 +45,9 @@ export const Route = createFileRoute("/api/create-order")({
           }
 
           const orderToken = generateSecureToken();
+          const fullNotes = notes
+            ? `${orderMessage}\n\nتوضیحات مشتری: ${notes}`
+            : orderMessage;
           const apiKey = process.env["VAICH_ORDER_API_KEY"] || "vaich_secret_key_987654321_secure_api";
 
           const response = await fetch(LOVABLE_ORDER_ENDPOINT, {
@@ -60,9 +63,12 @@ export const Route = createFileRoute("/api/create-order")({
               service: product.service || "سرویس هوش مصنوعی",
               product: product.name,
               plan: product.name,
+              plan_name: product.name,
               duration: "ماهانه",
               final_amount: Math.round(Number(product.price ?? 0)),
-              notes: notes ? `${orderMessage}\n\nتوضیحات مشتری: ${notes}` : orderMessage,
+              notes: fullNotes,
+              order_notes: fullNotes,
+              order_message: orderMessage,
               order_token: orderToken,
             }),
           });
