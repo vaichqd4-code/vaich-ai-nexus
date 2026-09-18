@@ -490,7 +490,7 @@ function Checkout() {
                   role="status"
                   className="mt-5 rounded-2xl border border-neon-blue/50 bg-background/60 p-4 text-sm leading-8 text-neon-blue"
                 >
-                  اطلاعات آماده شد و صفحه چت تلگرام در حال باز شدن است...
+                  اطلاعات آماده شد و صفحه ربات تلگرام در حال باز شدن است...
                 </p>
               ) : null}
             </div>
