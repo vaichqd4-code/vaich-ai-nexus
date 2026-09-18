@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Section } from "@/components/layout/Section";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Features } from "@/components/sections/Features";
@@ -69,6 +70,34 @@ function Hero() {
 }
 
 function Home() {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // دریافت پیام جستجو از دکمه سرچ در هدر بالای سایت
+  useEffect(() => {
+    const handleHeaderSearch = (event: Event) => {
+      const customEvent = event as CustomEvent<string>;
+      setSearchQuery(customEvent.detail || "");
+    };
+
+    window.addEventListener("header-search", handleHeaderSearch);
+    return () => {
+      window.removeEventListener("header-search", handleHeaderSearch);
+    };
+  }, []);
+
+  // فیلتر کاملاً خودکار و پویا روی تمام محصولات (فعلی و آینده)
+  const filteredProducts = products.filter((p) => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return true;
+
+    return (
+      p.name.toLowerCase().includes(q) ||
+      (p.service && p.service.toLowerCase().includes(q)) ||
+      (p.description && p.description.toLowerCase().includes(q)) ||
+      (p.duration && p.duration.toLowerCase().includes(q))
+    );
+  });
+
   return (
     <>
       <Hero />
@@ -78,11 +107,19 @@ function Home() {
         title="اشتراک‌های هوش مصنوعی"
         subtitle="سرویس مورد نظر خود را انتخاب کنید."
       >
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {products.map((p) => (
-            <ProductCard key={p.slug} product={p} />
-          ))}
-        </div>
+        {filteredProducts.length > 0 ? (
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {filteredProducts.map((p) => (
+              <ProductCard key={p.slug} product={p} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-3xl border border-border/60 bg-card/40 p-8 text-center">
+            <p className="text-sm text-muted-foreground">
+              هیچ اشتراکی مطابق با عبارت «{searchQuery}» پیدا نشد.
+            </p>
+          </div>
+        )}
       </Section>
 
       <Features />
