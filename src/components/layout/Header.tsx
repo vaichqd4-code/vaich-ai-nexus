@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Logo } from "@/components/brand/Logo";
 import { NeonLink } from "@/components/ui/NeonButton";
 import { cn } from "@/lib/utils";
+import { Search, X } from "lucide-react";
 
 const navItems = [
   { to: "/", label: "خانه" },
@@ -18,6 +19,8 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [theme, setTheme] = useState<Theme>("dark");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("vaich-theme") as Theme | null;
@@ -49,6 +52,19 @@ export function Header() {
     setTheme(nextTheme);
     localStorage.setItem("vaich-theme", nextTheme);
     document.documentElement.setAttribute("data-theme", nextTheme);
+  };
+
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+
+    const productsSection = document.getElementById("products");
+    if (productsSection) {
+      productsSection.scrollIntoView({ behavior: "smooth" });
+    }
+
+    window.dispatchEvent(
+      new CustomEvent("header-search", { detail: value })
+    );
   };
 
   return (
@@ -83,6 +99,42 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {/* دکمه بیضی و جمع‌وجور سرچ کنار دکمه‌های تم و منو */}
+          <div className="relative flex items-center">
+            {searchOpen ? (
+              <div className="flex items-center gap-1.5 rounded-full border border-neon-blue/60 bg-secondary/80 px-2.5 py-1.5 backdrop-blur-md transition-all">
+                <Search className="h-4 w-4 text-neon-blue shrink-0" />
+                <input
+                  type="text"
+                  autoFocus
+                  placeholder="جستجو..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  className="w-20 sm:w-32 bg-transparent text-xs text-foreground outline-none placeholder:text-muted-foreground"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchOpen(false);
+                    handleSearch("");
+                  }}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setSearchOpen(true)}
+                title="جستجو"
+                className="flex items-center gap-1 rounded-full border border-border bg-secondary/50 px-2.5 py-2 text-xs text-muted-foreground transition-all duration-300 hover:border-neon-purple/50 hover:bg-secondary hover:text-foreground"
+              >
+                <Search className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+
           {/* Theme Toggle */}
           <button
             type="button"
@@ -202,4 +254,4 @@ export function Header() {
       ) : null}
     </header>
   );
-      }
+}
