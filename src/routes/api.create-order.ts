@@ -69,9 +69,8 @@ export const Route = createFileRoute("/api/create-order")({
             console.error("Local order insert warning:", dbErr);
           }
 
-          // تولید لینک مستقیم اشتراک متن برای تایپ خودکار فاکتور داخل تلگرام
-          const encodedText = encodeURIComponent(fullNotes);
-          const telegramUrl = `https://t.me/share/url?url=https://t.me/${BOT_USERNAME}&text=${encodedText}`;
+          // انتقال مستقیم به صفحه گفتگوی ربات به همراه توکن سفارش
+          const telegramUrl = `https://t.me/${BOT_USERNAME}?start=new_order_${orderToken}`;
 
           return Response.json({
             success: true,
