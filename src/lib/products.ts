@@ -29,7 +29,7 @@ export const products: Product[] = [
     slug: "gemini-pro",
     name: "Gemini pro",
     price: 399000,
-    originalPrice: 1200000,
+    originalPrice: 4700000,
     duration: "۱۸ ماهه",
     description: "اشتراک Gemini pro ۱۸ ماهه.",
     purchaseInfo: [
