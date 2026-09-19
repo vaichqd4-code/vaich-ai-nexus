@@ -36,12 +36,6 @@ export function ProductCard({ product }: { product: Product }) {
           </span>
         )}
 
-        {product.discountPercent && (
-          <span className="rounded-full bg-neon-purple/15 px-3 py-1 text-xs font-bold text-neon-purple">
-            {product.discountPercent}٪ تخفیف
-          </span>
-        )}
-
         <p className="w-full gradient-text text-2xl font-extrabold">
           {formatPrice(product.price)}
         </p>
@@ -74,4 +68,4 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
     </article>
   );
-        }
+}
