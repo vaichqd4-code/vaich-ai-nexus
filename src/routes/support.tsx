@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { Section } from "@/components/layout/Section";
 import { NeonButton } from "@/components/ui/NeonButton";
 import { ContactLinks } from "@/components/brand/ContactLinks";
@@ -24,10 +24,39 @@ const fieldClass =
   "w-full rounded-2xl border border-input bg-background/60 px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-neon-blue/70 focus:ring-2 focus:ring-ring/40";
 
 function SupportPage() {
-  const handleOpenChat = (e?: FormEvent) => {
-    if (e) e.preventDefault();
+  const [name, setName] = useState("");
+  const [contact, setContact] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
     if (typeof window !== "undefined" && (window as any).$crisp) {
-      (window as any).$crisp.push(["do", "chat:open"]);
+      const crisp = (window as any).$crisp;
+
+      if (name.trim()) {
+        crisp.push(["set", "user:nickname", [name.trim()]]);
+      }
+
+      if (contact.trim()) {
+        const isEmail = /\S+@\S+\.\S+/.test(contact.trim());
+        if (isEmail) {
+          crisp.push(["set", "user:email", [contact.trim()]]);
+        } else {
+          crisp.push(["set", "session:data", [[["contact", contact.trim()]]]]);
+        }
+      }
+
+      if (message.trim()) {
+        const formattedMsg = `نام: ${name.trim() || "—"}\nتماس: ${contact.trim() || "—"}\n\nپیام:\n${message.trim()}`;
+        crisp.push(["do", "message:send", ["text", formattedMsg]]);
+      }
+
+      crisp.push(["do", "chat:open"]);
+
+      setName("");
+      setContact("");
+      setMessage("");
     }
   };
 
@@ -44,24 +73,47 @@ function SupportPage() {
           </p>
           <ContactLinks />
         </div>
-        <form onSubmit={handleOpenChat} className="glass-panel mx-auto grid max-w-2xl gap-4 rounded-4xl p-6 sm:p-8">
+        <form onSubmit={handleSubmit} className="glass-panel mx-auto grid max-w-2xl gap-4 rounded-4xl p-6 sm:p-8">
           <div>
             <label htmlFor="name" className="mb-2 block text-sm">
               نام
             </label>
-            <input id="name" className={fieldClass} placeholder="نام شما" />
+            <input
+              id="name"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className={fieldClass}
+              placeholder="نام شما"
+            />
           </div>
           <div>
             <label htmlFor="contact" className="mb-2 block text-sm">
               راه ارتباطی (ایمیل یا شماره تماس)
             </label>
-            <input id="contact" dir="ltr" className={`${fieldClass} text-right`} placeholder="you@example.com" />
+            <input
+              id="contact"
+              required
+              dir="ltr"
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+              className={`${fieldClass} text-right`}
+              placeholder="you@example.com"
+            />
           </div>
           <div>
             <label htmlFor="message" className="mb-2 block text-sm">
               پیام
             </label>
-            <textarea id="message" rows={5} className={fieldClass} placeholder="سوال خود را بنویسید." />
+            <textarea
+              id="message"
+              required
+              rows={5}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className={fieldClass}
+              placeholder="سوال خود را بنویسید."
+            />
           </div>
           <NeonButton type="submit" size="lg">
             ارتباط با پشتیبانی
