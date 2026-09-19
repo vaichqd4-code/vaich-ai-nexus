@@ -17,7 +17,7 @@ export const products: Product[] = [
     originalPrice: 392000,
     discountPercent: 30,
     duration: "60 روزه",
-    description: "اشتراک سرویس هوش مصنوعی Gemini، ۴۵ روزه.",
+    description: "اشتراک سرویس هوش مصنوعی Gemini، 60 روزه.",
     purchaseInfo: [
       "اشتراک Gemini به مدت 60 روز ارائه می‌شود.",
       "اشتراک به صورت اشتراکی با بهترین کیفیت و پایداری فعال می‌شود.",
