@@ -72,9 +72,27 @@ function ProductDetail() {
                 پشتیبانی
               </NeonLink>
             </div>
+
+            {product.features && product.features.length > 0 && (
+              <div className="mt-6 rounded-2xl border border-border/80 bg-background/50 p-4">
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-foreground">
+                  <span>✨</span> امکانات و قابلیت‌ها
+                </h3>
+                <ul className="space-y-2.5">
+                  {product.features.map((feature, idx) => (
+                    <li
+                      key={idx}
+                      className="text-xs leading-6 text-muted-foreground"
+                    >
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </aside>
         </div>
       </div>
     </Section>
   );
-}
+      }
