@@ -67,7 +67,7 @@ export const products: Product[] = [
   {
     slug: "اشتراک chatgpt plus شخصی",
     name: "ChatGPT plus",
-    price: 4750000,
+    price: 5350000,
     duration: "۱ ماهه",
     description: "اشتراک سرویس هوش مصنوعی ChatGPT.",
     purchaseInfo: [
@@ -93,7 +93,7 @@ export const products: Product[] = [
   {
     slug: "claude",
     name: "Claude Pro",
-    price: 5000000,
+    price: 5450000,
     duration: "۱ ماهه",
     description: "اشتراک سرویس هوش مصنوعی Claude Pro.",
     purchaseInfo: [
