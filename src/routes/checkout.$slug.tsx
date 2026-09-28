@@ -95,6 +95,8 @@ function Checkout() {
   const phoneRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
 
+  // دو فلگ مجزا برای اینکه هر هشدار در زمان و اسکرول دقیق خودش فقط ۱ بار اجرا شود
+  const hasTriggeredPaymentNotice = useRef(false);
   const hasTriggeredBottomNotice = useRef(false);
 
   const orderMessage = buildOrderMessage(product, customer);
@@ -136,14 +138,6 @@ function Checkout() {
     }
   };
 
-  const triggerFactorShake = () => {
-    setShouldShakeFactor(true);
-    vibrate([120, 80, 200]);
-    setTimeout(() => {
-      setShouldShakeFactor(false);
-    }, 900);
-  };
-
   const showTopNotice = (title: string, text: string, duration = 6500, pulse = false) => {
     setTopNotification({
       visible: true,
@@ -159,22 +153,44 @@ function Checkout() {
     }
   };
 
-  // بررسی هوشمند اسکرول: وقتی کاربر به پایین صفحه و بخش اتمام سفارش می‌رسد
+  const triggerFactorShake = () => {
+    setShouldShakeFactor(true);
+    vibrate([150, 100, 150]);
+    setTimeout(() => {
+      setShouldShakeFactor(false);
+    }, 900);
+  };
+
+  // مدیریت هوشمند اسکرول‌ها برای هر دو رویداد
   useEffect(() => {
     const handleScroll = () => {
-      if (hasTriggeredBottomNotice.current || !bottomSectionRef.current) return;
+      // ۱. هشدار رسید پرداختی وقتی کاربر به کارت بانکی می‌رسد (همان هشدار پیش‌فرض قبلی)
+      if (!hasTriggeredPaymentNotice.current && paymentCardRef.current) {
+        const rectPayment = paymentCardRef.current.getBoundingClientRect();
+        if (rectPayment.top <= window.innerHeight * 0.75) {
+          hasTriggeredPaymentNotice.current = true;
+          vibrate([150, 80, 150]);
+          showTopNotice(
+            "⚠️ توجه بسیار مهم پیش از پرداخت:",
+            "حتماً تصویر رسید و فیش واریزی خود را تا پایان تحویل سفارش نزد خود نگه دارید.",
+            7000
+          );
+        }
+      }
 
-      const rect = bottomSectionRef.current.getBoundingClientRect();
-      // وقتی دکمه ارسال به ربات وارد دید کاربر در صفحه شد
-      if (rect.top <= window.innerHeight * 0.85) {
-        hasTriggeredBottomNotice.current = true;
-        triggerFactorShake();
-        showTopNotice(
-          "⚠️ فاکتور سفارش را کپی کنید!",
-          "قبل از ارسال رسید در ربات، حتماً دکمه «کپی متن کامل سفارش» را بزنید و متن را در ربات بفرستید.",
-          7500,
-          true
-        );
+      // ۲. وقتی کاربر اسکرول کرد و رسید به پایین صفحه (بخش ارسال به ربات)
+      if (!hasTriggeredBottomNotice.current && bottomSectionRef.current) {
+        const rectBottom = bottomSectionRef.current.getBoundingClientRect();
+        if (rectBottom.top <= window.innerHeight * 0.85) {
+          hasTriggeredBottomNotice.current = true;
+          triggerFactorShake();
+          showTopNotice(
+            "📋 متن سفارش را کپی کنید!",
+            "متن فاکتور سفارش را کپی کنید و در ربات ارسال کنید تا ربات سفارش شما را پردازش کند.",
+            8000,
+            true
+          );
+        }
       }
     };
 
@@ -240,7 +256,7 @@ function Checkout() {
     try {
       await navigator.clipboard.writeText(orderMessage);
       setMsgCopied(true);
-      vibrate([100, 50, 100]);
+      vibrate(100);
       showTopNotice(
         "📋 متن فاکتور کپی شد!",
         "پس از باز شدن ربات، دکمه Start را بزنید و سپس این متن را در چت Paste و ارسال کنید.",
@@ -255,7 +271,6 @@ function Checkout() {
 
   return (
     <>
-      {/* استایل انیمیشن لرزش به همراه افکت پالس نوری */}
       <style>{`
         @keyframes customShake {
           0%, 100% { transform: translateX(0); }
@@ -421,7 +436,7 @@ function Checkout() {
                 </NeonButton>
               </div>
 
-              {/* کادر فاکتور با قابلیت لرزش هوشمند خودکار */}
+              {/* کادر فاکتور با قابلیت لرزش انیمیشنی هوشمند هنگام رسیدن کاربر به پایین */}
               <div
                 ref={factorBoxRef}
                 className={`rounded-2xl border border-border bg-background/50 p-4 transition-all duration-300 ${
@@ -476,7 +491,7 @@ function Checkout() {
                     if (!validateBeforeSend()) return;
                     if (isSubmitting) return;
 
-                    // اگر کاربر هنوز متن فاکتور را کپی نکرده، خودکار برایش کپی می‌کنیم و لرزش می‌دهیم
+                    // اگر هنوز دکمه کپی فاکتور را نزده، اول کادر فاکتور می‌لرزد
                     if (!msgCopied) {
                       triggerFactorShake();
                     }
@@ -485,12 +500,12 @@ function Checkout() {
                     try {
                       vibrate([120, 60, 220]);
 
-                      // ۱. تضمین کپی قطعی متن فاکتور در حافظه کلیپ‌بورد کاربر
+                      // ۱. تضمین کپی متن فاکتور در کلیپ‌بورد گوشی کاربر
                       try {
                         await navigator.clipboard.writeText(orderMessage);
                       } catch {}
 
-                      // ۲. نمایش نوار قرمز رنگ بالای صفحه
+                      // ۲. پیام راهنمای تلگرام
                       showTopNotice(
                         "📋 متن فاکتور کپی شد!",
                         "در ربات تلگرام ابتدا دکمه Start را بزنید، سپس متن فاکتور را Paste کرده و بفرستید. در پایان عکس فیش را ارسال کنید.",
@@ -518,7 +533,7 @@ function Checkout() {
 
                       setSubmitted(true);
 
-                      // ۴. هدایت به تلگرام
+                      // ۴. باز شدن ربات تلگرام
                       setTimeout(() => {
                         window.location.href = "https://t.me/vaich_new_receipt_bot";
                       }, 1800);
@@ -547,15 +562,4 @@ function Checkout() {
               {submitted ? (
                 <p
                   role="status"
-                  className="mt-5 rounded-2xl border border-neon-blue/50 bg-background/60 p-4 text-sm leading-8 text-neon-blue"
-                >
-                  اطلاعات آماده شد و صفحه ربات تلگرام در حال باز شدن است...
-                </p>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      </Section>
-    </>
-  );
-            }
+                  className="mt-5 rounded-2xl border border-neon-blue/50 bg-background/60 p-4 text-sm leading-8
