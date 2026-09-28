@@ -66,11 +66,9 @@ function Checkout() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [attempted, setAttempted] = useState(false);
 
-  // حالت پاپ‌آپ تصویری راهنما و انیمیشن محو شدن
   const [showGuideModal, setShowGuideModal] = useState(true);
   const [isFadingOut, setIsFadingOut] = useState(false);
 
-  // پیام‌های اعلان بالای صفحه (Top Banner Notification)
   const [topNotification, setTopNotification] = useState<{
     visible: boolean;
     title: string;
@@ -157,7 +155,6 @@ function Checkout() {
     }, 450);
   };
 
-  // لرزش ویبره و تایمر خودکار برای بستن آرام پس از ۶ ثانیه
   useEffect(() => {
     vibrate([140, 60, 140]);
     const timer = setTimeout(() => {
@@ -167,7 +164,6 @@ function Checkout() {
     return () => clearTimeout(timer);
   }, []);
 
-  // بررسی هوشمند اسکرول همیشگی: وقتی کاربر به بخش شماره کارت می‌رسد
   useEffect(() => {
     const handleScroll = () => {
       if (hasTriggeredPaymentNotice.current || !paymentCardRef.current) return;
@@ -259,9 +255,10 @@ function Checkout() {
     }
   };
 
+  const botUrl = "https://t.me/vaich_new_receipt_bot";
+
   return (
     <>
-      {/* کارت تصویری نکات و قوانین پرداخت با انیمیشن محو شدن خودکار و ضربدر */}
       {showGuideModal && (
         <div
           className={`fixed inset-0 z-[10000] flex items-center justify-center bg-black/85 px-4 backdrop-blur-md transition-opacity duration-500 ease-out ${
@@ -274,7 +271,6 @@ function Checkout() {
             }`}
             dir="rtl"
           >
-            {/* دکمه ضربدر در گوشه کارت */}
             <button
               type="button"
               onClick={closeGuideModal}
@@ -284,7 +280,6 @@ function Checkout() {
               ✕
             </button>
 
-            {/* تیتر کارت */}
             <div className="flex items-center gap-3 border-b border-purple-500/30 pb-4">
               <span className="text-2xl">🟣</span>
               <div>
@@ -297,7 +292,6 @@ function Checkout() {
               </div>
             </div>
 
-            {/* گام‌های خلاصه شده */}
             <div className="mt-4 space-y-3">
               <div className="rounded-2xl border border-white/10 bg-white/5 p-3.5">
                 <p className="text-xs font-black text-white sm:text-sm">
@@ -327,7 +321,6 @@ function Checkout() {
               </div>
             </div>
 
-            {/* دکمه متوجه شدم */}
             <button
               type="button"
               onClick={closeGuideModal}
@@ -339,7 +332,6 @@ function Checkout() {
         </div>
       )}
 
-      {/* پیام اعلان قرمز شناور، نرم و چشم‌گیر بالای سایت */}
       <div
         className={`fixed left-0 right-0 top-0 z-[9999] transition-all duration-500 ease-out px-4 py-3 ${
           topNotification.visible
@@ -396,7 +388,6 @@ function Checkout() {
               </div>
             </div>
 
-            {/* اطلاعات مشتری */}
             <div className="glass-panel rounded-3xl p-6">
               <h2 className="text-lg font-bold">اطلاعات مشتری</h2>
 
@@ -467,7 +458,6 @@ function Checkout() {
               </div>
             </div>
 
-            {/* اطلاعات پرداخت و شماره کارت */}
             <aside ref={paymentCardRef} className="h-fit space-y-4 rounded-3xl border border-border bg-card/70 p-6">
               <h2 className="text-base font-bold">اطلاعات پرداخت</h2>
 
@@ -498,7 +488,6 @@ function Checkout() {
               </div>
             </aside>
 
-            {/* بخش ارسال در ربات تلگرام */}
             <div className="glass-panel rounded-3xl p-6">
               <h2 className="text-lg font-bold">اتمام سفارش و ارسال به ربات</h2>
 
@@ -555,8 +544,23 @@ function Checkout() {
                       setSubmitted(true);
 
                       setTimeout(() => {
-                        window.location.href = "https://t.me/vaich_new_receipt_bot";
+                        window.location.href = botUrl;
                       }, 1800);
                     } catch (err) {
                       console.error("Order redirect error:", err);
-                      window.location.href = "https://t.me/v
+                      window.location.href = botUrl;
+                    } finally {
+                      setIsSubmitting(false);
+                    }
+                  }}
+                  className={`${neonButtonClass(
+                    "outline",
+                    "xl",
+                    "w-full border-transparent bg-purple-600 text-white hover:bg-purple-700 hover:text-white font-black",
+                  )} ${isReady && !isSubmitting ? "" : "opacity-50"}`}
+                >
+                  {isSubmitting ? "در حال آماده‌سازی و انتقال..." : "🤖 ارسال رسید در ربات"}
+                </button>
+              </div>
+
+              <p className="mt-4 rounded-2xl border bo
