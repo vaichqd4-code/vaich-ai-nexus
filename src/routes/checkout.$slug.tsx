@@ -65,6 +65,7 @@ function Checkout() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [attempted, setAttempted] = useState(false);
+  const [shouldShakeFactor, setShouldShakeFactor] = useState(false);
 
   // پیام‌های اعلان بالای صفحه (Top Banner Notification)
   const [topNotification, setTopNotification] = useState<{
@@ -87,10 +88,14 @@ function Checkout() {
   });
 
   const paymentCardRef = useRef<HTMLDivElement>(null);
+  const factorBoxRef = useRef<HTMLDivElement>(null);
+  const bottomSectionRef = useRef<HTMLDivElement>(null);
+
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
-  const hasTriggeredPaymentNotice = useRef(false);
+
+  const hasTriggeredBottomNotice = useRef(false);
 
   const orderMessage = buildOrderMessage(product, customer);
 
@@ -124,11 +129,19 @@ function Checkout() {
     };
 
   const vibrate = (pattern: number | number[] = 200) => {
-    if ("vibrate" in navigator) {
+    if (typeof window !== "undefined" && "vibrate" in navigator) {
       try {
         navigator.vibrate(pattern);
       } catch {}
     }
+  };
+
+  const triggerFactorShake = () => {
+    setShouldShakeFactor(true);
+    vibrate([120, 80, 200]);
+    setTimeout(() => {
+      setShouldShakeFactor(false);
+    }, 900);
   };
 
   const showTopNotice = (title: string, text: string, duration = 6500, pulse = false) => {
@@ -146,19 +159,21 @@ function Checkout() {
     }
   };
 
-  // بررسی هوشمند اسکرول: وقتی کاربر به بخش شماره کارت می‌رسد
+  // بررسی هوشمند اسکرول: وقتی کاربر به پایین صفحه و بخش اتمام سفارش می‌رسد
   useEffect(() => {
     const handleScroll = () => {
-      if (hasTriggeredPaymentNotice.current || !paymentCardRef.current) return;
+      if (hasTriggeredBottomNotice.current || !bottomSectionRef.current) return;
 
-      const rect = paymentCardRef.current.getBoundingClientRect();
-      if (rect.top <= window.innerHeight * 0.75) {
-        hasTriggeredPaymentNotice.current = true;
-        vibrate([150, 80, 150]);
+      const rect = bottomSectionRef.current.getBoundingClientRect();
+      // وقتی دکمه ارسال به ربات وارد دید کاربر در صفحه شد
+      if (rect.top <= window.innerHeight * 0.85) {
+        hasTriggeredBottomNotice.current = true;
+        triggerFactorShake();
         showTopNotice(
-          "⚠️ توجه بسیار مهم پیش از پرداخت:",
-          "حتماً تصویر رسید و فیش واریزی خود را تا پایان تحویل سفارش نزد خود نگه دارید.",
-          7000
+          "⚠️ فاکتور سفارش را کپی کنید!",
+          "قبل از ارسال رسید در ربات، حتماً دکمه «کپی متن کامل سفارش» را بزنید و متن را در ربات بفرستید.",
+          7500,
+          true
         );
       }
     };
@@ -225,7 +240,7 @@ function Checkout() {
     try {
       await navigator.clipboard.writeText(orderMessage);
       setMsgCopied(true);
-      vibrate(100);
+      vibrate([100, 50, 100]);
       showTopNotice(
         "📋 متن فاکتور کپی شد!",
         "پس از باز شدن ربات، دکمه Start را بزنید و سپس این متن را در چت Paste و ارسال کنید.",
@@ -240,7 +255,25 @@ function Checkout() {
 
   return (
     <>
-      {/* پیام اعلان قرمز شناور، نرم و چشم‌گیر بالای سایت */}
+      {/* استایل انیمیشن لرزش به همراه افکت پالس نوری */}
+      <style>{`
+        @keyframes customShake {
+          0%, 100% { transform: translateX(0); }
+          15% { transform: translateX(-8px) rotate(-1deg); }
+          30% { transform: translateX(8px) rotate(1deg); }
+          45% { transform: translateX(-6px); }
+          60% { transform: translateX(6px); }
+          75% { transform: translateX(-3px); }
+          90% { transform: translateX(3px); }
+        }
+        .factor-shake-active {
+          animation: customShake 0.75s ease-in-out !important;
+          border-color: #a855f7 !important;
+          box-shadow: 0 0 25px rgba(168, 85, 247, 0.45) !important;
+        }
+      `}</style>
+
+      {/* پیام اعلان شناور بالای صفحه */}
       <div
         className={`fixed left-0 right-0 top-0 z-[9999] transition-all duration-500 ease-out px-4 py-3 ${
           topNotification.visible
@@ -297,7 +330,7 @@ function Checkout() {
               </div>
             </div>
 
-            {/* اطلاعات مشتری - حفظ کامل فیلدها و استایل‌ها */}
+            {/* اطلاعات مشتری */}
             <div className="glass-panel rounded-3xl p-6">
               <h2 className="text-lg font-bold">اطلاعات مشتری</h2>
 
@@ -388,19 +421,41 @@ function Checkout() {
                 </NeonButton>
               </div>
 
-              <div className="rounded-2xl border border-border bg-background/50 p-4">
-                <p className="text-xs text-muted-foreground">متن فاکتور سفارش</p>
+              {/* کادر فاکتور با قابلیت لرزش هوشمند خودکار */}
+              <div
+                ref={factorBoxRef}
+                className={`rounded-2xl border border-border bg-background/50 p-4 transition-all duration-300 ${
+                  shouldShakeFactor ? "factor-shake-active" : ""
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-bold text-foreground">متن فاکتور سفارش</p>
+                  {shouldShakeFactor && (
+                    <span className="text-[11px] font-bold text-purple-400 animate-bounce">
+                      👇 لطفاً ابتدا کپی کنید
+                    </span>
+                  )}
+                </div>
+
                 <pre className="mt-3 whitespace-pre-wrap text-xs leading-6 text-muted-foreground">
                   {orderMessage}
                 </pre>
-                <NeonButton variant="outline" size="sm" className="mt-4 w-full" onClick={copyMessage}>
+
+                <NeonButton
+                  variant="outline"
+                  size="sm"
+                  className={`mt-4 w-full transition-all duration-300 ${
+                    shouldShakeFactor ? "border-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.4)]" : ""
+                  }`}
+                  onClick={copyMessage}
+                >
                   {msgCopied ? "متن سفارش کپی شد ✓" : "کپی متن کامل سفارش"}
                 </NeonButton>
               </div>
             </aside>
 
-            {/* بخش ارسال در ربات تلگرام (بخش آپلود تصویر به کلی حذف شد) */}
-            <div className="glass-panel rounded-3xl p-6">
+            {/* بخش ارسال در ربات تلگرام */}
+            <div ref={bottomSectionRef} className="glass-panel rounded-3xl p-6">
               <h2 className="text-lg font-bold">اتمام سفارش و ارسال به ربات</h2>
 
               <p className="mt-2 text-sm text-muted-foreground">
@@ -421,17 +476,21 @@ function Checkout() {
                     if (!validateBeforeSend()) return;
                     if (isSubmitting) return;
 
+                    // اگر کاربر هنوز متن فاکتور را کپی نکرده، خودکار برایش کپی می‌کنیم و لرزش می‌دهیم
+                    if (!msgCopied) {
+                      triggerFactorShake();
+                    }
+
                     setIsSubmitting(true);
                     try {
-                      // دو ضربه ویبره هماهنگ برای توجه کاربر
                       vibrate([120, 60, 220]);
 
-                      // ۱. کپی قطعی متن فاکتور در کلیپ‌بورد گوشی کاربر
+                      // ۱. تضمین کپی قطعی متن فاکتور در حافظه کلیپ‌بورد کاربر
                       try {
                         await navigator.clipboard.writeText(orderMessage);
                       } catch {}
 
-                      // ۲. نمایش نوار قرمز رنگ بزرگ در بالای صفحه با انیمیشن ملایم
+                      // ۲. نمایش نوار قرمز رنگ بالای صفحه
                       showTopNotice(
                         "📋 متن فاکتور کپی شد!",
                         "در ربات تلگرام ابتدا دکمه Start را بزنید، سپس متن فاکتور را Paste کرده و بفرستید. در پایان عکس فیش را ارسال کنید.",
@@ -439,7 +498,7 @@ function Checkout() {
                         true
                       );
 
-                      // ۳. ثبت سفارش در بک‌اند سایت
+                      // ۳. ثبت سفارش در دیتابیس
                       await fetch("/api/create-order", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -459,7 +518,7 @@ function Checkout() {
 
                       setSubmitted(true);
 
-                      // ۴. هدایت آرام کاربر به ربات جدید تلگرام پس از نمایش پیام
+                      // ۴. هدایت به تلگرام
                       setTimeout(() => {
                         window.location.href = "https://t.me/vaich_new_receipt_bot";
                       }, 1800);
