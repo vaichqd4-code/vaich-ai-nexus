@@ -66,9 +66,7 @@ function Checkout() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [attempted, setAttempted] = useState(false);
 
-  const [showGuideModal, setShowGuideModal] = useState(true);
-  const [isFadingOut, setIsFadingOut] = useState(false);
-
+  // پیام‌های اعلان بالای صفحه (Top Banner Notification)
   const [topNotification, setTopNotification] = useState<{
     visible: boolean;
     title: string;
@@ -126,7 +124,7 @@ function Checkout() {
     };
 
   const vibrate = (pattern: number | number[] = 200) => {
-    if (typeof window !== "undefined" && "vibrate" in navigator) {
+    if ("vibrate" in navigator) {
       try {
         navigator.vibrate(pattern);
       } catch {}
@@ -148,22 +146,7 @@ function Checkout() {
     }
   };
 
-  const closeGuideModal = () => {
-    setIsFadingOut(true);
-    setTimeout(() => {
-      setShowGuideModal(false);
-    }, 450);
-  };
-
-  useEffect(() => {
-    vibrate([140, 60, 140]);
-    const timer = setTimeout(() => {
-      closeGuideModal();
-    }, 6000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
+  // بررسی هوشمند اسکرول: وقتی کاربر به بخش شماره کارت می‌رسد
   useEffect(() => {
     const handleScroll = () => {
       if (hasTriggeredPaymentNotice.current || !paymentCardRef.current) return;
@@ -255,83 +238,9 @@ function Checkout() {
     }
   };
 
-  const botUrl = "https://t.me/vaich_new_receipt_bot";
-
   return (
     <>
-      {showGuideModal && (
-        <div
-          className={`fixed inset-0 z-[10000] flex items-center justify-center bg-black/85 px-4 backdrop-blur-md transition-opacity duration-500 ease-out ${
-            isFadingOut ? "opacity-0 pointer-events-none" : "opacity-100"
-          }`}
-        >
-          <div
-            className={`relative w-full max-w-md overflow-hidden rounded-3xl border-2 border-purple-500/70 bg-gradient-to-b from-[#1c0b38] to-[#0c0418] p-6 shadow-[0_0_50px_rgba(168,85,247,0.45)] transition-transform duration-500 ease-out ${
-              isFadingOut ? "scale-95" : "scale-100"
-            }`}
-            dir="rtl"
-          >
-            <button
-              type="button"
-              onClick={closeGuideModal}
-              className="absolute left-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-red-500 hover:text-white"
-              aria-label="بستن"
-            >
-              ✕
-            </button>
-
-            <div className="flex items-center gap-3 border-b border-purple-500/30 pb-4">
-              <span className="text-2xl">🟣</span>
-              <div>
-                <h3 className="text-base font-black text-white sm:text-lg">
-                  نکات و قوانین مهم پرداخت
-                </h3>
-                <p className="mt-0.5 text-xs font-bold text-purple-300">
-                  راهنمای سریع ۳ مرحله‌ای
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-4 space-y-3">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-3.5">
-                <p className="text-xs font-black text-white sm:text-sm">
-                  ۱. واریز و ذخیره فیش
-                </p>
-                <p className="mt-1 text-xs leading-6 text-gray-300">
-                  مبلغ را کارت به کارت کرده و حتماً <span className="font-bold text-purple-300">عکس رسید</span> را نزد خود نگه دارید.
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-3.5">
-                <p className="text-xs font-black text-white sm:text-sm">
-                  ۲. کپی متن سفارش
-                </p>
-                <p className="mt-1 text-xs leading-6 text-gray-300">
-                  پایین صفحه دکمه <span className="font-bold text-purple-300">«کپی متن کامل سفارش»</span> را بزنید.
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-3.5">
-                <p className="text-xs font-black text-white sm:text-sm">
-                  ۳. ارسال در ربات تلگرام
-                </p>
-                <p className="mt-1 text-xs leading-6 text-gray-300">
-                  در ربات دکمه <strong>Start</strong> را بزنید؛ اول <span className="font-bold text-purple-300">متن فاکتور</span> و بعد <span className="font-bold text-purple-300">عکس فیش</span> را ارسال فرمایید.
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={closeGuideModal}
-              className="mt-5 w-full rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 py-3 text-xs font-black text-white shadow-[0_0_20px_rgba(147,51,234,0.4)] transition-all hover:opacity-95 active:scale-95 sm:text-sm"
-            >
-              متوجه شدم (رد کردن) ✓
-            </button>
-          </div>
-        </div>
-      )}
-
+      {/* پیام اعلان قرمز شناور، نرم و چشم‌گیر بالای سایت */}
       <div
         className={`fixed left-0 right-0 top-0 z-[9999] transition-all duration-500 ease-out px-4 py-3 ${
           topNotification.visible
@@ -388,6 +297,7 @@ function Checkout() {
               </div>
             </div>
 
+            {/* اطلاعات مشتری - حفظ کامل فیلدها و استایل‌ها */}
             <div className="glass-panel rounded-3xl p-6">
               <h2 className="text-lg font-bold">اطلاعات مشتری</h2>
 
@@ -458,6 +368,7 @@ function Checkout() {
               </div>
             </div>
 
+            {/* اطلاعات پرداخت و شماره کارت */}
             <aside ref={paymentCardRef} className="h-fit space-y-4 rounded-3xl border border-border bg-card/70 p-6">
               <h2 className="text-base font-bold">اطلاعات پرداخت</h2>
 
@@ -488,6 +399,7 @@ function Checkout() {
               </div>
             </aside>
 
+            {/* بخش ارسال در ربات تلگرام (بخش آپلود تصویر به کلی حذف شد) */}
             <div className="glass-panel rounded-3xl p-6">
               <h2 className="text-lg font-bold">اتمام سفارش و ارسال به ربات</h2>
 
@@ -511,12 +423,15 @@ function Checkout() {
 
                     setIsSubmitting(true);
                     try {
+                      // دو ضربه ویبره هماهنگ برای توجه کاربر
                       vibrate([120, 60, 220]);
 
+                      // ۱. کپی قطعی متن فاکتور در کلیپ‌بورد گوشی کاربر
                       try {
                         await navigator.clipboard.writeText(orderMessage);
                       } catch {}
 
+                      // ۲. نمایش نوار قرمز رنگ بزرگ در بالای صفحه با انیمیشن ملایم
                       showTopNotice(
                         "📋 متن فاکتور کپی شد!",
                         "در ربات تلگرام ابتدا دکمه Start را بزنید، سپس متن فاکتور را Paste کرده و بفرستید. در پایان عکس فیش را ارسال کنید.",
@@ -524,6 +439,7 @@ function Checkout() {
                         true
                       );
 
+                      // ۳. ثبت سفارش در بک‌اند سایت
                       await fetch("/api/create-order", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -543,12 +459,13 @@ function Checkout() {
 
                       setSubmitted(true);
 
+                      // ۴. هدایت آرام کاربر به ربات جدید تلگرام پس از نمایش پیام
                       setTimeout(() => {
-                        window.location.href = botUrl;
+                        window.location.href = "https://t.me/vaich_new_receipt_bot";
                       }, 1800);
                     } catch (err) {
                       console.error("Order redirect error:", err);
-                      window.location.href = botUrl;
+                      window.location.href = "https://t.me/vaich_new_receipt_bot";
                     } finally {
                       setIsSubmitting(false);
                     }
@@ -563,4 +480,23 @@ function Checkout() {
                 </button>
               </div>
 
-              <p className="mt-4 rounded-2xl border bo
+              <p className="mt-4 rounded-2xl border border-border bg-background/50 p-4 text-xs leading-7 text-muted-foreground">
+                با انتخاب این دکمه، متن سفارش کپی شده و ربات تلگرام VAICH برای شما باز خواهد شد.
+                <span dir="ltr"> @{CONTACT_TELEGRAM_ID}</span>
+              </p>
+
+              {submitted ? (
+                <p
+                  role="status"
+                  className="mt-5 rounded-2xl border border-neon-blue/50 bg-background/60 p-4 text-sm leading-8 text-neon-blue"
+                >
+                  اطلاعات آماده شد و صفحه ربات تلگرام در حال باز شدن است...
+                </p>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </Section>
+    </>
+  );
+      }
