@@ -66,7 +66,7 @@ function Checkout() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [attempted, setAttempted] = useState(false);
 
-  // پاپ‌آپ راهنمای شیشه‌ای و تار در ابتدای ورود به صفحه
+  // پاپ‌آپ راهنمای شیشه‌ای و تار بنفش در بدو ورود
   const [showGuideModal, setShowGuideModal] = useState(true);
 
   // پیام‌های اعلان بالای صفحه (Top Banner Notification)
@@ -149,7 +149,7 @@ function Checkout() {
     }
   };
 
-  // ویبره اولیه هم‌زمان با باز شدن پاپ‌آپ راهنما
+  // لرزش ویبره هنگام باز شدن اولیه پاپ‌آپ
   useEffect(() => {
     vibrate([140, 60, 140]);
   }, []);
@@ -549,4 +549,4 @@ function Checkout() {
                     "w-full border-transparent bg-purple-600 text-white hover:bg-purple-700 hover:text-white font-black",
                   )} ${isReady && !isSubmitting ? "" : "opacity-50"}`}
                 >
-                  {isSubmitting ?
+                  {isSubmitting ? "در حال آماد
