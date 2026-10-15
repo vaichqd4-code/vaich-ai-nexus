@@ -733,7 +733,15 @@ export function AdminPage() {
         </div>
 
         {cloudSyncMsg && (
-          <div className="mt-3 rounded-2xl border border-purple-500/40 bg-purple-500/15 p-3.5 text-xs font-bold text-purple-700 dark:text-purple-300">
+          <div
+            className={`mt-3 rounded-2xl border p-3.5 text-xs font-bold transition-all ${
+              cloudSyncMsg.startsWith("❌")
+                ? "border-red-500/40 bg-red-500/15 text-red-600 dark:text-red-300"
+                : cloudSyncMsg.startsWith("✅")
+                ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
+                : "border-purple-500/40 bg-purple-500/15 text-purple-700 dark:text-purple-300 animate-pulse"
+            }`}
+          >
             {cloudSyncMsg}
           </div>
         )}
@@ -1734,6 +1742,23 @@ export function AdminPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Status Notification for Mobile / Scrolled View */}
+      {cloudSyncMsg && (
+        <div className="fixed bottom-5 left-4 right-4 z-50 mx-auto max-w-md pointer-events-none">
+          <div
+            className={`rounded-2xl border p-3.5 text-xs font-bold shadow-2xl backdrop-blur-xl text-center transition-all ${
+              cloudSyncMsg.startsWith("❌")
+                ? "border-red-500/50 bg-red-950/90 text-red-200"
+                : cloudSyncMsg.startsWith("✅")
+                ? "border-emerald-500/50 bg-emerald-950/90 text-emerald-200"
+                : "border-purple-500/50 bg-purple-950/90 text-purple-200 animate-pulse"
+            }`}
+          >
+            {cloudSyncMsg}
           </div>
         </div>
       )}

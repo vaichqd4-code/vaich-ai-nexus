@@ -318,6 +318,35 @@ const GITHUB_REPO_NAME = "vaich-ai-nexus";
 const GITHUB_TOKEN = [103, 104, 112, 95, 48, 87, 77, 115, 69, 88, 90, 102, 48, 110, 120, 70, 57, 105, 53, 55, 103, 118, 65, 105, 101, 48, 55, 83, 69, 104, 114, 80, 83, 99, 51, 100, 103, 68, 121, 109].map((c) => String.fromCharCode(c)).join("");
 const CONFIG_FILE_PATH = "public/site-config.json";
 
+// In-memory cache of latest confirmed file SHA to prevent unnecessary roundtrips and guarantee consecutive commit success
+let latestKnownSha: string | null = null;
+
+// Async sequential queue (mutex) ensuring no two cloud publish calls ever overlap or conflict
+let cloudSyncQueue: Promise<any> = Promise.resolve();
+
+export function queueCloudSync<T>(task: () => Promise<T>): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    cloudSyncQueue = cloudSyncQueue.then(
+      async () => {
+        try {
+          const res = await task();
+          resolve(res);
+        } catch (err) {
+          reject(err);
+        }
+      },
+      async () => {
+        try {
+          const res = await task();
+          resolve(res);
+        } catch (err) {
+          reject(err);
+        }
+      }
+    );
+  });
+}
+
 export function encodeUtf8Base64(str: string): string {
   if (typeof TextEncoder !== "undefined") {
     const bytes = new TextEncoder().encode(str);
@@ -342,8 +371,54 @@ export function decodeUtf8Base64(b64: string): string {
   return decodeURIComponent(escape(binary));
 }
 
-export async function fetchLatestConfigSha(): Promise<string | undefined> {
-  // 1. Direct contents endpoint with cache-busting timestamp query
+export async function fetchLatestConfigSha(forceFresh = false): Promise<string | undefined> {
+  // If we already know the latest confirmed SHA from a recent successful commit and fresh is not forced, use it
+  if (!forceFresh && latestKnownSha) {
+    return latestKnownSha;
+  }
+
+  // 1. Primary & most accurate: Query git ref heads/main to get exact real-time commit, then query file at that immutable commit
+  // This completely bypasses any intermediate branch-pointer or contents caching!
+  try {
+    const refRes = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/git/ref/heads/main?_t=${Date.now()}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${GITHUB_TOKEN}`,
+          Accept: "application/vnd.github.v3+json",
+        },
+      }
+    );
+
+    if (refRes.ok) {
+      const refData = await refRes.json();
+      const commitSha = refData?.object?.sha;
+      if (commitSha) {
+        const fileRes = await fetch(
+          `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=${commitSha}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${GITHUB_TOKEN}`,
+              Accept: "application/vnd.github.v3+json",
+            },
+          }
+        );
+        if (fileRes.ok) {
+          const fileData = await fileRes.json();
+          if (fileData?.sha && typeof fileData.sha === "string" && fileData.sha.length > 0) {
+            latestKnownSha = fileData.sha;
+            return fileData.sha;
+          }
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("Could not get SHA via git ref HEAD:", e);
+  }
+
+  // 2. Secondary: Direct contents endpoint with cache-busting timestamp query
   try {
     const res = await fetch(
       `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main&_t=${Date.now()}`,
@@ -359,16 +434,15 @@ export async function fetchLatestConfigSha(): Promise<string | undefined> {
     if (res.ok) {
       const data = await res.json();
       if (data && typeof data.sha === "string" && data.sha.length > 0) {
+        latestKnownSha = data.sha;
         return data.sha;
       }
-    } else {
-      console.warn("Contents endpoint returned status:", res.status);
     }
   } catch (e) {
     console.warn("Could not get SHA from contents URL:", e);
   }
 
-  // 2. Fallback: Query commits tree endpoint to obtain exact blob SHA
+  // 3. Tertiary fallback: Query commits tree endpoint to obtain exact blob SHA
   try {
     const commitRes = await fetch(
       `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/commits/main?_t=${Date.now()}`,
@@ -393,6 +467,7 @@ export async function fetchLatestConfigSha(): Promise<string | undefined> {
           const treeData = await treeRes.json();
           const target = treeData?.tree?.find((item: any) => item.path === CONFIG_FILE_PATH);
           if (target?.sha) {
+            latestKnownSha = target.sha;
             return target.sha;
           }
         }
@@ -402,6 +477,11 @@ export async function fetchLatestConfigSha(): Promise<string | undefined> {
     console.warn("Could not get SHA from commit tree fallback:", e);
   }
 
+  // 4. Fallback to existing latestKnownSha if available
+  if (latestKnownSha) {
+    return latestKnownSha;
+  }
+
   return undefined;
 }
 
@@ -409,18 +489,20 @@ export async function commitConfigToCloud(config: SiteConfig): Promise<{ success
   const jsonStr = JSON.stringify(config, null, 2);
   const contentB64 = encodeUtf8Base64(jsonStr);
 
-  const maxAttempts = 3;
+  const maxAttempts = 5;
   let lastError = "";
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const sha = await fetchLatestConfigSha();
+      // On retry after conflict or error, always force fresh SHA from HEAD ref
+      const forceFresh = attempt > 1;
+      let sha = await fetchLatestConfigSha(forceFresh);
 
       // Guard: Never send PUT if SHA is missing, because GitHub rejects with 422 ("sha wasn't supplied")
       if (!sha) {
         console.warn(`Attempt ${attempt}: SHA could not be fetched from GitHub API, retrying...`);
         if (attempt < maxAttempts) {
-          await new Promise((resolve) => setTimeout(resolve, 600));
+          await new Promise((resolve) => setTimeout(resolve, 500));
           continue;
         }
         return { success: false, error: "امکان دریافت شناسه فایل از سرور وجود ندارد. لطفاً ارتباط اینترنت خود را بررسی کنید." };
@@ -445,15 +527,29 @@ export async function commitConfigToCloud(config: SiteConfig): Promise<{ success
       );
 
       if (putRes.ok) {
+        const putData = await putRes.json().catch(() => null);
+        if (putData?.content?.sha) {
+          latestKnownSha = putData.content.sha;
+        }
         return { success: true };
       }
 
       const errBody = await putRes.text();
       console.warn(`Commit attempt ${attempt} failed (${putRes.status}):`, errBody);
 
-      // If HTTP 409 (Conflict) or HTTP 422 (SHA mismatch / not supplied), pause briefly and retry with fresh SHA
+      // Invalidate cached SHA since GitHub rejected it
+      latestKnownSha = null;
+
+      // If HTTP 409 (Conflict) or HTTP 422 (SHA mismatch / unprocessable), pause with progressive backoff and retry
       if ((putRes.status === 409 || putRes.status === 422) && attempt < maxAttempts) {
-        await new Promise((resolve) => setTimeout(resolve, 800));
+        const backoffMs = attempt * 700; // 700ms, 1400ms, 2100ms, 2800ms
+        await new Promise((resolve) => setTimeout(resolve, backoffMs));
+        continue;
+      }
+
+      // If HTTP 403 (secondary rate limit) or 500+ retry once or twice
+      if ((putRes.status === 403 || putRes.status >= 500) && attempt < maxAttempts) {
+        await new Promise((resolve) => setTimeout(resolve, 1500));
         continue;
       }
 
@@ -461,9 +557,10 @@ export async function commitConfigToCloud(config: SiteConfig): Promise<{ success
       return { success: false, error: lastError };
     } catch (err: any) {
       console.error(`Commit attempt ${attempt} exception:`, err);
+      latestKnownSha = null;
       lastError = err?.message || "خطای اتصال به سرور";
       if (attempt < maxAttempts) {
-        await new Promise((resolve) => setTimeout(resolve, 800));
+        await new Promise((resolve) => setTimeout(resolve, attempt * 600));
         continue;
       }
     }
@@ -510,6 +607,9 @@ export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
             const parsed = JSON.parse(rawDecoded);
             if (parsed && Array.isArray(parsed.products) && parsed.products.length > 0) {
               fetchedData = parsed as SiteConfig;
+              if (ghJson.sha && typeof ghJson.sha === "string") {
+                latestKnownSha = ghJson.sha;
+              }
             }
           }
         }
@@ -642,42 +742,49 @@ export function useDynamicProducts() {
     saveStoredMasterPin(newPin);
   };
 
-  const publishToCloud = async (override?: {
+  const publishToCloud = (override?: {
     products?: Product[];
     rows?: ProductCategoryRow[];
     layout?: LayoutMode;
     masterPin?: string;
     adminUsers?: AdminUser[];
   }): Promise<{ success: boolean; error?: string }> => {
-    setIsCloudSyncing(true);
-    const currentProducts = override?.products || items;
-    const currentRows = override?.rows || rows;
-    const currentLayout = override?.layout || layout;
-    const currentMasterPin = override?.masterPin || masterPin;
-    const currentAdminUsers = override?.adminUsers || adminUsers;
+    return queueCloudSync(async () => {
+      setIsCloudSyncing(true);
+      try {
+        const currentProducts = override?.products ?? (typeof window !== "undefined" ? getStoredProducts() : items);
+        const currentRows = override?.rows ?? (typeof window !== "undefined" ? getStoredCategoryRows() : rows);
+        const currentLayout = override?.layout ?? (typeof window !== "undefined" ? getStoredLayout() : layout);
+        const currentMasterPin = override?.masterPin ?? (typeof window !== "undefined" ? getStoredMasterPin() : masterPin);
+        const currentAdminUsers = override?.adminUsers ?? (typeof window !== "undefined" ? getStoredAdminUsers() : adminUsers);
 
-    const fullConfig: SiteConfig = {
-      products: currentProducts,
-      categoryRows: currentRows,
-      layout: currentLayout,
-      masterPin: currentMasterPin,
-      adminUsers: currentAdminUsers,
-      updatedAt: new Date().toISOString(),
-    };
+        const fullConfig: SiteConfig = {
+          products: currentProducts,
+          categoryRows: currentRows,
+          layout: currentLayout,
+          masterPin: currentMasterPin,
+          adminUsers: currentAdminUsers,
+          updatedAt: new Date().toISOString(),
+        };
 
-    saveStoredProducts(currentProducts);
-    saveStoredCategoryRows(currentRows);
-    saveStoredLayout(currentLayout);
-    saveStoredMasterPin(currentMasterPin);
-    saveStoredAdminUsers(currentAdminUsers);
+        saveStoredProducts(currentProducts);
+        saveStoredCategoryRows(currentRows);
+        saveStoredLayout(currentLayout);
+        saveStoredMasterPin(currentMasterPin);
+        saveStoredAdminUsers(currentAdminUsers);
 
-    const result = await commitConfigToCloud(fullConfig);
-    setIsCloudSyncing(false);
-    if (result.success) {
-      setLastCloudSync(fullConfig.updatedAt);
-      localStorage.setItem("vaich_config_updated_at", fullConfig.updatedAt);
-    }
-    return result;
+        const result = await commitConfigToCloud(fullConfig);
+        if (result.success) {
+          setLastCloudSync(fullConfig.updatedAt);
+          if (typeof window !== "undefined") {
+            localStorage.setItem("vaich_config_updated_at", fullConfig.updatedAt);
+          }
+        }
+        return result;
+      } finally {
+        setIsCloudSyncing(false);
+      }
+    });
   };
 
   return {
