@@ -120,6 +120,24 @@ function RootShell({ children }: { children: ReactNode }) {
         />
         <HeadContent />
         <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "OnlineStore",
+              name: "VAICH",
+              alternateName: "فروشگاه اشتراک هوش مصنوعی وایچ",
+              url: "https://vaich.ir",
+              description:
+                "فروشگاه تخصصی خرید قانونی و مستقیم اشتراک‌های هوش مصنوعی ChatGPT Plus، Gemini Pro و Claude Pro با تحویل آنی.",
+              telephone: "+989193872172",
+              priceRange: "IRR",
+              currenciesAccepted: "IRR",
+              paymentAccepted: "کارت به کارت",
+            }),
+          }}
+        />
+        <script
           dangerouslySetInnerHTML={{
             __html: `window.$crisp=[];window.CRISP_WEBSITE_ID="7751150b-b8d0-4953-8745-021b7d8a730c";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();`,
           }}

@@ -290,6 +290,13 @@
   animation: rise-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* =========================
    REDUCED MOTION
    ========================= */
