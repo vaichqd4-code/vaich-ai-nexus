@@ -236,10 +236,80 @@ export function saveStoredLayout(mode: LayoutMode): void {
   }
 }
 
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  pin: string;
+  role: "superadmin" | "admin" | "editor";
+  createdAt: string;
+}
+
+export const DEFAULT_ADMIN_PIN = "Yh111111";
+export const MASTER_ADMIN_EMAIL = "vaichqd4@gmail.com";
+
+export const DEFAULT_ADMIN_USERS: AdminUser[] = [
+  {
+    id: "admin-master",
+    name: "مدیر ارشد (مالک)",
+    email: MASTER_ADMIN_EMAIL,
+    pin: DEFAULT_ADMIN_PIN,
+    role: "superadmin",
+    createdAt: "2026-10-15T00:00:00.000Z",
+  },
+];
+
+export function getStoredMasterPin(): string {
+  if (typeof window === "undefined") return DEFAULT_ADMIN_PIN;
+  try {
+    return localStorage.getItem("vaich_admin_pin") || DEFAULT_ADMIN_PIN;
+  } catch (err) {
+    return DEFAULT_ADMIN_PIN;
+  }
+}
+
+export function saveStoredMasterPin(pin: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem("vaich_admin_pin", pin);
+    window.dispatchEvent(new CustomEvent("vaich_admin_pin_updated", { detail: pin }));
+  } catch (err) {
+    console.error("Error saving master pin:", err);
+  }
+}
+
+export function getStoredAdminUsers(): AdminUser[] {
+  if (typeof window === "undefined") return DEFAULT_ADMIN_USERS;
+  try {
+    const raw = localStorage.getItem("vaich_admin_users");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.error("Error loading admin users:", err);
+  }
+  return DEFAULT_ADMIN_USERS;
+}
+
+export function saveStoredAdminUsers(users: AdminUser[]): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem("vaich_admin_users", JSON.stringify(users));
+    window.dispatchEvent(new CustomEvent("vaich_admin_users_updated", { detail: users }));
+  } catch (err) {
+    console.error("Error saving admin users:", err);
+  }
+}
+
 export type SiteConfig = {
   products: Product[];
   categoryRows: ProductCategoryRow[];
   layout: LayoutMode;
+  masterPin?: string;
+  adminUsers?: AdminUser[];
   updatedAt: string;
 };
 
@@ -379,6 +449,14 @@ export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
       if (fetchedData.layout) {
         localStorage.setItem("vaich_layout_config", fetchedData.layout);
       }
+      if (fetchedData.masterPin) {
+        localStorage.setItem("vaich_admin_pin", fetchedData.masterPin);
+        window.dispatchEvent(new CustomEvent("vaich_admin_pin_updated", { detail: fetchedData.masterPin }));
+      }
+      if (Array.isArray(fetchedData.adminUsers) && fetchedData.adminUsers.length > 0) {
+        localStorage.setItem("vaich_admin_users", JSON.stringify(fetchedData.adminUsers));
+        window.dispatchEvent(new CustomEvent("vaich_admin_users_updated", { detail: fetchedData.adminUsers }));
+      }
       if (fetchedData.updatedAt) {
         localStorage.setItem("vaich_config_updated_at", fetchedData.updatedAt);
       }
@@ -406,6 +484,12 @@ export function useDynamicProducts() {
   const [layout, setLayoutState] = useState<LayoutMode>(() =>
     typeof window !== "undefined" ? getStoredLayout() : "1-row"
   );
+  const [adminUsers, setAdminUsersState] = useState<AdminUser[]>(() =>
+    typeof window !== "undefined" ? getStoredAdminUsers() : DEFAULT_ADMIN_USERS
+  );
+  const [masterPin, setMasterPinState] = useState<string>(() =>
+    typeof window !== "undefined" ? getStoredMasterPin() : DEFAULT_ADMIN_PIN
+  );
   const [isCloudSyncing, setIsCloudSyncing] = useState(false);
   const [lastCloudSync, setLastCloudSync] = useState<string | null>(() =>
     typeof window !== "undefined" ? localStorage.getItem("vaich_config_updated_at") : null
@@ -415,23 +499,33 @@ export function useDynamicProducts() {
     setItems(getStoredProducts());
     setRowsState(getStoredCategoryRows());
     setLayoutState(getStoredLayout());
+    setAdminUsersState(getStoredAdminUsers());
+    setMasterPinState(getStoredMasterPin());
 
     // Pull from cloud on mount
     syncSiteConfigWithCloud().then((cfg) => {
       if (cfg?.updatedAt) setLastCloudSync(cfg.updatedAt);
+      if (cfg?.adminUsers) setAdminUsersState(cfg.adminUsers);
+      if (cfg?.masterPin) setMasterPinState(cfg.masterPin);
     });
 
     const handleProducts = () => setItems(getStoredProducts());
     const handleRows = () => setRowsState(getStoredCategoryRows());
     const handleLayout = () => setLayoutState(getStoredLayout());
+    const handleAdminUsers = () => setAdminUsersState(getStoredAdminUsers());
+    const handleMasterPin = () => setMasterPinState(getStoredMasterPin());
 
     window.addEventListener("vaich_products_updated", handleProducts);
     window.addEventListener("vaich_rows_updated", handleRows);
     window.addEventListener("vaich_layout_updated", handleLayout);
+    window.addEventListener("vaich_admin_users_updated", handleAdminUsers);
+    window.addEventListener("vaich_admin_pin_updated", handleMasterPin);
 
     const handleFocus = () => {
       syncSiteConfigWithCloud().then((cfg) => {
         if (cfg?.updatedAt) setLastCloudSync(cfg.updatedAt);
+        if (cfg?.adminUsers) setAdminUsersState(cfg.adminUsers);
+        if (cfg?.masterPin) setMasterPinState(cfg.masterPin);
       });
     };
     window.addEventListener("focus", handleFocus);
@@ -441,6 +535,8 @@ export function useDynamicProducts() {
       window.removeEventListener("vaich_products_updated", handleProducts);
       window.removeEventListener("vaich_rows_updated", handleRows);
       window.removeEventListener("vaich_layout_updated", handleLayout);
+      window.removeEventListener("vaich_admin_users_updated", handleAdminUsers);
+      window.removeEventListener("vaich_admin_pin_updated", handleMasterPin);
       window.removeEventListener("focus", handleFocus);
       document.removeEventListener("visibilitychange", handleFocus);
     };
@@ -461,26 +557,44 @@ export function useDynamicProducts() {
     saveStoredCategoryRows(newRows);
   };
 
+  const updateAdminUsers = (newUsers: AdminUser[]) => {
+    setAdminUsersState(newUsers);
+    saveStoredAdminUsers(newUsers);
+  };
+
+  const updateMasterPin = (newPin: string) => {
+    setMasterPinState(newPin);
+    saveStoredMasterPin(newPin);
+  };
+
   const publishToCloud = async (override?: {
     products?: Product[];
     rows?: ProductCategoryRow[];
     layout?: LayoutMode;
+    masterPin?: string;
+    adminUsers?: AdminUser[];
   }): Promise<{ success: boolean; error?: string }> => {
     setIsCloudSyncing(true);
     const currentProducts = override?.products || items;
     const currentRows = override?.rows || rows;
     const currentLayout = override?.layout || layout;
+    const currentMasterPin = override?.masterPin || masterPin;
+    const currentAdminUsers = override?.adminUsers || adminUsers;
 
     const fullConfig: SiteConfig = {
       products: currentProducts,
       categoryRows: currentRows,
       layout: currentLayout,
+      masterPin: currentMasterPin,
+      adminUsers: currentAdminUsers,
       updatedAt: new Date().toISOString(),
     };
 
     saveStoredProducts(currentProducts);
     saveStoredCategoryRows(currentRows);
     saveStoredLayout(currentLayout);
+    saveStoredMasterPin(currentMasterPin);
+    saveStoredAdminUsers(currentAdminUsers);
 
     const result = await commitConfigToCloud(fullConfig);
     setIsCloudSyncing(false);
@@ -495,9 +609,13 @@ export function useDynamicProducts() {
     products: items,
     rows,
     layout,
+    adminUsers,
+    masterPin,
     setLayout: changeLayout,
     setProducts: updateProducts,
     setRows: updateRows,
+    setAdminUsers: updateAdminUsers,
+    setMasterPin: updateMasterPin,
     resetToDefault: resetProductsToDefault,
     publishToCloud,
     isCloudSyncing,

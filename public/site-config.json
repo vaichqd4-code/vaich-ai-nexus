@@ -121,5 +121,16 @@
     }
   ],
   "layout": "1-row",
-  "updatedAt": "2026-10-15T07:56:23.778Z"
+  "masterPin": "Yh111111",
+  "adminUsers": [
+    {
+      "id": "admin-master",
+      "name": "مدیر ارشد (مالک)",
+      "email": "vaichqd4@gmail.com",
+      "pin": "Yh111111",
+      "role": "superadmin",
+      "createdAt": "2026-10-15T00:00:00.000Z"
+    }
+  ],
+  "updatedAt": "2026-10-15T08:15:00.000Z"
 }

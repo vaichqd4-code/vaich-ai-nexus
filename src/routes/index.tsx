@@ -129,19 +129,29 @@ function ProductRowSection({
   if (products.length === 0) return null;
 
   return (
-    <Section id={row.id} title={row.title} subtitle={row.subtitle}>
-      <div className="relative">
-        {/* Navigation Arrows with soft purple glow (without hint text) */}
+    <section id={row.id} className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
+      {/* Title & Navigation Arrows Header */}
+      <div className="flex items-center justify-between gap-3 mb-3">
+        <div>
+          <h2 className="text-lg sm:text-2xl font-black text-foreground flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-primary" />
+            <span>{row.title}</span>
+          </h2>
+          {row.subtitle && (
+            <p className="mt-0.5 text-[11px] sm:text-xs text-muted-foreground">{row.subtitle}</p>
+          )}
+        </div>
+
         {layout !== "grid" && products.length > 1 && (
-          <div className="mb-3 flex items-center justify-end gap-2.5">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={() => scrollCarousel("right")}
               aria-label="محصول قبلی"
               title="مشاهده موارد قبلی"
-              className="grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-2xl border-2 border-purple-500/50 bg-card/90 text-purple-600 dark:text-purple-300 shadow-[0_0_14px_rgba(168,85,247,0.32)] transition-all hover:border-purple-500 hover:bg-purple-500/10 hover:shadow-[0_0_22px_rgba(168,85,247,0.55)] active:scale-95"
+              className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl border border-purple-500/40 bg-card/90 text-purple-600 dark:text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)] transition-all hover:border-purple-500 hover:bg-purple-500/10 active:scale-95"
             >
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="m9 18 6-6-6-6" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
@@ -150,20 +160,22 @@ function ProductRowSection({
               onClick={() => scrollCarousel("left")}
               aria-label="محصول بعدی"
               title="مشاهده موارد بعدی"
-              className="grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-2xl border-2 border-purple-500/50 bg-card/90 text-purple-600 dark:text-purple-300 shadow-[0_0_14px_rgba(168,85,247,0.32)] transition-all hover:border-purple-500 hover:bg-purple-500/10 hover:shadow-[0_0_22px_rgba(168,85,247,0.55)] active:scale-95"
+              className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl border border-purple-500/40 bg-card/90 text-purple-600 dark:text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)] transition-all hover:border-purple-500 hover:bg-purple-500/10 active:scale-95"
             >
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
           </div>
         )}
+      </div>
 
+      <div className="relative">
         {/* 1-Row Carousel */}
         {layout === "1-row" && (
           <div
             ref={carouselRef}
-            className="flex gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-4 px-1 scrollbar-none"
+            className="flex gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-1 scrollbar-none"
           >
             {products.map((p) => (
               <ProductCard key={p.slug} product={p} />
@@ -175,7 +187,7 @@ function ProductRowSection({
         {layout === "2-row" && (
           <div
             ref={carouselRef}
-            className="grid grid-rows-2 grid-flow-col auto-cols-[185px] xs:auto-cols-[210px] sm:auto-cols-[315px] gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-4 px-1 scrollbar-none"
+            className="grid grid-rows-2 grid-flow-col auto-cols-[180px] xs:auto-cols-[205px] sm:auto-cols-[315px] gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-1 scrollbar-none"
           >
             {products.map((p) => (
               <ProductCard key={p.slug} product={p} />
@@ -185,14 +197,14 @@ function ProductRowSection({
 
         {/* Grid View */}
         {layout === "grid" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 py-4 justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 py-2 justify-items-center">
             {products.map((p) => (
               <ProductCard key={p.slug} product={p} className="w-full max-w-[320px]" />
             ))}
           </div>
         )}
       </div>
-    </Section>
+    </section>
   );
 }
 

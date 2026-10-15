@@ -5,11 +5,41 @@ import {
   formatPrice,
   toPersianDigits,
   normalizePin,
+  DEFAULT_ADMIN_PIN,
+  MASTER_ADMIN_EMAIL,
+  DEFAULT_CATEGORY_ROWS,
   type Product,
   type ProductCategoryRow,
   type LayoutMode,
+  type AdminUser,
 } from "@/lib/products";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
+import {
+  ShieldCheck,
+  Lock,
+  Package,
+  Layers,
+  LayoutGrid,
+  KeyRound,
+  Users,
+  UserPlus,
+  Trash2,
+  Edit3,
+  Plus,
+  X,
+  Sparkles,
+  Rows,
+  Columns,
+  LogOut,
+  RefreshCw,
+  Check,
+  AlertTriangle,
+  ExternalLink,
+  Star,
+  Shield,
+  Mail,
+  UserCheck,
+} from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -21,16 +51,18 @@ export const Route = createFileRoute("/admin")({
   component: AdminPage,
 });
 
-const DEFAULT_ADMIN_PIN = "Yh111111";
-
 export function AdminPage() {
   const {
     products,
     rows,
     layout,
+    adminUsers,
+    masterPin,
     setLayout,
     setProducts,
     setRows,
+    setAdminUsers,
+    setMasterPin,
     resetToDefault,
     publishToCloud,
     isCloudSyncing,
@@ -39,10 +71,15 @@ export function AdminPage() {
 
   // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{ email: string; name: string; role: string } | null>(null);
   const [inputEmail, setInputEmail] = useState("");
   const [inputPin, setInputPin] = useState("");
   const [authError, setAuthError] = useState("");
-  const [activeTab, setActiveTab] = useState<"products" | "rows" | "layout" | "settings">("products");
+  const [activeTab, setActiveTab] = useState<"products" | "rows" | "layout" | "admins" | "settings">("products");
+
+  // Admin Management Modal State
+  const [isEditingAdmin, setIsEditingAdmin] = useState(false);
+  const [editAdminUser, setEditAdminUser] = useState<Partial<AdminUser> | null>(null);
 
   // Cloud Sync Status Message
   const [cloudSyncMsg, setCloudSyncMsg] = useState("");
@@ -69,6 +106,11 @@ export function AdminPage() {
         const parsed = JSON.parse(savedAuth);
         if (parsed.authenticated) {
           setIsAuthenticated(true);
+          setCurrentUser({
+            email: parsed.email || MASTER_ADMIN_EMAIL,
+            name: parsed.name || "مدیر ارشد",
+            role: parsed.role || "superadmin",
+          });
         }
       } catch (e) {}
     }
@@ -79,26 +121,28 @@ export function AdminPage() {
     products?: Product[];
     rows?: ProductCategoryRow[];
     layout?: LayoutMode;
+    masterPin?: string;
+    adminUsers?: AdminUser[];
   }) => {
     setCloudSyncMsg("⏳ در حال ذخیره و همگام‌سازی ابری با سرور جهانی...");
     const res = await publishToCloud(override);
     if (res.success) {
-      setCloudSyncMsg("✅ با موفقیت در فضای ابری منتشر شد! تمام کاربران روی موبایل و کامپیوتر فوراً تغییرات را می‌بینند.");
+      setCloudSyncMsg("✅ با موفقیت در فضای ابری منتشر شد! تمام کاربران روی موبایل و لپ‌تاپ فوراً تغییرات را می‌بینند.");
       setTimeout(() => setCloudSyncMsg(""), 6000);
     } else {
       setCloudSyncMsg(`❌ خطا در ذخیره ابری: ${res.error || "خطای اتصال به سرور"}`);
     }
   };
 
-  // Required Email + Password Authentication
+  // Required Email + Password Authentication with Multi-Device Cloud Sync
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError("");
 
     const trimmedEmail = inputEmail.trim().toLowerCase();
     const normInput = normalizePin(inputPin);
-    const storedPin = localStorage.getItem("vaich_admin_pin");
-    const validPin = normalizePin(storedPin || DEFAULT_ADMIN_PIN);
+    const effectiveMasterPin = normalizePin(masterPin || localStorage.getItem("vaich_admin_pin") || DEFAULT_ADMIN_PIN);
+    const fallbackPin = normalizePin(DEFAULT_ADMIN_PIN);
 
     if (!trimmedEmail) {
       setAuthError("لطفاً ایمیل اختصاصی مدیریت را وارد کنید.");
@@ -110,27 +154,59 @@ export function AdminPage() {
       return;
     }
 
-    const isEmailValid = trimmedEmail === "vaichqd4@gmail.com";
-    const isPinValid = normInput === validPin;
+    // Check 1: Master Admin Account (email vaichqd4@gmail.com with synced masterPin OR default Yh111111)
+    const isMasterEmail = trimmedEmail === MASTER_ADMIN_EMAIL.toLowerCase();
+    const isMasterPinMatch = normInput === effectiveMasterPin || normInput === fallbackPin;
 
-    if (!isEmailValid || !isPinValid) {
-      setAuthError("ایمیل یا رمز عبور مدیر نادرست است.");
+    if (isMasterEmail && isMasterPinMatch) {
+      const session = {
+        authenticated: true,
+        email: MASTER_ADMIN_EMAIL,
+        name: "مدیر ارشد (مالک)",
+        role: "superadmin",
+        loggedInAt: new Date().toISOString(),
+      };
+      localStorage.setItem("vaich_admin_auth", JSON.stringify(session));
+      setCurrentUser({
+        email: MASTER_ADMIN_EMAIL,
+        name: "مدیر ارشد (مالک)",
+        role: "superadmin",
+      });
+      setIsAuthenticated(true);
       return;
     }
 
-    const session = {
-      authenticated: true,
-      email: trimmedEmail,
-      loggedInAt: new Date().toISOString(),
-    };
-    localStorage.setItem("vaich_admin_auth", JSON.stringify(session));
-    setIsAuthenticated(true);
+    // Check 2: Any added admin user from adminUsers list
+    const foundUser = adminUsers.find(
+      (u) => u.email.trim().toLowerCase() === trimmedEmail && normalizePin(u.pin) === normInput
+    );
+
+    if (foundUser) {
+      const session = {
+        authenticated: true,
+        email: foundUser.email,
+        name: foundUser.name,
+        role: foundUser.role,
+        loggedInAt: new Date().toISOString(),
+      };
+      localStorage.setItem("vaich_admin_auth", JSON.stringify(session));
+      setCurrentUser({
+        email: foundUser.email,
+        name: foundUser.name,
+        role: foundUser.role,
+      });
+      setIsAuthenticated(true);
+      return;
+    }
+
+    setAuthError("ایمیل یا رمز عبور مدیر نادرست است.");
   };
 
   // Logout handler
   const handleLogout = () => {
     localStorage.removeItem("vaich_admin_auth");
     setIsAuthenticated(false);
+    setCurrentUser(null);
     setInputPin("");
     setInputEmail("");
   };
@@ -342,17 +418,90 @@ export function AdminPage() {
     }
   };
 
-  // Change Admin Master PIN
+  // Change Admin Master PIN (Global Cloud Sync across Laptop, Mobile & Tablet)
   const handleChangePin = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newPin || newPin.length < 4) {
       setPinChangeMsg("رمز عبور باید حداقل ۴ کاراکتر باشد.");
       return;
     }
-    localStorage.setItem("vaich_admin_pin", newPin);
+    const cleanPin = newPin.trim();
+    setMasterPin(cleanPin);
+    const updatedAdmins = adminUsers.map((u) =>
+      u.email.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()
+        ? { ...u, pin: cleanPin }
+        : u
+    );
+    setAdminUsers(updatedAdmins);
+    handlePublishCloud({ masterPin: cleanPin, adminUsers: updatedAdmins });
     setNewPin("");
-    setPinChangeMsg("رمز عبور مدیر با موفقیت تغییر کرد!");
-    setTimeout(() => setPinChangeMsg(""), 4000);
+    setPinChangeMsg("رمز عبور مدیر با موفقیت تغییر کرد و در تمام دستگاه‌ها (موبایل و لپ‌تاپ) همگام شد!");
+    setTimeout(() => setPinChangeMsg(""), 5000);
+  };
+
+  // Admin Management Handlers
+  const handleOpenAddAdmin = () => {
+    setEditAdminUser({
+      id: `admin-${Date.now().toString(36)}`,
+      name: "",
+      email: "",
+      pin: "",
+      role: "admin",
+      createdAt: new Date().toISOString(),
+    });
+    setIsEditingAdmin(true);
+  };
+
+  const handleOpenEditAdmin = (user: AdminUser) => {
+    setEditAdminUser({ ...user });
+    setIsEditingAdmin(true);
+  };
+
+  const handleSaveAdminUser = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editAdminUser || !editAdminUser.name || !editAdminUser.email || !editAdminUser.pin) {
+      alert("لطفاً نام، ایمیل و رمز عبور مدیر را به طور کامل وارد کنید.");
+      return;
+    }
+
+    const cleanEmail = editAdminUser.email.trim().toLowerCase();
+    const cleanPin = editAdminUser.pin.trim();
+
+    const newAdmin: AdminUser = {
+      id: editAdminUser.id || `admin-${Date.now().toString(36)}`,
+      name: editAdminUser.name.trim(),
+      email: cleanEmail,
+      pin: cleanPin,
+      role: editAdminUser.role || "admin",
+      createdAt: editAdminUser.createdAt || new Date().toISOString(),
+    };
+
+    const exists = adminUsers.some((u) => u.id === newAdmin.id || u.email.toLowerCase() === cleanEmail);
+    let updated: AdminUser[];
+    if (exists) {
+      updated = adminUsers.map((u) =>
+        u.id === newAdmin.id || u.email.toLowerCase() === cleanEmail ? newAdmin : u
+      );
+    } else {
+      updated = [...adminUsers, newAdmin];
+    }
+
+    setAdminUsers(updated);
+    handlePublishCloud({ adminUsers: updated });
+    setIsEditingAdmin(false);
+    setEditAdminUser(null);
+  };
+
+  const handleDeleteAdmin = (id: string, email: string) => {
+    if (email.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()) {
+      alert("حساب مدیر ارشد اصلی قابل حذف نیست.");
+      return;
+    }
+    if (confirm(`آیا از حذف دسترسی این مدیر اطمینان دارید؟`)) {
+      const updated = adminUsers.filter((u) => u.id !== id && u.email.toLowerCase() !== email.toLowerCase());
+      setAdminUsers(updated);
+      handlePublishCloud({ adminUsers: updated });
+    }
   };
 
   // Reset to default
@@ -369,8 +518,8 @@ export function AdminPage() {
       <div className="aurora min-h-[85vh] flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md rounded-3xl border border-border/80 bg-card/90 p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
           <div className="text-center">
-            <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-linear-to-tr from-primary/20 to-accent/20 border border-primary/30 text-2xl shadow-inner">
-              🔐
+            <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-linear-to-tr from-primary/20 to-accent/20 border border-primary/30 shadow-inner text-primary">
+              <Lock className="h-8 w-8 text-primary" />
             </div>
             <h1 className="text-2xl font-black tracking-tight text-foreground sm:text-3xl">
               ورود به پنل مدیریت VAICH
@@ -419,15 +568,16 @@ export function AdminPage() {
 
             <button
               type="submit"
-              className="neon-gradient w-full rounded-2xl py-3.5 text-sm font-bold text-white shadow-lg transition-transform hover:scale-[1.01] active:scale-[0.99]"
+              className="neon-gradient w-full rounded-2xl py-3.5 text-sm font-bold text-white shadow-lg transition-transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
             >
-              ورود به پنل مدیریت
+              <ShieldCheck className="h-4 w-4" />
+              <span>ورود به پنل مدیریت</span>
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <Link to="/" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-              ← بازگشت به صفحه اصلی فروشگاه
+            <Link to="/" className="text-xs text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1">
+              <span>بازگشت به صفحه اصلی فروشگاه</span>
             </Link>
           </div>
         </div>
@@ -446,14 +596,14 @@ export function AdminPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6">
           <div className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/20 text-primary font-bold">
-              ⚡
+              <ShieldCheck className="h-5 w-5 text-primary" />
             </span>
             <div>
               <h1 className="text-base font-extrabold text-foreground sm:text-lg">
                 پنل مدیریت فروشگاه VAICH
               </h1>
               <p className="text-[11px] text-muted-foreground">
-                سطح دسترسی: <span className="font-semibold text-emerald-500">مدیر کل فروشگاه (تایید‌شده ✓)</span>
+                سطح دسترسی: <span className="font-semibold text-emerald-500">{currentUser?.name || "مدیر ارشد"} ({currentUser?.role === "superadmin" ? "مدیر کل تایید‌شده ✓" : "مدیر سیستم تایید‌شده ✓"})</span>
               </p>
             </div>
           </div>
@@ -461,16 +611,18 @@ export function AdminPage() {
           <div className="flex items-center gap-2">
             <Link
               to="/"
-              className="hidden sm:inline-flex rounded-xl border border-border px-3.5 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-border px-3.5 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary transition-colors"
             >
-              مشاهده فروشگاه
+              <span>مشاهده فروشگاه</span>
+              <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
             </Link>
             <button
               type="button"
               onClick={handleLogout}
-              className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-1.5 text-xs font-bold text-rose-500 hover:bg-rose-500 hover:text-white transition-all"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-1.5 text-xs font-bold text-rose-500 hover:bg-rose-500 hover:text-white transition-all"
             >
-              خروج
+              <LogOut className="h-3.5 w-3.5" />
+              <span>خروج</span>
             </button>
           </div>
         </div>
@@ -482,49 +634,66 @@ export function AdminPage() {
           <button
             type="button"
             onClick={() => setActiveTab("products")}
-            className={`rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
+            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
               activeTab === "products"
                 ? "bg-primary text-white shadow-md"
                 : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
             }`}
           >
-            📦 مدیریت محصولات ({toPersianDigits(products.length)})
+            <Package className="h-4 w-4" />
+            <span>مدیریت محصولات ({toPersianDigits(products.length)})</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab("rows")}
-            className={`rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
+            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
               activeTab === "rows"
                 ? "bg-primary text-white shadow-md"
                 : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
             }`}
           >
-            📑 مدیریت ردیف‌ها و دسته‌بندی‌ها ({toPersianDigits(rows.length)})
+            <Layers className="h-4 w-4" />
+            <span>مدیریت ردیف‌ها ({toPersianDigits(rows.length)})</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab("layout")}
-            className={`rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
+            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
               activeTab === "layout"
                 ? "bg-primary text-white shadow-md"
                 : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
             }`}
           >
-            📐 چیدمان نوار سایت ({layout === "1-row" ? "۱ ردیفه" : layout === "2-row" ? "۲ ردیفه" : "شبکه‌ای"})
+            <LayoutGrid className="h-4 w-4" />
+            <span>چیدمان نوار سایت ({layout === "1-row" ? "۱ ردیفه" : layout === "2-row" ? "۲ ردیفه" : "شبکه‌ای"})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("admins")}
+            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
+              activeTab === "admins"
+                ? "bg-primary text-white shadow-md"
+                : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Users className="h-4 w-4" />
+            <span>مدیریت مدیران ({toPersianDigits(adminUsers.length)})</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab("settings")}
-            className={`rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
+            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
               activeTab === "settings"
                 ? "bg-primary text-white shadow-md"
                 : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
             }`}
           >
-            ⚙️ رمز عبور و تنظیمات
+            <KeyRound className="h-4 w-4" />
+            <span>رمز عبور و تنظیمات</span>
           </button>
         </div>
 
@@ -557,16 +726,8 @@ export function AdminPage() {
               onClick={() => handlePublishCloud()}
               className="flex items-center gap-2 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-4 py-2 text-xs font-bold shadow-md transition-all disabled:opacity-50"
             >
-              {isCloudSyncing ? (
-                <>
-                  <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                  <span>در حال ذخیره در سرور ابری...</span>
-                </>
-              ) : (
-                <>
-                  <span>🚀 انتشار سراسری در سرور</span>
-                </>
-              )}
+              <RefreshCw className={`h-3.5 w-3.5 ${isCloudSyncing ? "animate-spin" : ""}`} />
+              <span>{isCloudSyncing ? "در حال ذخیره در سرور ابری..." : "انتشار سراسری در سرور"}</span>
             </button>
           </div>
         </div>
@@ -609,7 +770,7 @@ export function AdminPage() {
                   onClick={handleOpenAddProduct}
                   className="neon-gradient flex h-full w-full items-center justify-center gap-2 rounded-3xl p-4 text-sm font-extrabold text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  <span className="text-xl">+</span>
+                  <Plus className="h-5 w-5" />
                   <span>افزودن محصول جدید</span>
                 </button>
               </div>
@@ -691,13 +852,14 @@ export function AdminPage() {
                         <button
                           type="button"
                           onClick={() => handleToggleFeatured(p.slug)}
-                          className={`rounded-xl border px-3 py-1.5 text-xs font-bold transition-all ${
+                          className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all ${
                             hasBadge
                               ? "border-primary bg-primary/10 text-primary"
                               : "border-border bg-secondary/40 text-muted-foreground hover:text-foreground"
                           }`}
                         >
-                          {hasBadge ? "★ برچسب فعال" : "☆ افزودن برچسب ویژه"}
+                          <Star className={`h-3.5 w-3.5 ${hasBadge ? "fill-primary text-primary" : "text-muted-foreground"}`} />
+                          <span>{hasBadge ? "برچسب فعال" : "افزودن برچسب"}</span>
                         </button>
 
                         {/* Quick Discount Presets */}
@@ -736,19 +898,20 @@ export function AdminPage() {
                         <button
                           type="button"
                           onClick={() => handleOpenEditProduct(p)}
-                          className="rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground hover:border-primary hover:text-primary transition-colors"
+                          className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground hover:border-primary hover:text-primary transition-colors"
                         >
-                          ویرایش و شخصی‌سازی
+                          <Edit3 className="h-3.5 w-3.5" />
+                          <span>ویرایش</span>
                         </button>
 
                         {/* Delete Button */}
                         <button
                           type="button"
                           onClick={() => handleDeleteProduct(p.slug)}
-                          className="rounded-xl border border-rose-500/30 bg-rose-500/5 px-2.5 py-1.5 text-xs font-semibold text-rose-500 hover:bg-rose-500 hover:text-white transition-all"
+                          className="inline-flex items-center justify-center rounded-xl border border-rose-500/30 bg-rose-500/5 p-1.5 text-xs font-semibold text-rose-500 hover:bg-rose-500 hover:text-white transition-all"
                           title="حذف محصول"
                         >
-                          ✕
+                          <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
                     </div>
@@ -775,9 +938,10 @@ export function AdminPage() {
               <button
                 type="button"
                 onClick={handleOpenAddRow}
-                className="neon-gradient shrink-0 rounded-2xl px-5 py-2.5 text-xs font-extrabold text-white shadow-md transition-transform hover:scale-105"
+                className="neon-gradient shrink-0 rounded-2xl px-5 py-2.5 text-xs font-extrabold text-white shadow-md transition-transform hover:scale-105 inline-flex items-center gap-1.5"
               >
-                + افزودن ردیف جدید
+                <Plus className="h-4 w-4" />
+                <span>افزودن ردیف جدید</span>
               </button>
             </div>
 
@@ -805,17 +969,19 @@ export function AdminPage() {
                       <button
                         type="button"
                         onClick={() => handleOpenEditRow(row)}
-                        className="rounded-xl border border-border bg-secondary/50 px-3 py-1.5 text-xs font-semibold text-foreground hover:border-primary transition-all"
+                        className="inline-flex items-center gap-1 rounded-xl border border-border bg-secondary/50 px-3 py-1.5 text-xs font-semibold text-foreground hover:border-primary transition-all"
                       >
-                        ویرایش عنوان
+                        <Edit3 className="h-3.5 w-3.5" />
+                        <span>ویرایش عنوان</span>
                       </button>
                       {rows.length > 1 && (
                         <button
                           type="button"
                           onClick={() => handleDeleteRow(row.id)}
-                          className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-rose-500 hover:bg-rose-500 hover:text-white transition-all"
+                          className="inline-flex items-center gap-1 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-rose-500 hover:bg-rose-500 hover:text-white transition-all"
                         >
-                          حذف ردیف
+                          <Trash2 className="h-3.5 w-3.5" />
+                          <span>حذف ردیف</span>
                         </button>
                       )}
                     </div>
@@ -851,7 +1017,9 @@ export function AdminPage() {
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xl">↔️</span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/15 text-primary">
+                      <Rows className="h-5 w-5" />
+                    </span>
                     {layout === "1-row" && (
                       <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-white">
                         فعال
@@ -877,7 +1045,9 @@ export function AdminPage() {
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xl">⚌</span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/15 text-primary">
+                      <Columns className="h-5 w-5" />
+                    </span>
                     {layout === "2-row" && (
                       <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-white">
                         فعال
@@ -903,7 +1073,9 @@ export function AdminPage() {
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xl">▦</span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/15 text-primary">
+                      <LayoutGrid className="h-5 w-5" />
+                    </span>
                     {layout === "grid" && (
                       <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-white">
                         فعال
@@ -924,16 +1096,126 @@ export function AdminPage() {
           </div>
         )}
 
-        {/* ---------------- TAB 4: SETTINGS ---------------- */}
+        {/* ---------------- TAB 4: ADMIN USERS MANAGEMENT ---------------- */}
+        {activeTab === "admins" && (
+          <div className="mt-6 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border/80 bg-card p-6">
+              <div>
+                <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                  <Users className="h-5 w-5 text-primary" />
+                  <span>مدیریت مدیران و دسترسی‌های فروشگاه</span>
+                </h2>
+                <p className="mt-1 text-xs text-muted-foreground leading-5">
+                  مدیران جدید را با ایمیل و رمز اختصاصی تعریف کنید. تمام تغییرات بلافاصله در سرور ابری ثبت شده و در هر دو دستگاه موبایل و لپ‌تاپ فوراً معتبر است.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleOpenAddAdmin}
+                className="neon-gradient shrink-0 rounded-2xl px-5 py-2.5 text-xs font-extrabold text-white shadow-md transition-transform hover:scale-105 inline-flex items-center gap-1.5"
+              >
+                <UserPlus className="h-4 w-4" />
+                <span>افزودن مدیر جدید</span>
+              </button>
+            </div>
+
+            <div className="rounded-3xl border border-border/80 bg-card overflow-hidden shadow-xs">
+              <div className="border-b border-border/60 p-4 sm:px-6">
+                <h3 className="text-base font-bold text-foreground">
+                  لیست مدیران مجاز فروشگاه
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  مدیران می‌توانند با ایمیل اختصاصی خود وارد پنل شده و محصولات، قیمت‌ها و ردیف‌ها را مدیریت کنند.
+                </p>
+              </div>
+
+              <div className="divide-y divide-border/60">
+                {adminUsers.map((admin) => {
+                  const isMaster = admin.email.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase();
+
+                  return (
+                    <div
+                      key={admin.id}
+                      className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 hover:bg-secondary/20 transition-colors"
+                    >
+                      <div className="flex items-center gap-3.5">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/15 text-primary font-bold">
+                          {isMaster ? <Shield className="h-5 w-5" /> : <UserCheck className="h-5 w-5" />}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-foreground">{admin.name}</span>
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                                isMaster
+                                  ? "bg-purple-500/20 text-purple-600 dark:text-purple-300 border border-purple-500/30"
+                                  : admin.role === "admin"
+                                  ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30"
+                                  : "bg-blue-500/20 text-blue-600 dark:text-blue-300 border border-blue-500/30"
+                              }`}
+                            >
+                              {isMaster
+                                ? "مدیر ارشد (مالک کل)"
+                                : admin.role === "admin"
+                                ? "مدیر فروشگاه"
+                                : "ویرایشگر محتوا"}
+                            </span>
+                          </div>
+                          <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Mail className="h-3 w-3" />
+                              <span dir="ltr">{admin.email}</span>
+                            </span>
+                            <span>•</span>
+                            <span className="flex items-center gap-1">
+                              <KeyRound className="h-3 w-3" />
+                              <span>رمز: <code className="text-foreground">••••••••</code></span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEditAdmin(admin)}
+                          className="inline-flex items-center gap-1 rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground hover:border-primary hover:text-primary transition-colors"
+                        >
+                          <Edit3 className="h-3.5 w-3.5" />
+                          <span>ویرایش / تغییر رمز</span>
+                        </button>
+
+                        {!isMaster && (
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteAdmin(admin.id, admin.email)}
+                            className="inline-flex items-center justify-center rounded-xl border border-rose-500/30 bg-rose-500/10 p-1.5 text-xs font-semibold text-rose-500 hover:bg-rose-500 hover:text-white transition-all"
+                            title="حذف دسترسی مدیر"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ---------------- TAB 5: SETTINGS ---------------- */}
         {activeTab === "settings" && (
           <div className="mt-6 grid gap-6 sm:grid-cols-2">
             {/* Change Master PIN */}
             <div className="rounded-3xl border border-border/80 bg-card p-6">
-              <h2 className="text-base font-bold text-foreground">
-                تغییر رمز عبور ورود به پنل
+              <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+                <KeyRound className="h-4 w-4 text-primary" />
+                <span>تغییر رمز عبور ورود به پنل</span>
               </h2>
               <p className="mt-1 text-xs text-muted-foreground">
-                وضعیت امنیت: <span className="text-emerald-500 font-bold">رمز عبور اختصاصی فعال است</span>
+                وضعیت امنیت: <span className="text-emerald-500 font-bold">همگام‌سازی ابری فعال است ✓</span>
               </p>
 
               <form onSubmit={handleChangePin} className="mt-4 space-y-3">
@@ -957,17 +1239,19 @@ export function AdminPage() {
                 </div>
                 <button
                   type="submit"
-                  className="rounded-2xl bg-primary px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-all"
+                  className="rounded-2xl bg-primary px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-all inline-flex items-center gap-1.5"
                 >
-                  ذخیره رمز جدید
+                  <Check className="h-3.5 w-3.5" />
+                  <span>ذخیره و همگام‌سازی ابری رمز جدید</span>
                 </button>
               </form>
             </div>
 
             {/* Reset Defaults */}
             <div className="rounded-3xl border border-border/80 bg-card p-6 space-y-4">
-              <h2 className="text-base font-bold text-foreground">
-                تنظیمات کارخانه
+              <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4 text-amber-500" />
+                <span>تنظیمات کارخانه</span>
               </h2>
               <p className="text-xs text-muted-foreground leading-5">
                 در صورت نیاز می‌توانید محصولات و ردیف‌های سایت را به حالت پیش‌فرض اولیه بازگردانید.
@@ -978,7 +1262,7 @@ export function AdminPage() {
                 onClick={handleResetToDefault}
                 className="flex items-center justify-center gap-2 rounded-2xl border border-rose-500/30 bg-rose-500/10 py-3 text-xs font-bold text-rose-500 hover:bg-rose-500 hover:text-white transition-all w-full"
               >
-                <span>⚠️</span>
+                <AlertTriangle className="h-4 w-4" />
                 <span>بازنشانی به محصولات و ردیف‌های پیش‌فرض VAICH</span>
               </button>
             </div>
@@ -1004,7 +1288,7 @@ export function AdminPage() {
                 }}
                 className="grid h-8 w-8 place-items-center rounded-xl bg-secondary text-muted-foreground hover:text-foreground"
               >
-                ✕
+                <X className="h-4 w-4" />
               </button>
             </div>
 
@@ -1293,7 +1577,7 @@ export function AdminPage() {
                 }}
                 className="grid h-8 w-8 place-items-center rounded-xl bg-secondary text-muted-foreground hover:text-foreground"
               >
-                ✕
+                <X className="h-4 w-4" />
               </button>
             </div>
 
@@ -1341,6 +1625,112 @@ export function AdminPage() {
                   className="neon-gradient rounded-2xl px-5 py-2 text-xs font-bold text-white shadow-md transition-transform hover:scale-105"
                 >
                   ذخیره ردیف
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ---------------- ADD / EDIT ADMIN USER MODAL ---------------- */}
+      {isEditingAdmin && editAdminUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-md rounded-3xl border border-border bg-card p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-border/60 pb-3">
+              <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+                <Users className="h-4 w-4 text-primary" />
+                <span>{editAdminUser.name ? `ویرایش مدیر: ${editAdminUser.name}` : "افزودن مدیر جدید"}</span>
+              </h2>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsEditingAdmin(false);
+                  setEditAdminUser(null);
+                }}
+                className="grid h-8 w-8 place-items-center rounded-xl bg-secondary text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveAdminUser} className="mt-4 space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">
+                  نام و نام خانوادگی مدیر: *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editAdminUser.name || ""}
+                  onChange={(e) => setEditAdminUser({ ...editAdminUser, name: e.target.value })}
+                  placeholder="مثلاً: علی رضایی"
+                  className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">
+                  ایمیل اختصاصی ورود: *
+                </label>
+                <input
+                  type="email"
+                  required
+                  dir="ltr"
+                  disabled={editAdminUser.email?.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()}
+                  value={editAdminUser.email || ""}
+                  onChange={(e) => setEditAdminUser({ ...editAdminUser, email: e.target.value })}
+                  placeholder="name@example.com"
+                  className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary disabled:opacity-60"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">
+                  رمز عبور اختصاصی مدیر: *
+                </label>
+                <input
+                  type="text"
+                  required
+                  dir="ltr"
+                  value={editAdminUser.pin || ""}
+                  onChange={(e) => setEditAdminUser({ ...editAdminUser, pin: e.target.value })}
+                  placeholder="حداقل ۴ کاراکتر"
+                  className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">
+                  نقش و سطح دسترسی:
+                </label>
+                <select
+                  disabled={editAdminUser.email?.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()}
+                  value={editAdminUser.role || "admin"}
+                  onChange={(e) => setEditAdminUser({ ...editAdminUser, role: e.target.value as any })}
+                  className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary disabled:opacity-60"
+                >
+                  <option value="superadmin">مدیر ارشد (دسترسی کامل)</option>
+                  <option value="admin">مدیر فروشگاه (مدیریت سفارش‌ها و محصولات)</option>
+                  <option value="editor">ویرایشگر (ویرایش محصولات)</option>
+                </select>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-border/60">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEditingAdmin(false);
+                    setEditAdminUser(null);
+                  }}
+                  className="rounded-2xl border border-border px-4 py-2 text-xs font-semibold text-muted-foreground hover:bg-secondary"
+                >
+                  انصراف
+                </button>
+                <button
+                  type="submit"
+                  className="neon-gradient rounded-2xl px-5 py-2 text-xs font-bold text-white shadow-md transition-transform hover:scale-105"
+                >
+                  ذخیره اطلاعات مدیر
                 </button>
               </div>
             </form>
