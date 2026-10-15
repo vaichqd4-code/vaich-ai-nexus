@@ -80,8 +80,8 @@ export function ProductCard({
           <img
             src={logoUrl}
             alt={product.name}
-            width={140}
-            height={90}
+            width={120}
+            height={120}
             decoding="async"
             className="max-h-full max-w-full object-contain rounded-lg sm:rounded-xl drop-shadow-md group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
@@ -155,6 +155,7 @@ export function ProductCard({
           params={{ slug: product.slug }}
           variant="outline"
           size="sm"
+          aria-label={`مشاهده جزئیات ${product.name}`}
           className="text-center text-[10px] sm:text-xs py-1.5 px-1 rounded-xl"
         >
           جزئیات
@@ -164,6 +165,7 @@ export function ProductCard({
           to="/checkout/$slug"
           params={{ slug: product.slug }}
           size="sm"
+          aria-label={`خرید اشتراک ${product.name}`}
           className="text-center text-[10px] sm:text-xs font-bold py-1.5 px-1 rounded-xl"
         >
           خرید آنی

@@ -101,6 +101,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "preload",
+        as: "font",
+        type: "font/woff2",
+        href: "https://fonts.gstatic.com/s/vazirmatn/v16/Dxxo8j6PP2D_kU2muijlGMWWIGroe7ll.woff2",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "preload",
         as: "style",
         href: "https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap",
       },

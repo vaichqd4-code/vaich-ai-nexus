@@ -650,29 +650,38 @@ export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
 }
 
 export function useDynamicProducts() {
-  const [items, setItems] = useState<Product[]>(() =>
-    typeof window !== "undefined" ? getStoredProducts() : DEFAULT_PRODUCTS
-  );
-  const [rows, setRowsState] = useState<ProductCategoryRow[]>(() =>
-    typeof window !== "undefined" ? getStoredCategoryRows() : DEFAULT_CATEGORY_ROWS
-  );
-  const [layout, setLayoutState] = useState<LayoutMode>(() =>
-    typeof window !== "undefined" ? getStoredLayout() : "1-row"
-  );
-  const [adminUsers, setAdminUsersState] = useState<AdminUser[]>(() =>
-    typeof window !== "undefined" ? getStoredAdminUsers() : DEFAULT_ADMIN_USERS
-  );
-  const [masterPin, setMasterPinState] = useState<string>(() =>
-    typeof window !== "undefined" ? getStoredMasterPin() : DEFAULT_ADMIN_PIN
-  );
+  const [items, setItems] = useState<Product[]>(DEFAULT_PRODUCTS);
+  const [rows, setRowsState] = useState<ProductCategoryRow[]>(DEFAULT_CATEGORY_ROWS);
+  const [layout, setLayoutState] = useState<LayoutMode>("1-row");
+  const [adminUsers, setAdminUsersState] = useState<AdminUser[]>(DEFAULT_ADMIN_USERS);
+  const [masterPin, setMasterPinState] = useState<string>(DEFAULT_ADMIN_PIN);
   const [isCloudSyncing, setIsCloudSyncing] = useState(false);
-  const [lastCloudSync, setLastCloudSync] = useState<string | null>(() =>
-    typeof window !== "undefined" ? localStorage.getItem("vaich_config_updated_at") : null
-  );
+  const [lastCloudSync, setLastCloudSync] = useState<string | null>(null);
 
   useEffect(() => {
+    // Client-side hydration of stored products / rows / layout
+    // Safe from React SSR hydration mismatch
+    try {
+      const storedItems = getStoredProducts();
+      if (storedItems && storedItems.length > 0) setItems(storedItems);
+      const storedRows = getStoredCategoryRows();
+      if (storedRows && storedRows.length > 0) setRowsState(storedRows);
+      const storedLayout = getStoredLayout();
+      if (storedLayout) setLayoutState(storedLayout);
+      const storedUsers = getStoredAdminUsers();
+      if (storedUsers && storedUsers.length > 0) setAdminUsersState(storedUsers);
+      const storedPin = getStoredMasterPin();
+      if (storedPin) setMasterPinState(storedPin);
+      setLastCloudSync(localStorage.getItem("vaich_config_updated_at"));
+    } catch {
+      // Ignore client read errors
+    }
+
     // Pull from cloud on mount asynchronously without blocking initial render
     syncSiteConfigWithCloud().then((cfg) => {
+      if (cfg?.products) setItems(cfg.products);
+      if (cfg?.categoryRows) setRowsState(cfg.categoryRows);
+      if (cfg?.layout) setLayoutState(cfg.layout);
       if (cfg?.updatedAt) setLastCloudSync(cfg.updatedAt);
       if (cfg?.adminUsers) setAdminUsersState(cfg.adminUsers);
       if (cfg?.masterPin) setMasterPinState(cfg.masterPin);

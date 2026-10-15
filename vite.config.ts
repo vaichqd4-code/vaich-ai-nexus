@@ -17,7 +17,13 @@ export default defineConfig({
       rollupOptions: {
         output: {
           manualChunks(id) {
+            if (id.includes("routes/admin") || id.includes("routes\\admin")) {
+              return "admin-portal";
+            }
             if (id.includes("node_modules")) {
+              if (id.includes("@supabase")) {
+                return "supabase-vendor";
+              }
               if (id.includes("lucide-react")) {
                 return "lucide-icons";
               }

@@ -102,8 +102,8 @@ function Hero() {
             <img
               src="/hero-ai.webp"
               alt="خرید اشتراک های هوش مصنوعی VAICH"
-              width={1024}
-              height={768}
+              width={568}
+              height={426}
               loading="eager"
               fetchPriority="high"
               decoding="async"
