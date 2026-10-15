@@ -342,59 +342,132 @@ export function decodeUtf8Base64(b64: string): string {
   return decodeURIComponent(escape(binary));
 }
 
-export async function commitConfigToCloud(config: SiteConfig): Promise<{ success: boolean; error?: string }> {
-  try {
-    let sha: string | undefined;
+export async function fetchLatestConfigSha(): Promise<string | undefined> {
+  const urls = [
+    `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main&_nocache=${Date.now()}`,
+    `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?_nocache=${Date.now()}`,
+  ];
+
+  for (const url of urls) {
     try {
-      const getRes = await fetch(
-        `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main`,
-        {
-          headers: {
-            Authorization: `Bearer ${GITHUB_TOKEN}`,
-            Accept: "application/vnd.github.v3+json",
-          },
-        }
-      );
-      if (getRes.ok) {
-        const getData = await getRes.json();
-        sha = getData.sha;
-      }
-    } catch (e) {
-      console.warn("Could not get existing SHA:", e);
-    }
-
-    const jsonStr = JSON.stringify(config, null, 2);
-    const contentB64 = encodeUtf8Base64(jsonStr);
-
-    const putRes = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}`,
-      {
-        method: "PUT",
+      const res = await fetch(url, {
+        method: "GET",
+        cache: "no-store",
         headers: {
           Authorization: `Bearer ${GITHUB_TOKEN}`,
           Accept: "application/vnd.github.v3+json",
-          "Content-Type": "application/json",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
         },
-        body: JSON.stringify({
-          message: `[Admin] Sync site config: ${new Date().toISOString()}`,
-          content: contentB64,
-          sha: sha,
-          branch: "main",
-        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data && typeof data.sha === "string" && data.sha.length > 0) {
+          return data.sha;
+        }
+      }
+    } catch (e) {
+      console.warn("Could not get SHA from contents URL:", url, e);
+    }
+  }
+
+  // Fallback: Query commits tree endpoint to obtain exact blob SHA
+  try {
+    const commitRes = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/commits/main?_nocache=${Date.now()}`,
+      {
+        cache: "no-store",
+        headers: {
+          Authorization: `Bearer ${GITHUB_TOKEN}`,
+          Accept: "application/vnd.github.v3+json",
+          "Cache-Control": "no-cache, no-store",
+        },
       }
     );
-
-    if (!putRes.ok) {
-      const errBody = await putRes.text();
-      console.error("GitHub commit failed:", putRes.status, errBody);
-      return { success: false, error: `خطا در ذخیره ابری (${putRes.status})` };
+    if (commitRes.ok) {
+      const commitData = await commitRes.json();
+      const treeUrl = commitData?.commit?.tree?.url;
+      if (treeUrl) {
+        const treeRes = await fetch(`${treeUrl}?recursive=1&_nocache=${Date.now()}`, {
+          cache: "no-store",
+          headers: {
+            Authorization: `Bearer ${GITHUB_TOKEN}`,
+            Accept: "application/vnd.github.v3+json",
+            "Cache-Control": "no-cache, no-store",
+          },
+        });
+        if (treeRes.ok) {
+          const treeData = await treeRes.json();
+          const target = treeData?.tree?.find((item: any) => item.path === CONFIG_FILE_PATH);
+          if (target?.sha) {
+            return target.sha;
+          }
+        }
+      }
     }
-
-    return { success: true };
-  } catch (err: any) {
-    console.error("Error committing config to GitHub:", err);
-    return { success: false, error: err?.message || "خطای اتصال به سرور" };
+  } catch (e) {
+    console.warn("Could not get SHA from commit tree fallback:", e);
   }
+
+  return undefined;
+}
+
+export async function commitConfigToCloud(config: SiteConfig): Promise<{ success: boolean; error?: string }> {
+  const jsonStr = JSON.stringify(config, null, 2);
+  const contentB64 = encodeUtf8Base64(jsonStr);
+
+  const maxAttempts = 3;
+  let lastError = "";
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const sha = await fetchLatestConfigSha();
+
+      const putRes = await fetch(
+        `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${GITHUB_TOKEN}`,
+            Accept: "application/vnd.github.v3+json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: `[Admin] Sync site config: ${new Date().toISOString()}`,
+            content: contentB64,
+            sha: sha,
+            branch: "main",
+          }),
+        }
+      );
+
+      if (putRes.ok) {
+        return { success: true };
+      }
+
+      const errBody = await putRes.text();
+      console.warn(`Commit attempt ${attempt} failed (${putRes.status}):`, errBody);
+
+      // If HTTP 409 (Conflict: file updated remotely or SHA mismatch), pause briefly and retry with fresh SHA
+      if (putRes.status === 409 && attempt < maxAttempts) {
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        continue;
+      }
+
+      lastError = `خطا در ذخیره ابری (${putRes.status})`;
+      return { success: false, error: lastError };
+    } catch (err: any) {
+      console.error(`Commit attempt ${attempt} exception:`, err);
+      lastError = err?.message || "خطای اتصال به سرور";
+      if (attempt < maxAttempts) {
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        continue;
+      }
+    }
+  }
+
+  return { success: false, error: lastError || "خطا در برقراری ارتباط با سرور ابری" };
 }
 
 export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
@@ -420,11 +493,14 @@ export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
     if (!fetchedData) {
       try {
         const ghRes = await fetch(
-          `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main`,
+          `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main&_nocache=${Date.now()}`,
           {
+            cache: "no-store",
             headers: {
               Authorization: `Bearer ${GITHUB_TOKEN}`,
               Accept: "application/vnd.github.v3+json",
+              "Cache-Control": "no-cache, no-store, must-revalidate",
+              Pragma: "no-cache",
             },
           }
         );
