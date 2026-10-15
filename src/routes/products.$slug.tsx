@@ -1,8 +1,8 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { Section } from "@/components/layout/Section";
 import { NeonLink } from "@/components/ui/NeonButton";
-import { formatPrice, getProduct } from "@/lib/products";
+import { formatPrice, toPersianDigits, getProduct } from "@/lib/products";
 
 export const Route = createFileRoute("/products/$slug")({
   loader: ({ params }) => {
@@ -15,13 +15,20 @@ export const Route = createFileRoute("/products/$slug")({
       return { meta: [{ title: "محصول یافت نشد | VAICH" }, { name: "robots", content: "noindex" }] };
     }
     const { product } = loaderData;
-    const title = `اشتراک ${product.name} | VAICH`;
+    const title = `خرید اشتراک ${product.name} (${product.duration || "قانونی"}) | VAICH`;
+    const canonicalUrl = `https://vaich.ir/products/${encodeURIComponent(product.slug)}`;
     return {
       meta: [
         { title },
-        { name: "description", content: `${product.description} قیمت: ${formatPrice(product.price)}` },
+        { name: "description", content: `خرید آنلاین اشتراک قانونی ${product.name} با تحویل فوری، پشتیبانی ۲۴ ساعته و ضمانت سلامت اکانت. ${product.description} قیمت: ${formatPrice(product.price)}` },
         { property: "og:title", content: title },
         { property: "og:description", content: product.description },
+        { property: "og:url", content: canonicalUrl },
+        { property: "og:type", content: "product" },
+        { name: "twitter:card", content: "summary_large_image" },
+      ],
+      links: [
+        { rel: "canonical", href: canonicalUrl },
       ],
     };
   },
@@ -31,68 +38,159 @@ export const Route = createFileRoute("/products/$slug")({
 function ProductDetail() {
   const { product } = Route.useLoaderData();
 
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `اشتراک ${product.name}`,
+    description: product.description,
+    image: "https://vaich.ir/vaich-logo.png",
+    offers: {
+      "@type": "Offer",
+      url: `https://vaich.ir/products/${encodeURIComponent(product.slug)}`,
+      priceCurrency: "IRR",
+      price: product.price,
+      availability: "https://schema.org/InStock",
+      seller: {
+        "@type": "Organization",
+        name: "VAICH",
+      },
+    },
+  };
+
   return (
-    <Section className="aurora">
-      <div className="glass-panel rounded-4xl p-6 sm:p-10">
-        <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
-          <div>
-            <div className="flex items-center gap-4">
-              <ServiceIcon slug={product.slug} className="h-16 w-16" />
-              <div className="min-w-0">
-                <h1 className="truncate text-2xl font-extrabold sm:text-3xl">
-                  اشتراک {product.name}
-                </h1>
-                <p className="mt-2 text-sm text-muted-foreground">{product.description}</p>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+
+      <Section className="aurora">
+        {/* Breadcrumb Navigation */}
+        <nav aria-label="مسیر راهنما" className="mb-6 flex items-center gap-2 text-xs text-muted-foreground">
+          <Link to="/" className="hover:text-foreground transition-colors">
+            خانه
+          </Link>
+          <span>/</span>
+          <Link to="/products" className="hover:text-foreground transition-colors">
+            اشتراک‌های هوش مصنوعی
+          </Link>
+          <span>/</span>
+          <span className="font-semibold text-foreground truncate max-w-[200px] sm:max-w-none">
+            {product.name}
+          </span>
+        </nav>
+
+        <div className="glass-panel rounded-4xl p-6 sm:p-10">
+          <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
+            <div>
+              <div className="flex items-center gap-4">
+                <ServiceIcon slug={product.slug} iconUrl={product.iconUrl} className="h-16 w-16" />
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h1 className="truncate text-2xl font-extrabold sm:text-3xl text-foreground">
+                      اشتراک {product.name}
+                    </h1>
+                    {product.badge && (
+                      <span className="rounded-full bg-linear-to-r from-primary to-accent px-2.5 py-0.5 text-xs font-bold text-white shadow-xs">
+                        {product.badge}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-2 text-sm text-muted-foreground">{product.description}</p>
+                </div>
               </div>
-            </div>
 
-            <div className="mt-8">
-              <h2 className="text-base font-bold">اطلاعات مهم خرید</h2>
-              <ul className="mt-3 space-y-3">
-                {product.purchaseInfo.map((info) => (
-                  <li
-                    key={info}
-                    className="rounded-2xl border border-border bg-background/40 px-4 py-3 text-sm leading-7 text-muted-foreground"
-                  >
-                    {info}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <aside className="h-fit rounded-3xl border border-border bg-card/70 p-6">
-            <p className="text-sm text-muted-foreground">قیمت</p>
-            <p className="gradient-text mt-1 text-3xl font-extrabold">{formatPrice(product.price)}</p>
-            <div className="mt-6 flex flex-col gap-2">
-              <NeonLink to="/checkout/$slug" params={{ slug: product.slug }} size="lg">
-                خرید
-              </NeonLink>
-              <NeonLink to="/support" variant="outline" size="lg">
-                پشتیبانی
-              </NeonLink>
-            </div>
-
-            {product.features && product.features.length > 0 && (
-              <div className="mt-6 rounded-2xl border border-border/80 bg-background/50 p-4">
-                <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-foreground">
-                  <span>✨</span> امکانات و قابلیت‌ها
-                </h3>
-                <ul className="space-y-2.5">
-                  {product.features.map((feature, idx) => (
+              <div className="mt-8">
+                <h2 className="text-base font-bold flex items-center gap-2 text-foreground">
+                  <span className="h-2 w-2 rounded-full bg-primary" />
+                  اطلاعات مهم خرید و تحویل
+                </h2>
+                <ul className="mt-3 space-y-3">
+                  {product.purchaseInfo.map((info) => (
                     <li
-                      key={idx}
-                      className="text-xs leading-6 text-muted-foreground"
+                      key={info}
+                      className="rounded-2xl border border-border bg-background/50 px-4 py-3 text-sm leading-7 text-muted-foreground"
                     >
-                      {feature}
+                      {info}
                     </li>
                   ))}
                 </ul>
               </div>
-            )}
-          </aside>
+            </div>
+
+            <aside className="h-fit rounded-3xl border border-border bg-card/70 p-6 shadow-lg">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">قیمت سرویس:</span>
+                {product.duration && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-secondary/60 px-2.5 py-0.5 text-xs font-medium text-foreground">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    مدت: {product.duration}
+                  </span>
+                )}
+              </div>
+
+              <div className="mt-2 flex items-baseline gap-2">
+                <p className="gradient-text text-3xl font-extrabold tracking-tight">
+                  {formatPrice(product.price)}
+                </p>
+                {product.originalPrice && (
+                  <span className="text-xs text-muted-foreground line-through">
+                    {formatPrice(product.originalPrice)}
+                  </span>
+                )}
+                {product.discountPercent ? (
+                  <span className="rounded-md bg-rose-500/10 px-1.5 py-0.5 text-xs font-bold text-rose-500 border border-rose-500/20">
+                    %{toPersianDigits(product.discountPercent)}
+                  </span>
+                ) : null}
+              </div>
+
+              <div className="mt-6 flex flex-col gap-2.5">
+                <NeonLink to="/checkout/$slug" params={{ slug: product.slug }} size="lg" className="w-full text-center">
+                  خرید آنلاین و تحویل فوری
+                </NeonLink>
+                <NeonLink to="/support" variant="outline" size="lg" className="w-full text-center">
+                  مشاوره و پشتیبانی
+                </NeonLink>
+              </div>
+
+              {/* Conversion Trust Checklist */}
+              <div className="mt-5 space-y-2 border-t border-border/60 pt-4 text-xs text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <span className="text-emerald-500 font-bold">✓</span>
+                  <span>فعال‌سازی قانونی با گارانتی سلامت اکانت</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-emerald-500 font-bold">✓</span>
+                  <span>تحویل سریع پس از واریز و تأیید فاکتور</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-emerald-500 font-bold">✓</span>
+                  <span>پشتیبانی اختصاصی در صورت بروز هرگونه مشکل</span>
+                </div>
+              </div>
+
+              {product.features && product.features.length > 0 && (
+                <div className="mt-6 rounded-2xl border border-border/80 bg-background/50 p-4">
+                  <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-foreground">
+                    <span>✨</span> قابلیت‌ها و دسترسی‌های این پلن
+                  </h3>
+                  <ul className="space-y-2.5">
+                    {product.features.map((feature, idx) => (
+                      <li
+                        key={idx}
+                        className="text-xs leading-6 text-muted-foreground"
+                      >
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </aside>
+          </div>
         </div>
-      </div>
-    </Section>
+      </Section>
+    </>
   );
-      }
+}

@@ -7,13 +7,17 @@ import { SupportCta } from "@/components/sections/SupportCta";
 export const Route = createFileRoute("/why")({
   head: () => ({
     meta: [
-      { title: "چرا VAICH | خرید مطمئن اشتراک هوش مصنوعی" },
+      { title: "چرا VAICH | مزایای خرید مستقیم اشتراک هوش مصنوعی" },
       {
         name: "description",
-        content: "تحویل سریع، پشتیبانی، قیمت شفاف و تجربه‌ای ساده در خرید اشتراک هوش مصنوعی از VAICH.",
+        content: "چرا خرید از VAICH؟ تحویل فوری، پشتیبانی ۲۴ ساعته، ضمانت ۱۰۰٪ سلامت و پایداری اکانت‌ها و قیمت شفاف و رقابتی اشتراک‌های هوش مصنوعی.",
       },
-      { property: "og:title", content: "چرا VAICH" },
-      { property: "og:description", content: "دلایل انتخاب VAICH برای خرید اشتراک هوش مصنوعی." },
+      { property: "og:title", content: "چرا VAICH | مزایای خرید مستقیم اشتراک هوش مصنوعی" },
+      { property: "og:description", content: "دلایل انتخاب VAICH برای خرید مطمئن و قانونی اشتراک هوش مصنوعی." },
+      { property: "og:url", content: "https://vaich.ir/why" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://vaich.ir/why" },
     ],
   }),
   component: () => (

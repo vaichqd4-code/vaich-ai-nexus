@@ -8,13 +8,17 @@ import { Faq } from "@/components/sections/Faq";
 export const Route = createFileRoute("/support")({
   head: () => ({
     meta: [
-      { title: "پشتیبانی | VAICH" },
+      { title: "پشتیبانی و ارتباط با کارشناسان | VAICH" },
       {
         name: "description",
-        content: "برای پرسش درباره اشتراک‌های هوش مصنوعی با تیم پشتیبانی VAICH در ارتباط باشید.",
+        content: "برای دریافت مشاوره، راهنمایی پیش از خرید یا پیگیری و فعال‌سازی اشتراک‌های هوش مصنوعی، با تیم پشتیبانی ۲۴ ساعته VAICH در ارتباط باشید.",
       },
-      { property: "og:title", content: "پشتیبانی | VAICH" },
-      { property: "og:description", content: "تیم پشتیبانی VAICH آماده کمک به شماست." },
+      { property: "og:title", content: "پشتیبانی و ارتباط با کارشناسان | VAICH" },
+      { property: "og:description", content: "تیم پشتیبانی VAICH به صورت ۲۴ ساعته در تلگرام و گفت‌وگوی آنلاین آماده پاسخگویی است." },
+      { property: "og:url", content: "https://vaich.ir/support" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://vaich.ir/support" },
     ],
   }),
   component: SupportPage,

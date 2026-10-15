@@ -16,6 +16,7 @@ export function ProductCard({
 
   const handleMouseMove = (e: MouseEvent<HTMLElement>) => {
     if (!cardRef.current) return;
+    if (typeof window !== "undefined" && window.matchMedia("(hover: none)").matches) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -54,7 +55,7 @@ export function ProductCard({
         transition: tilt.active ? "transform 0.1s ease-out" : "transform 0.4s ease-out, box-shadow 0.3s ease",
       }}
       className={cn(
-        "group relative flex w-[180px] xs:w-[205px] sm:w-[315px] shrink-0 snap-start flex-col gap-2.5 sm:gap-3.5 overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3 sm:p-4 shadow-xs hover:border-primary/50 hover:shadow-2xl transition-all",
+        "group relative flex w-[180px] xs:w-[205px] sm:w-[315px] shrink-0 snap-start flex-col gap-2.5 sm:gap-3.5 overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3 sm:p-4 shadow-xs hover:border-primary/50 hover:shadow-2xl transition-all touch-pan-y",
         className,
       )}
     >

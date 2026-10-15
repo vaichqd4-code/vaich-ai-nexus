@@ -4,16 +4,20 @@ import { Section } from "@/components/layout/Section";
 export const Route = createFileRoute("/privacy")({
   head: () => ({
     meta: [
-      { title: "حریم خصوصی | VAICH" },
+      { title: "سیاست حفظ حریم خصوصی و امنیت اطلاعات | VAICH" },
       {
         name: "description",
-        content: "سیاست حریم خصوصی و نحوه استفاده VAICH از اطلاعات مشتریان.",
+        content: "سیاست حفظ حریم خصوصی و امنیت اطلاعات مشتریان در فروشگاه تخصصی اشتراک هوش مصنوعی VAICH.",
       },
       { property: "og:title", content: "حریم خصوصی | VAICH" },
       {
         property: "og:description",
-        content: "سیاست حریم خصوصی VAICH.",
+        content: "سیاست حفظ حریم خصوصی کاربران در VAICH.",
       },
+      { property: "og:url", content: "https://vaich.ir/privacy" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://vaich.ir/privacy" },
     ],
   }),
 

@@ -159,7 +159,7 @@ export function Header() {
                 ? "حالت روشن"
                 : "حالت تاریک"
             }
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-border bg-secondary/50 text-foreground transition-all duration-300 hover:border-neon-purple/50 hover:bg-secondary"
+            className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-border bg-secondary/50 text-foreground transition-all duration-300 hover:border-neon-purple/50 hover:bg-secondary active:scale-95"
           >
             {theme === "dark" ? (
               <svg
@@ -213,7 +213,7 @@ export function Header() {
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-label="باز و بسته کردن منو"
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-border bg-secondary/50 lg:hidden"
+            className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-border bg-secondary/50 text-foreground transition-all active:scale-95 lg:hidden"
           >
             <svg
               viewBox="0 0 24 24"

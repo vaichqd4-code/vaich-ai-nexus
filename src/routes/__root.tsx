@@ -78,19 +78,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "VAICH | فروشگاه اشتراک‌های هوش مصنوعی" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=5" },
+      { title: "VAICH | فروشگاه معتبر اشتراک‌های تخصصی هوش مصنوعی" },
       {
         name: "description",
-        content: "خرید اشتراک سرویس‌های هوش مصنوعی Gemini، ChatGPT و Claude از VAICH.",
+        content: "خرید آنلاین، قانونی و با تحویل فوری اشتراک‌های هوش مصنوعی ChatGPT Plus، Gemini Pro و Claude Pro با ضمانت سلامت اکانت در فروشگاه VAICH.",
       },
+      { name: "keywords", content: "خرید اکانت chatgpt, خرید اشتراک gemini pro, خرید اکانت claude pro, خرید هوش مصنوعی, vaich" },
       { name: "author", content: "VAICH" },
+      { name: "theme-color", content: "#2563eb" },
       { property: "og:site_name", content: "VAICH" },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "https://vaich.ir/vaich-logo.png" },
+      { property: "og:url", content: "https://vaich.ir" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "https://vaich.ir/vaich-logo.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "canonical", href: "https://vaich.ir" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -124,16 +130,39 @@ function RootShell({ children }: { children: ReactNode }) {
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "OnlineStore",
-              name: "VAICH",
-              alternateName: "فروشگاه اشتراک هوش مصنوعی وایچ",
-              url: "https://vaich.ir",
-              description:
-                "فروشگاه تخصصی خرید قانونی و مستقیم اشتراک‌های هوش مصنوعی ChatGPT Plus، Gemini Pro و Claude Pro با تحویل آنی.",
-              telephone: "+989193872172",
-              priceRange: "IRR",
-              currenciesAccepted: "IRR",
-              paymentAccepted: "کارت به کارت",
+              "@graph": [
+                {
+                  "@type": "WebSite",
+                  "@id": "https://vaich.ir/#website",
+                  "url": "https://vaich.ir",
+                  "name": "VAICH",
+                  "description": "فروشگاه تخصصی اشتراک‌های هوش مصنوعی",
+                  "inLanguage": "fa-IR",
+                  "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": "https://vaich.ir/products?q={search_term_string}",
+                    "query-input": "required name=search_term_string"
+                  }
+                },
+                {
+                  "@type": "OnlineStore",
+                  "@id": "https://vaich.ir/#organization",
+                  "name": "VAICH",
+                  "alternateName": "فروشگاه اشتراک هوش مصنوعی وایچ",
+                  "url": "https://vaich.ir",
+                  "logo": "https://vaich.ir/vaich-logo.png",
+                  "image": "https://vaich.ir/vaich-logo.png",
+                  "description": "فروشگاه تخصصی خرید قانونی و مستقیم اشتراک‌های هوش مصنوعی ChatGPT Plus، Gemini Pro و Claude Pro با تحویل آنی و ضمانت پایداری.",
+                  "telephone": "+989193872172",
+                  "priceRange": "IRR",
+                  "currenciesAccepted": "IRR",
+                  "paymentAccepted": "کارت به کارت",
+                  "sameAs": [
+                    "https://t.me/vaich_ir",
+                    "https://instagram.com/vaich_ir"
+                  ]
+                }
+              ]
             }),
           }}
         />

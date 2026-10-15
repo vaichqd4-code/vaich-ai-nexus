@@ -32,7 +32,12 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://vaich.ir" },
+      { property: "og:image", content: "https://vaich.ir/vaich-logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "https://vaich.ir/vaich-logo.png" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://vaich.ir" },
     ],
   }),
   component: Home,
@@ -91,7 +96,7 @@ function Hero() {
         </div>
 
         <div className="relative">
-          <div className="float-slow glow-strong overflow-hidden rounded-3xl sm:rounded-4xl border border-border shadow-2xl bg-card">
+          <div className="float-slow glow-strong overflow-hidden rounded-3xl sm:rounded-4xl border border-border shadow-2xl bg-card aspect-4/3">
             <img
               src="/317630163_1789657188376603.jpg"
               alt="خرید اشتراک های هوش مصنوعی VAICH"
@@ -149,7 +154,7 @@ function ProductRowSection({
               onClick={() => scrollCarousel("right")}
               aria-label="محصول قبلی"
               title="مشاهده موارد قبلی"
-              className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl border border-purple-500/40 bg-card/90 text-purple-600 dark:text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)] transition-all hover:border-purple-500 hover:bg-purple-500/10 active:scale-95"
+              className="grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-xl border border-purple-500/40 bg-card/90 text-purple-600 dark:text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)] transition-all hover:border-purple-500 hover:bg-purple-500/10 active:scale-95"
             >
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="m9 18 6-6-6-6" strokeLinecap="round" strokeLinejoin="round"/>
@@ -160,7 +165,7 @@ function ProductRowSection({
               onClick={() => scrollCarousel("left")}
               aria-label="محصول بعدی"
               title="مشاهده موارد بعدی"
-              className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl border border-purple-500/40 bg-card/90 text-purple-600 dark:text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)] transition-all hover:border-purple-500 hover:bg-purple-500/10 active:scale-95"
+              className="grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-xl border border-purple-500/40 bg-card/90 text-purple-600 dark:text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)] transition-all hover:border-purple-500 hover:bg-purple-500/10 active:scale-95"
             >
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
@@ -175,7 +180,7 @@ function ProductRowSection({
         {layout === "1-row" && (
           <div
             ref={carouselRef}
-            className="flex gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-1 scrollbar-none"
+            className="flex gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-1 scrollbar-none touch-pan-y"
           >
             {products.map((p) => (
               <ProductCard key={p.slug} product={p} />
@@ -187,7 +192,7 @@ function ProductRowSection({
         {layout === "2-row" && (
           <div
             ref={carouselRef}
-            className="grid grid-rows-2 grid-flow-col auto-cols-[180px] xs:auto-cols-[205px] sm:auto-cols-[315px] gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-1 scrollbar-none"
+            className="grid grid-rows-2 grid-flow-col auto-cols-[180px] xs:auto-cols-[205px] sm:auto-cols-[315px] gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-1 scrollbar-none touch-pan-y"
           >
             {products.map((p) => (
               <ProductCard key={p.slug} product={p} />

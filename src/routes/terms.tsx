@@ -4,16 +4,20 @@ import { Section } from "@/components/layout/Section";
 export const Route = createFileRoute("/terms")({
   head: () => ({
     meta: [
-      { title: "قوانین و مقررات | VAICH" },
+      { title: "قوانین و مقررات خرید و ضمانت خدمات | VAICH" },
       {
         name: "description",
-        content: "قوانین و مقررات خرید و استفاده از خدمات VAICH.",
+        content: "قوانین و مقررات رسمی خرید، روش پرداخت، شرایط فعال‌سازی و تضمین سلامت اکانت‌های هوش مصنوعی در فروشگاه VAICH.",
       },
       { property: "og:title", content: "قوانین و مقررات | VAICH" },
       {
         property: "og:description",
         content: "شرایط خرید و استفاده از خدمات VAICH.",
       },
+      { property: "og:url", content: "https://vaich.ir/terms" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://vaich.ir/terms" },
     ],
   }),
   component: () => (
