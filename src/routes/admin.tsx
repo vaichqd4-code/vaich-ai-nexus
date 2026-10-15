@@ -85,7 +85,7 @@ export function AdminPage() {
       return;
     }
 
-    const email = inputEmail.trim() || "vaichqd4@gmail.com";
+    const email = inputEmail.trim() || "مدیر کل فروشگاه";
     const session = {
       authenticated: true,
       email: email,
@@ -99,8 +99,7 @@ export function AdminPage() {
 
   // Google One-Click Login Simulation / Trigger
   const handleGoogleQuickLogin = () => {
-    const defaultEmail = "vaichqd4@gmail.com";
-    setInputEmail(defaultEmail);
+    setInputEmail("admin@vaich.ir");
   };
 
   // Logout handler
@@ -335,14 +334,14 @@ export function AdminPage() {
 
             <div>
               <label className="block text-xs font-medium text-foreground mb-1.5">
-                ایمیل اکانت گوگل شما:
+                ایمیل یا شناسه کاربری مدیر:
               </label>
               <input
-                type="email"
+                type="text"
                 dir="ltr"
                 value={inputEmail}
                 onChange={(e) => setInputEmail(e.target.value)}
-                placeholder="vaichqd4@gmail.com"
+                placeholder="name@example.com"
                 className="w-full rounded-2xl border border-border bg-background/60 px-4 py-3 text-sm outline-none transition-colors focus:border-primary"
               />
             </div>
@@ -397,7 +396,7 @@ export function AdminPage() {
                 پنل مدیریت فروشگاه VAICH
               </h1>
               <p className="text-[11px] text-muted-foreground">
-                ورود با: <span className="font-semibold text-foreground">{googleUser}</span>
+                سطح دسترسی: <span className="font-semibold text-emerald-500">مدیر کل فروشگاه (تایید‌شده ✓)</span>
               </p>
             </div>
           </div>
