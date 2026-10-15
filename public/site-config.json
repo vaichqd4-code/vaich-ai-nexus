@@ -1,14 +1,14 @@
 {
   "products": [
     {
-      "slug": "test",
-      "name": "تست",
-      "price": 2000000,
-      "duration": "6ماهه",
-      "description": "...........................",
+      "slug": "sfisfgsf",
+      "name": "بیکنیلیب",
+      "price": 6000000,
+      "duration": "10ماهه",
+      "description": ".........",
       "featured": true,
       "badge": "خالی",
-      "badgeColor": "blue",
+      "badgeColor": "emerald",
       "categoryId": "ai",
       "features": [
         "⚡ فعال‌سازی قانونی و تضمینی",
@@ -153,5 +153,5 @@
       "createdAt": "2026-10-15T00:00:00.000Z"
     }
   ],
-  "updatedAt": "2026-10-15T09:13:13.187Z"
+  "updatedAt": "2026-10-15T09:14:09.969Z"
 }
