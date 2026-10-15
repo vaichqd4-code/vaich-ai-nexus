@@ -180,7 +180,7 @@ function ProductRowSection({
         {layout === "1-row" && (
           <div
             ref={carouselRef}
-            className="flex gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-1 scrollbar-none touch-pan-y"
+            className="flex gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-1 scrollbar-none overscroll-x-contain"
           >
             {products.map((p) => (
               <ProductCard key={p.slug} product={p} />
@@ -192,7 +192,7 @@ function ProductRowSection({
         {layout === "2-row" && (
           <div
             ref={carouselRef}
-            className="grid grid-rows-2 grid-flow-col auto-cols-[180px] xs:auto-cols-[205px] sm:auto-cols-[315px] gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-1 scrollbar-none touch-pan-y"
+            className="grid grid-rows-2 grid-flow-col auto-cols-[185px] xs:auto-cols-[210px] sm:auto-cols-[285px] gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-1 scrollbar-none overscroll-x-contain"
           >
             {products.map((p) => (
               <ProductCard key={p.slug} product={p} />

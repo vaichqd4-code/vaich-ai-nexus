@@ -1,5 +1,5 @@
 import { useState, useRef, type MouseEvent } from "react";
-import { ServiceIcon } from "@/components/brand/ServiceIcon";
+import { getProductLogo } from "@/components/brand/ServiceIcon";
 import { NeonLink } from "@/components/ui/NeonButton";
 import { formatPrice, toPersianDigits, type Product } from "@/lib/products";
 import { cn } from "@/lib/utils";
@@ -22,8 +22,8 @@ export function ProductCard({
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -8;
-    const rotateY = ((x - centerX) / centerX) * 8;
+    const rotateX = ((y - centerY) / centerY) * -7;
+    const rotateY = ((x - centerX) / centerX) * 7;
     setTilt({ x: rotateX, y: rotateY, active: true });
   };
 
@@ -43,6 +43,9 @@ export function ProductCard({
   };
   const badgeClass = (product.badgeColor && badgeColorMap[product.badgeColor]) || badgeColorMap.purple;
 
+  const logoUrl = getProductLogo(product.slug, product.iconUrl);
+  const initial = product.slug ? product.slug.charAt(0).toUpperCase() : "AI";
+
   return (
     <article
       ref={cardRef}
@@ -55,7 +58,7 @@ export function ProductCard({
         transition: tilt.active ? "transform 0.1s ease-out" : "transform 0.4s ease-out, box-shadow 0.3s ease",
       }}
       className={cn(
-        "group relative flex w-[180px] xs:w-[205px] sm:w-[315px] shrink-0 snap-start flex-col gap-2.5 sm:gap-3.5 overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3 sm:p-4 shadow-xs hover:border-primary/50 hover:shadow-2xl transition-all touch-pan-y",
+        "group relative flex w-[185px] xs:w-[210px] sm:w-[285px] shrink-0 snap-start flex-col gap-2.5 sm:gap-3 overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-2.5 sm:p-3.5 shadow-xs hover:border-primary/50 hover:shadow-2xl transition-all select-none",
         className,
       )}
     >
@@ -65,65 +68,91 @@ export function ProductCard({
         className="pointer-events-none absolute inset-x-0 -top-24 h-40 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-40 neon-gradient"
       />
 
-      {/* Special / Featured Badge */}
-      {hasBadge && badgeLabel && (
-        <span className={cn("absolute left-2.5 top-2.5 sm:left-3.5 sm:top-3.5 z-10 rounded-full px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-bold shadow-md", badgeClass)}>
-          {badgeLabel}
-        </span>
-      )}
+      {/* Top Image Banner: BodoCP-Style Rounded Square Frame */}
+      <div className="relative w-full aspect-16/10 xs:aspect-4/3 sm:aspect-16/10 rounded-xl sm:rounded-2xl overflow-hidden bg-linear-to-b from-secondary/70 via-secondary/35 to-background/60 p-2.5 sm:p-3 flex items-center justify-center border border-border/50 group-hover:border-primary/40 transition-colors">
+        {/* Subtle Ambient Glow */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-primary/10 opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-100"
+        />
 
-      {/* Top Header: Icon + Name */}
-      <div className="flex items-center gap-2.5 sm:gap-3.5 pt-0.5">
-        <ServiceIcon slug={product.slug} iconUrl={product.iconUrl} className="h-9 w-9 sm:h-11 sm:w-11 shrink-0 rounded-xl" />
+        {logoUrl ? (
+          <img
+            src={logoUrl}
+            alt={product.name}
+            className="max-h-full max-w-full object-contain rounded-lg sm:rounded-xl drop-shadow-md group-hover:scale-105 transition-transform duration-300"
+            loading="lazy"
+          />
+        ) : (
+          <span className="text-2xl sm:text-3xl font-black text-primary">
+            {initial}
+          </span>
+        )}
 
-        <div className="min-w-0 flex-1">
-          <h3 className="truncate text-sm sm:text-base font-bold tracking-tight text-foreground">
-            {product.name}
-          </h3>
-          <p className="mt-0.5 line-clamp-1 text-[10px] sm:text-xs text-muted-foreground">
-            {product.description}
-          </p>
-        </div>
+        {/* Floating Special / Featured Badge */}
+        {hasBadge && badgeLabel && (
+          <span
+            className={cn(
+              "absolute right-2 top-2 z-10 rounded-full px-2 py-0.5 sm:px-2.5 sm:py-0.5 text-[9px] sm:text-[11px] font-bold shadow-md",
+              badgeClass,
+            )}
+          >
+            {badgeLabel}
+          </span>
+        )}
+      </div>
+
+      {/* Card Content: Title & Subtitle */}
+      <div className="flex flex-col gap-0.5 px-0.5">
+        <h3
+          className="truncate text-xs sm:text-sm font-bold tracking-tight text-foreground"
+          title={product.name}
+        >
+          {product.name}
+        </h3>
+        <p className="line-clamp-1 text-[10px] sm:text-xs text-muted-foreground">
+          {product.description || (product.duration ? `اشتراک معتبر • ${product.duration}` : "تحویل فوری و قانونی")}
+        </p>
       </div>
 
       {/* Pricing Block */}
-      <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-secondary/30 p-2.5 sm:p-3">
-        <div className="flex items-center justify-between gap-1 sm:gap-2">
+      <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-secondary/30 p-2 sm:p-2.5 mt-auto">
+        <div className="flex items-center justify-between gap-1">
           <span className="text-[10px] sm:text-xs text-muted-foreground">قیمت:</span>
-          <div className="flex items-center gap-1 sm:gap-1.5">
+          <div className="flex items-center gap-1">
             {product.originalPrice && (
               <span className="text-[10px] sm:text-xs text-muted-foreground line-through">
                 {formatPrice(product.originalPrice)}
               </span>
             )}
             {product.discountPercent ? (
-              <span className="rounded-md bg-rose-500/10 px-1 py-0.2 sm:px-1.5 sm:py-0.5 text-[9px] sm:text-[11px] font-bold text-rose-500 border border-rose-500/20">
+              <span className="rounded-md bg-rose-500/10 px-1 py-0.2 sm:px-1.5 sm:py-0.5 text-[9px] sm:text-[10px] font-bold text-rose-500 border border-rose-500/20">
                 %{toPersianDigits(product.discountPercent)}
               </span>
             ) : null}
           </div>
         </div>
 
-        <p className="mt-1 gradient-text text-base sm:text-xl font-extrabold tracking-tight">
-          {formatPrice(product.price)}
-        </p>
-
-        {product.duration && (
-          <div className="mt-1.5 flex items-center gap-1.5 border-t border-border/40 pt-1.5 text-[10px] sm:text-xs font-medium text-muted-foreground">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            <span>مدت: {product.duration}</span>
-          </div>
-        )}
+        <div className="mt-1 flex items-baseline justify-between gap-1">
+          <p className="gradient-text text-sm sm:text-base font-extrabold tracking-tight">
+            {formatPrice(product.price)}
+          </p>
+          {product.duration && (
+            <span className="text-[9px] sm:text-[11px] text-muted-foreground font-medium truncate">
+              {product.duration}
+            </span>
+          )}
+        </div>
       </div>
 
-      {/* Action Buttons - side by side to eliminate empty white space */}
-      <div className="grid grid-cols-2 gap-1.5 pt-0.5">
+      {/* Action Buttons: 2-column Side-by-Side */}
+      <div className="grid grid-cols-2 gap-1.5">
         <NeonLink
           to="/products/$slug"
           params={{ slug: product.slug }}
           variant="outline"
           size="sm"
-          className="text-center text-[11px] sm:text-xs py-1.5 px-1 rounded-xl"
+          className="text-center text-[10px] sm:text-xs py-1.5 px-1 rounded-xl"
         >
           جزئیات
         </NeonLink>
@@ -132,7 +161,7 @@ export function ProductCard({
           to="/checkout/$slug"
           params={{ slug: product.slug }}
           size="sm"
-          className="text-center text-[11px] sm:text-xs font-bold py-1.5 px-1 rounded-xl"
+          className="text-center text-[10px] sm:text-xs font-bold py-1.5 px-1 rounded-xl"
         >
           خرید آنی
         </NeonLink>

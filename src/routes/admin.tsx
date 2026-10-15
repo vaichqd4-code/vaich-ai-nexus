@@ -13,7 +13,7 @@ import {
   type LayoutMode,
   type AdminUser,
 } from "@/lib/products";
-import { ServiceIcon } from "@/components/brand/ServiceIcon";
+import { ServiceIcon, getProductLogo, PRESET_LOGOS } from "@/components/brand/ServiceIcon";
 import {
   ShieldCheck,
   Lock,
@@ -39,7 +39,50 @@ import {
   Shield,
   Mail,
   UserCheck,
+  Upload,
+  ImageIcon,
 } from "lucide-react";
+
+// Client-side image compressor for mobile and desktop uploads
+function compressAndResizeImage(
+  file: File,
+  maxWidth = 480,
+  maxHeight = 480,
+  quality = 0.85
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("خطا در خواندن فایل"));
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("خطا در بارگذاری تصویر"));
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          resolve(e.target?.result as string);
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+        let dataUrl = canvas.toDataURL("image/webp", quality);
+        if (!dataUrl.startsWith("data:image/webp")) {
+          dataUrl = canvas.toDataURL("image/jpeg", quality);
+        }
+        resolve(dataUrl);
+      };
+      img.src = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -89,6 +132,33 @@ export function AdminPage() {
   const [editProduct, setEditProduct] = useState<Partial<Product> | null>(null);
   const [featuresText, setFeaturesText] = useState("");
   const [purchaseInfoText, setPurchaseInfoText] = useState("");
+  const [isCompressingImage, setIsCompressingImage] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState("");
+
+  // Handle client-side image file upload & compression
+  const handleImageFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setImageUploadError("لطفاً یک فایل تصویری (PNG, JPG, WebP) انتخاب کنید.");
+      return;
+    }
+
+    setImageUploadError("");
+    setIsCompressingImage(true);
+
+    try {
+      const compressedDataUrl = await compressAndResizeImage(file, 480, 480, 0.85);
+      setEditProduct((prev) => (prev ? { ...prev, iconUrl: compressedDataUrl } : null));
+    } catch (err) {
+      console.error("Image processing error:", err);
+      setImageUploadError("خطا در بهینه‌سازی تصویر. لطفاً تصویر دیگری را امتحان کنید.");
+    } finally {
+      setIsCompressingImage(false);
+      e.target.value = "";
+    }
+  };
 
   // Category Row Add / Edit Modal State
   const [isEditingRow, setIsEditingRow] = useState(false);
@@ -261,11 +331,15 @@ export function AdminPage() {
     setEditProduct({ ...product });
     setFeaturesText(product.features ? product.features.join("\n") : "");
     setPurchaseInfoText(product.purchaseInfo ? product.purchaseInfo.join("\n") : "");
+    setImageUploadError("");
+    setIsCompressingImage(false);
     setIsEditing(true);
   };
 
   // Open Add Form for Product
   const handleOpenAddProduct = () => {
+    setImageUploadError("");
+    setIsCompressingImage(false);
     setEditProduct({
       slug: "",
       name: "",
@@ -1504,6 +1578,112 @@ export function AdminPage() {
                   >
                     🟡 طلایی
                   </button>
+                </div>
+              </div>
+
+              {/* Product Image & Upload Section (BodoCP-Style Rounded Square Visual) */}
+              <div className="rounded-2xl border border-border/80 bg-secondary/30 p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-foreground flex items-center gap-2">
+                    <ImageIcon className="h-4 w-4 text-primary" />
+                    <span>تصویر یا لوگوی محصول (کارت سبک BodoCP):</span>
+                  </span>
+                  {editProduct.iconUrl && (
+                    <button
+                      type="button"
+                      onClick={() => setEditProduct({ ...editProduct, iconUrl: undefined })}
+                      className="text-[11px] text-rose-500 font-semibold hover:underline"
+                    >
+                      حذف تصویر و بازگشت به پیش‌فرض
+                    </button>
+                  )}
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  {/* Live Preview of the Image */}
+                  <div className="relative h-24 w-24 sm:h-28 sm:w-28 shrink-0 rounded-2xl overflow-hidden bg-background/80 border border-border/80 p-2 flex items-center justify-center shadow-inner">
+                    {getProductLogo(editProduct.slug || "", editProduct.iconUrl) ? (
+                      <img
+                        src={getProductLogo(editProduct.slug || "", editProduct.iconUrl)}
+                        alt="پیش‌نمایش تصویر"
+                        className="max-h-full max-w-full object-contain rounded-xl drop-shadow-sm"
+                      />
+                    ) : (
+                      <span className="text-2xl font-black text-muted-foreground/60">
+                        {editProduct.slug ? editProduct.slug.charAt(0).toUpperCase() : "AI"}
+                      </span>
+                    )}
+                    {editProduct.badge && (
+                      <span className="absolute right-1 top-1 rounded-full bg-primary/90 px-1.5 py-0.2 text-[8px] font-bold text-white">
+                        {editProduct.badge}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Upload and Quick Selection controls */}
+                  <div className="flex-1 space-y-2.5 w-full">
+                    <div className="flex items-center gap-2">
+                      <label className="flex-1 cursor-pointer inline-flex items-center justify-center gap-2 rounded-2xl border border-primary/40 bg-primary/10 px-4 py-2.5 text-xs font-bold text-primary hover:bg-primary/20 transition-all shadow-xs">
+                        <Upload className="h-4 w-4" />
+                        <span>
+                          {isCompressingImage
+                            ? "در حال فشرده‌سازی و بهینه‌سازی تصویر..."
+                            : "آپلود تصویر جدید از دستگاه (گوشی یا سیستم)"}
+                        </span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          disabled={isCompressingImage}
+                          onChange={handleImageFileUpload}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+
+                    {imageUploadError && (
+                      <p className="text-[11px] text-rose-500 font-medium">
+                        {imageUploadError}
+                      </p>
+                    )}
+
+                    {/* Quick Presets */}
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="text-[11px] text-muted-foreground">لوگوهای پرکاربرد:</span>
+                      <button
+                        type="button"
+                        onClick={() => setEditProduct({ ...editProduct, iconUrl: PRESET_LOGOS["chatgpt"] })}
+                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors"
+                      >
+                        ChatGPT
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setEditProduct({ ...editProduct, iconUrl: PRESET_LOGOS["gemini-pro"] })}
+                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors"
+                      >
+                        Gemini
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setEditProduct({ ...editProduct, iconUrl: PRESET_LOGOS["claude"] })}
+                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors"
+                      >
+                        Claude
+                      </button>
+                    </div>
+
+                    {/* Optional direct URL input */}
+                    <div>
+                      <input
+                        type="text"
+                        dir="ltr"
+                        value={editProduct.iconUrl || ""}
+                        onChange={(e) => setEditProduct({ ...editProduct, iconUrl: e.target.value })}
+                        placeholder="آدرس اینترنتی تصویر مستقیم (اختیاری): https://..."
+                        className="w-full rounded-xl border border-border bg-background/50 px-3 py-1.5 text-xs text-muted-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
