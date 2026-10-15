@@ -5,16 +5,19 @@ type LogoProps = {
   className?: string;
   size?: number;
   withWordmark?: boolean;
+  onClick?: () => void;
 };
 
 export function Logo({
   className,
   size = 34,
   withWordmark = true,
+  onClick,
 }: LogoProps) {
   return (
     <Link
       to="/"
+      onClick={onClick}
       aria-label="VAICH — صفحه اصلی"
       className={cn("group flex items-center gap-2 shrink-0 select-none", className)}
     >
