@@ -299,6 +299,13 @@
   }
 }
 
+/* 100% Solid Theme-Matched Mobile Drawer Background */
+.mobile-drawer-panel {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+  opacity: 1 !important;
+}
+
 /* =========================
    REDUCED MOTION
    ========================= */

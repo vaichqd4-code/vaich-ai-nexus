@@ -240,14 +240,18 @@ export function Header() {
       {open && (
         <div
           onClick={() => setOpen(false)}
-          className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm transition-opacity duration-300 lg:hidden"
+          className="fixed inset-0 z-[60] bg-slate-900/20 dark:bg-black/60 backdrop-blur-xs transition-opacity duration-200 lg:hidden"
         />
       )}
 
-      {/* Modern Off-Canvas Side Drawer with 100% Solid Opaque Background */}
+      {/* Modern Off-Canvas Side Drawer with 100% Solid Theme-Matched Background */}
       <aside
+        style={{
+          backgroundColor: "var(--background)",
+          color: "var(--foreground)",
+        }}
         className={cn(
-          "fixed top-0 bottom-0 right-0 z-[70] w-[300px] max-w-[85vw] bg-white dark:bg-[#0c101c] border-l border-border/80 shadow-2xl flex flex-col p-6 transition-transform duration-300 ease-in-out lg:hidden opacity-100",
+          "mobile-drawer-panel fixed top-0 bottom-0 right-0 z-[70] w-[300px] max-w-[85vw] border-l border-border/80 shadow-2xl flex flex-col p-6 transition-transform duration-300 ease-in-out lg:hidden",
           open ? "translate-x-0" : "translate-x-full pointer-events-none"
         )}
       >
