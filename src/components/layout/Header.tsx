@@ -80,13 +80,13 @@ export function Header() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300",
+        "sticky top-0 z-50 w-full transition-all duration-200",
         scrolled
-          ? "glass-panel border-x-0 border-t-0"
-          : "border-b border-transparent",
+          ? "bg-background/85 backdrop-blur-md border-b border-border/50 shadow-xs"
+          : "bg-background/40 backdrop-blur-xs border-b border-border/20",
       )}
     >
-      <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6 lg:grid-cols-[auto_minmax(0,1fr)_auto]">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2.5 px-3 py-1.5 sm:px-6 sm:py-2.5">
         <Logo />
 
         <nav
@@ -108,19 +108,19 @@ export function Header() {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-2">
-          {/* دکمه بیضی و جمع‌وجور سرچ کنار دکمه‌های تم و منو */}
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* دکمه جمع‌وجور سرچ کنار دکمه‌های تم و منو */}
           <div className="relative flex items-center">
             {searchOpen ? (
-              <div className="flex items-center gap-1.5 rounded-full border border-neon-blue/60 bg-secondary/80 px-2.5 py-1.5 backdrop-blur-md transition-all">
-                <Search className="h-4 w-4 text-neon-blue shrink-0" />
+              <div className="flex items-center gap-1.5 rounded-xl border border-primary/60 bg-secondary/95 px-2.5 py-1.5 shadow-sm transition-all">
+                <Search className="h-4 w-4 text-primary shrink-0" />
                 <input
                   type="text"
                   autoFocus
                   placeholder="جستجو..."
                   value={searchQuery}
                   onChange={(e) => handleSearch(e.target.value)}
-                  className="w-20 sm:w-32 bg-transparent text-xs text-foreground outline-none placeholder:text-muted-foreground"
+                  className="w-20 xs:w-28 sm:w-36 bg-transparent text-xs text-foreground outline-none placeholder:text-muted-foreground"
                 />
                 <button
                   type="button"
@@ -128,7 +128,7 @@ export function Header() {
                     setSearchOpen(false);
                     handleSearch("");
                   }}
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground p-0.5"
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
@@ -138,7 +138,7 @@ export function Header() {
                 type="button"
                 onClick={() => setSearchOpen(true)}
                 title="جستجو"
-                className="flex items-center gap-1 rounded-full border border-border bg-secondary/50 px-2.5 py-2 text-xs text-muted-foreground transition-all duration-300 hover:border-neon-purple/50 hover:bg-secondary hover:text-foreground"
+                className="grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary hover:text-foreground active:scale-95"
               >
                 <Search className="h-4 w-4" />
               </button>
@@ -159,7 +159,7 @@ export function Header() {
                 ? "حالت روشن"
                 : "حالت تاریک"
             }
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-border bg-secondary/50 text-foreground transition-all duration-300 hover:border-neon-purple/50 hover:bg-secondary active:scale-95"
+            className="grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary active:scale-95"
           >
             {theme === "dark" ? (
               <svg
@@ -213,7 +213,7 @@ export function Header() {
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-label="باز و بسته کردن منو"
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-border bg-secondary/50 text-foreground transition-all active:scale-95 lg:hidden"
+            className="grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary active:scale-95 lg:hidden"
           >
             <svg
               viewBox="0 0 24 24"

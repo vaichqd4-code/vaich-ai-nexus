@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils";
 
 export const PRESET_LOGOS: Record<string, string> = {
-  gemini: "/file_000000007ea4822f9eac5c00be6be9eb.png",
-  "gemini-pro": "/file_00000000377481f6b667af886cd18fb6.png",
-  chatgpt: "/ChatGPT-Logo-500x281.jpg",
-  "chatgpt-plus": "/ChatGPT-Logo-500x281.jpg",
-  "اشتراک chatgpt plus شخصی": "/ChatGPT-Logo-500x281.jpg",
+  gemini: "/gemini-logo.webp",
+  "gemini-pro": "/gemini-pro-logo.webp",
+  chatgpt: "/chatgpt-logo.webp",
+  "chatgpt-plus": "/chatgpt-logo.webp",
+  "اشتراک chatgpt plus شخصی": "/chatgpt-logo.webp",
   claude: "/Claude-.webp",
   "claude-pro": "/Claude-.webp",
 };
@@ -47,6 +47,9 @@ export function ServiceIcon({
         <img
           src={logo}
           alt={slug}
+          width={40}
+          height={40}
+          decoding="async"
           className={cn("h-10 w-10 rounded-xl object-contain", imgClassName)}
           loading="lazy"
         />

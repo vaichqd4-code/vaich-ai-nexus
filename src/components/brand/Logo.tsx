@@ -9,25 +9,26 @@ type LogoProps = {
 
 export function Logo({
   className,
-  size = 40,
+  size = 34,
   withWordmark = true,
 }: LogoProps) {
   return (
     <Link
       to="/"
       aria-label="VAICH — صفحه اصلی"
-      className={cn("group flex items-center gap-2.5", className)}
+      className={cn("group flex items-center gap-2 shrink-0 select-none", className)}
     >
       <img
-        src="/file_0000000019fc81f8a45fc2a27ebaa579.png"
+        src="/vaich-logo.webp"
         alt="لوگوی VAICH"
         width={size}
         height={size}
-        className="rounded-xl object-contain transition-transform duration-300 group-hover:scale-105"
+        decoding="async"
+        className="h-7 w-7 sm:h-9 sm:w-9 rounded-xl object-contain transition-transform duration-300 group-hover:scale-105"
       />
 
       {withWordmark && (
-        <span className="gradient-text text-lg font-extrabold tracking-[0.25em]">
+        <span className="gradient-text text-sm sm:text-lg font-black tracking-wider sm:tracking-widest">
           VAICH
         </span>
       )}

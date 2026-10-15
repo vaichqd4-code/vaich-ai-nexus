@@ -80,6 +80,9 @@ export function ProductCard({
           <img
             src={logoUrl}
             alt={product.name}
+            width={140}
+            height={90}
+            decoding="async"
             className="max-h-full max-w-full object-contain rounded-lg sm:rounded-xl drop-shadow-md group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
           />

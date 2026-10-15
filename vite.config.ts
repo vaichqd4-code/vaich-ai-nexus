@@ -10,6 +10,28 @@ export default defineConfig({
   vite: {
     // Keep root static assets (including /favicon.ico) in every production bundle.
     publicDir: "public",
+    build: {
+      target: "es2022",
+      cssCodeSplit: true,
+      chunkSizeWarningLimit: 600,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes("node_modules")) {
+              if (id.includes("lucide-react")) {
+                return "lucide-icons";
+              }
+              if (id.includes("@tanstack")) {
+                return "tanstack-framework";
+              }
+              if (id.includes("@radix-ui")) {
+                return "radix-primitives";
+              }
+            }
+          },
+        },
+      },
+    },
   },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).

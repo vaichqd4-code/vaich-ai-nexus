@@ -671,13 +671,7 @@ export function useDynamicProducts() {
   );
 
   useEffect(() => {
-    setItems(getStoredProducts());
-    setRowsState(getStoredCategoryRows());
-    setLayoutState(getStoredLayout());
-    setAdminUsersState(getStoredAdminUsers());
-    setMasterPinState(getStoredMasterPin());
-
-    // Pull from cloud on mount
+    // Pull from cloud on mount asynchronously without blocking initial render
     syncSiteConfigWithCloud().then((cfg) => {
       if (cfg?.updatedAt) setLastCloudSync(cfg.updatedAt);
       if (cfg?.adminUsers) setAdminUsersState(cfg.adminUsers);

@@ -1,14 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo, lazy, Suspense } from "react";
 import { Section } from "@/components/layout/Section";
 import { ProductCard } from "@/components/product/ProductCard";
-import { Features } from "@/components/sections/Features";
-import { HowItWorks } from "@/components/sections/HowItWorks";
-import { Trust } from "@/components/sections/Trust";
-import { Faq } from "@/components/sections/Faq";
-import { SupportCta } from "@/components/sections/SupportCta";
 import { NeonLink } from "@/components/ui/NeonButton";
 import { useDynamicProducts, type LayoutMode, type ProductCategoryRow, type Product } from "@/lib/products";
+
+// Code splitting below-the-fold landing page sections for 90+ Lighthouse Performance
+const Features = lazy(() => import("@/components/sections/Features").then((m) => ({ default: m.Features })));
+const HowItWorks = lazy(() => import("@/components/sections/HowItWorks").then((m) => ({ default: m.HowItWorks })));
+const Trust = lazy(() => import("@/components/sections/Trust").then((m) => ({ default: m.Trust })));
+const Faq = lazy(() => import("@/components/sections/Faq").then((m) => ({ default: m.Faq })));
+const SupportCta = lazy(() => import("@/components/sections/SupportCta").then((m) => ({ default: m.SupportCta })));
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -98,11 +100,12 @@ function Hero() {
         <div className="relative">
           <div className="float-slow glow-strong overflow-hidden rounded-3xl sm:rounded-4xl border border-border shadow-2xl bg-card aspect-4/3">
             <img
-              src="/317630163_1789657188376603.jpg"
+              src="/hero-ai.webp"
               alt="خرید اشتراک های هوش مصنوعی VAICH"
               width={1024}
               height={768}
               loading="eager"
+              fetchPriority="high"
               decoding="async"
               className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.02]"
             />
@@ -230,18 +233,18 @@ function Home() {
     };
   }, []);
 
-  // Filter products by search query
-  const filteredProducts = products.filter((p) => {
+  // Filter products by search query with memoization
+  const filteredProducts = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    if (!q) return true;
+    if (!q) return products;
 
-    return (
+    return products.filter((p) =>
       p.name.toLowerCase().includes(q) ||
       (p.service && p.service.toLowerCase().includes(q)) ||
       (p.description && p.description.toLowerCase().includes(q)) ||
       (p.duration && p.duration.toLowerCase().includes(q))
     );
-  });
+  }, [products, searchQuery]);
 
   // Effective rows: if searching, show single search results section; otherwise render custom category rows
   const isSearching = Boolean(searchQuery.trim());
@@ -287,11 +290,14 @@ function Home() {
         })
       )}
 
-      <Features />
-      <HowItWorks />
-      <Trust />
-      <Faq />
-      <SupportCta />
+      {/* Code-split and lazy-loaded landing sections */}
+      <Suspense fallback={<div className="h-16 py-4" />}>
+        <Features />
+        <HowItWorks />
+        <Trust />
+        <Faq />
+        <SupportCta />
+      </Suspense>
     </>
   );
 }
