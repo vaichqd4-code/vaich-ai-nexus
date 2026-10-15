@@ -1,9 +1,16 @@
 import { useState, useRef, type MouseEvent } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { NeonLink } from "@/components/ui/NeonButton";
-import { formatPrice, type Product } from "@/lib/products";
+import { formatPrice, toPersianDigits, type Product } from "@/lib/products";
+import { cn } from "@/lib/utils";
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({
+  product,
+  className,
+}: {
+  product: Product;
+  className?: string;
+}) {
   const cardRef = useRef<HTMLElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0, active: false });
 
@@ -23,6 +30,9 @@ export function ProductCard({ product }: { product: Product }) {
     setTilt({ x: 0, y: 0, active: false });
   };
 
+  const isSpecial = product.featured || product.badge || product.slug === "gemini-pro";
+  const badgeLabel = product.badge || (product.featured ? "پیشنهاد ویژه 🔥" : "ویژه 🔥");
+
   return (
     <article
       ref={cardRef}
@@ -34,7 +44,10 @@ export function ProductCard({ product }: { product: Product }) {
           : "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)",
         transition: tilt.active ? "transform 0.1s ease-out" : "transform 0.4s ease-out, box-shadow 0.3s ease",
       }}
-      className="group relative flex w-[280px] sm:w-[315px] shrink-0 snap-start flex-col gap-4 overflow-hidden rounded-3xl border border-border/80 bg-card p-5 shadow-xs hover:border-primary/50 hover:shadow-2xl"
+      className={cn(
+        "group relative flex w-[280px] sm:w-[315px] shrink-0 snap-start flex-col gap-4 overflow-hidden rounded-3xl border border-border/80 bg-card p-5 shadow-xs hover:border-primary/50 hover:shadow-2xl transition-colors",
+        className,
+      )}
     >
       {/* 3D Glass Light reflection layer */}
       <div
@@ -42,16 +55,16 @@ export function ProductCard({ product }: { product: Product }) {
         className="pointer-events-none absolute inset-x-0 -top-24 h-40 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-40 neon-gradient"
       />
 
-      {/* Special Badge */}
-      {product.slug === "gemini-pro" && (
-        <span className="absolute left-3.5 top-3.5 z-10 rounded-full bg-primary/90 px-3 py-1 text-xs font-bold text-white shadow-md">
-          پیشنهاد ویژه 🔥
+      {/* Special / Featured Badge */}
+      {isSpecial && (
+        <span className="absolute left-3.5 top-3.5 z-10 rounded-full bg-linear-to-r from-primary to-accent px-3 py-1 text-xs font-bold text-white shadow-md">
+          {badgeLabel}
         </span>
       )}
 
       {/* Top Header: Icon + Name */}
       <div className="flex items-center gap-3.5 pt-1">
-        <ServiceIcon slug={product.slug} className="h-12 w-12" />
+        <ServiceIcon slug={product.slug} iconUrl={product.iconUrl} className="h-12 w-12" />
 
         <div className="min-w-0 flex-1">
           <h3 className="truncate text-lg font-bold tracking-tight text-foreground">
@@ -67,11 +80,18 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="rounded-2xl border border-border/60 bg-secondary/30 p-3.5">
         <div className="flex items-center justify-between gap-2">
           <span className="text-xs text-muted-foreground">قیمت با تخفیف:</span>
-          {product.originalPrice && (
-            <span className="text-xs text-muted-foreground line-through">
-              {formatPrice(product.originalPrice)}
-            </span>
-          )}
+          <div className="flex items-center gap-1.5">
+            {product.originalPrice && (
+              <span className="text-xs text-muted-foreground line-through">
+                {formatPrice(product.originalPrice)}
+              </span>
+            )}
+            {product.discountPercent ? (
+              <span className="rounded-md bg-rose-500/10 px-1.5 py-0.5 text-[11px] font-bold text-rose-500 border border-rose-500/20">
+                %{toPersianDigits(product.discountPercent)}
+              </span>
+            ) : null}
+          </div>
         </div>
 
         <p className="mt-1 gradient-text text-xl font-extrabold tracking-tight">

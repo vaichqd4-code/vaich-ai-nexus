@@ -4,7 +4,7 @@ import { Section } from "@/components/layout/Section";
 import { ProductCard } from "@/components/product/ProductCard";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { SupportCta } from "@/components/sections/SupportCta";
-import { products } from "@/lib/products";
+import { useDynamicProducts } from "@/lib/products";
 
 export const Route = createFileRoute("/products/")({
   head: () => ({
@@ -27,6 +27,7 @@ export const Route = createFileRoute("/products/")({
 
 function ProductsPage() {
   const [search, setSearch] = useState("");
+  const { products } = useDynamicProducts();
 
   const filteredProducts = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -47,7 +48,7 @@ function ProductsPage() {
 
       return searchableText.includes(query);
     });
-  }, [search]);
+  }, [search, products]);
 
   return (
     <>
@@ -85,9 +86,9 @@ function ProductsPage() {
 
         {/* Products */}
         {filteredProducts.length > 0 ? (
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 justify-items-center">
             {filteredProducts.map((product) => (
-              <ProductCard key={product.slug} product={product} />
+              <ProductCard key={product.slug} product={product} className="w-full max-w-[340px]" />
             ))}
           </div>
         ) : (
@@ -104,4 +105,4 @@ function ProductsPage() {
       <SupportCta />
     </>
   );
-    }
+}

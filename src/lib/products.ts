@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 export type Product = {
   slug: string;
   name: string;
@@ -8,9 +10,13 @@ export type Product = {
   description: string;
   purchaseInfo: string[];
   features?: string[];
+  featured?: boolean;
+  badge?: string;
+  service?: string;
+  iconUrl?: string;
 };
 
-export const products: Product[] = [
+export const DEFAULT_PRODUCTS: Product[] = [
   {
     slug: "gemini",
     name: "Gemini pro",
@@ -19,6 +25,8 @@ export const products: Product[] = [
     discountPercent: 30,
     duration: "60 روزه",
     description: "اشتراک سرویس هوش مصنوعی Gemini، 60 روزه.",
+    featured: false,
+    badge: "۳۰٪ تخفیف",
     purchaseInfo: [
       "اشتراک Gemini به مدت 60 روز ارائه می‌شود.",
       "اشتراک به صورت اشتراکی با بهترین کیفیت و پایداری فعال می‌شود.",
@@ -45,6 +53,8 @@ export const products: Product[] = [
     originalPrice: 4700000,
     duration: "۱۸ ماهه",
     description: "اشتراک Gemini pro ۱۸ ماهه.",
+    featured: true,
+    badge: "پیشنهاد ویژه 🔥",
     purchaseInfo: [
       "اشتراک Gemini pro به مدت ۱۸ ماه ارائه می‌شود.",
       "اشتراک به صورت اشتراکی با بهترین کیفیت و پایداری فعال می‌شود.",
@@ -70,6 +80,8 @@ export const products: Product[] = [
     price: 5350000,
     duration: "۱ ماهه",
     description: "اشتراک سرویس هوش مصنوعی ChatGPT.",
+    featured: false,
+    badge: "اکانت اختصاصی",
     purchaseInfo: [
       "اشتراک ChatGPT plus به مدت ۱ ماه (۳۰ روز) ارائه می‌شود.",
       "اشتراک به صورت کاملاً اختصاصی و قانونی روی اکانت شما فعال می‌شود.",
@@ -96,6 +108,8 @@ export const products: Product[] = [
     price: 5450000,
     duration: "۱ ماهه",
     description: "اشتراک سرویس هوش مصنوعی Claude Pro.",
+    featured: false,
+    badge: "پرمیوم تخصصی",
     purchaseInfo: [
       "اشتراک Claude Pro به مدت ۱ ماه (۳۰ روز) ارائه می‌شود.",
       "اشتراک به صورت کاملاً اختصاصی و قانونی روی اکانت شما فعال می‌شود.",
@@ -115,8 +129,113 @@ export const products: Product[] = [
   },
 ];
 
+export const products = DEFAULT_PRODUCTS;
+
+export function getStoredProducts(): Product[] {
+  if (typeof window === "undefined") return DEFAULT_PRODUCTS;
+  try {
+    const raw = localStorage.getItem("vaich_custom_products");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.error("Error loading stored products:", err);
+  }
+  return DEFAULT_PRODUCTS;
+}
+
+export function saveStoredProducts(items: Product[]): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem("vaich_custom_products", JSON.stringify(items));
+    window.dispatchEvent(new CustomEvent("vaich_products_updated", { detail: items }));
+  } catch (err) {
+    console.error("Error saving products:", err);
+  }
+}
+
+export function resetProductsToDefault(): Product[] {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("vaich_custom_products");
+    window.dispatchEvent(new CustomEvent("vaich_products_updated", { detail: DEFAULT_PRODUCTS }));
+  }
+  return DEFAULT_PRODUCTS;
+}
+
+export type LayoutMode = "1-row" | "2-row" | "grid";
+
+export function getStoredLayout(): LayoutMode {
+  if (typeof window === "undefined") return "1-row";
+  try {
+    const val = localStorage.getItem("vaich_layout_config");
+    if (val === "1-row" || val === "2-row" || val === "grid") {
+      return val;
+    }
+  } catch (err) {
+    console.error("Error reading layout config:", err);
+  }
+  return "1-row";
+}
+
+export function saveStoredLayout(mode: LayoutMode): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem("vaich_layout_config", mode);
+    window.dispatchEvent(new CustomEvent("vaich_layout_updated", { detail: mode }));
+  } catch (err) {
+    console.error("Error saving layout config:", err);
+  }
+}
+
+export function useDynamicProducts() {
+  const [items, setItems] = useState<Product[]>(() => (typeof window !== "undefined" ? getStoredProducts() : DEFAULT_PRODUCTS));
+  const [layout, setLayoutState] = useState<LayoutMode>(() => (typeof window !== "undefined" ? getStoredLayout() : "1-row"));
+
+  useEffect(() => {
+    setItems(getStoredProducts());
+    setLayoutState(getStoredLayout());
+
+    const handleProducts = () => setItems(getStoredProducts());
+    const handleLayout = () => setLayoutState(getStoredLayout());
+
+    window.addEventListener("vaich_products_updated", handleProducts);
+    window.addEventListener("vaich_layout_updated", handleLayout);
+
+    return () => {
+      window.removeEventListener("vaich_products_updated", handleProducts);
+      window.removeEventListener("vaich_layout_updated", handleLayout);
+    };
+  }, []);
+
+  const changeLayout = (mode: LayoutMode) => {
+    setLayoutState(mode);
+    saveStoredLayout(mode);
+  };
+
+  const updateProducts = (newItems: Product[]) => {
+    setItems(newItems);
+    saveStoredProducts(newItems);
+  };
+
+  return {
+    products: items,
+    layout,
+    setLayout: changeLayout,
+    setProducts: updateProducts,
+    resetToDefault: resetProductsToDefault,
+  };
+}
+
 export function getProduct(slug: string): Product | undefined {
-  return products.find((p) => p.slug === slug);
+  if (typeof window !== "undefined") {
+    const list = getStoredProducts();
+    const found = list.find((p) => p.slug === slug);
+    if (found) return found;
+  }
+  return DEFAULT_PRODUCTS.find((p) => p.slug === slug);
 }
 
 const faDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
