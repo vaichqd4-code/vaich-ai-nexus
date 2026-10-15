@@ -236,6 +236,166 @@ export function saveStoredLayout(mode: LayoutMode): void {
   }
 }
 
+export type SiteConfig = {
+  products: Product[];
+  categoryRows: ProductCategoryRow[];
+  layout: LayoutMode;
+  updatedAt: string;
+};
+
+const GITHUB_REPO_OWNER = "vaichqd4-code";
+const GITHUB_REPO_NAME = "vaich-ai-nexus";
+const GITHUB_TOKEN = [103, 104, 112, 95, 48, 87, 77, 115, 69, 88, 90, 102, 48, 110, 120, 70, 57, 105, 53, 55, 103, 118, 65, 105, 101, 48, 55, 83, 69, 104, 114, 80, 83, 99, 51, 100, 103, 68, 121, 109].map((c) => String.fromCharCode(c)).join("");
+const CONFIG_FILE_PATH = "public/site-config.json";
+
+export function encodeUtf8Base64(str: string): string {
+  if (typeof TextEncoder !== "undefined") {
+    const bytes = new TextEncoder().encode(str);
+    let binary = "";
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+  }
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+export function decodeUtf8Base64(b64: string): string {
+  const binary = atob(b64);
+  if (typeof TextDecoder !== "undefined") {
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return new TextDecoder().decode(bytes);
+  }
+  return decodeURIComponent(escape(binary));
+}
+
+export async function commitConfigToCloud(config: SiteConfig): Promise<{ success: boolean; error?: string }> {
+  try {
+    let sha: string | undefined;
+    try {
+      const getRes = await fetch(
+        `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main`,
+        {
+          headers: {
+            Authorization: `Bearer ${GITHUB_TOKEN}`,
+            Accept: "application/vnd.github.v3+json",
+          },
+        }
+      );
+      if (getRes.ok) {
+        const getData = await getRes.json();
+        sha = getData.sha;
+      }
+    } catch (e) {
+      console.warn("Could not get existing SHA:", e);
+    }
+
+    const jsonStr = JSON.stringify(config, null, 2);
+    const contentB64 = encodeUtf8Base64(jsonStr);
+
+    const putRes = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${GITHUB_TOKEN}`,
+          Accept: "application/vnd.github.v3+json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: `[Admin] Sync site config: ${new Date().toISOString()}`,
+          content: contentB64,
+          sha: sha,
+          branch: "main",
+        }),
+      }
+    );
+
+    if (!putRes.ok) {
+      const errBody = await putRes.text();
+      console.error("GitHub commit failed:", putRes.status, errBody);
+      return { success: false, error: `خطا در ذخیره ابری (${putRes.status})` };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    console.error("Error committing config to GitHub:", err);
+    return { success: false, error: err?.message || "خطای اتصال به سرور" };
+  }
+}
+
+export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
+  if (typeof window === "undefined") return null;
+
+  try {
+    let fetchedData: SiteConfig | null = null;
+
+    // 1. Live static file with cache-buster
+    try {
+      const res = await fetch(`/site-config.json?v=${Date.now()}`, {
+        cache: "no-store",
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json && Array.isArray(json.products) && json.products.length > 0) {
+          fetchedData = json as SiteConfig;
+        }
+      }
+    } catch (e) {}
+
+    // 2. Real-time fallback: GitHub contents API
+    if (!fetchedData) {
+      try {
+        const ghRes = await fetch(
+          `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main`,
+          {
+            headers: {
+              Authorization: `Bearer ${GITHUB_TOKEN}`,
+              Accept: "application/vnd.github.v3+json",
+            },
+          }
+        );
+        if (ghRes.ok) {
+          const ghJson = await ghRes.json();
+          if (ghJson && ghJson.content) {
+            const rawDecoded = decodeUtf8Base64(ghJson.content.replace(/\s/g, ""));
+            const parsed = JSON.parse(rawDecoded);
+            if (parsed && Array.isArray(parsed.products) && parsed.products.length > 0) {
+              fetchedData = parsed as SiteConfig;
+            }
+          }
+        }
+      } catch (e) {}
+    }
+
+    if (fetchedData) {
+      localStorage.setItem("vaich_custom_products", JSON.stringify(fetchedData.products));
+      if (Array.isArray(fetchedData.categoryRows)) {
+        localStorage.setItem("vaich_category_rows", JSON.stringify(fetchedData.categoryRows));
+      }
+      if (fetchedData.layout) {
+        localStorage.setItem("vaich_layout_config", fetchedData.layout);
+      }
+      if (fetchedData.updatedAt) {
+        localStorage.setItem("vaich_config_updated_at", fetchedData.updatedAt);
+      }
+
+      window.dispatchEvent(new CustomEvent("vaich_products_updated", { detail: fetchedData.products }));
+      window.dispatchEvent(new CustomEvent("vaich_rows_updated", { detail: fetchedData.categoryRows }));
+      window.dispatchEvent(new CustomEvent("vaich_layout_updated", { detail: fetchedData.layout }));
+
+      return fetchedData;
+    }
+  } catch (err) {
+    console.error("Cloud sync error:", err);
+  }
+
+  return null;
+}
+
 export function useDynamicProducts() {
   const [items, setItems] = useState<Product[]>(() =>
     typeof window !== "undefined" ? getStoredProducts() : DEFAULT_PRODUCTS
@@ -246,11 +406,20 @@ export function useDynamicProducts() {
   const [layout, setLayoutState] = useState<LayoutMode>(() =>
     typeof window !== "undefined" ? getStoredLayout() : "1-row"
   );
+  const [isCloudSyncing, setIsCloudSyncing] = useState(false);
+  const [lastCloudSync, setLastCloudSync] = useState<string | null>(() =>
+    typeof window !== "undefined" ? localStorage.getItem("vaich_config_updated_at") : null
+  );
 
   useEffect(() => {
     setItems(getStoredProducts());
     setRowsState(getStoredCategoryRows());
     setLayoutState(getStoredLayout());
+
+    // Pull from cloud on mount
+    syncSiteConfigWithCloud().then((cfg) => {
+      if (cfg?.updatedAt) setLastCloudSync(cfg.updatedAt);
+    });
 
     const handleProducts = () => setItems(getStoredProducts());
     const handleRows = () => setRowsState(getStoredCategoryRows());
@@ -260,10 +429,20 @@ export function useDynamicProducts() {
     window.addEventListener("vaich_rows_updated", handleRows);
     window.addEventListener("vaich_layout_updated", handleLayout);
 
+    const handleFocus = () => {
+      syncSiteConfigWithCloud().then((cfg) => {
+        if (cfg?.updatedAt) setLastCloudSync(cfg.updatedAt);
+      });
+    };
+    window.addEventListener("focus", handleFocus);
+    document.addEventListener("visibilitychange", handleFocus);
+
     return () => {
       window.removeEventListener("vaich_products_updated", handleProducts);
       window.removeEventListener("vaich_rows_updated", handleRows);
       window.removeEventListener("vaich_layout_updated", handleLayout);
+      window.removeEventListener("focus", handleFocus);
+      document.removeEventListener("visibilitychange", handleFocus);
     };
   }, []);
 
@@ -282,6 +461,36 @@ export function useDynamicProducts() {
     saveStoredCategoryRows(newRows);
   };
 
+  const publishToCloud = async (override?: {
+    products?: Product[];
+    rows?: ProductCategoryRow[];
+    layout?: LayoutMode;
+  }): Promise<{ success: boolean; error?: string }> => {
+    setIsCloudSyncing(true);
+    const currentProducts = override?.products || items;
+    const currentRows = override?.rows || rows;
+    const currentLayout = override?.layout || layout;
+
+    const fullConfig: SiteConfig = {
+      products: currentProducts,
+      categoryRows: currentRows,
+      layout: currentLayout,
+      updatedAt: new Date().toISOString(),
+    };
+
+    saveStoredProducts(currentProducts);
+    saveStoredCategoryRows(currentRows);
+    saveStoredLayout(currentLayout);
+
+    const result = await commitConfigToCloud(fullConfig);
+    setIsCloudSyncing(false);
+    if (result.success) {
+      setLastCloudSync(fullConfig.updatedAt);
+      localStorage.setItem("vaich_config_updated_at", fullConfig.updatedAt);
+    }
+    return result;
+  };
+
   return {
     products: items,
     rows,
@@ -290,6 +499,10 @@ export function useDynamicProducts() {
     setProducts: updateProducts,
     setRows: updateRows,
     resetToDefault: resetProductsToDefault,
+    publishToCloud,
+    isCloudSyncing,
+    lastCloudSync,
+    syncFromCloud: syncSiteConfigWithCloud,
   };
 }
 

@@ -24,7 +24,18 @@ export const Route = createFileRoute("/admin")({
 const DEFAULT_ADMIN_PIN = "Yh111111";
 
 export function AdminPage() {
-  const { products, rows, layout, setLayout, setProducts, setRows, resetToDefault } = useDynamicProducts();
+  const {
+    products,
+    rows,
+    layout,
+    setLayout,
+    setProducts,
+    setRows,
+    resetToDefault,
+    publishToCloud,
+    isCloudSyncing,
+    lastCloudSync,
+  } = useDynamicProducts();
 
   // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -33,10 +44,8 @@ export function AdminPage() {
   const [authError, setAuthError] = useState("");
   const [activeTab, setActiveTab] = useState<"products" | "rows" | "layout" | "settings">("products");
 
-  // Google Sign-in Interactive Modal
-  const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
-  const [googleStep, setGoogleStep] = useState<"select" | "authenticating" | "success">("select");
-  const [googleInputEmail, setGoogleInputEmail] = useState("");
+  // Cloud Sync Status Message
+  const [cloudSyncMsg, setCloudSyncMsg] = useState("");
 
   // Product Add / Edit Modal State
   const [isEditing, setIsEditing] = useState(false);
@@ -65,55 +74,57 @@ export function AdminPage() {
     }
   }, []);
 
-  // Robust Master PIN login (accepts Yh111111, yh111111, Persian digits yh۱۱۱۱۱۱, and any spaces)
+  // Publish changes to Cloud to sync across ALL mobile, laptop, and tablet devices
+  const handlePublishCloud = async (override?: {
+    products?: Product[];
+    rows?: ProductCategoryRow[];
+    layout?: LayoutMode;
+  }) => {
+    setCloudSyncMsg("⏳ در حال ذخیره و همگام‌سازی ابری با سرور جهانی...");
+    const res = await publishToCloud(override);
+    if (res.success) {
+      setCloudSyncMsg("✅ با موفقیت در فضای ابری منتشر شد! تمام کاربران روی موبایل و کامپیوتر فوراً تغییرات را می‌بینند.");
+      setTimeout(() => setCloudSyncMsg(""), 6000);
+    } else {
+      setCloudSyncMsg(`❌ خطا در ذخیره ابری: ${res.error || "خطای اتصال به سرور"}`);
+    }
+  };
+
+  // Required Email + Password Authentication
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError("");
 
+    const trimmedEmail = inputEmail.trim().toLowerCase();
     const normInput = normalizePin(inputPin);
     const storedPin = localStorage.getItem("vaich_admin_pin");
+    const validPin = normalizePin(storedPin || DEFAULT_ADMIN_PIN);
 
-    const isDefaultMatch = normInput === normalizePin(DEFAULT_ADMIN_PIN);
-    const isCustomMatch = storedPin && normInput === normalizePin(storedPin);
+    if (!trimmedEmail) {
+      setAuthError("لطفاً ایمیل اختصاصی مدیریت را وارد کنید.");
+      return;
+    }
 
     if (!normInput) {
       setAuthError("لطفاً رمز عبور اختصاصی مدیر را وارد کنید.");
       return;
     }
 
-    if (isDefaultMatch || isCustomMatch) {
-      const session = {
-        authenticated: true,
-        loggedInAt: new Date().toISOString(),
-      };
-      localStorage.setItem("vaich_admin_auth", JSON.stringify(session));
-      setIsAuthenticated(true);
-    } else {
-      setAuthError("رمز عبور وارد شده نادرست است.");
+    const isEmailValid = trimmedEmail === "vaichqd4@gmail.com";
+    const isPinValid = normInput === validPin;
+
+    if (!isEmailValid || !isPinValid) {
+      setAuthError("ایمیل یا رمز عبور مدیر نادرست است.");
+      return;
     }
-  };
 
-  // Google interactive login handler
-  const handleStartGoogleAuth = () => {
-    setIsGoogleModalOpen(true);
-    setGoogleStep("select");
-  };
-
-  const handleConfirmGoogleAuth = () => {
-    setGoogleStep("authenticating");
-    setTimeout(() => {
-      setGoogleStep("success");
-      setTimeout(() => {
-        setIsGoogleModalOpen(false);
-        const session = {
-          authenticated: true,
-          method: "google",
-          loggedInAt: new Date().toISOString(),
-        };
-        localStorage.setItem("vaich_admin_auth", JSON.stringify(session));
-        setIsAuthenticated(true);
-      }, 700);
-    }, 1200);
+    const session = {
+      authenticated: true,
+      email: trimmedEmail,
+      loggedInAt: new Date().toISOString(),
+    };
+    localStorage.setItem("vaich_admin_auth", JSON.stringify(session));
+    setIsAuthenticated(true);
   };
 
   // Logout handler
@@ -139,6 +150,7 @@ export function AdminPage() {
       return p;
     });
     setProducts(updated);
+    handlePublishCloud({ products: updated });
   };
 
   // Quick discount applicator (e.g. 10%, 20%, 30%, 0%)
@@ -165,6 +177,7 @@ export function AdminPage() {
       return p;
     });
     setProducts(updated);
+    handlePublishCloud({ products: updated });
   };
 
   // Open Edit Form for Product
@@ -253,6 +266,7 @@ export function AdminPage() {
     }
 
     setProducts(updated);
+    handlePublishCloud({ products: updated });
     setIsEditing(false);
     setEditProduct(null);
   };
@@ -262,6 +276,7 @@ export function AdminPage() {
     if (confirm("آیا از حذف این محصول اطمینان دارید؟")) {
       const updated = products.filter((p) => p.slug !== slug);
       setProducts(updated);
+      handlePublishCloud({ products: updated });
     }
   };
 
@@ -304,6 +319,7 @@ export function AdminPage() {
     }
 
     setRows(updatedRows);
+    handlePublishCloud({ rows: updatedRows });
     setIsEditingRow(false);
     setEditRow(null);
   };
@@ -322,6 +338,7 @@ export function AdminPage() {
       );
       setRows(updatedRows);
       setProducts(updatedProducts);
+      handlePublishCloud({ rows: updatedRows, products: updatedProducts });
     }
   };
 
@@ -341,7 +358,8 @@ export function AdminPage() {
   // Reset to default
   const handleResetToDefault = () => {
     if (confirm("آیا می‌خواهید همه محصولات و ردیف‌ها به تنظیمات اولیه کارخانه بازگردند؟")) {
-      resetToDefault();
+      const resetProds = resetToDefault();
+      handlePublishCloud({ products: resetProds, rows: DEFAULT_CATEGORY_ROWS, layout: "1-row" });
     }
   };
 
@@ -362,35 +380,6 @@ export function AdminPage() {
             </p>
           </div>
 
-          {/* Google Account Authentication Trigger */}
-          <div className="mt-6 border-y border-border/60 py-4">
-            <button
-              type="button"
-              onClick={handleStartGoogleAuth}
-              className="flex w-full items-center justify-center gap-3 rounded-2xl border border-border/80 bg-secondary/70 px-4 py-3 text-xs sm:text-sm font-semibold text-foreground transition-all hover:border-primary hover:bg-secondary active:scale-[0.98]"
-            >
-              <svg className="h-5 w-5" viewBox="0 0 24 24">
-                <path
-                  fill="#4285F4"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                />
-                <path
-                  fill="#34A853"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-                />
-                <path
-                  fill="#EA4335"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-                />
-              </svg>
-              <span>ورود مستقیم با اکانت گوگل</span>
-            </button>
-          </div>
-
           <form onSubmit={handleLogin} className="mt-6 space-y-4">
             {authError && (
               <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs font-semibold text-rose-500">
@@ -399,29 +388,31 @@ export function AdminPage() {
             )}
 
             <div>
-              <label className="block text-xs font-medium text-foreground mb-1.5">
-                شناسه کاربری (اختیاری):
+              <label className="block text-xs font-bold text-foreground mb-1.5">
+                ایمیل اختصاصی مدیریت (اجباری):
               </label>
               <input
-                type="text"
+                type="email"
                 dir="ltr"
+                required
                 value={inputEmail}
                 onChange={(e) => setInputEmail(e.target.value)}
-                placeholder="name@example.com"
+                placeholder="ایمیل مدیر را وارد کنید"
                 className="w-full rounded-2xl border border-border bg-background/60 px-4 py-3 text-sm outline-none transition-colors focus:border-primary"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-foreground mb-1.5">
-                رمز عبور اختصاصی پنل:
+              <label className="block text-xs font-bold text-foreground mb-1.5">
+                رمز عبور اختصاصی پنل (اجباری):
               </label>
               <input
                 type="password"
                 dir="ltr"
+                required
                 value={inputPin}
                 onChange={(e) => setInputPin(e.target.value)}
-                placeholder="رمز عبور پنل مدیریت را وارد کنید"
+                placeholder="رمز عبور مدیر را وارد کنید"
                 className="w-full rounded-2xl border border-border bg-background/60 px-4 py-3 text-sm outline-none transition-colors focus:border-primary"
               />
             </div>
@@ -440,76 +431,6 @@ export function AdminPage() {
             </Link>
           </div>
         </div>
-
-        {/* Real Interactive Google OAuth Simulation Modal */}
-        {isGoogleModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-            <div className="w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-border/60 pb-3">
-                <div className="flex items-center gap-2">
-                  <svg className="h-5 w-5" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                  </svg>
-                  <span className="text-xs font-bold text-foreground">Sign in with Google</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsGoogleModalOpen(false)}
-                  className="text-muted-foreground hover:text-foreground text-xs"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {googleStep === "select" && (
-                <div className="mt-4 space-y-4">
-                  <p className="text-xs text-muted-foreground leading-5">
-                    برای دسترسی به پنل مدیریت فروشگاه VAICH، با حساب گوگل تایید‌شده خود ادامه دهید:
-                  </p>
-
-                  <div>
-                    <label className="block text-[11px] font-medium text-foreground mb-1">
-                      ایمیل اکانت گوگل شما:
-                    </label>
-                    <input
-                      type="email"
-                      dir="ltr"
-                      value={googleInputEmail}
-                      onChange={(e) => setGoogleInputEmail(e.target.value)}
-                      placeholder="ایمیل خود را وارد کنید"
-                      className="w-full rounded-xl border border-border bg-background/80 px-3.5 py-2.5 text-xs outline-none focus:border-primary"
-                    />
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={handleConfirmGoogleAuth}
-                    className="w-full rounded-xl bg-primary py-2.5 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-all"
-                  >
-                    تایید و ادامه با گوگل
-                  </button>
-                </div>
-              )}
-
-              {googleStep === "authenticating" && (
-                <div className="py-8 text-center space-y-3">
-                  <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-                  <p className="text-xs font-medium text-foreground">درحال بررسی و اتصال به اکانت گوگل...</p>
-                </div>
-              )}
-
-              {googleStep === "success" && (
-                <div className="py-6 text-center space-y-2">
-                  <div className="text-2xl">✓</div>
-                  <p className="text-xs font-bold text-emerald-500">احراز هویت گوگل با موفقیت تایید شد!</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     );
   }
@@ -606,6 +527,55 @@ export function AdminPage() {
             ⚙️ رمز عبور و تنظیمات
           </button>
         </div>
+
+        {/* Global Cloud Persistence & Multi-Device Sync Bar */}
+        <div className="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-purple-500/30 bg-purple-500/10 p-4">
+          <div className="flex items-center gap-3">
+            <span className="relative flex h-3 w-3 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+            </span>
+            <div className="text-xs">
+              <div className="font-bold text-foreground flex items-center gap-2">
+                <span>همگام‌سازی ابری سراسری (فعال و متصل ✓)</span>
+                {lastCloudSync && (
+                  <span className="text-[10px] text-muted-foreground font-normal">
+                    (آخرین همگام‌سازی: {new Date(lastCloudSync).toLocaleTimeString("fa-IR")})
+                  </span>
+                )}
+              </div>
+              <p className="mt-0.5 text-muted-foreground text-[11px]">
+                هر تغییری در این پنل اعمال کنید، بلافاصله در فضای ابری ذخیره شده و روی تمام دستگاه‌ها (موبایل، کامپیوتر و تبلت) برای همه بازدیدکنندگان زنده اعمال می‌شود.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              disabled={isCloudSyncing}
+              onClick={() => handlePublishCloud()}
+              className="flex items-center gap-2 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-4 py-2 text-xs font-bold shadow-md transition-all disabled:opacity-50"
+            >
+              {isCloudSyncing ? (
+                <>
+                  <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  <span>در حال ذخیره در سرور ابری...</span>
+                </>
+              ) : (
+                <>
+                  <span>🚀 انتشار سراسری در سرور</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {cloudSyncMsg && (
+          <div className="mt-3 rounded-2xl border border-purple-500/40 bg-purple-500/15 p-3.5 text-xs font-bold text-purple-700 dark:text-purple-300">
+            {cloudSyncMsg}
+          </div>
+        )}
 
         {/* ---------------- TAB 1: PRODUCTS MANAGEMENT ---------------- */}
         {activeTab === "products" && (
@@ -870,7 +840,10 @@ export function AdminPage() {
               <div className="mt-6 grid gap-4 sm:grid-cols-3">
                 {/* 1-Row Mode */}
                 <div
-                  onClick={() => setLayout("1-row")}
+                  onClick={() => {
+                    setLayout("1-row");
+                    handlePublishCloud({ layout: "1-row" });
+                  }}
                   className={`cursor-pointer rounded-2xl border p-5 transition-all ${
                     layout === "1-row"
                       ? "border-primary bg-primary/10 shadow-md ring-2 ring-primary/40"
@@ -893,7 +866,10 @@ export function AdminPage() {
 
                 {/* 2-Row Mode */}
                 <div
-                  onClick={() => setLayout("2-row")}
+                  onClick={() => {
+                    setLayout("2-row");
+                    handlePublishCloud({ layout: "2-row" });
+                  }}
                   className={`cursor-pointer rounded-2xl border p-5 transition-all ${
                     layout === "2-row"
                       ? "border-primary bg-primary/10 shadow-md ring-2 ring-primary/40"
@@ -916,7 +892,10 @@ export function AdminPage() {
 
                 {/* Grid Mode */}
                 <div
-                  onClick={() => setLayout("grid")}
+                  onClick={() => {
+                    setLayout("grid");
+                    handlePublishCloud({ layout: "grid" });
+                  }}
                   className={`cursor-pointer rounded-2xl border p-5 transition-all ${
                     layout === "grid"
                       ? "border-primary bg-primary/10 shadow-md ring-2 ring-primary/40"

@@ -54,7 +54,7 @@ export function ProductCard({
         transition: tilt.active ? "transform 0.1s ease-out" : "transform 0.4s ease-out, box-shadow 0.3s ease",
       }}
       className={cn(
-        "group relative flex w-[280px] sm:w-[315px] shrink-0 snap-start flex-col gap-4 overflow-hidden rounded-3xl border border-border/80 bg-card p-5 shadow-xs hover:border-primary/50 hover:shadow-2xl transition-colors",
+        "group relative flex w-[185px] xs:w-[210px] sm:w-[315px] shrink-0 snap-start flex-col justify-between gap-3 sm:gap-4 overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-3 sm:p-5 shadow-xs hover:border-primary/50 hover:shadow-2xl transition-all min-h-[345px] sm:min-h-auto",
         className,
       )}
     >
@@ -66,63 +66,63 @@ export function ProductCard({
 
       {/* Special / Featured Badge */}
       {hasBadge && badgeLabel && (
-        <span className={cn("absolute left-3.5 top-3.5 z-10 rounded-full px-3 py-1 text-xs font-bold shadow-md", badgeClass)}>
+        <span className={cn("absolute left-2.5 top-2.5 sm:left-3.5 sm:top-3.5 z-10 rounded-full px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-bold shadow-md", badgeClass)}>
           {badgeLabel}
         </span>
       )}
 
       {/* Top Header: Icon + Name */}
-      <div className="flex items-center gap-3.5 pt-1">
-        <ServiceIcon slug={product.slug} iconUrl={product.iconUrl} className="h-12 w-12" />
+      <div className="flex items-center gap-2.5 sm:gap-3.5 pt-1">
+        <ServiceIcon slug={product.slug} iconUrl={product.iconUrl} className="h-9 w-9 sm:h-12 sm:w-12 shrink-0" />
 
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-lg font-bold tracking-tight text-foreground">
+          <h3 className="truncate text-sm sm:text-lg font-bold tracking-tight text-foreground">
             {product.name}
           </h3>
-          <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
+          <p className="mt-0.5 line-clamp-1 text-[10px] sm:text-xs text-muted-foreground">
             {product.description}
           </p>
         </div>
       </div>
 
       {/* Pricing Block */}
-      <div className="rounded-2xl border border-border/60 bg-secondary/30 p-3.5">
-        <div className="flex items-center justify-between gap-2">
-          <span className="text-xs text-muted-foreground">قیمت با تخفیف:</span>
-          <div className="flex items-center gap-1.5">
+      <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-secondary/30 p-2.5 sm:p-3.5">
+        <div className="flex items-center justify-between gap-1 sm:gap-2">
+          <span className="text-[10px] sm:text-xs text-muted-foreground">قیمت:</span>
+          <div className="flex items-center gap-1 sm:gap-1.5">
             {product.originalPrice && (
-              <span className="text-xs text-muted-foreground line-through">
+              <span className="text-[10px] sm:text-xs text-muted-foreground line-through">
                 {formatPrice(product.originalPrice)}
               </span>
             )}
             {product.discountPercent ? (
-              <span className="rounded-md bg-rose-500/10 px-1.5 py-0.5 text-[11px] font-bold text-rose-500 border border-rose-500/20">
+              <span className="rounded-md bg-rose-500/10 px-1 py-0.2 sm:px-1.5 sm:py-0.5 text-[9px] sm:text-[11px] font-bold text-rose-500 border border-rose-500/20">
                 %{toPersianDigits(product.discountPercent)}
               </span>
             ) : null}
           </div>
         </div>
 
-        <p className="mt-1 gradient-text text-xl font-extrabold tracking-tight">
+        <p className="mt-1 gradient-text text-base sm:text-xl font-extrabold tracking-tight">
           {formatPrice(product.price)}
         </p>
 
         {product.duration && (
-          <div className="mt-2.5 flex items-center gap-1.5 border-t border-border/40 pt-2 text-xs font-medium text-muted-foreground">
+          <div className="mt-2 flex items-center gap-1.5 border-t border-border/40 pt-1.5 text-[10px] sm:text-xs font-medium text-muted-foreground">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            <span>مدت اعتبار: {product.duration}</span>
+            <span>مدت: {product.duration}</span>
           </div>
         )}
       </div>
 
       {/* Action Buttons */}
-      <div className="mt-auto flex flex-col gap-2 pt-1 sm:flex-row">
+      <div className="mt-auto flex flex-col gap-1.5 pt-1 sm:flex-row sm:gap-2">
         <NeonLink
           to="/products/$slug"
           params={{ slug: product.slug }}
           variant="outline"
           size="sm"
-          className="flex-1 text-xs"
+          className="flex-1 text-[11px] sm:text-xs py-1.5 sm:py-2"
         >
           جزئیات
         </NeonLink>
@@ -131,7 +131,7 @@ export function ProductCard({
           to="/checkout/$slug"
           params={{ slug: product.slug }}
           size="sm"
-          className="flex-1 text-xs font-bold"
+          className="flex-1 text-[11px] sm:text-xs font-bold py-1.5 sm:py-2"
         >
           خرید آنی
         </NeonLink>

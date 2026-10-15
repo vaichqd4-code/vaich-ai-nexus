@@ -121,7 +121,8 @@ function ProductRowSection({
 
   const scrollCarousel = (direction: "left" | "right") => {
     if (!carouselRef.current) return;
-    const scrollAmount = direction === "right" ? 330 : -330;
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+    const scrollAmount = (direction === "right" ? 1 : -1) * (isMobile ? 215 : 330);
     carouselRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
   };
 
@@ -130,42 +131,31 @@ function ProductRowSection({
   return (
     <Section id={row.id} title={row.title} subtitle={row.subtitle}>
       <div className="relative">
-        {/* Navigation Arrows for 1-row and 2-row carousels */}
+        {/* Navigation Arrows with soft purple glow (without hint text) */}
         {layout !== "grid" && products.length > 1 && (
-          <div className="mb-4 flex items-center justify-between gap-4">
-            <span className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
-              <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-              <span>
-                {layout === "2-row"
-                  ? "نمایش دو ردیفه اشتراک‌ها (به چپ و راست بکشید)"
-                  : "برای مشاهده اشتراک‌ها، به چپ و راست بکشید"}
-              </span>
-            </span>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => scrollCarousel("right")}
-                aria-label="محصول قبلی"
-                title="قبلی"
-                className="grid h-9 w-9 place-items-center rounded-xl border border-border/80 bg-card text-foreground shadow-xs transition-all hover:border-primary hover:text-primary active:scale-95"
-              >
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="m9 18 6-6-6-6" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollCarousel("left")}
-                aria-label="محصول بعدی"
-                title="بعدی"
-                className="grid h-9 w-9 place-items-center rounded-xl border border-border/80 bg-card text-foreground shadow-xs transition-all hover:border-primary hover:text-primary active:scale-95"
-              >
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-            </div>
+          <div className="mb-3 flex items-center justify-end gap-2.5">
+            <button
+              type="button"
+              onClick={() => scrollCarousel("right")}
+              aria-label="محصول قبلی"
+              title="مشاهده موارد قبلی"
+              className="grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-2xl border-2 border-purple-500/50 bg-card/90 text-purple-600 dark:text-purple-300 shadow-[0_0_14px_rgba(168,85,247,0.32)] transition-all hover:border-purple-500 hover:bg-purple-500/10 hover:shadow-[0_0_22px_rgba(168,85,247,0.55)] active:scale-95"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="m9 18 6-6-6-6" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => scrollCarousel("left")}
+              aria-label="محصول بعدی"
+              title="مشاهده موارد بعدی"
+              className="grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-2xl border-2 border-purple-500/50 bg-card/90 text-purple-600 dark:text-purple-300 shadow-[0_0_14px_rgba(168,85,247,0.32)] transition-all hover:border-purple-500 hover:bg-purple-500/10 hover:shadow-[0_0_22px_rgba(168,85,247,0.55)] active:scale-95"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
           </div>
         )}
 
@@ -173,7 +163,7 @@ function ProductRowSection({
         {layout === "1-row" && (
           <div
             ref={carouselRef}
-            className="flex gap-4 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-4 px-1 scrollbar-none"
+            className="flex gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-4 px-1 scrollbar-none"
           >
             {products.map((p) => (
               <ProductCard key={p.slug} product={p} />
@@ -185,7 +175,7 @@ function ProductRowSection({
         {layout === "2-row" && (
           <div
             ref={carouselRef}
-            className="grid grid-rows-2 grid-flow-col auto-cols-[280px] sm:auto-cols-[315px] gap-4 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-4 px-1 scrollbar-none"
+            className="grid grid-rows-2 grid-flow-col auto-cols-[185px] xs:auto-cols-[210px] sm:auto-cols-[315px] gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-4 px-1 scrollbar-none"
           >
             {products.map((p) => (
               <ProductCard key={p.slug} product={p} />
