@@ -4,7 +4,7 @@ import { formatPrice, type Product } from "@/lib/products";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
-    <article className="group relative flex flex-col gap-5 overflow-hidden rounded-3xl border border-border bg-card/70 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-neon-purple/50 hover:shadow-[0_20px_60px_-30px_var(--neon-purple)]">
+    <article className="group relative flex flex-col gap-5 overflow-hidden rounded-3xl border border-border/80 bg-card p-6 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl">
       
       {product.slug === "gemini-pro" && (
         <span className="absolute left-4 top-4 z-10 rounded-full bg-neon-purple px-4 py-1.5 text-xs font-extrabold text-white shadow-[0_0_20px_-6px_var(--neon-purple)]">

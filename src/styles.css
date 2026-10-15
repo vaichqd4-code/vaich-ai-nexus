@@ -44,31 +44,91 @@
 }
 
 /* =========================
-   DARK THEME — پیش‌فرض
+   LIGHT THEME — پیش‌فرض (تم روشن انسانی، مینیمال و دقیق)
    ========================= */
 
-:root {
-  --radius: 1.25rem;
+:root,
+[data-theme="light"] {
+  --radius: 1rem;
 
-  --background: oklch(0.13 0.03 275);
-  --foreground: oklch(0.97 0.005 275);
+  --background: oklch(0.985 0.005 255);
+  --foreground: oklch(0.16 0.03 265);
 
-  --surface: oklch(0.18 0.035 275);
+  --surface: oklch(1 0 0);
 
-  --card: oklch(0.19 0.038 275);
-  --card-foreground: oklch(0.97 0.005 275);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.16 0.03 265);
 
-  --popover: oklch(0.17 0.035 275);
-  --popover-foreground: oklch(0.97 0.005 275);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.16 0.03 265);
 
-  --primary: oklch(0.62 0.24 296);
+  /* هویت برند: آبی الکتریک و بنفش نئونی با کنتراست بی‌نقص روی زمینه روشن */
+  --primary: oklch(0.52 0.25 285);
   --primary-foreground: oklch(0.99 0 0);
 
-  --secondary: oklch(0.24 0.04 275);
-  --secondary-foreground: oklch(0.97 0.005 275);
+  --secondary: oklch(0.955 0.012 265);
+  --secondary-foreground: oklch(0.20 0.03 265);
 
-  --muted: oklch(0.24 0.035 275);
-  --muted-foreground: oklch(0.72 0.025 275);
+  --muted: oklch(0.955 0.01 265);
+  --muted-foreground: oklch(0.42 0.025 265);
+
+  --accent: oklch(0.55 0.22 250);
+  --accent-foreground: oklch(0.99 0 0);
+
+  --destructive: oklch(0.58 0.22 22);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.89 0.015 265);
+  --input: oklch(0.92 0.012 265);
+  --ring: oklch(0.52 0.25 285);
+
+  --neon-blue: oklch(0.55 0.22 250);
+  --neon-purple: oklch(0.52 0.25 285);
+  --neon-green: oklch(0.58 0.16 155);
+
+  --gradient-neon: linear-gradient(
+    135deg,
+    #2563eb 0%,
+    #7c3aed 100%
+  );
+
+  --gradient-surface: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #f8fafc 100%
+  );
+
+  --glow-soft: 0 4px 20px -4px rgba(124, 58, 237, 0.15);
+  --glow-strong: 0 8px 30px -4px rgba(37, 99, 235, 0.2);
+}
+
+/* =========================
+   DARK THEME — تم مشکی لوکس، زغالی و اصیل
+   ========================= */
+
+[data-theme="dark"],
+.dark {
+  --radius: 1rem;
+
+  --background: oklch(0.12 0.025 265);
+  --foreground: oklch(0.97 0.005 265);
+
+  --surface: oklch(0.16 0.03 265);
+
+  --card: oklch(0.165 0.032 265);
+  --card-foreground: oklch(0.97 0.005 265);
+
+  --popover: oklch(0.15 0.03 265);
+  --popover-foreground: oklch(0.97 0.005 265);
+
+  --primary: oklch(0.64 0.24 290);
+  --primary-foreground: oklch(0.99 0 0);
+
+  --secondary: oklch(0.22 0.035 265);
+  --secondary-foreground: oklch(0.97 0.005 265);
+
+  --muted: oklch(0.22 0.03 265);
+  --muted-foreground: oklch(0.70 0.02 265);
 
   --accent: oklch(0.68 0.19 250);
   --accent-foreground: oklch(0.99 0 0);
@@ -76,89 +136,28 @@
   --destructive: oklch(0.62 0.22 22);
   --destructive-foreground: oklch(0.99 0 0);
 
-  --border: oklch(0.32 0.04 275 / 60%);
-  --input: oklch(0.3 0.04 275 / 70%);
-  --ring: oklch(0.62 0.24 296);
+  --border: oklch(0.28 0.03 265 / 70%);
+  --input: oklch(0.26 0.03 265 / 80%);
+  --ring: oklch(0.64 0.24 290);
 
-  --neon-blue: oklch(0.72 0.19 248);
-  --neon-purple: oklch(0.62 0.26 300);
+  --neon-blue: oklch(0.70 0.19 248);
+  --neon-purple: oklch(0.64 0.25 295);
   --neon-green: oklch(0.72 0.18 155);
 
   --gradient-neon: linear-gradient(
-    120deg,
-    var(--neon-blue),
-    var(--neon-purple)
+    135deg,
+    #3b82f6 0%,
+    #8b5cf6 100%
   );
 
   --gradient-surface: linear-gradient(
-    160deg,
-    color-mix(in oklab, var(--surface) 90%, transparent),
-    color-mix(in oklab, var(--background) 92%, transparent)
+    180deg,
+    color-mix(in oklab, var(--surface) 95%, transparent),
+    color-mix(in oklab, var(--background) 95%, transparent)
   );
 
-  --glow-soft: 0 0 40px -12px
-    color-mix(in oklab, var(--neon-purple) 70%, transparent);
-
-  --glow-strong: 0 0 60px -10px
-    color-mix(in oklab, var(--neon-blue) 75%, transparent);
-}
-
-/* =========================
-   LIGHT THEME
-   ========================= */
-
-[data-theme="light"] {
-  --background: oklch(0.975 0.008 275);
-  --foreground: oklch(0.20 0.025 275);
-
-  --surface: oklch(0.99 0.004 275);
-
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.20 0.025 275);
-
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.20 0.025 275);
-
-  --primary: oklch(0.55 0.24 296);
-  --primary-foreground: oklch(0.99 0 0);
-
-  --secondary: oklch(0.94 0.018 275);
-  --secondary-foreground: oklch(0.25 0.025 275);
-
-  --muted: oklch(0.94 0.015 275);
-  --muted-foreground: oklch(0.48 0.025 275);
-
-  --accent: oklch(0.58 0.19 250);
-  --accent-foreground: oklch(0.99 0 0);
-
-  --destructive: oklch(0.58 0.22 22);
-  --destructive-foreground: oklch(0.99 0 0);
-
-  --border: oklch(0.86 0.025 275);
-  --input: oklch(0.90 0.02 275);
-  --ring: oklch(0.55 0.24 296);
-
-  --neon-blue: oklch(0.60 0.19 248);
-  --neon-purple: oklch(0.55 0.25 300);
-  --neon-green: oklch(0.58 0.16 155);
-
-  --gradient-neon: linear-gradient(
-    120deg,
-    var(--neon-blue),
-    var(--neon-purple)
-  );
-
-  --gradient-surface: linear-gradient(
-    160deg,
-    color-mix(in oklab, var(--surface) 96%, transparent),
-    color-mix(in oklab, var(--background) 98%, transparent)
-  );
-
-  --glow-soft: 0 0 40px -16px
-    color-mix(in oklab, var(--neon-purple) 35%, transparent);
-
-  --glow-strong: 0 0 60px -14px
-    color-mix(in oklab, var(--neon-blue) 40%, transparent);
+  --glow-soft: 0 0 35px -10px rgba(139, 92, 246, 0.4);
+  --glow-strong: 0 0 50px -10px rgba(59, 130, 246, 0.5);
 }
 
 /* =========================
