@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Logo } from "@/components/brand/Logo";
 import { NeonLink } from "@/components/ui/NeonButton";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,22 @@ export function Header() {
   const [theme, setTheme] = useState<Theme>("light");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("vaich-theme") as Theme | null;
@@ -236,85 +253,84 @@ export function Header() {
         </div>
       </div>
 
-      {/* Backdrop overlay */}
-      {open && (
-        <div
-          onClick={() => setOpen(false)}
-          className="fixed inset-0 z-[60] bg-slate-900/20 dark:bg-black/60 backdrop-blur-xs transition-opacity duration-200 lg:hidden"
-        />
-      )}
-
-      {/* Modern Off-Canvas Side Drawer with 100% Solid Theme-Matched Background */}
-      <aside
-        style={{
-          backgroundColor: "var(--background)",
-          color: "var(--foreground)",
-        }}
-        className={cn(
-          "mobile-drawer-panel fixed top-0 bottom-0 right-0 z-[70] w-[300px] max-w-[85vw] border-l border-border/80 shadow-2xl flex flex-col p-6 transition-transform duration-300 ease-in-out lg:hidden",
-          open ? "translate-x-0" : "translate-x-full pointer-events-none"
-        )}
-      >
-        {/* Drawer Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-border/80">
-          <Logo onClick={() => setOpen(false)} />
-          <button
-            type="button"
+      {/* Mobile Drawer via Portal — Escapes header stacking context and covers full viewport with 100% solid background */}
+      {mounted && open && typeof document !== "undefined" && createPortal(
+        <div className="fixed inset-0 z-[9999] lg:hidden" dir="rtl">
+          {/* Subtle Dim Backdrop */}
+          <div
             onClick={() => setOpen(false)}
-            aria-label="بستن منو"
-            className="grid h-9 w-9 place-items-center rounded-xl border border-border/70 bg-secondary/50 text-foreground transition-all hover:bg-secondary active:scale-95"
-          >
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-        </div>
+            className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity duration-200"
+          />
 
-        {/* Navigation Links (Search removed inside drawer as requested) */}
-        <nav className="flex-1 overflow-y-auto py-5">
-          <ul className="flex flex-col gap-2">
-            {navItems.map((item) => (
-              <li key={item.to}>
-                <Link
-                  to={item.to}
-                  onClick={() => setOpen(false)}
-                  activeOptions={{ exact: item.to === "/" }}
-                  className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-muted-foreground transition-all hover:bg-secondary/70 hover:text-foreground data-[status=active]:bg-primary/10 data-[status=active]:text-primary data-[status=active]:font-extrabold"
+          {/* Solid Theme-Matched Full-Height Drawer */}
+          <aside
+            style={{
+              backgroundColor: "var(--background)",
+              color: "var(--foreground)",
+            }}
+            className="mobile-drawer-panel fixed top-0 bottom-0 right-0 h-full w-[310px] max-w-[85vw] border-l border-border shadow-2xl flex flex-col p-6 z-10 transition-transform duration-300 ease-out"
+          >
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-border/80">
+              <Logo onClick={() => setOpen(false)} />
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="بستن منو"
+                className="grid h-10 w-10 place-items-center rounded-xl border border-border/70 bg-secondary/50 text-foreground transition-all hover:bg-secondary active:scale-95"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Navigation Links — Full Height Scrollable List */}
+            <nav className="flex-1 overflow-y-auto py-5">
+              <ul className="flex flex-col gap-2">
+                {navItems.map((item) => (
+                  <li key={item.to}>
+                    <Link
+                      to={item.to}
+                      onClick={() => setOpen(false)}
+                      activeOptions={{ exact: item.to === "/" }}
+                      className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-muted-foreground transition-all hover:bg-secondary/70 hover:text-foreground data-[status=active]:bg-primary/10 data-[status=active]:text-primary data-[status=active]:font-extrabold border border-transparent data-[status=active]:border-primary/20"
+                    >
+                      <span>{item.label}</span>
+                      <svg viewBox="0 0 24 24" className="h-4 w-4 opacity-50" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {/* Drawer Footer */}
+            <div className="pt-4 border-t border-border/80 flex flex-col gap-3">
+              {/* Theme Switcher inside Drawer */}
+              <div className="flex items-center justify-between rounded-xl border border-border/80 bg-secondary/40 px-3.5 py-2.5">
+                <span className="text-xs font-semibold text-foreground">حالت نمایش:</span>
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  className="flex items-center gap-1.5 rounded-lg bg-card px-3 py-1.5 text-xs font-bold text-foreground shadow-xs border border-border/70 active:scale-95 transition-all"
                 >
-                  <span>{item.label}</span>
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 opacity-50" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+                  {theme === "dark" ? "حالت تاریک 🌙" : "حالت روشن ☀️"}
+                </button>
+              </div>
 
-        {/* Drawer Footer */}
-        <div className="pt-4 border-t border-border/80 flex flex-col gap-3">
-          {/* Theme Switcher inside Drawer */}
-          <div className="flex items-center justify-between rounded-xl border border-border/80 bg-secondary/40 px-3.5 py-2.5">
-            <span className="text-xs font-semibold text-foreground">حالت نمایش:</span>
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="flex items-center gap-1.5 rounded-lg bg-card px-3 py-1.5 text-xs font-bold text-foreground shadow-xs border border-border/70 active:scale-95 transition-all"
-            >
-              {theme === "dark" ? "حالت تاریک 🌙" : "حالت روشن ☀️"}
-            </button>
-          </div>
-
-          <NeonLink
-            to="/products"
-            onClick={() => setOpen(false)}
-            size="md"
-            className="w-full text-center py-2.5 font-bold"
-          >
-            مشاهده و خرید اشتراک‌ها
-          </NeonLink>
-        </div>
-      </aside>
+              <NeonLink
+                to="/products"
+                onClick={() => setOpen(false)}
+                size="md"
+                className="w-full text-center py-2.5 font-bold"
+              >
+                مشاهده و خرید اشتراک‌ها
+              </NeonLink>
+            </div>
+          </aside>
+        </div>,
+        document.body
+      )}
     </header>
   );
 }

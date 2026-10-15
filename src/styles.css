@@ -299,11 +299,31 @@
   }
 }
 
-/* 100% Solid Theme-Matched Mobile Drawer Background */
+/* 100% Solid Theme-Matched Mobile Drawer Background & Smooth Animation */
+@keyframes drawerSlideInRtl {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 .mobile-drawer-panel {
+  background-color: #ffffff;
   background-color: var(--background) !important;
+  color: #0f172a;
   color: var(--foreground) !important;
   opacity: 1 !important;
+  animation: drawerSlideInRtl 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-theme="dark"] .mobile-drawer-panel,
+.dark .mobile-drawer-panel {
+  background-color: #0c101d !important;
+  background-color: var(--background) !important;
+  color: #f8fafc !important;
+  color: var(--foreground) !important;
 }
 
 /* =========================
