@@ -343,45 +343,39 @@ export function decodeUtf8Base64(b64: string): string {
 }
 
 export async function fetchLatestConfigSha(): Promise<string | undefined> {
-  const urls = [
-    `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main&_nocache=${Date.now()}`,
-    `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?_nocache=${Date.now()}`,
-  ];
-
-  for (const url of urls) {
-    try {
-      const res = await fetch(url, {
+  // 1. Direct contents endpoint with cache-busting timestamp query
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main&_t=${Date.now()}`,
+      {
         method: "GET",
-        cache: "no-store",
         headers: {
           Authorization: `Bearer ${GITHUB_TOKEN}`,
           Accept: "application/vnd.github.v3+json",
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          Pragma: "no-cache",
         },
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        if (data && typeof data.sha === "string" && data.sha.length > 0) {
-          return data.sha;
-        }
       }
-    } catch (e) {
-      console.warn("Could not get SHA from contents URL:", url, e);
+    );
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data && typeof data.sha === "string" && data.sha.length > 0) {
+        return data.sha;
+      }
+    } else {
+      console.warn("Contents endpoint returned status:", res.status);
     }
+  } catch (e) {
+    console.warn("Could not get SHA from contents URL:", e);
   }
 
-  // Fallback: Query commits tree endpoint to obtain exact blob SHA
+  // 2. Fallback: Query commits tree endpoint to obtain exact blob SHA
   try {
     const commitRes = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/commits/main?_nocache=${Date.now()}`,
+      `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/commits/main?_t=${Date.now()}`,
       {
-        cache: "no-store",
         headers: {
           Authorization: `Bearer ${GITHUB_TOKEN}`,
           Accept: "application/vnd.github.v3+json",
-          "Cache-Control": "no-cache, no-store",
         },
       }
     );
@@ -389,12 +383,10 @@ export async function fetchLatestConfigSha(): Promise<string | undefined> {
       const commitData = await commitRes.json();
       const treeUrl = commitData?.commit?.tree?.url;
       if (treeUrl) {
-        const treeRes = await fetch(`${treeUrl}?recursive=1&_nocache=${Date.now()}`, {
-          cache: "no-store",
+        const treeRes = await fetch(`${treeUrl}?recursive=1&_t=${Date.now()}`, {
           headers: {
             Authorization: `Bearer ${GITHUB_TOKEN}`,
             Accept: "application/vnd.github.v3+json",
-            "Cache-Control": "no-cache, no-store",
           },
         });
         if (treeRes.ok) {
@@ -424,6 +416,16 @@ export async function commitConfigToCloud(config: SiteConfig): Promise<{ success
     try {
       const sha = await fetchLatestConfigSha();
 
+      // Guard: Never send PUT if SHA is missing, because GitHub rejects with 422 ("sha wasn't supplied")
+      if (!sha) {
+        console.warn(`Attempt ${attempt}: SHA could not be fetched from GitHub API, retrying...`);
+        if (attempt < maxAttempts) {
+          await new Promise((resolve) => setTimeout(resolve, 600));
+          continue;
+        }
+        return { success: false, error: "امکان دریافت شناسه فایل از سرور وجود ندارد. لطفاً ارتباط اینترنت خود را بررسی کنید." };
+      }
+
       const putRes = await fetch(
         `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}`,
         {
@@ -449,8 +451,8 @@ export async function commitConfigToCloud(config: SiteConfig): Promise<{ success
       const errBody = await putRes.text();
       console.warn(`Commit attempt ${attempt} failed (${putRes.status}):`, errBody);
 
-      // If HTTP 409 (Conflict: file updated remotely or SHA mismatch), pause briefly and retry with fresh SHA
-      if (putRes.status === 409 && attempt < maxAttempts) {
+      // If HTTP 409 (Conflict) or HTTP 422 (SHA mismatch / not supplied), pause briefly and retry with fresh SHA
+      if ((putRes.status === 409 || putRes.status === 422) && attempt < maxAttempts) {
         await new Promise((resolve) => setTimeout(resolve, 800));
         continue;
       }
@@ -489,18 +491,15 @@ export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
       }
     } catch (e) {}
 
-    // 2. Real-time fallback: GitHub contents API
+    // 2. Real-time fallback: GitHub contents API (without forbidden CORS headers)
     if (!fetchedData) {
       try {
         const ghRes = await fetch(
-          `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main&_nocache=${Date.now()}`,
+          `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main&_t=${Date.now()}`,
           {
-            cache: "no-store",
             headers: {
               Authorization: `Bearer ${GITHUB_TOKEN}`,
               Accept: "application/vnd.github.v3+json",
-              "Cache-Control": "no-cache, no-store, must-revalidate",
-              Pragma: "no-cache",
             },
           }
         );
