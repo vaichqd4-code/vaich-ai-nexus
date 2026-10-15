@@ -322,15 +322,6 @@ export function Header() {
           >
             مشاهده و خرید اشتراک‌ها
           </NeonLink>
-
-          <Link
-            to="/admin"
-            onClick={() => setOpen(false)}
-            className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground hover:text-primary py-1 transition-colors"
-          >
-            <span>🔐</span>
-            <span>ورود به پنل مدیریت</span>
-          </Link>
         </div>
       </aside>
     </header>

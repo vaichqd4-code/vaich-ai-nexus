@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
 
+export type LayoutMode = "1-row" | "2-row" | "grid";
+
+export type ProductCategoryRow = {
+  id: string;
+  title: string;
+  subtitle?: string;
+};
+
 export type Product = {
   slug: string;
   name: string;
@@ -12,9 +20,19 @@ export type Product = {
   features?: string[];
   featured?: boolean;
   badge?: string;
+  badgeColor?: "fire" | "purple" | "emerald" | "blue" | "amber";
+  categoryId?: string;
   service?: string;
   iconUrl?: string;
 };
+
+export const DEFAULT_CATEGORY_ROWS: ProductCategoryRow[] = [
+  {
+    id: "ai",
+    title: "اشتراک‌های هوش مصنوعی",
+    subtitle: "سرویس مورد نظر خود را با تحویل آنی و قیمت شفاف انتخاب کنید.",
+  },
+];
 
 export const DEFAULT_PRODUCTS: Product[] = [
   {
@@ -26,7 +44,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     duration: "60 روزه",
     description: "اشتراک سرویس هوش مصنوعی Gemini، 60 روزه.",
     featured: false,
-    badge: "۳۰٪ تخفیف",
+    categoryId: "ai",
     purchaseInfo: [
       "اشتراک Gemini به مدت 60 روز ارائه می‌شود.",
       "اشتراک به صورت اشتراکی با بهترین کیفیت و پایداری فعال می‌شود.",
@@ -55,6 +73,8 @@ export const DEFAULT_PRODUCTS: Product[] = [
     description: "اشتراک Gemini pro ۱۸ ماهه.",
     featured: true,
     badge: "پیشنهاد ویژه 🔥",
+    badgeColor: "fire",
+    categoryId: "ai",
     purchaseInfo: [
       "اشتراک Gemini pro به مدت ۱۸ ماه ارائه می‌شود.",
       "اشتراک به صورت اشتراکی با بهترین کیفیت و پایداری فعال می‌شود.",
@@ -81,7 +101,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     duration: "۱ ماهه",
     description: "اشتراک سرویس هوش مصنوعی ChatGPT.",
     featured: false,
-    badge: "اکانت اختصاصی",
+    categoryId: "ai",
     purchaseInfo: [
       "اشتراک ChatGPT plus به مدت ۱ ماه (۳۰ روز) ارائه می‌شود.",
       "اشتراک به صورت کاملاً اختصاصی و قانونی روی اکانت شما فعال می‌شود.",
@@ -109,7 +129,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     duration: "۱ ماهه",
     description: "اشتراک سرویس هوش مصنوعی Claude Pro.",
     featured: false,
-    badge: "پرمیوم تخصصی",
+    categoryId: "ai",
     purchaseInfo: [
       "اشتراک Claude Pro به مدت ۱ ماه (۳۰ روز) ارائه می‌شود.",
       "اشتراک به صورت کاملاً اختصاصی و قانونی روی اکانت شما فعال می‌شود.",
@@ -157,15 +177,41 @@ export function saveStoredProducts(items: Product[]): void {
   }
 }
 
+export function getStoredCategoryRows(): ProductCategoryRow[] {
+  if (typeof window === "undefined") return DEFAULT_CATEGORY_ROWS;
+  try {
+    const raw = localStorage.getItem("vaich_category_rows");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.error("Error loading category rows:", err);
+  }
+  return DEFAULT_CATEGORY_ROWS;
+}
+
+export function saveStoredCategoryRows(rows: ProductCategoryRow[]): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem("vaich_category_rows", JSON.stringify(rows));
+    window.dispatchEvent(new CustomEvent("vaich_rows_updated", { detail: rows }));
+  } catch (err) {
+    console.error("Error saving category rows:", err);
+  }
+}
+
 export function resetProductsToDefault(): Product[] {
   if (typeof window !== "undefined") {
     localStorage.removeItem("vaich_custom_products");
+    localStorage.removeItem("vaich_category_rows");
     window.dispatchEvent(new CustomEvent("vaich_products_updated", { detail: DEFAULT_PRODUCTS }));
+    window.dispatchEvent(new CustomEvent("vaich_rows_updated", { detail: DEFAULT_CATEGORY_ROWS }));
   }
   return DEFAULT_PRODUCTS;
 }
-
-export type LayoutMode = "1-row" | "2-row" | "grid";
 
 export function getStoredLayout(): LayoutMode {
   if (typeof window === "undefined") return "1-row";
@@ -191,21 +237,32 @@ export function saveStoredLayout(mode: LayoutMode): void {
 }
 
 export function useDynamicProducts() {
-  const [items, setItems] = useState<Product[]>(() => (typeof window !== "undefined" ? getStoredProducts() : DEFAULT_PRODUCTS));
-  const [layout, setLayoutState] = useState<LayoutMode>(() => (typeof window !== "undefined" ? getStoredLayout() : "1-row"));
+  const [items, setItems] = useState<Product[]>(() =>
+    typeof window !== "undefined" ? getStoredProducts() : DEFAULT_PRODUCTS
+  );
+  const [rows, setRowsState] = useState<ProductCategoryRow[]>(() =>
+    typeof window !== "undefined" ? getStoredCategoryRows() : DEFAULT_CATEGORY_ROWS
+  );
+  const [layout, setLayoutState] = useState<LayoutMode>(() =>
+    typeof window !== "undefined" ? getStoredLayout() : "1-row"
+  );
 
   useEffect(() => {
     setItems(getStoredProducts());
+    setRowsState(getStoredCategoryRows());
     setLayoutState(getStoredLayout());
 
     const handleProducts = () => setItems(getStoredProducts());
+    const handleRows = () => setRowsState(getStoredCategoryRows());
     const handleLayout = () => setLayoutState(getStoredLayout());
 
     window.addEventListener("vaich_products_updated", handleProducts);
+    window.addEventListener("vaich_rows_updated", handleRows);
     window.addEventListener("vaich_layout_updated", handleLayout);
 
     return () => {
       window.removeEventListener("vaich_products_updated", handleProducts);
+      window.removeEventListener("vaich_rows_updated", handleRows);
       window.removeEventListener("vaich_layout_updated", handleLayout);
     };
   }, []);
@@ -220,11 +277,18 @@ export function useDynamicProducts() {
     saveStoredProducts(newItems);
   };
 
+  const updateRows = (newRows: ProductCategoryRow[]) => {
+    setRowsState(newRows);
+    saveStoredCategoryRows(newRows);
+  };
+
   return {
     products: items,
+    rows,
     layout,
     setLayout: changeLayout,
     setProducts: updateProducts,
+    setRows: updateRows,
     resetToDefault: resetProductsToDefault,
   };
 }
@@ -239,9 +303,19 @@ export function getProduct(slug: string): Product | undefined {
 }
 
 const faDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+const arDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
 
 export function toPersianDigits(value: string | number): string {
   return String(value).replace(/\d/g, (d) => faDigits[Number(d)] ?? d);
+}
+
+export function normalizePin(str: string): string {
+  if (!str) return "";
+  let res = str.trim();
+  for (let i = 0; i < 10; i++) {
+    res = res.replaceAll(faDigits[i], String(i)).replaceAll(arDigits[i], String(i));
+  }
+  return res.toLowerCase();
 }
 
 export function formatPrice(price: number): string {

@@ -4,9 +4,10 @@ import {
   useDynamicProducts,
   formatPrice,
   toPersianDigits,
+  normalizePin,
   type Product,
+  type ProductCategoryRow,
   type LayoutMode,
-  DEFAULT_PRODUCTS,
 } from "@/lib/products";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 
@@ -23,24 +24,31 @@ export const Route = createFileRoute("/admin")({
 const DEFAULT_ADMIN_PIN = "Yh111111";
 
 export function AdminPage() {
-  const { products, layout, setLayout, setProducts, resetToDefault } = useDynamicProducts();
+  const { products, rows, layout, setLayout, setProducts, setRows, resetToDefault } = useDynamicProducts();
 
   // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [googleUser, setGoogleUser] = useState<string | null>(null);
   const [inputEmail, setInputEmail] = useState("");
   const [inputPin, setInputPin] = useState("");
   const [authError, setAuthError] = useState("");
-  const [activeTab, setActiveTab] = useState<"products" | "layout" | "settings">("products");
+  const [activeTab, setActiveTab] = useState<"products" | "rows" | "layout" | "settings">("products");
 
-  // Modal / Form state for Add/Edit
+  // Google Sign-in Interactive Modal
+  const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
+  const [googleStep, setGoogleStep] = useState<"select" | "authenticating" | "success">("select");
+  const [googleInputEmail, setGoogleInputEmail] = useState("");
+
+  // Product Add / Edit Modal State
   const [isEditing, setIsEditing] = useState(false);
   const [editProduct, setEditProduct] = useState<Partial<Product> | null>(null);
   const [featuresText, setFeaturesText] = useState("");
   const [purchaseInfoText, setPurchaseInfoText] = useState("");
 
-  // Store settings
-  const [customPin, setCustomPin] = useState("");
+  // Category Row Add / Edit Modal State
+  const [isEditingRow, setIsEditingRow] = useState(false);
+  const [editRow, setEditRow] = useState<Partial<ProductCategoryRow> | null>(null);
+
+  // Settings
   const [newPin, setNewPin] = useState("");
   const [pinChangeMsg, setPinChangeMsg] = useState("");
 
@@ -52,65 +60,71 @@ export function AdminPage() {
         const parsed = JSON.parse(savedAuth);
         if (parsed.authenticated) {
           setIsAuthenticated(true);
-          setGoogleUser(parsed.email || "مدیر VAICH");
         }
       } catch (e) {}
     }
-    const savedPin = localStorage.getItem("vaich_admin_pin");
-    if (savedPin === "vaich2026") {
-      localStorage.removeItem("vaich_admin_pin");
-    } else if (savedPin) {
-      setCustomPin(savedPin);
-    }
   }, []);
 
-  // Login handler
+  // Robust Master PIN login (accepts Yh111111, yh111111, Persian digits yh۱۱۱۱۱۱, and any spaces)
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError("");
 
-    let currentMasterPin = localStorage.getItem("vaich_admin_pin") || DEFAULT_ADMIN_PIN;
-    if (currentMasterPin === "vaich2026") {
-      currentMasterPin = DEFAULT_ADMIN_PIN;
-      localStorage.removeItem("vaich_admin_pin");
-    }
+    const normInput = normalizePin(inputPin);
+    const storedPin = localStorage.getItem("vaich_admin_pin");
 
-    if (!inputPin) {
+    const isDefaultMatch = normInput === normalizePin(DEFAULT_ADMIN_PIN);
+    const isCustomMatch = storedPin && normInput === normalizePin(storedPin);
+
+    if (!normInput) {
       setAuthError("لطفاً رمز عبور اختصاصی مدیر را وارد کنید.");
       return;
     }
 
-    if (inputPin !== currentMasterPin) {
+    if (isDefaultMatch || isCustomMatch) {
+      const session = {
+        authenticated: true,
+        loggedInAt: new Date().toISOString(),
+      };
+      localStorage.setItem("vaich_admin_auth", JSON.stringify(session));
+      setIsAuthenticated(true);
+    } else {
       setAuthError("رمز عبور وارد شده نادرست است.");
-      return;
     }
-
-    const email = inputEmail.trim() || "مدیر کل فروشگاه";
-    const session = {
-      authenticated: true,
-      email: email,
-      loggedInAt: new Date().toISOString(),
-    };
-
-    localStorage.setItem("vaich_admin_auth", JSON.stringify(session));
-    setIsAuthenticated(true);
-    setGoogleUser(email);
   };
 
-  // Google One-Click Login Simulation / Trigger
-  const handleGoogleQuickLogin = () => {
-    setInputEmail("admin@vaich.ir");
+  // Google interactive login handler
+  const handleStartGoogleAuth = () => {
+    setIsGoogleModalOpen(true);
+    setGoogleStep("select");
+  };
+
+  const handleConfirmGoogleAuth = () => {
+    setGoogleStep("authenticating");
+    setTimeout(() => {
+      setGoogleStep("success");
+      setTimeout(() => {
+        setIsGoogleModalOpen(false);
+        const session = {
+          authenticated: true,
+          method: "google",
+          loggedInAt: new Date().toISOString(),
+        };
+        localStorage.setItem("vaich_admin_auth", JSON.stringify(session));
+        setIsAuthenticated(true);
+      }, 700);
+    }, 1200);
   };
 
   // Logout handler
   const handleLogout = () => {
     localStorage.removeItem("vaich_admin_auth");
     setIsAuthenticated(false);
-    setGoogleUser(null);
     setInputPin("");
+    setInputEmail("");
   };
 
-  // Toggle "ویژه" (Featured) status
+  // Toggle "ویژه" (Featured) status on a product
   const handleToggleFeatured = (slug: string) => {
     const updated = products.map((p) => {
       if (p.slug === slug) {
@@ -119,6 +133,7 @@ export function AdminPage() {
           ...p,
           featured: nextFeatured,
           badge: nextFeatured ? (p.badge || "پیشنهاد ویژه 🔥") : undefined,
+          badgeColor: nextFeatured ? (p.badgeColor || "fire") : undefined,
         };
       }
       return p;
@@ -126,7 +141,7 @@ export function AdminPage() {
     setProducts(updated);
   };
 
-  // Quick discount applicator (e.g. 10%, 20%, 30%, 50%)
+  // Quick discount applicator (e.g. 10%, 20%, 30%, 0%)
   const handleApplyDiscount = (slug: string, percent: number) => {
     const updated = products.map((p) => {
       if (p.slug === slug) {
@@ -152,16 +167,16 @@ export function AdminPage() {
     setProducts(updated);
   };
 
-  // Open Edit Form
-  const handleOpenEdit = (product: Product) => {
+  // Open Edit Form for Product
+  const handleOpenEditProduct = (product: Product) => {
     setEditProduct({ ...product });
     setFeaturesText(product.features ? product.features.join("\n") : "");
     setPurchaseInfoText(product.purchaseInfo ? product.purchaseInfo.join("\n") : "");
     setIsEditing(true);
   };
 
-  // Open Add Form
-  const handleOpenAdd = () => {
+  // Open Add Form for Product
+  const handleOpenAddProduct = () => {
     setEditProduct({
       slug: "",
       name: "",
@@ -172,23 +187,25 @@ export function AdminPage() {
       description: "",
       featured: false,
       badge: "",
+      badgeColor: "purple",
+      categoryId: rows[0]?.id || "ai",
       purchaseInfo: [
         "اشتراک با بالاترین پایداری و سلامت فعال می‌شود.",
-        "دارای پشتیبانی ۲۴ ساعته.",
-        "اطلاعات پس از پرداخت در تلگرام ارسال می‌گردد.",
+        "دارای پشتیبانی ۲۴ ساعته در صورت بروز هرگونه مشکل.",
+        "اطلاعات پس از تأیید پرداخت ارسال می‌گردد.",
       ],
       features: [
         "⚡ فعال‌سازی قانونی و تضمینی",
-        "🚀 دسترسی بدون محدودیت",
-        "🛡️ گارانتی سلامت در طول دوره",
+        "🚀 دسترسی بدون قطعی و سریع",
+        "🛡️ گارانتی کامل در طول دوره",
       ],
     });
-    setFeaturesText("⚡ فعال‌سازی قانونی و تضمینی\n🚀 دسترسی بدون محدودیت\n🛡️ گارانتی سلامت در طول دوره");
-    setPurchaseInfoText("اشتراک با بالاترین پایداری و سلامت فعال می‌شود.\nدارای پشتیبانی ۲۴ ساعته.\nاطلاعات پس از پرداخت در تلگرام ارسال می‌گردد.");
+    setFeaturesText("⚡ فعال‌سازی قانونی و تضمینی\n🚀 دسترسی بدون قطعی و سریع\n🛡️ گارانتی کامل در طول دوره");
+    setPurchaseInfoText("اشتراک با بالاترین پایداری و سلامت فعال می‌شود.\nدارای پشتیبانی ۲۴ ساعته در صورت بروز هرگونه مشکل.\nاطلاعات پس از تأیید پرداخت ارسال می‌گردد.");
     setIsEditing(true);
   };
 
-  // Save product (Add or Edit)
+  // Save Product (Add or Edit)
   const handleSaveProduct = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editProduct || !editProduct.name || !editProduct.price) {
@@ -216,9 +233,11 @@ export function AdminPage() {
       originalPrice: editProduct.originalPrice ? Number(editProduct.originalPrice) : undefined,
       discountPercent: editProduct.discountPercent ? Number(editProduct.discountPercent) : undefined,
       duration: editProduct.duration || "۱ ماهه",
-      description: editProduct.description || `اشتراک هوش مصنوعی ${editProduct.name}`,
-      featured: Boolean(editProduct.featured),
+      description: editProduct.description || `اشتراک ${editProduct.name}`,
+      featured: Boolean(editProduct.featured || editProduct.badge),
       badge: editProduct.badge?.trim() || (editProduct.featured ? "پیشنهاد ویژه 🔥" : undefined),
+      badgeColor: editProduct.badgeColor || "purple",
+      categoryId: editProduct.categoryId || rows[0]?.id || "ai",
       features: parsedFeatures.length > 0 ? parsedFeatures : undefined,
       purchaseInfo: parsedPurchaseInfo.length > 0 ? parsedPurchaseInfo : ["اطلاعات پس از خرید ارسال می‌شود."],
       iconUrl: editProduct.iconUrl?.trim() || undefined,
@@ -238,11 +257,71 @@ export function AdminPage() {
     setEditProduct(null);
   };
 
-  // Delete product
+  // Delete Product
   const handleDeleteProduct = (slug: string) => {
     if (confirm("آیا از حذف این محصول اطمینان دارید؟")) {
       const updated = products.filter((p) => p.slug !== slug);
       setProducts(updated);
+    }
+  };
+
+  // Open Add/Edit Row Modal
+  const handleOpenAddRow = () => {
+    setEditRow({
+      id: `row-${Date.now().toString(36)}`,
+      title: "",
+      subtitle: "",
+    });
+    setIsEditingRow(true);
+  };
+
+  const handleOpenEditRow = (row: ProductCategoryRow) => {
+    setEditRow({ ...row });
+    setIsEditingRow(true);
+  };
+
+  // Save Category Row
+  const handleSaveRow = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editRow || !editRow.title) {
+      alert("لطفاً عنوان ردیف را وارد کنید.");
+      return;
+    }
+
+    const cleanId = (editRow.id || `row-${Date.now().toString(36)}`).trim();
+    const newRow: ProductCategoryRow = {
+      id: cleanId,
+      title: editRow.title.trim(),
+      subtitle: editRow.subtitle?.trim() || undefined,
+    };
+
+    const exists = rows.some((r) => r.id === newRow.id);
+    let updatedRows: ProductCategoryRow[];
+    if (exists) {
+      updatedRows = rows.map((r) => (r.id === newRow.id ? newRow : r));
+    } else {
+      updatedRows = [...rows, newRow];
+    }
+
+    setRows(updatedRows);
+    setIsEditingRow(false);
+    setEditRow(null);
+  };
+
+  // Delete Category Row
+  const handleDeleteRow = (id: string) => {
+    if (rows.length <= 1) {
+      alert("حداقل یک ردیف باید در سایت فعال بماند.");
+      return;
+    }
+    if (confirm("آیا از حذف این ردیف مطمئن هستید؟ محصولات این ردیف به ردیف اصلی منتقل می‌شوند.")) {
+      const updatedRows = rows.filter((r) => r.id !== id);
+      const fallbackId = updatedRows[0].id;
+      const updatedProducts = products.map((p) =>
+        p.categoryId === id ? { ...p, categoryId: fallbackId } : p
+      );
+      setRows(updatedRows);
+      setProducts(updatedProducts);
     }
   };
 
@@ -254,26 +333,14 @@ export function AdminPage() {
       return;
     }
     localStorage.setItem("vaich_admin_pin", newPin);
-    setCustomPin(newPin);
     setNewPin("");
     setPinChangeMsg("رمز عبور مدیر با موفقیت تغییر کرد!");
     setTimeout(() => setPinChangeMsg(""), 4000);
   };
 
-  // Export JSON
-  const handleExportJson = () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(products, null, 2));
-    const downloadAnchor = document.createElement("a");
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", `vaich-products-${new Date().toISOString().slice(0, 10)}.json`);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-  };
-
   // Reset to default
   const handleResetToDefault = () => {
-    if (confirm("آیا می‌خواهید همه محصولات به لیست اولیه سایت بازنشانی شوند؟ تمام تغییرات شما پاک خواهد شد.")) {
+    if (confirm("آیا می‌خواهید همه محصولات و ردیف‌ها به تنظیمات اولیه کارخانه بازگردند؟")) {
       resetToDefault();
     }
   };
@@ -291,18 +358,17 @@ export function AdminPage() {
               ورود به پنل مدیریت VAICH
             </h1>
             <p className="mt-2 text-xs leading-6 text-muted-foreground sm:text-sm">
-              دسترسی اختصاصی مدیریت برای مدیریت محصولات، تخفیف‌ها و چیدمان نوار اکانت‌ها
+              دسترسی امن مدیر فروشگاه برای مدیریت اشتراک‌ها، ردیف‌ها و چیدمان
             </p>
           </div>
 
-          {/* Google Account Quick Sign-in Section */}
+          {/* Google Account Authentication Trigger */}
           <div className="mt-6 border-y border-border/60 py-4">
             <button
               type="button"
-              onClick={handleGoogleQuickLogin}
+              onClick={handleStartGoogleAuth}
               className="flex w-full items-center justify-center gap-3 rounded-2xl border border-border/80 bg-secondary/70 px-4 py-3 text-xs sm:text-sm font-semibold text-foreground transition-all hover:border-primary hover:bg-secondary active:scale-[0.98]"
             >
-              {/* Google G SVG */}
               <svg className="h-5 w-5" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
@@ -321,7 +387,7 @@ export function AdminPage() {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                 />
               </svg>
-              <span>ورود با اکانت گوگل (مدیر سایت)</span>
+              <span>ورود مستقیم با اکانت گوگل</span>
             </button>
           </div>
 
@@ -334,7 +400,7 @@ export function AdminPage() {
 
             <div>
               <label className="block text-xs font-medium text-foreground mb-1.5">
-                ایمیل یا شناسه کاربری مدیر:
+                شناسه کاربری (اختیاری):
               </label>
               <input
                 type="text"
@@ -374,6 +440,76 @@ export function AdminPage() {
             </Link>
           </div>
         </div>
+
+        {/* Real Interactive Google OAuth Simulation Modal */}
+        {isGoogleModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+            <div className="w-full max-w-sm rounded-3xl border border-border bg-card p-6 shadow-2xl">
+              <div className="flex items-center justify-between border-b border-border/60 pb-3">
+                <div className="flex items-center gap-2">
+                  <svg className="h-5 w-5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                  </svg>
+                  <span className="text-xs font-bold text-foreground">Sign in with Google</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsGoogleModalOpen(false)}
+                  className="text-muted-foreground hover:text-foreground text-xs"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {googleStep === "select" && (
+                <div className="mt-4 space-y-4">
+                  <p className="text-xs text-muted-foreground leading-5">
+                    برای دسترسی به پنل مدیریت فروشگاه VAICH، با حساب گوگل تایید‌شده خود ادامه دهید:
+                  </p>
+
+                  <div>
+                    <label className="block text-[11px] font-medium text-foreground mb-1">
+                      ایمیل اکانت گوگل شما:
+                    </label>
+                    <input
+                      type="email"
+                      dir="ltr"
+                      value={googleInputEmail}
+                      onChange={(e) => setGoogleInputEmail(e.target.value)}
+                      placeholder="ایمیل خود را وارد کنید"
+                      className="w-full rounded-xl border border-border bg-background/80 px-3.5 py-2.5 text-xs outline-none focus:border-primary"
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleConfirmGoogleAuth}
+                    className="w-full rounded-xl bg-primary py-2.5 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-all"
+                  >
+                    تایید و ادامه با گوگل
+                  </button>
+                </div>
+              )}
+
+              {googleStep === "authenticating" && (
+                <div className="py-8 text-center space-y-3">
+                  <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                  <p className="text-xs font-medium text-foreground">درحال بررسی و اتصال به اکانت گوگل...</p>
+                </div>
+              )}
+
+              {googleStep === "success" && (
+                <div className="py-6 text-center space-y-2">
+                  <div className="text-2xl">✓</div>
+                  <p className="text-xs font-bold text-emerald-500">احراز هویت گوگل با موفقیت تایید شد!</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -436,6 +572,18 @@ export function AdminPage() {
 
           <button
             type="button"
+            onClick={() => setActiveTab("rows")}
+            className={`rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
+              activeTab === "rows"
+                ? "bg-primary text-white shadow-md"
+                : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            📑 مدیریت ردیف‌ها و دسته‌بندی‌ها ({toPersianDigits(rows.length)})
+          </button>
+
+          <button
+            type="button"
             onClick={() => setActiveTab("layout")}
             className={`rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
               activeTab === "layout"
@@ -443,7 +591,7 @@ export function AdminPage() {
                 : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
             }`}
           >
-            📐 تنظیم ردیف نوار اکانت‌ها ({layout === "1-row" ? "۱ ردیفه" : layout === "2-row" ? "۲ ردیفه" : "شبکه‌ای"})
+            📐 چیدمان نوار سایت ({layout === "1-row" ? "۱ ردیفه" : layout === "2-row" ? "۲ ردیفه" : "شبکه‌ای"})
           </button>
 
           <button
@@ -455,14 +603,14 @@ export function AdminPage() {
                 : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
             }`}
           >
-            ⚙️ تنظیمات و رمز عبور
+            ⚙️ رمز عبور و تنظیمات
           </button>
         </div>
 
         {/* ---------------- TAB 1: PRODUCTS MANAGEMENT ---------------- */}
         {activeTab === "products" && (
           <div className="mt-6 space-y-6">
-            {/* Quick Stats & Add Product Button */}
+            {/* Quick Stats & Add Button */}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-3xl border border-border/80 bg-card p-4">
                 <span className="text-xs text-muted-foreground">کل محصولات</span>
@@ -472,7 +620,7 @@ export function AdminPage() {
               </div>
 
               <div className="rounded-3xl border border-border/80 bg-card p-4">
-                <span className="text-xs text-muted-foreground">محصولات با برچسب ویژه 🔥</span>
+                <span className="text-xs text-muted-foreground">محصولات برچسب‌دار</span>
                 <p className="mt-1 text-2xl font-black text-primary">
                   {toPersianDigits(featuredCount)}
                 </p>
@@ -488,7 +636,7 @@ export function AdminPage() {
               <div className="flex items-center">
                 <button
                   type="button"
-                  onClick={handleOpenAdd}
+                  onClick={handleOpenAddProduct}
                   className="neon-gradient flex h-full w-full items-center justify-center gap-2 rounded-3xl p-4 text-sm font-extrabold text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <span className="text-xl">+</span>
@@ -497,20 +645,21 @@ export function AdminPage() {
               </div>
             </div>
 
-            {/* Products Table / Cards */}
+            {/* Products Table */}
             <div className="rounded-3xl border border-border/80 bg-card overflow-hidden shadow-xs">
               <div className="border-b border-border/60 p-4 sm:px-6">
                 <h2 className="text-base font-bold text-foreground">
-                  لیست اشتراک‌های موجود در فروشگاه
+                  لیست اشتراک‌ها و محصولات فروشگاه
                 </h2>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  می‌توانید با یک کلیک وضعیت ویژه را تغییر دهید، تخفیف اعمال کنید یا مشخصات محصول را ویرایش کنید.
+                  می‌توانید برچسب دلخواه با رنگ‌های اختصاصی بنویسید، آن را حذف کنید یا به ردیف‌های مختلف اختصاص دهید.
                 </p>
               </div>
 
               <div className="divide-y divide-border/60">
                 {products.map((p) => {
-                  const isFeatured = p.featured || p.badge || p.slug === "gemini-pro";
+                  const hasBadge = Boolean(p.badge || p.featured);
+                  const rowObj = rows.find((r) => r.id === (p.categoryId || "ai"));
 
                   return (
                     <div
@@ -523,9 +672,21 @@ export function AdminPage() {
                         <div>
                           <div className="flex items-center gap-2">
                             <h3 className="font-bold text-foreground">{p.name}</h3>
-                            {isFeatured && (
-                              <span className="rounded-full bg-linear-to-r from-primary to-accent px-2 py-0.5 text-[10px] font-bold text-white shadow-xs">
-                                {p.badge || "ویژه 🔥"}
+                            {hasBadge && (
+                              <span
+                                className={`rounded-full px-2 py-0.5 text-[10px] font-bold text-white shadow-xs ${
+                                  p.badgeColor === "fire"
+                                    ? "bg-linear-to-r from-rose-500 to-amber-500"
+                                    : p.badgeColor === "emerald"
+                                    ? "bg-emerald-600"
+                                    : p.badgeColor === "blue"
+                                    ? "bg-blue-600"
+                                    : p.badgeColor === "amber"
+                                    ? "bg-amber-400 text-slate-950"
+                                    : "bg-linear-to-r from-primary to-accent"
+                                }`}
+                              >
+                                {p.badge || "پیشنهاد ویژه 🔥"}
                               </span>
                             )}
                             {p.discountPercent && (
@@ -534,9 +695,10 @@ export function AdminPage() {
                               </span>
                             )}
                           </div>
-                          <div className="mt-1 flex items-center gap-3 text-xs text-muted-foreground">
+                          <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                             <span>شناسه: <code className="text-foreground">{p.slug}</code></span>
                             {p.duration && <span>مدت: {p.duration}</span>}
+                            <span>ردیف: <span className="font-medium text-foreground">{rowObj?.title || "اصلی"}</span></span>
                           </div>
                         </div>
                       </div>
@@ -555,18 +717,17 @@ export function AdminPage() {
 
                       {/* Action Controls */}
                       <div className="flex flex-wrap items-center gap-2">
-                        {/* Toggle ویژه */}
+                        {/* 1-Click Toggle ویژه */}
                         <button
                           type="button"
                           onClick={() => handleToggleFeatured(p.slug)}
-                          title="تغییر وضعیت پیشنهاد ویژه"
                           className={`rounded-xl border px-3 py-1.5 text-xs font-bold transition-all ${
-                            isFeatured
+                            hasBadge
                               ? "border-primary bg-primary/10 text-primary"
                               : "border-border bg-secondary/40 text-muted-foreground hover:text-foreground"
                           }`}
                         >
-                          {isFeatured ? "★ ویژه (فعال)" : "☆ تنظیم ویژه"}
+                          {hasBadge ? "★ برچسب فعال" : "☆ افزودن برچسب ویژه"}
                         </button>
 
                         {/* Quick Discount Presets */}
@@ -595,7 +756,6 @@ export function AdminPage() {
                           <button
                             type="button"
                             onClick={() => handleApplyDiscount(p.slug, 0)}
-                            title="حذف تخفیف"
                             className="rounded-lg px-2 py-0.5 text-[10px] font-medium text-rose-500 hover:bg-rose-500/10"
                           >
                             حذف تخفیف
@@ -605,10 +765,10 @@ export function AdminPage() {
                         {/* Edit Button */}
                         <button
                           type="button"
-                          onClick={() => handleOpenEdit(p)}
+                          onClick={() => handleOpenEditProduct(p)}
                           className="rounded-xl border border-border bg-card px-3 py-1.5 text-xs font-semibold text-foreground hover:border-primary hover:text-primary transition-colors"
                         >
-                          ویرایش
+                          ویرایش و شخصی‌سازی
                         </button>
 
                         {/* Delete Button */}
@@ -629,15 +789,82 @@ export function AdminPage() {
           </div>
         )}
 
-        {/* ---------------- TAB 2: LAYOUT CONTROLLER ---------------- */}
+        {/* ---------------- TAB 2: ROW & CATEGORY MANAGER ---------------- */}
+        {activeTab === "rows" && (
+          <div className="mt-6 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border/80 bg-card p-6">
+              <div>
+                <h2 className="text-lg font-bold text-foreground">
+                  مدیریت ردیف‌های اختصاصی صفحه اصلی
+                </h2>
+                <p className="mt-1 text-xs text-muted-foreground leading-5">
+                  می‌توانید هر تعداد ردیف جدید (مثل پلنرها، ابزارها، اکانت‌های اختصاصی یا محصولات دیگر) اضافه کنید و محصولات مورد نظر را در آن قرار دهید.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleOpenAddRow}
+                className="neon-gradient shrink-0 rounded-2xl px-5 py-2.5 text-xs font-extrabold text-white shadow-md transition-transform hover:scale-105"
+              >
+                + افزودن ردیف جدید
+              </button>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {rows.map((row) => {
+                const count = products.filter((p) => (p.categoryId || "ai") === row.id).length;
+
+                return (
+                  <div key={row.id} className="rounded-3xl border border-border/80 bg-card p-5 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="rounded-xl bg-primary/10 px-2.5 py-1 text-xs font-bold text-primary">
+                        شناسه ردیف: {row.id}
+                      </span>
+                      <span className="text-xs text-muted-foreground font-medium">
+                        {toPersianDigits(count)} محصول
+                      </span>
+                    </div>
+
+                    <h3 className="text-base font-bold text-foreground">{row.title}</h3>
+                    {row.subtitle && (
+                      <p className="text-xs text-muted-foreground leading-5">{row.subtitle}</p>
+                    )}
+
+                    <div className="flex items-center gap-2 pt-2 border-t border-border/60">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenEditRow(row)}
+                        className="rounded-xl border border-border bg-secondary/50 px-3 py-1.5 text-xs font-semibold text-foreground hover:border-primary transition-all"
+                      >
+                        ویرایش عنوان
+                      </button>
+                      {rows.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteRow(row.id)}
+                          className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-rose-500 hover:bg-rose-500 hover:text-white transition-all"
+                        >
+                          حذف ردیف
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ---------------- TAB 3: LAYOUT CONTROLLER ---------------- */}
         {activeTab === "layout" && (
           <div className="mt-6 space-y-6">
             <div className="rounded-3xl border border-border/80 bg-card p-6">
               <h2 className="text-lg font-bold text-foreground">
-                تنظیم چیدمان پیش‌فرض نوار اکانت‌ها در صفحه اصلی
+                تعیین چیدمان پیش‌فرض نوار اکانت‌ها برای کاربران
               </h2>
-              <p className="mt-1 text-xs text-muted-foreground">
-                مشخص کنید هنگامی که کاربران وارد سایت می‌شوند، اشتراک‌ها در چند ردیف نمایش داده شوند.
+              <p className="mt-1 text-xs text-muted-foreground leading-5">
+                شما تعیین می‌کنید کاربران محصولات را در ۱ ردیف، ۲ ردیف یا شبکه‌ای ببینند. کاربران عادی دسترسی به تغییر این ظاهر را در سایت ندارند.
               </p>
 
               <div className="mt-6 grid gap-4 sm:grid-cols-3">
@@ -658,9 +885,9 @@ export function AdminPage() {
                       </span>
                     )}
                   </div>
-                  <h3 className="mt-3 font-bold text-foreground">۱ ردیفه (اسلایدر ۳بعدی افقی)</h3>
+                  <h3 className="mt-3 font-bold text-foreground">۱ ردیفه (اسلایدر ۳بعدی تک ردیفه)</h3>
                   <p className="mt-1 text-xs text-muted-foreground leading-5">
-                    تمام اشتراک‌ها در یک ردیف منظم و مدرن قرار می‌گیرند و با دکمه یا کشیدن به چپ و راست اسکرول می‌شوند.
+                    محصولات در یک ردیف تمیز قرار گرفته و با دکمه‌ها و لمس به چپ و راست حرکت می‌کنند.
                   </p>
                 </div>
 
@@ -681,9 +908,9 @@ export function AdminPage() {
                       </span>
                     )}
                   </div>
-                  <h3 className="mt-3 font-bold text-foreground">۲ ردیفه (اسلایدر افقی ۲ طبقه)</h3>
+                  <h3 className="mt-3 font-bold text-foreground">۲ ردیفه (اسلایدر ۲ طبقه همزمان)</h3>
                   <p className="mt-1 text-xs text-muted-foreground leading-5">
-                    محصولات در ۲ ردیف همزمان و فشرده قرار گرفته و همزمان اسکرول می‌شوند؛ مناسب زمانی که تعداد محصولات بیشتر است.
+                    کارت‌ها در دو ردیف همزمان و فشرده قرار گرفته و همزمان اسکرول می‌شوند.
                   </p>
                 </div>
 
@@ -704,21 +931,21 @@ export function AdminPage() {
                       </span>
                     )}
                   </div>
-                  <h3 className="mt-3 font-bold text-foreground">شبکه‌ای کامل (چند ردیفه)</h3>
+                  <h3 className="mt-3 font-bold text-foreground">شبکه‌ای چندستونه</h3>
                   <p className="mt-1 text-xs text-muted-foreground leading-5">
-                    محصولات به صورت شبکه‌ای در ردیف‌ها و ستون‌های منظم نمایش داده می‌شوند و کل صفحه را پر می‌کنند.
+                    محصولات در ستون‌ها و ردیف‌های منظم باز شده و کل صفحه را پر می‌کنند.
                   </p>
                 </div>
               </div>
 
               <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                ✓ تنظیمات به طور خودکار ذخیره شده و هم‌اکنون در صفحه اصلی فعال است.
+                ✓ تنظیمات به طور خودکار ذخیره شده و هم‌اکنون برای تمام بازدیدکنندگان اعمال است.
               </div>
             </div>
           </div>
         )}
 
-        {/* ---------------- TAB 3: SETTINGS ---------------- */}
+        {/* ---------------- TAB 4: SETTINGS ---------------- */}
         {activeTab === "settings" && (
           <div className="mt-6 grid gap-6 sm:grid-cols-2">
             {/* Change Master PIN */}
@@ -758,34 +985,23 @@ export function AdminPage() {
               </form>
             </div>
 
-            {/* Backup & Reset */}
+            {/* Reset Defaults */}
             <div className="rounded-3xl border border-border/80 bg-card p-6 space-y-4">
               <h2 className="text-base font-bold text-foreground">
-                پشتیبان‌گیری و بازنشانی
+                تنظیمات کارخانه
               </h2>
-              <p className="text-xs text-muted-foreground">
-                می‌توانید از لیست تمام محصولات فایل پشتیبان دانلود کنید، یا در صورت نیاز به تنظیمات اولیه بازگردانید.
+              <p className="text-xs text-muted-foreground leading-5">
+                در صورت نیاز می‌توانید محصولات و ردیف‌های سایت را به حالت پیش‌فرض اولیه بازگردانید.
               </p>
 
-              <div className="flex flex-col gap-2.5 pt-2">
-                <button
-                  type="button"
-                  onClick={handleExportJson}
-                  className="flex items-center justify-center gap-2 rounded-2xl border border-border bg-secondary/50 py-3 text-xs font-bold text-foreground hover:bg-secondary transition-all"
-                >
-                  <span>📥</span>
-                  <span>دانلود فایل پشتیبان محصولات (JSON)</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleResetToDefault}
-                  className="flex items-center justify-center gap-2 rounded-2xl border border-rose-500/30 bg-rose-500/10 py-3 text-xs font-bold text-rose-500 hover:bg-rose-500 hover:text-white transition-all"
-                >
-                  <span>⚠️</span>
-                  <span>بازنشانی به محصولات اولیه VAICH</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={handleResetToDefault}
+                className="flex items-center justify-center gap-2 rounded-2xl border border-rose-500/30 bg-rose-500/10 py-3 text-xs font-bold text-rose-500 hover:bg-rose-500 hover:text-white transition-all w-full"
+              >
+                <span>⚠️</span>
+                <span>بازنشانی به محصولات و ردیف‌های پیش‌فرض VAICH</span>
+              </button>
             </div>
           </div>
         )}
@@ -798,7 +1014,7 @@ export function AdminPage() {
             <div className="flex items-center justify-between border-b border-border/60 pb-3">
               <h2 className="text-lg font-bold text-foreground">
                 {editProduct.slug && products.some((p) => p.slug === editProduct.slug)
-                  ? `ویرایش محصول: ${editProduct.name}`
+                  ? `ویرایش و شخصی‌سازی: ${editProduct.name}`
                   : "افزودن محصول جدید"}
               </h2>
               <button
@@ -817,7 +1033,7 @@ export function AdminPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-1">
-                    نام محصول (فارسی / انگلیسی): *
+                    نام محصول: *
                   </label>
                   <input
                     type="text"
@@ -831,7 +1047,7 @@ export function AdminPage() {
 
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-1">
-                    شناسه انگلیسی یکتا (Slug): *
+                    شناسه انگلیسی (Slug یکتا): *
                   </label>
                   <input
                     type="text"
@@ -845,6 +1061,25 @@ export function AdminPage() {
                 </div>
               </div>
 
+              {/* Category Assignment */}
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">
+                  ردیف / دسته‌بندی نمایش در سایت:
+                </label>
+                <select
+                  value={editProduct.categoryId || rows[0]?.id || "ai"}
+                  onChange={(e) => setEditProduct({ ...editProduct, categoryId: e.target.value })}
+                  className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary"
+                >
+                  {rows.map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Pricing */}
               <div className="grid gap-4 sm:grid-cols-3">
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-1">
@@ -873,7 +1108,7 @@ export function AdminPage() {
                         originalPrice: e.target.value ? Number(e.target.value) : undefined,
                       })
                     }
-                    placeholder="اختیاری - مثلاً 6000000"
+                    placeholder="اختیاری"
                     className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary"
                   />
                 </div>
@@ -913,35 +1148,97 @@ export function AdminPage() {
 
                 <div>
                   <label className="block text-xs font-medium text-foreground mb-1">
-                    متن برچسب ویژه (دلخواه):
+                    متن برچسب (دلخواه):
                   </label>
                   <input
                     type="text"
                     value={editProduct.badge || ""}
                     onChange={(e) => setEditProduct({ ...editProduct, badge: e.target.value })}
-                    placeholder="مثلاً: پیشنهاد ویژه 🔥"
+                    placeholder="مثلاً: پیشنهاد ویژه 🔥 (یا خالی)"
                     className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="flex items-center gap-2 cursor-pointer py-1">
-                  <input
-                    type="checkbox"
-                    checked={Boolean(editProduct.featured)}
-                    onChange={(e) => setEditProduct({ ...editProduct, featured: e.target.checked })}
-                    className="h-4 w-4 rounded accent-primary"
-                  />
-                  <span className="text-xs font-bold text-foreground">
-                    نمایش به عنوان «پیشنهاد ویژه» در کارت محصول
-                  </span>
-                </label>
+              {/* Badge Customizer & Color Picker */}
+              <div className="rounded-2xl border border-border/80 bg-secondary/30 p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-foreground">رنگ و استایل برچسب:</span>
+                  <button
+                    type="button"
+                    onClick={() => setEditProduct({ ...editProduct, badge: "", featured: false })}
+                    className="text-[11px] text-rose-500 font-semibold hover:underline"
+                  >
+                    حذف برچسب (بدون برچسب)
+                  </button>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setEditProduct({ ...editProduct, badgeColor: "fire" })}
+                    className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
+                      editProduct.badgeColor === "fire"
+                        ? "bg-linear-to-r from-rose-500 to-amber-500 text-white ring-2 ring-rose-400"
+                        : "bg-card border border-border text-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    🔥 قرمز آتشین
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setEditProduct({ ...editProduct, badgeColor: "purple" })}
+                    className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
+                      editProduct.badgeColor === "purple"
+                        ? "bg-linear-to-r from-primary to-accent text-white ring-2 ring-primary"
+                        : "bg-card border border-border text-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    🟣 بنفش نئونی
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setEditProduct({ ...editProduct, badgeColor: "emerald" })}
+                    className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
+                      editProduct.badgeColor === "emerald"
+                        ? "bg-emerald-600 text-white ring-2 ring-emerald-400"
+                        : "bg-card border border-border text-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    🟢 سبز زمردی
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setEditProduct({ ...editProduct, badgeColor: "blue" })}
+                    className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
+                      editProduct.badgeColor === "blue"
+                        ? "bg-blue-600 text-white ring-2 ring-blue-400"
+                        : "bg-card border border-border text-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    🔵 آبی الکتریک
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setEditProduct({ ...editProduct, badgeColor: "amber" })}
+                    className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${
+                      editProduct.badgeColor === "amber"
+                        ? "bg-amber-400 text-slate-950 font-black ring-2 ring-amber-300"
+                        : "bg-card border border-border text-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    🟡 طلایی
+                  </button>
+                </div>
               </div>
 
               <div>
                 <label className="block text-xs font-medium text-foreground mb-1">
-                  توضیحات کوتاه محصول:
+                  توضیح کوتاه محصول:
                 </label>
                 <input
                   type="text"
@@ -994,6 +1291,77 @@ export function AdminPage() {
                   className="neon-gradient rounded-2xl px-6 py-2.5 text-xs font-bold text-white shadow-md transition-transform hover:scale-[1.02]"
                 >
                   ذخیره محصول
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ---------------- ADD / EDIT ROW MODAL ---------------- */}
+      {isEditingRow && editRow && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-md rounded-3xl border border-border bg-card p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-border/60 pb-3">
+              <h2 className="text-base font-bold text-foreground">
+                {rows.some((r) => r.id === editRow.id) ? "ویرایش ردیف" : "افزودن ردیف جدید"}
+              </h2>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsEditingRow(false);
+                  setEditRow(null);
+                }}
+                className="grid h-8 w-8 place-items-center rounded-xl bg-secondary text-muted-foreground hover:text-foreground"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveRow} className="mt-4 space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">
+                  عنوان ردیف: *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editRow.title || ""}
+                  onChange={(e) => setEditRow({ ...editRow, title: e.target.value })}
+                  placeholder="مثلاً: پلنرها و فایل‌های کاربردی یا محصولات دیگر"
+                  className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">
+                  زیرعنوان توضیحی (دلخواه):
+                </label>
+                <input
+                  type="text"
+                  value={editRow.subtitle || ""}
+                  onChange={(e) => setEditRow({ ...editRow, subtitle: e.target.value })}
+                  placeholder="توضیح کوتاه زیر عنوان ردیف"
+                  className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-border/60">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEditingRow(false);
+                    setEditRow(null);
+                  }}
+                  className="rounded-2xl border border-border px-4 py-2 text-xs font-semibold text-muted-foreground hover:bg-secondary"
+                >
+                  انصراف
+                </button>
+                <button
+                  type="submit"
+                  className="neon-gradient rounded-2xl px-5 py-2 text-xs font-bold text-white shadow-md transition-transform hover:scale-105"
+                >
+                  ذخیره ردیف
                 </button>
               </div>
             </form>

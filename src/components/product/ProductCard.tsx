@@ -30,8 +30,17 @@ export function ProductCard({
     setTilt({ x: 0, y: 0, active: false });
   };
 
-  const isSpecial = product.featured || product.badge || product.slug === "gemini-pro";
-  const badgeLabel = product.badge || (product.featured ? "پیشنهاد ویژه 🔥" : "ویژه 🔥");
+  const hasBadge = Boolean(product.badge) || Boolean(product.featured);
+  const badgeLabel = product.badge || (product.featured ? "پیشنهاد ویژه 🔥" : "");
+
+  const badgeColorMap: Record<string, string> = {
+    fire: "bg-linear-to-r from-rose-500 to-amber-500 text-white",
+    purple: "bg-linear-to-r from-primary to-accent text-white",
+    emerald: "bg-emerald-600 text-white",
+    blue: "bg-blue-600 text-white",
+    amber: "bg-amber-400 text-slate-950 font-black",
+  };
+  const badgeClass = (product.badgeColor && badgeColorMap[product.badgeColor]) || badgeColorMap.purple;
 
   return (
     <article
@@ -56,8 +65,8 @@ export function ProductCard({
       />
 
       {/* Special / Featured Badge */}
-      {isSpecial && (
-        <span className="absolute left-3.5 top-3.5 z-10 rounded-full bg-linear-to-r from-primary to-accent px-3 py-1 text-xs font-bold text-white shadow-md">
+      {hasBadge && badgeLabel && (
+        <span className={cn("absolute left-3.5 top-3.5 z-10 rounded-full px-3 py-1 text-xs font-bold shadow-md", badgeClass)}>
           {badgeLabel}
         </span>
       )}

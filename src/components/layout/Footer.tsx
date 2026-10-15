@@ -110,16 +110,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-border/70 px-4 py-6 text-center text-xs text-muted-foreground sm:px-6">
-        <div className="mx-auto flex max-w-6xl flex-col sm:flex-row items-center justify-between gap-3">
-          <span>© {toPersianDigits(1404)} VAICH — تمامی حقوق محفوظ است.</span>
-          <Link
-            to="/admin"
-            className="flex items-center gap-1.5 opacity-70 transition-opacity hover:opacity-100 hover:text-primary text-[11px]"
-          >
-            <span>🔐</span>
-            <span>ورود به پنل مدیریت</span>
-          </Link>
-        </div>
+        © {toPersianDigits(1404)} VAICH — تمامی حقوق محفوظ است.
       </div>
     </footer>
   );
