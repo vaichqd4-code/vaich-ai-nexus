@@ -3,8 +3,8 @@
     {
       "slug": "gemini",
       "name": "Gemini pro",
-      "price": 275000,
-      "originalPrice": 392000,
+      "price": 160000,
+      "originalPrice": 390000,
       "duration": "60 روزه",
       "description": "اشتراک سرویس هوش مصنوعی Gemini، 60 روزه.",
       "featured": false,
@@ -132,5 +132,5 @@
       "createdAt": "2026-10-15T00:00:00.000Z"
     }
   ],
-  "updatedAt": "2026-10-15T08:34:20.814Z"
+  "updatedAt": "2026-10-15T08:35:27.777Z"
 }
