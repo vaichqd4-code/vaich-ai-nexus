@@ -20,7 +20,7 @@ export const Route = createFileRoute("/admin")({
   component: AdminPage,
 });
 
-const DEFAULT_ADMIN_PIN = "vaich2026";
+const DEFAULT_ADMIN_PIN = "Yh111111";
 
 export function AdminPage() {
   const { products, layout, setLayout, setProducts, resetToDefault } = useDynamicProducts();
@@ -57,7 +57,9 @@ export function AdminPage() {
       } catch (e) {}
     }
     const savedPin = localStorage.getItem("vaich_admin_pin");
-    if (savedPin) {
+    if (savedPin === "vaich2026") {
+      localStorage.removeItem("vaich_admin_pin");
+    } else if (savedPin) {
       setCustomPin(savedPin);
     }
   }, []);
@@ -67,15 +69,19 @@ export function AdminPage() {
     e.preventDefault();
     setAuthError("");
 
-    const currentMasterPin = localStorage.getItem("vaich_admin_pin") || DEFAULT_ADMIN_PIN;
+    let currentMasterPin = localStorage.getItem("vaich_admin_pin") || DEFAULT_ADMIN_PIN;
+    if (currentMasterPin === "vaich2026") {
+      currentMasterPin = DEFAULT_ADMIN_PIN;
+      localStorage.removeItem("vaich_admin_pin");
+    }
 
     if (!inputPin) {
-      setAuthError("لطفاً رمز عبور مدیر را وارد کنید.");
+      setAuthError("لطفاً رمز عبور اختصاصی مدیر را وارد کنید.");
       return;
     }
 
     if (inputPin !== currentMasterPin) {
-      setAuthError("رمز عبور اشتباه است. (پیش‌فرض: vaich2026)");
+      setAuthError("رمز عبور وارد شده نادرست است.");
       return;
     }
 
@@ -350,7 +356,7 @@ export function AdminPage() {
                 dir="ltr"
                 value={inputPin}
                 onChange={(e) => setInputPin(e.target.value)}
-                placeholder="رمز عبور مدیر (پیش‌فرض: vaich2026)"
+                placeholder="رمز عبور پنل مدیریت را وارد کنید"
                 className="w-full rounded-2xl border border-border bg-background/60 px-4 py-3 text-sm outline-none transition-colors focus:border-primary"
               />
             </div>
@@ -722,7 +728,7 @@ export function AdminPage() {
                 تغییر رمز عبور ورود به پنل
               </h2>
               <p className="mt-1 text-xs text-muted-foreground">
-                رمز عبور فعلی: <code className="text-primary font-bold">{customPin || DEFAULT_ADMIN_PIN}</code>
+                وضعیت امنیت: <span className="text-emerald-500 font-bold">رمز عبور اختصاصی فعال است</span>
               </p>
 
               <form onSubmit={handleChangePin} className="mt-4 space-y-3">
