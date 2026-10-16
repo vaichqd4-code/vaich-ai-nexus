@@ -34,6 +34,7 @@
       "name": "Gemini pro",
       "price": 399000,
       "originalPrice": 4700000,
+      "discountPercent": 90,
       "duration": "۱۸ ماهه",
       "description": "اشتراک Gemini pro ۱۸ ماهه.",
       "featured": true,
@@ -132,5 +133,5 @@
       "createdAt": "2026-10-15T00:00:00.000Z"
     }
   ],
-  "updatedAt": "2026-10-15T09:45:58.979Z"
+  "updatedAt": "2026-10-16T07:04:08.090Z"
 }
