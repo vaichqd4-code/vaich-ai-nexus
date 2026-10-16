@@ -1,16 +1,16 @@
 {
   "products": [
     {
-      "slug": "G",
-      "name": "H",
+      "slug": "T",
+      "name": "G",
       "price": 500000,
-      "discountPercent": 2,
+      "discountPercent": 80,
       "duration": "۱ ماهه",
-      "description": "1",
+      "description": "Rr",
       "featured": true,
       "badge": "Tt",
       "badgeColor": "fire",
-      "categoryId": "row-mvamo303",
+      "categoryId": "row-mvampt3r",
       "features": [
         "⚡ فعال‌سازی قانونی و تضمینی",
         "🚀 دسترسی بدون قطعی و سریع",
@@ -145,9 +145,9 @@
       "subtitle": "سرویس مورد نظر خود را با تحویل آنی و قیمت شفاف انتخاب کنید."
     },
     {
-      "id": "row-mvamo303",
-      "title": "پلنر های(Google sheets)",
-      "subtitle": "انواع پلنر های مدیریت و سبک زندگی"
+      "id": "row-mvampt3r",
+      "title": "پلنر ها",
+      "subtitle": "پلنر های مدیریت و سبک زندگی (Google sheets)"
     }
   ],
   "layout": "1-row",
@@ -162,5 +162,5 @@
       "createdAt": "2026-10-15T00:00:00.000Z"
     }
   ],
-  "updatedAt": "2026-10-16T07:13:41.873Z"
+  "updatedAt": "2026-10-16T07:14:53.535Z"
 }
