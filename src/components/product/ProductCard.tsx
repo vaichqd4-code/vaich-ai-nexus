@@ -68,8 +68,13 @@ export function ProductCard({
         className="pointer-events-none absolute inset-x-0 -top-24 h-40 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-40 neon-gradient"
       />
 
-      {/* Top Image Banner: BodoCP-Style Rounded Square Frame */}
-      <div className="relative w-full aspect-16/10 xs:aspect-4/3 sm:aspect-16/10 rounded-xl sm:rounded-2xl overflow-hidden bg-linear-to-b from-secondary/70 via-secondary/35 to-background/60 p-2.5 sm:p-3 flex items-center justify-center border border-border/50 group-hover:border-primary/40 transition-colors">
+      {/* Top Image Banner: BodoCP-Style Rounded Frame */}
+      <div
+        className={cn(
+          "relative w-full aspect-16/10 xs:aspect-4/3 sm:aspect-16/10 rounded-xl sm:rounded-2xl overflow-hidden bg-linear-to-b from-secondary/70 via-secondary/35 to-background/60 flex items-center justify-center border border-border/50 group-hover:border-primary/40 transition-colors",
+          product.imageFit === "cover" ? "p-0" : "p-2.5 sm:p-3"
+        )}
+      >
         {/* Subtle Ambient Glow */}
         <div
           aria-hidden="true"
@@ -80,10 +85,15 @@ export function ProductCard({
           <img
             src={logoUrl}
             alt={product.name}
-            width={120}
-            height={120}
+            width={280}
+            height={175}
             decoding="async"
-            className="max-h-full max-w-full object-contain rounded-lg sm:rounded-xl drop-shadow-md group-hover:scale-105 transition-transform duration-300"
+            className={cn(
+              "drop-shadow-md group-hover:scale-105 transition-transform duration-300",
+              product.imageFit === "cover"
+                ? "h-full w-full object-cover rounded-xl sm:rounded-2xl"
+                : "max-h-full max-w-full object-contain rounded-lg sm:rounded-xl"
+            )}
             loading="lazy"
           />
         ) : (

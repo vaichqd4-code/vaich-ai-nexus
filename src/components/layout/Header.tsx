@@ -5,13 +5,14 @@ import { Logo } from "@/components/brand/Logo";
 import { NeonLink } from "@/components/ui/NeonButton";
 import { cn } from "@/lib/utils";
 import { Search, X, ChevronDown, Layers, Sparkles } from "lucide-react";
-import { useDynamicProducts } from "@/lib/products";
+import { useDynamicProducts, formatPrice, toPersianDigits } from "@/lib/products";
+import { ServiceIcon } from "@/components/brand/ServiceIcon";
 
 type Theme = "dark" | "light";
 
 export function Header() {
   const router = useRouter();
-  const { rows } = useDynamicProducts();
+  const { rows, products } = useDynamicProducts();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [theme, setTheme] = useState<Theme>("light");
@@ -21,25 +22,41 @@ export function Header() {
   const [drawerCategoriesOpen, setDrawerCategoriesOpen] = useState(true);
   const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  const filteredProducts = searchQuery.trim()
+    ? products.filter((p) => {
+        const q = searchQuery.trim().toLowerCase();
+        return (
+          p.name.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q) ||
+          p.slug.toLowerCase().includes(q) ||
+          (p.badge && p.badge.toLowerCase().includes(q))
+        );
+      })
+    : [];
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Close categories dropdown on outside click
+  // Close search and categories dropdown on outside click
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setCategoriesOpen(false);
       }
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+      }
     };
-    if (categoriesOpen) {
+    if (categoriesOpen || searchOpen) {
       document.addEventListener("mousedown", handleOutsideClick);
     }
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
-  }, [categoriesOpen]);
+  }, [categoriesOpen, searchOpen]);
 
   useEffect(() => {
     if (open) {
@@ -218,18 +235,18 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* دکمه جمع‌وجور سرچ کنار دکمه‌های تم و منو */}
-          <div className="relative flex items-center">
+          {/* دکمه و باکس جستجوی هوشمند با نتایج زنده */}
+          <div className="relative flex items-center" ref={searchContainerRef}>
             {searchOpen ? (
               <div className="flex items-center gap-1.5 rounded-xl border border-primary/60 bg-secondary/95 px-2.5 py-1.5 shadow-sm transition-all">
                 <Search className="h-4 w-4 text-primary shrink-0" />
                 <input
                   type="text"
                   autoFocus
-                  placeholder="جستجو..."
+                  placeholder="نام محصول، پلنر یا اشتراک..."
                   value={searchQuery}
                   onChange={(e) => handleSearch(e.target.value)}
-                  className="w-20 xs:w-28 sm:w-36 bg-transparent text-xs text-foreground outline-none placeholder:text-muted-foreground"
+                  className="w-28 xs:w-36 sm:w-48 bg-transparent text-xs text-foreground outline-none placeholder:text-muted-foreground"
                 />
                 <button
                   type="button"
@@ -237,7 +254,7 @@ export function Header() {
                     setSearchOpen(false);
                     handleSearch("");
                   }}
-                  className="text-muted-foreground hover:text-foreground p-0.5"
+                  className="text-muted-foreground hover:text-foreground p-0.5 cursor-pointer"
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
@@ -247,10 +264,83 @@ export function Header() {
                 type="button"
                 onClick={() => setSearchOpen(true)}
                 title="جستجو"
-                className="grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary hover:text-foreground active:scale-95"
+                className="grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary hover:text-foreground active:scale-95 cursor-pointer"
               >
                 <Search className="h-4 w-4" />
               </button>
+            )}
+
+            {/* نتایج زنده جستجو بلافاصله زیر اینپوت */}
+            {searchOpen && searchQuery.trim().length > 0 && (
+              <div className="absolute left-0 sm:left-auto sm:right-0 top-full mt-2 w-[calc(100vw-28px)] max-w-[360px] sm:w-[380px] rounded-3xl border border-border/80 bg-card/95 p-3 shadow-2xl backdrop-blur-xl z-50">
+                <div className="flex items-center justify-between px-2 pb-2 border-b border-border/50 text-[11px] font-bold text-muted-foreground">
+                  <span>نتایج جستجو ({toPersianDigits(filteredProducts.length)})</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSearchOpen(false);
+                    }}
+                    className="text-muted-foreground hover:text-foreground text-[10px] cursor-pointer"
+                  >
+                    بستن ✕
+                  </button>
+                </div>
+
+                {filteredProducts.length > 0 ? (
+                  <div className="mt-2 divide-y divide-border/40 max-h-[300px] overflow-y-auto">
+                    {filteredProducts.map((p) => (
+                      <Link
+                        key={p.slug}
+                        to="/products/$slug"
+                        params={{ slug: p.slug }}
+                        onClick={() => {
+                          setSearchOpen(false);
+                          setSearchQuery("");
+                        }}
+                        className="flex items-center gap-3 p-2 hover:bg-secondary/60 rounded-2xl transition-colors group cursor-pointer"
+                      >
+                        <ServiceIcon slug={p.slug} iconUrl={p.iconUrl} className="h-10 w-10 shrink-0 rounded-xl" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">
+                              {p.name}
+                            </span>
+                            {p.badge && (
+                              <span className="rounded-full bg-primary/10 px-1.5 py-0.2 text-[9px] font-bold text-primary shrink-0">
+                                {p.badge}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-muted-foreground truncate">{p.description}</p>
+                        </div>
+                        <div className="text-left shrink-0">
+                          <span className="text-xs font-black text-primary block">{formatPrice(p.price)}</span>
+                          {p.duration && <span className="text-[10px] text-muted-foreground block">{p.duration}</span>}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-6 text-center text-xs text-muted-foreground">
+                    محصولی با عنوان «{searchQuery}» یافت نشد.
+                  </div>
+                )}
+
+                <div className="mt-2 pt-2 border-t border-border/50">
+                  <Link
+                    to="/products"
+                    onClick={() => {
+                      setSearchOpen(false);
+                      setSearchQuery("");
+                    }}
+                    className="flex items-center justify-between rounded-xl px-2 py-1.5 text-xs font-bold text-primary hover:bg-primary/10 transition-colors"
+                  >
+                    <span>مشاهده همه محصولات در صفحه فروشگاه</span>
+                    <span>←</span>
+                  </Link>
+                </div>
+              </div>
             )}
           </div>
 

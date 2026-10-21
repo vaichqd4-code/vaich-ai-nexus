@@ -418,7 +418,7 @@ export function AdminPage() {
 
   // Open Edit Form for Product
   const handleOpenEditProduct = (product: Product) => {
-    setEditProduct({ ...product });
+    setEditProduct({ ...product, imageFit: product.imageFit || "contain" });
     setFeaturesText(product.features ? product.features.join("\n") : "");
     setPurchaseInfoText(product.purchaseInfo ? product.purchaseInfo.join("\n") : "");
     setImageUploadError("");
@@ -442,6 +442,7 @@ export function AdminPage() {
       badge: "",
       badgeColor: "purple",
       categoryId: rows[0]?.id || "ai",
+      imageFit: "contain",
       purchaseInfo: [
         "اشتراک با بالاترین پایداری و سلامت فعال می‌شود.",
         "دارای پشتیبانی ۲۴ ساعته در صورت بروز هرگونه مشکل.",
@@ -494,6 +495,7 @@ export function AdminPage() {
       features: parsedFeatures.length > 0 ? parsedFeatures : undefined,
       purchaseInfo: parsedPurchaseInfo.length > 0 ? parsedPurchaseInfo : ["اطلاعات پس از خرید ارسال می‌شود."],
       iconUrl: editProduct.iconUrl?.trim() || undefined,
+      imageFit: editProduct.imageFit || "contain",
     };
 
     const exists = products.some((p) => p.slug === fullProduct.slug);
@@ -1541,6 +1543,28 @@ export function AdminPage() {
                       className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-xs outline-none focus:border-primary"
                     />
                   </div>
+
+                  {/* دکمه برجسته ذخیره پایین فرم مخصوص کاربران موبایل */}
+                  <div className="pt-2">
+                    <button
+                      type="button"
+                      disabled={isCloudSyncing}
+                      onClick={handleSaveBanner}
+                      className="neon-gradient w-full flex items-center justify-center gap-2 rounded-2xl py-3 text-xs font-black text-white shadow-lg transition-transform hover:scale-102 cursor-pointer disabled:opacity-50"
+                    >
+                      {isCloudSyncing ? (
+                        <>
+                          <RefreshCw className="h-4 w-4 animate-spin" />
+                          <span>در حال ذخیره و انتشار سراسری در سرور...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Check className="h-4 w-4" />
+                          <span>ذخیره و انتشار نهایی بنر در سایت</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1901,12 +1925,12 @@ export function AdminPage() {
 
                 <div className="flex flex-col sm:flex-row items-center gap-4">
                   {/* Live Preview of the Image */}
-                  <div className="relative h-24 w-24 sm:h-28 sm:w-28 shrink-0 rounded-2xl overflow-hidden bg-background/80 border border-border/80 p-2 flex items-center justify-center shadow-inner">
+                  <div className={`relative h-24 w-24 sm:h-28 sm:w-28 shrink-0 rounded-2xl overflow-hidden bg-background/80 border border-border/80 flex items-center justify-center shadow-inner ${editProduct.imageFit === "cover" ? "p-0" : "p-2"}`}>
                     {getProductLogo(editProduct.slug || "", editProduct.iconUrl) ? (
                       <img
                         src={getProductLogo(editProduct.slug || "", editProduct.iconUrl)}
                         alt="پیش‌نمایش تصویر"
-                        className="max-h-full max-w-full object-contain rounded-xl drop-shadow-sm"
+                        className={editProduct.imageFit === "cover" ? "h-full w-full object-cover rounded-2xl" : "max-h-full max-w-full object-contain rounded-xl drop-shadow-sm"}
                       />
                     ) : (
                       <span className="text-2xl font-black text-muted-foreground/60">
@@ -1952,28 +1976,28 @@ export function AdminPage() {
                       <button
                         type="button"
                         onClick={() => setEditProduct({ ...editProduct, iconUrl: PRESET_LOGOS["chatgpt"] })}
-                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors"
+                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors cursor-pointer"
                       >
                         ChatGPT
                       </button>
                       <button
                         type="button"
                         onClick={() => setEditProduct({ ...editProduct, iconUrl: PRESET_LOGOS["gemini-pro"] })}
-                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors"
+                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors cursor-pointer"
                       >
                         Gemini
                       </button>
                       <button
                         type="button"
                         onClick={() => setEditProduct({ ...editProduct, iconUrl: PRESET_LOGOS["claude"] })}
-                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors"
+                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors cursor-pointer"
                       >
                         Claude
                       </button>
                       <button
                         type="button"
                         onClick={() => setEditProduct({ ...editProduct, iconUrl: "/vaich-logo.webp" })}
-                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors text-primary font-bold"
+                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors text-primary font-bold cursor-pointer"
                       >
                         لوگوی VAICH (پلنر و سایر)
                       </button>
@@ -1989,6 +2013,40 @@ export function AdminPage() {
                         placeholder="آدرس اینترنتی تصویر مستقیم (اختیاری): https://..."
                         className="w-full rounded-xl border border-border bg-background/50 px-3 py-1.5 text-xs text-muted-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary"
                       />
+                    </div>
+
+                    {/* Image Display Mode Toggle */}
+                    <div className="rounded-xl border border-border/70 bg-background/60 p-2.5 space-y-2">
+                      <span className="text-[11px] font-bold text-foreground block">
+                        حالت نمایش و اندازه تصویر در کارت محصول:
+                      </span>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setEditProduct({ ...editProduct, imageFit: "contain" })}
+                          className={`rounded-xl py-2 px-2.5 text-xs font-bold transition-all border cursor-pointer flex items-center justify-center gap-1.5 ${
+                            editProduct.imageFit !== "cover"
+                              ? "bg-primary text-white border-primary shadow-xs"
+                              : "bg-card border-border text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          <span>لوگوی متمرکز (Contain)</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setEditProduct({ ...editProduct, imageFit: "cover" })}
+                          className={`rounded-xl py-2 px-2.5 text-xs font-bold transition-all border cursor-pointer flex items-center justify-center gap-1.5 ${
+                            editProduct.imageFit === "cover"
+                              ? "bg-primary text-white border-primary shadow-xs"
+                              : "bg-card border-border text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          <span>کاور لبه‌به‌لبه و افقی (Cover)</span>
+                        </button>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground leading-4">
+                        💡 حالت «کاور لبه‌به‌لبه و افقی» کادر بالای کارت را بدون حاشیه پر می‌کند (پیشنهادی برای پلنرها، اسکرین‌شات‌ها و تصاویر افقی).
+                      </p>
                     </div>
                   </div>
                 </div>

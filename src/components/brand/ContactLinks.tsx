@@ -15,7 +15,7 @@ export function whatsappUrlWithText(text: string) {
 export function ContactLinks({ className = "" }: { className?: string }) {
   const { instagramUrl } = useDynamicProducts();
   const activeInstagram = instagramUrl || CONTACT_INSTAGRAM_URL;
-  const igHandle = activeInstagram.replace(/\/$/, "").split("/").pop() || "vaich_ir";
+  const igHandle = activeInstagram.replace(/\?.*$/, "").replace(/\/$/, "").split("/").pop() || "vaich_ir";
 
   const contactMethods = [
     {

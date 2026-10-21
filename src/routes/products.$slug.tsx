@@ -64,7 +64,7 @@ function ProductDetail() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
 
-      <Section className="aurora">
+      <Section className="aurora overflow-x-hidden">
         {/* Breadcrumb Navigation */}
         <nav aria-label="مسیر راهنما" className="mb-6 flex items-center gap-2 text-xs text-muted-foreground">
           <Link to="/" className="hover:text-foreground transition-colors">
@@ -80,14 +80,14 @@ function ProductDetail() {
           </span>
         </nav>
 
-        <div className="glass-panel rounded-4xl p-6 sm:p-10">
-          <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
-            <div>
-              <div className="flex items-center gap-4">
-                <ServiceIcon slug={product.slug} iconUrl={product.iconUrl} className="h-16 w-16 sm:h-20 sm:w-20" />
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h1 className="truncate text-2xl font-extrabold sm:text-3xl text-foreground">
+        <div className="glass-panel rounded-3xl sm:rounded-4xl p-4 sm:p-8 overflow-hidden">
+          <div className="grid gap-6 sm:gap-8 lg:grid-cols-[1.4fr_1fr]">
+            <div className="min-w-0">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <ServiceIcon slug={product.slug} iconUrl={product.iconUrl} className="h-16 w-16 sm:h-20 sm:w-20 shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h1 className="text-xl sm:text-3xl font-extrabold text-foreground break-words">
                       {product.name}
                     </h1>
                     {product.badge && (
@@ -96,7 +96,7 @@ function ProductDetail() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-2 text-sm text-muted-foreground">{product.description}</p>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground break-words">{product.description}</p>
                 </div>
               </div>
 
@@ -109,7 +109,7 @@ function ProductDetail() {
                   {product.purchaseInfo.map((info) => (
                     <li
                       key={info}
-                      className="rounded-2xl border border-border bg-background/50 px-4 py-3 text-sm leading-7 text-muted-foreground"
+                      className="rounded-2xl border border-border bg-background/50 px-4 py-3 text-sm leading-7 text-muted-foreground break-words"
                     >
                       {info}
                     </li>
@@ -118,7 +118,7 @@ function ProductDetail() {
               </div>
             </div>
 
-            <aside className="h-fit rounded-3xl border border-border bg-card/70 p-6 shadow-lg">
+            <aside className="h-fit rounded-3xl border border-border bg-card/70 p-4 sm:p-6 shadow-lg min-w-0">
               <div className="flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">قیمت سرویس:</span>
                 {product.duration && (

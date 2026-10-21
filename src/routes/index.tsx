@@ -74,8 +74,11 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
             <span>مرجع تخصصی خدمات دیجیتالی و اشتراک‌های هوش مصنوعی</span>
           </div>
 
-          <h1 className="mt-6 text-3xl leading-[1.4] font-extrabold sm:text-5xl sm:leading-[1.3]">
-            خرید مستقیم و مطمئن <span className="gradient-text">خدمات دیجیتالی</span> و اشتراک‌های هوش مصنوعی
+          <h1 className="mt-5 text-2xl font-black tracking-tight sm:text-4xl lg:text-[2.6rem] leading-[1.45] sm:leading-[1.35] text-foreground">
+            خرید مستقیم و مطمئن{" "}
+            <span className="gradient-text font-black">
+              خدمات دیجیتال و اشتراک‌های هوش مصنوعی
+            </span>
           </h1>
 
           <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground sm:text-base font-normal">

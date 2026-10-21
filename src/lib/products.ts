@@ -24,6 +24,7 @@ export type Product = {
   categoryId?: string;
   service?: string;
   iconUrl?: string;
+  imageFit?: "contain" | "cover";
 };
 
 export const DEFAULT_CATEGORY_ROWS: ProductCategoryRow[] = [
@@ -649,8 +650,15 @@ export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
       }
     } catch (e) {}
 
-    // 2. Real-time fallback: GitHub contents API (without forbidden CORS headers)
-    if (!fetchedData) {
+    // 2. Real-time fallback: If static file is missing, stale, or lacks promoBanner/instagramUrl, pull direct from GitHub
+    const localUpdatedAt = localStorage.getItem("vaich_config_updated_at");
+    const isStaticStale =
+      !fetchedData ||
+      !fetchedData.promoBanner ||
+      !fetchedData.instagramUrl ||
+      (localUpdatedAt && fetchedData.updatedAt && new Date(localUpdatedAt) > new Date(fetchedData.updatedAt));
+
+    if (isStaticStale) {
       try {
         const ghRes = await fetch(
           `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main&_t=${Date.now()}`,

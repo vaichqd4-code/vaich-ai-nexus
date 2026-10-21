@@ -274,31 +274,35 @@ function Checkout() {
       </div>
 
       <Section
-        className="aurora"
+        className="aurora overflow-x-hidden"
         title="پرداخت و ارسال رسید"
         subtitle={`تکمیل سفارش ${product.name}`}
       >
-        <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-          <div className="space-y-5">
-            <div className="glass-panel rounded-3xl p-6">
-              <div className="flex items-center gap-4">
-                <ServiceIcon slug={product.slug} iconUrl={product.iconUrl} className="h-16 w-16 sm:h-20 sm:w-20" />
+        <div className="grid gap-6 lg:grid-cols-[1fr_360px] overflow-hidden">
+          <div className="space-y-5 min-w-0">
+            <div className="glass-panel rounded-3xl p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5 sm:gap-4 min-w-0">
+                  <ServiceIcon slug={product.slug} iconUrl={product.iconUrl} className="h-14 w-14 sm:h-18 sm:w-18 shrink-0" />
 
-                <div className="min-w-0">
-                  <p className="text-xs text-muted-foreground">محصول / خدمت</p>
-                  <h1 className="truncate text-xl font-bold">{product.name}</h1>
-                  <p className="mt-1 text-sm text-muted-foreground">{product.duration}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs text-muted-foreground">محصول / خدمت</p>
+                    <h1 className="text-lg sm:text-xl font-bold text-foreground break-words">{product.name}</h1>
+                    {product.duration && (
+                      <p className="mt-0.5 text-xs text-muted-foreground">{product.duration}</p>
+                    )}
+                  </div>
                 </div>
 
-                <div className="mr-auto text-left">
-                  <p className="text-xs text-muted-foreground">مبلغ قابل پرداخت</p>
-                  <p className="text-lg font-bold text-neon-blue">{formatPrice(product.price)}</p>
+                <div className="flex items-center justify-between sm:flex-col sm:items-end border-t border-border/50 pt-3 sm:border-0 sm:pt-0">
+                  <p className="text-xs text-muted-foreground">مبلغ قابل پرداخت:</p>
+                  <p className="text-lg sm:text-xl font-black text-primary">{formatPrice(product.price)}</p>
                 </div>
               </div>
             </div>
 
             {/* اطلاعات مشتری - حفظ کامل فیلدها و استایل‌ها */}
-            <div className="glass-panel rounded-3xl p-6">
+            <div className="glass-panel rounded-3xl p-4 sm:p-6">
               <h2 className="text-lg font-bold">اطلاعات مشتری</h2>
 
               <div className="mt-5 space-y-4">
