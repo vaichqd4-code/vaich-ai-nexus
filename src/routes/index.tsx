@@ -3,7 +3,7 @@ import { useEffect, useState, useRef, useMemo, lazy, Suspense } from "react";
 import { Section } from "@/components/layout/Section";
 import { ProductCard } from "@/components/product/ProductCard";
 import { NeonLink } from "@/components/ui/NeonButton";
-import { useDynamicProducts, type LayoutMode, type ProductCategoryRow, type Product } from "@/lib/products";
+import { useDynamicProducts, type LayoutMode, type ProductCategoryRow, type Product, type PromoBannerConfig } from "@/lib/products";
 
 // Code splitting below-the-fold landing page sections for 90+ Lighthouse Performance
 const Features = lazy(() => import("@/components/sections/Features").then((m) => ({ default: m.Features })));
@@ -45,27 +45,46 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-function Hero() {
+function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
+  const bannerImage = promoBanner?.imageUrl || "/hero-ai.webp";
+  const bannerAlt = promoBanner?.altText || "خرید مستقیم و مطمئن خدمات دیجیتالی و اشتراک‌های هوش مصنوعی VAICH";
+  const bannerLink = promoBanner?.linkUrl;
+
+  const imageElement = (
+    <div className="float-slow glow-strong overflow-hidden rounded-3xl sm:rounded-4xl border border-border shadow-2xl bg-card aspect-4/3 group">
+      <img
+        src={bannerImage}
+        alt={bannerAlt}
+        width={568}
+        height={426}
+        loading="eager"
+        fetchPriority="high"
+        decoding="async"
+        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+      />
+    </div>
+  );
+
   return (
     <section className="aurora relative overflow-hidden">
       <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-14 pb-8 sm:px-6 sm:pt-20 lg:grid-cols-2 lg:pt-24">
         <div className="rise-in">
           <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-secondary/60 px-4 py-1.5 text-xs font-semibold text-foreground shadow-xs">
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>فروشگاه معتبر اشتراک‌های تخصصی هوش مصنوعی</span>
+            <span>مرجع تخصصی خدمات دیجیتالی و اشتراک‌های هوش مصنوعی</span>
           </div>
 
           <h1 className="mt-6 text-3xl leading-[1.4] font-extrabold sm:text-5xl sm:leading-[1.3]">
-            خرید مستقیم و قانونی اشتراک‌های <span className="gradient-text">هوش مصنوعی</span>
+            خرید مستقیم و مطمئن <span className="gradient-text">خدمات دیجیتالی</span> و اشتراک‌های هوش مصنوعی
           </h1>
 
           <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground sm:text-base font-normal">
-            خرید مطمئن و تحویل فوری اکانت‌های رسمی ChatGPT Plus، Gemini Pro و Claude Pro با تضمین کامل سلامت اکانت.
+            خرید مطمئن و تحویل فوری اکانت‌های رسمی هوش مصنوعی (ChatGPT, Gemini, Claude)، پلنرهای تخصصی دیجیتال و انواع خدمات نوین آنلاین با تضمین ۱۰۰٪ کیفیت و اصالت.
           </p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <NeonLink to="/products" size="lg">
-              مشاهده و خرید اشتراک‌ها
+              مشاهده محصولات و خدمات
             </NeonLink>
             <NeonLink to="/support" variant="outline" size="lg">
               پشتیبانی آنلاین
@@ -85,7 +104,7 @@ function Hero() {
               <span className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-white text-[10px]">
                 ✓
               </span>
-              <span>تضمین ۱۰۰٪ سلامت اکانت</span>
+              <span>تضمین ۱۰۰٪ اصالت و کیفیت</span>
             </div>
 
             <div className="inline-flex items-center gap-1.5 rounded-full border border-purple-500/25 bg-secondary/70 px-3.5 py-1.5 text-xs font-medium text-foreground backdrop-blur-md">
@@ -98,18 +117,18 @@ function Hero() {
         </div>
 
         <div className="relative">
-          <div className="float-slow glow-strong overflow-hidden rounded-3xl sm:rounded-4xl border border-border shadow-2xl bg-card aspect-4/3">
-            <img
-              src="/hero-ai.webp"
-              alt="خرید اشتراک های هوش مصنوعی VAICH"
-              width={568}
-              height={426}
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-              className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.02]"
-            />
-          </div>
+          {bannerLink ? (
+            <a
+              href={bannerLink}
+              target={bannerLink.startsWith("http") ? "_blank" : undefined}
+              rel={bannerLink.startsWith("http") ? "noopener noreferrer" : undefined}
+              className="block cursor-pointer focus:outline-none"
+            >
+              {imageElement}
+            </a>
+          ) : (
+            imageElement
+          )}
         </div>
       </div>
     </section>
@@ -218,7 +237,7 @@ function ProductRowSection({
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
-  const { products, rows, layout } = useDynamicProducts();
+  const { products, rows, layout, promoBanner } = useDynamicProducts();
 
   // Search listener from header
   useEffect(() => {
@@ -251,7 +270,7 @@ function Home() {
 
   return (
     <>
-      <Hero />
+      <Hero promoBanner={promoBanner} />
 
       {isSearching ? (
         <Section

@@ -8,10 +8,13 @@ import {
   DEFAULT_ADMIN_PIN,
   MASTER_ADMIN_EMAIL,
   DEFAULT_CATEGORY_ROWS,
+  DEFAULT_PROMO_BANNER,
+  DEFAULT_INSTAGRAM_URL,
   type Product,
   type ProductCategoryRow,
   type LayoutMode,
   type AdminUser,
+  type PromoBannerConfig,
 } from "@/lib/products";
 import { ServiceIcon, getProductLogo, PRESET_LOGOS } from "@/components/brand/ServiceIcon";
 import {
@@ -41,6 +44,7 @@ import {
   UserCheck,
   Upload,
   ImageIcon,
+  Instagram,
 } from "lucide-react";
 
 // Client-side image compressor for mobile and desktop uploads
@@ -101,11 +105,15 @@ export function AdminPage() {
     layout,
     adminUsers,
     masterPin,
+    promoBanner,
+    instagramUrl,
     setLayout,
     setProducts,
     setRows,
     setAdminUsers,
     setMasterPin,
+    setPromoBanner,
+    setInstagramUrl,
     resetToDefault,
     publishToCloud,
     isCloudSyncing,
@@ -118,7 +126,25 @@ export function AdminPage() {
   const [inputEmail, setInputEmail] = useState("");
   const [inputPin, setInputPin] = useState("");
   const [authError, setAuthError] = useState("");
-  const [activeTab, setActiveTab] = useState<"products" | "rows" | "layout" | "admins" | "settings">("products");
+  const [activeTab, setActiveTab] = useState<"products" | "rows" | "layout" | "admins" | "banner" | "settings">("products");
+
+  // Promo Banner State
+  const [bannerConfig, setBannerConfig] = useState<PromoBannerConfig>(promoBanner || DEFAULT_PROMO_BANNER);
+  const [isCompressingBanner, setIsCompressingBanner] = useState(false);
+  const [bannerUploadError, setBannerUploadError] = useState("");
+  const [bannerSaveMsg, setBannerSaveMsg] = useState("");
+
+  // Instagram Settings State
+  const [instagramInput, setInstagramInput] = useState(instagramUrl || DEFAULT_INSTAGRAM_URL);
+  const [instagramSaveMsg, setInstagramSaveMsg] = useState("");
+
+  useEffect(() => {
+    if (promoBanner) setBannerConfig(promoBanner);
+  }, [promoBanner]);
+
+  useEffect(() => {
+    if (instagramUrl) setInstagramInput(instagramUrl);
+  }, [instagramUrl]);
 
   // Admin Management Modal State
   const [isEditingAdmin, setIsEditingAdmin] = useState(false);
@@ -134,6 +160,70 @@ export function AdminPage() {
   const [purchaseInfoText, setPurchaseInfoText] = useState("");
   const [isCompressingImage, setIsCompressingImage] = useState(false);
   const [imageUploadError, setImageUploadError] = useState("");
+
+  // Handle client-side promo banner upload
+  const handleBannerFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setBannerUploadError("لطفاً یک فایل تصویری (PNG, JPG, WebP) انتخاب کنید.");
+      return;
+    }
+
+    try {
+      setIsCompressingBanner(true);
+      setBannerUploadError("");
+      const compressedDataUrl = await compressAndResizeImage(file, 1024, 768, 0.85);
+      setBannerConfig((prev) => ({ ...prev, imageUrl: compressedDataUrl }));
+    } catch (err: any) {
+      setBannerUploadError(err.message || "خطا در پردازش تصویر بنر");
+    } finally {
+      setIsCompressingBanner(false);
+    }
+  };
+
+  const handleSaveBanner = async () => {
+    setPromoBanner(bannerConfig);
+    setBannerSaveMsg("در حال ذخیره و انتشار بنر...");
+    const res = await publishToCloud({ promoBanner: bannerConfig });
+    if (res.success) {
+      setBannerSaveMsg("بنر تبلیغاتی با موفقیت در سراسر سایت و کلودفلر منتشر شد! ✓");
+      setTimeout(() => setBannerSaveMsg(""), 4000);
+    } else {
+      setBannerSaveMsg(`خطا در ذخیره ابری: ${res.error || "نامشخص"}`);
+    }
+  };
+
+  const handleResetBanner = async () => {
+    const defaultBanner: PromoBannerConfig = {
+      imageUrl: "/hero-ai.webp",
+      linkUrl: "/products",
+      altText: "خرید مستقیم و مطمئن خدمات دیجیتالی و اشتراک‌های هوش مصنوعی VAICH",
+    };
+    setBannerConfig(defaultBanner);
+    setPromoBanner(defaultBanner);
+    setBannerSaveMsg("در حال بازنشانی به بنر پیش‌فرض...");
+    const res = await publishToCloud({ promoBanner: defaultBanner });
+    if (res.success) {
+      setBannerSaveMsg("بنر پیش‌فرض سیستم بازگردانی و منتشر شد! ✓");
+      setTimeout(() => setBannerSaveMsg(""), 4000);
+    } else {
+      setBannerSaveMsg(`خطا: ${res.error || "نامشخص"}`);
+    }
+  };
+
+  const handleSaveInstagram = async () => {
+    setInstagramUrl(instagramInput);
+    setInstagramSaveMsg("در حال ذخیره...");
+    const res = await publishToCloud({ instagramUrl: instagramInput });
+    if (res.success) {
+      setInstagramSaveMsg("لینک پیج اینستاگرام با موفقیت ثبت و منتشر شد! ✓");
+      setTimeout(() => setInstagramSaveMsg(""), 4000);
+    } else {
+      setInstagramSaveMsg(`خطا: ${res.error || "نامشخص"}`);
+    }
+  };
 
   // Handle client-side image file upload & compression
   const handleImageFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -759,6 +849,19 @@ export function AdminPage() {
 
           <button
             type="button"
+            onClick={() => setActiveTab("banner")}
+            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
+              activeTab === "banner"
+                ? "bg-primary text-white shadow-md"
+                : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <ImageIcon className="h-4 w-4" />
+            <span>عکس تبلیغات (بنر هیرو)</span>
+          </button>
+
+          <button
+            type="button"
             onClick={() => setActiveTab("settings")}
             className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
               activeTab === "settings"
@@ -767,7 +870,7 @@ export function AdminPage() {
             }`}
           >
             <KeyRound className="h-4 w-4" />
-            <span>رمز عبور و تنظیمات</span>
+            <span>تنظیمات و اینستاگرام</span>
           </button>
         </div>
 
@@ -1287,9 +1390,206 @@ export function AdminPage() {
           </div>
         )}
 
+        {/* ---------------- TAB: HERO PROMO BANNER ---------------- */}
+        {activeTab === "banner" && (
+          <div className="mt-6 space-y-6">
+            <div className="rounded-3xl border border-border/80 bg-card p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                    <ImageIcon className="h-5 w-5 text-primary" />
+                    <span>مدیریت عکس تبلیغات و بنر صفحه اصلی (هیرو)</span>
+                  </h2>
+                  <p className="mt-1 text-xs text-muted-foreground leading-5">
+                    می‌توانید عکس هیرو بالای صفحه اصلی را تغییر دهید، بنر تبلیغاتی یا معرفی محصول جدید بارگذاری کنید و لینک دلخواه برای کلیک روی بنر تعیین کنید.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={handleResetBanner}
+                    className="inline-flex items-center gap-1.5 rounded-2xl border border-border bg-secondary/50 px-4 py-2.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-all cursor-pointer"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5" />
+                    <span>بازنشانی به بنر پیش‌فرض</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSaveBanner}
+                    className="neon-gradient inline-flex items-center gap-1.5 rounded-2xl px-5 py-2.5 text-xs font-extrabold text-white shadow-md transition-transform hover:scale-105 cursor-pointer"
+                  >
+                    <Check className="h-4 w-4" />
+                    <span>ذخیره و انتشار بنر</span>
+                  </button>
+                </div>
+              </div>
+
+              {bannerSaveMsg && (
+                <div className="mt-4 rounded-2xl border border-primary/30 bg-primary/10 p-3 text-xs font-bold text-primary">
+                  {bannerSaveMsg}
+                </div>
+              )}
+
+              {/* Banner Live Preview and Controls */}
+              <div className="mt-6 grid gap-6 lg:grid-cols-12">
+                {/* Preview Frame */}
+                <div className="lg:col-span-7 flex flex-col justify-center">
+                  <span className="text-xs font-bold text-foreground mb-2 block">
+                    پیش‌نمایش زنده در صفحه اصلی:
+                  </span>
+                  <div className="relative aspect-4/3 w-full overflow-hidden rounded-3xl border border-border/70 bg-secondary/30 shadow-xl group">
+                    <img
+                      src={bannerConfig.imageUrl || "/hero-ai.webp"}
+                      alt={bannerConfig.altText || "پیش‌نمایش بنر تبلیغاتی"}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-102"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                    <div className="absolute bottom-3 right-3 left-3 flex items-center justify-between text-[11px] text-white/90 font-medium">
+                      <span className="bg-black/60 backdrop-blur-xs px-2.5 py-1 rounded-xl">
+                        {bannerConfig.linkUrl ? `لینک مقصد: ${bannerConfig.linkUrl}` : "بدون لینک مقصد (فقط نمایش)"}
+                      </span>
+                      <span className="bg-primary/80 backdrop-blur-xs px-2.5 py-1 rounded-xl font-bold">
+                        بنر فعال هیرو
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Form Controls */}
+                <div className="lg:col-span-5 space-y-4">
+                  {/* Upload file */}
+                  <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-3">
+                    <span className="text-xs font-bold text-foreground block">
+                      آپلود تصویر بنر از سیستم یا موبایل:
+                    </span>
+                    <label className="cursor-pointer flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-primary/50 bg-primary/5 p-5 text-center hover:bg-primary/10 transition-all">
+                      <Upload className="h-6 w-6 text-primary" />
+                      <span className="text-xs font-bold text-primary">
+                        {isCompressingBanner
+                          ? "در حال پردازش و بهینه‌سازی بنر..."
+                          : "انتخاب فایل تصویر جدید"}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground">
+                        فرمت‌های PNG، JPG، WebP (بهینه‌سازی خودکار انجام می‌شود)
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        disabled={isCompressingBanner}
+                        onChange={handleBannerFileUpload}
+                        className="hidden"
+                      />
+                    </label>
+
+                    {bannerUploadError && (
+                      <p className="text-[11px] text-rose-500 font-medium">
+                        {bannerUploadError}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Direct Image URL */}
+                  <div>
+                    <label className="block text-xs font-medium text-foreground mb-1">
+                      یا آدرس اینترنتی تصویر مستقیم (URL):
+                    </label>
+                    <input
+                      type="text"
+                      dir="ltr"
+                      value={bannerConfig.imageUrl || ""}
+                      onChange={(e) =>
+                        setBannerConfig((prev) => ({ ...prev, imageUrl: e.target.value }))
+                      }
+                      placeholder="/hero-ai.webp یا https://..."
+                      className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-xs outline-none focus:border-primary"
+                    />
+                  </div>
+
+                  {/* Destination Link */}
+                  <div>
+                    <label className="block text-xs font-medium text-foreground mb-1">
+                      لینک مقصد هنگام کلیک کاربر روی بنر (اختیاری):
+                    </label>
+                    <input
+                      type="text"
+                      dir="ltr"
+                      value={bannerConfig.linkUrl || ""}
+                      onChange={(e) =>
+                        setBannerConfig((prev) => ({ ...prev, linkUrl: e.target.value }))
+                      }
+                      placeholder="مثلاً: /products یا https://t.me/..."
+                      className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-xs outline-none focus:border-primary"
+                    />
+                    <p className="mt-1 text-[10px] text-muted-foreground">
+                      اگر خالی باشد، بنر فقط یک تصویر جذاب بدون تغییر صفحه خواهد بود.
+                    </p>
+                  </div>
+
+                  {/* Alt text */}
+                  <div>
+                    <label className="block text-xs font-medium text-foreground mb-1">
+                      متن جایگزین (SEO / Alt Text):
+                    </label>
+                    <input
+                      type="text"
+                      value={bannerConfig.altText || ""}
+                      onChange={(e) =>
+                        setBannerConfig((prev) => ({ ...prev, altText: e.target.value }))
+                      }
+                      placeholder="توضیح عکس برای موتورهای جستجو"
+                      className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-xs outline-none focus:border-primary"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ---------------- TAB 5: SETTINGS ---------------- */}
         {activeTab === "settings" && (
-          <div className="mt-6 grid gap-6 sm:grid-cols-2">
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Instagram Link Setting */}
+            <div className="rounded-3xl border border-border/80 bg-card p-6 space-y-4">
+              <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+                <Instagram className="h-4 w-4 text-primary" />
+                <span>پیج اینستاگرام سایت</span>
+              </h2>
+              <p className="text-xs text-muted-foreground leading-5">
+                آدرس رسمی پیج اینستاگرام را وارد کنید. تمام دکمه‌ها و لینک‌های اینستاگرام سایت به این آدرس هدایت می‌شوند.
+              </p>
+
+              {instagramSaveMsg && (
+                <div className="rounded-xl border border-primary/30 bg-primary/10 p-2.5 text-xs font-semibold text-primary">
+                  {instagramSaveMsg}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">
+                  آدرس پیج اینستاگرام:
+                </label>
+                <input
+                  type="text"
+                  dir="ltr"
+                  value={instagramInput}
+                  onChange={(e) => setInstagramInput(e.target.value)}
+                  placeholder="https://www.instagram.com/vaich_ir"
+                  className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-xs outline-none focus:border-primary"
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={handleSaveInstagram}
+                className="rounded-2xl bg-primary px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-all inline-flex items-center gap-1.5 cursor-pointer"
+              >
+                <Check className="h-3.5 w-3.5" />
+                <span>ذخیره و انتشار پیج</span>
+              </button>
+            </div>
+
             {/* Change Master PIN */}
             <div className="rounded-3xl border border-border/80 bg-card p-6">
               <h2 className="text-base font-bold text-foreground flex items-center gap-2">
@@ -1321,7 +1621,7 @@ export function AdminPage() {
                 </div>
                 <button
                   type="submit"
-                  className="rounded-2xl bg-primary px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-all inline-flex items-center gap-1.5"
+                  className="rounded-2xl bg-primary px-5 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-all inline-flex items-center gap-1.5 cursor-pointer"
                 >
                   <Check className="h-3.5 w-3.5" />
                   <span>ذخیره و همگام‌سازی ابری رمز جدید</span>
@@ -1342,7 +1642,7 @@ export function AdminPage() {
               <button
                 type="button"
                 onClick={handleResetToDefault}
-                className="flex items-center justify-center gap-2 rounded-2xl border border-rose-500/30 bg-rose-500/10 py-3 text-xs font-bold text-rose-500 hover:bg-rose-500 hover:text-white transition-all w-full"
+                className="flex items-center justify-center gap-2 rounded-2xl border border-rose-500/30 bg-rose-500/10 py-3 text-xs font-bold text-rose-500 hover:bg-rose-500 hover:text-white transition-all w-full cursor-pointer"
               >
                 <AlertTriangle className="h-4 w-4" />
                 <span>بازنشانی به محصولات و ردیف‌های پیش‌فرض VAICH</span>
@@ -1669,6 +1969,13 @@ export function AdminPage() {
                         className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors"
                       >
                         Claude
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setEditProduct({ ...editProduct, iconUrl: "/vaich-logo.webp" })}
+                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors text-primary font-bold"
+                      >
+                        لوگوی VAICH (پلنر و سایر)
                       </button>
                     </div>
 

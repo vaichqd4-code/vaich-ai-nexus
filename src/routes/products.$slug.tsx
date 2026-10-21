@@ -72,7 +72,7 @@ function ProductDetail() {
           </Link>
           <span>/</span>
           <Link to="/products" className="hover:text-foreground transition-colors">
-            اشتراک‌های هوش مصنوعی
+            محصولات و خدمات
           </Link>
           <span>/</span>
           <span className="font-semibold text-foreground truncate max-w-[200px] sm:max-w-none">
@@ -84,11 +84,11 @@ function ProductDetail() {
           <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
             <div>
               <div className="flex items-center gap-4">
-                <ServiceIcon slug={product.slug} iconUrl={product.iconUrl} className="h-16 w-16" />
+                <ServiceIcon slug={product.slug} iconUrl={product.iconUrl} className="h-16 w-16 sm:h-20 sm:w-20" />
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
                     <h1 className="truncate text-2xl font-extrabold sm:text-3xl text-foreground">
-                      اشتراک {product.name}
+                      {product.name}
                     </h1>
                     {product.badge && (
                       <span className="rounded-full bg-linear-to-r from-primary to-accent px-2.5 py-0.5 text-xs font-bold text-white shadow-xs">

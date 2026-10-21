@@ -165,5 +165,11 @@
       "createdAt": "2026-10-15T00:00:00.000Z"
     }
   ],
-  "updatedAt": "2026-10-20T15:51:39.192Z"
+  "promoBanner": {
+    "imageUrl": "/hero-ai.webp",
+    "linkUrl": "/products",
+    "altText": "خرید مستقیم و مطمئن خدمات دیجیتالی و اشتراک‌های هوش مصنوعی VAICH"
+  },
+  "instagramUrl": "https://www.instagram.com/vaich_ir",
+  "updatedAt": "2026-10-21T08:00:00.000Z"
 }

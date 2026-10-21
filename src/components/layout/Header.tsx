@@ -1,32 +1,45 @@
-import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { Link, useRouter } from "@tanstack/react-router";
+import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Logo } from "@/components/brand/Logo";
 import { NeonLink } from "@/components/ui/NeonButton";
 import { cn } from "@/lib/utils";
-import { Search, X } from "lucide-react";
-
-const navItems = [
-  { to: "/", label: "خانه" },
-  { to: "/products", label: "اشتراک‌های هوش مصنوعی" },
-  { to: "/why", label: "چرا VAICH" },
-  { to: "/faq", label: "سوالات متداول" },
-  { to: "/support", label: "پشتیبانی" },
-] as const;
+import { Search, X, ChevronDown, Layers, Sparkles } from "lucide-react";
+import { useDynamicProducts } from "@/lib/products";
 
 type Theme = "dark" | "light";
 
 export function Header() {
+  const router = useRouter();
+  const { rows } = useDynamicProducts();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [theme, setTheme] = useState<Theme>("light");
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [drawerCategoriesOpen, setDrawerCategoriesOpen] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Close categories dropdown on outside click
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setCategoriesOpen(false);
+      }
+    };
+    if (categoriesOpen) {
+      document.addEventListener("mousedown", handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [categoriesOpen]);
 
   useEffect(() => {
     if (open) {
@@ -111,17 +124,96 @@ export function Header() {
           className="hidden justify-center lg:flex"
         >
           <ul className="flex items-center gap-1">
-            {navItems.map((item) => (
-              <li key={item.to}>
-                <Link
-                  to={item.to}
-                  activeOptions={{ exact: item.to === "/" }}
-                  className="rounded-full px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground data-[status=active]:text-foreground"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+            <li>
+              <Link
+                to="/"
+                activeOptions={{ exact: true }}
+                className="rounded-full px-3.5 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground data-[status=active]:text-foreground font-medium"
+              >
+                خانه
+              </Link>
+            </li>
+
+            {/* دراپ‌داون دسته‌بندی‌ها و سایر محصولات */}
+            <li className="relative" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => setCategoriesOpen((prev) => !prev)}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm transition-colors font-medium",
+                  categoriesOpen
+                    ? "bg-secondary text-foreground font-bold"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <span>سایر محصولات</span>
+                <ChevronDown
+                  className={cn("h-3.5 w-3.5 transition-transform duration-200", categoriesOpen && "rotate-180")}
+                />
+              </button>
+
+              {categoriesOpen && (
+                <div className="absolute right-0 top-full mt-2 w-60 rounded-2xl border border-border/80 bg-background/95 p-2 shadow-2xl backdrop-blur-xl z-50 animate-in fade-in zoom-in-95 duration-150">
+                  <p className="px-3 py-1.5 text-[11px] font-bold text-muted-foreground">دسته‌بندی‌های موجود:</p>
+                  <div className="flex flex-col gap-1">
+                    {rows.map((row) => (
+                      <a
+                        key={row.id}
+                        href={`/#${row.id}`}
+                        onClick={(e) => {
+                          setCategoriesOpen(false);
+                          const el = document.getElementById(row.id);
+                          if (el) {
+                            e.preventDefault();
+                            el.scrollIntoView({ behavior: "smooth" });
+                          }
+                        }}
+                        className="flex items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold text-foreground hover:bg-secondary/70 transition-colors"
+                      >
+                        <span className="truncate">{row.title}</span>
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+                      </a>
+                    ))}
+                    <div className="my-1 border-t border-border/60" />
+                    <Link
+                      to="/products"
+                      onClick={() => setCategoriesOpen(false)}
+                      className="flex items-center justify-between rounded-xl px-3 py-2 text-xs font-bold text-primary hover:bg-primary/10 transition-colors"
+                    >
+                      <span>مشاهده همه محصولات</span>
+                      <span>←</span>
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </li>
+
+            <li>
+              <Link
+                to="/why"
+                className="rounded-full px-3.5 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground data-[status=active]:text-foreground font-medium"
+              >
+                چرا VAICH
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                to="/faq"
+                className="rounded-full px-3.5 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground data-[status=active]:text-foreground font-medium"
+              >
+                سوالات متداول
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                to="/support"
+                className="rounded-full px-3.5 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground data-[status=active]:text-foreground font-medium"
+              >
+                پشتیبانی
+              </Link>
+            </li>
           </ul>
         </nav>
 
@@ -222,7 +314,7 @@ export function Header() {
             size="sm"
             className="hidden sm:inline-flex"
           >
-            خرید اشتراک
+            خرید محصول
           </NeonLink>
 
           <button
@@ -284,23 +376,91 @@ export function Header() {
             </div>
 
             {/* Navigation Links — Full Height Scrollable List */}
-            <nav className="flex-1 overflow-y-auto py-5">
-              <ul className="flex flex-col gap-2">
-                {navItems.map((item) => (
-                  <li key={item.to}>
-                    <Link
-                      to={item.to}
-                      onClick={() => setOpen(false)}
-                      activeOptions={{ exact: item.to === "/" }}
-                      className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-muted-foreground transition-all hover:bg-secondary/70 hover:text-foreground data-[status=active]:bg-primary/10 data-[status=active]:text-primary data-[status=active]:font-extrabold border border-transparent data-[status=active]:border-primary/20"
-                    >
-                      <span>{item.label}</span>
-                      <svg viewBox="0 0 24 24" className="h-4 w-4 opacity-50" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </Link>
-                  </li>
-                ))}
+            <nav className="flex-1 overflow-y-auto py-4">
+              <ul className="flex flex-col gap-1.5">
+                <li>
+                  <Link
+                    to="/"
+                    onClick={() => setOpen(false)}
+                    activeOptions={{ exact: true }}
+                    className="flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-all hover:bg-secondary/70 hover:text-foreground data-[status=active]:bg-primary/10 data-[status=active]:text-primary data-[status=active]:font-extrabold border border-transparent data-[status=active]:border-primary/20"
+                  >
+                    <span>خانه</span>
+                    <svg viewBox="0 0 24 24" className="h-4 w-4 opacity-50" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </Link>
+                </li>
+
+                {/* دسته بندی ها و سایر محصولات در منوی موبایل */}
+                <li className="rounded-2xl border border-border/70 bg-secondary/30 p-2 my-1">
+                  <div className="flex items-center justify-between px-2 py-1 text-xs font-bold text-foreground">
+                    <span className="flex items-center gap-1.5">
+                      <Layers className="h-3.5 w-3.5 text-primary" />
+                      <span>سایر محصولات و دسته‌ها:</span>
+                    </span>
+                    <span className="text-[10px] text-muted-foreground font-normal">{rows.length} دسته</span>
+                  </div>
+                  <div className="mt-1 flex flex-col gap-1">
+                    {rows.map((row) => (
+                      <a
+                        key={row.id}
+                        href={`/#${row.id}`}
+                        onClick={(e) => {
+                          setOpen(false);
+                          const el = document.getElementById(row.id);
+                          if (el) {
+                            e.preventDefault();
+                            el.scrollIntoView({ behavior: "smooth" });
+                          }
+                        }}
+                        className="flex items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold text-muted-foreground hover:bg-secondary/80 hover:text-foreground transition-all"
+                      >
+                        <span className="truncate">{row.title}</span>
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+                      </a>
+                    ))}
+                  </div>
+                </li>
+
+                <li>
+                  <Link
+                    to="/why"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-all hover:bg-secondary/70 hover:text-foreground data-[status=active]:bg-primary/10 data-[status=active]:text-primary data-[status=active]:font-extrabold border border-transparent data-[status=active]:border-primary/20"
+                  >
+                    <span>چرا VAICH</span>
+                    <svg viewBox="0 0 24 24" className="h-4 w-4 opacity-50" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to="/faq"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-all hover:bg-secondary/70 hover:text-foreground data-[status=active]:bg-primary/10 data-[status=active]:text-primary data-[status=active]:font-extrabold border border-transparent data-[status=active]:border-primary/20"
+                  >
+                    <span>سوالات متداول</span>
+                    <svg viewBox="0 0 24 24" className="h-4 w-4 opacity-50" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to="/support"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-all hover:bg-secondary/70 hover:text-foreground data-[status=active]:bg-primary/10 data-[status=active]:text-primary data-[status=active]:font-extrabold border border-transparent data-[status=active]:border-primary/20"
+                  >
+                    <span>پشتیبانی</span>
+                    <svg viewBox="0 0 24 24" className="h-4 w-4 opacity-50" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </Link>
+                </li>
               </ul>
             </nav>
 
@@ -324,7 +484,7 @@ export function Header() {
                 size="md"
                 className="w-full text-center py-2.5 font-bold"
               >
-                مشاهده و خرید اشتراک‌ها
+                مشاهده و خرید محصولات
               </NeonLink>
             </div>
           </aside>

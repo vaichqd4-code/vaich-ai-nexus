@@ -282,16 +282,16 @@ function Checkout() {
           <div className="space-y-5">
             <div className="glass-panel rounded-3xl p-6">
               <div className="flex items-center gap-4">
-                <ServiceIcon slug={product.slug} />
+                <ServiceIcon slug={product.slug} iconUrl={product.iconUrl} className="h-16 w-16 sm:h-20 sm:w-20" />
 
                 <div className="min-w-0">
-                  <p className="text-xs text-muted-foreground">سرویس</p>
+                  <p className="text-xs text-muted-foreground">محصول / خدمت</p>
                   <h1 className="truncate text-xl font-bold">{product.name}</h1>
                   <p className="mt-1 text-sm text-muted-foreground">{product.duration}</p>
                 </div>
 
                 <div className="mr-auto text-left">
-                  <p className="text-xs text-muted-foreground">مبلغ</p>
+                  <p className="text-xs text-muted-foreground">مبلغ قابل پرداخت</p>
                   <p className="text-lg font-bold text-neon-blue">{formatPrice(product.price)}</p>
                 </div>
               </div>

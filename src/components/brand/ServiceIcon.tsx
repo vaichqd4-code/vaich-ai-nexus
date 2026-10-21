@@ -11,7 +11,7 @@ export const PRESET_LOGOS: Record<string, string> = {
 };
 
 export function getProductLogo(slug: string, iconUrl?: string): string | undefined {
-  if (iconUrl) return iconUrl;
+  if (iconUrl && iconUrl.trim().length > 0) return iconUrl.trim();
   if (!slug) return undefined;
   if (PRESET_LOGOS[slug]) return PRESET_LOGOS[slug];
 
@@ -34,12 +34,13 @@ export function ServiceIcon({
   imgClassName?: string;
 }) {
   const logo = getProductLogo(slug, iconUrl);
-  const initial = slug ? slug.charAt(0).toUpperCase() : "AI";
+  const cleanSlug = slug ? slug.replace(/^vaich[-_]?/i, "") : "";
+  const initial = cleanSlug ? cleanSlug.charAt(0).toUpperCase() : "AI";
 
   return (
     <span
       className={cn(
-        "grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-border/80 bg-secondary/60 shadow-[0_0_28px_-16px_var(--neon-blue)] transition-all",
+        "grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-border/80 bg-linear-to-b from-secondary/70 to-secondary/40 p-2 shadow-[0_0_28px_-16px_var(--neon-blue)] transition-all overflow-hidden",
         className,
       )}
     >
@@ -47,14 +48,14 @@ export function ServiceIcon({
         <img
           src={logo}
           alt={slug}
-          width={40}
-          height={40}
+          width={48}
+          height={48}
           decoding="async"
-          className={cn("h-10 w-10 rounded-xl object-contain", imgClassName)}
+          className={cn("max-h-full max-w-full rounded-xl object-contain drop-shadow-sm", imgClassName)}
           loading="lazy"
         />
       ) : (
-        <span className="text-neon-blue text-xl font-black">
+        <span className="text-neon-blue text-lg font-black">
           {initial}
         </span>
       )}
