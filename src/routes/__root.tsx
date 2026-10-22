@@ -79,10 +79,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=5" },
-      { title: "VAICH | فروشگاه معتبر اشتراک‌های تخصصی هوش مصنوعی" },
+      { title: "VAICH | مرجع خدمات دیجیتال و اشتراک‌های هوش مصنوعی" },
       {
         name: "description",
-        content: "خرید آنلاین، قانونی و با تحویل فوری اشتراک‌های هوش مصنوعی ChatGPT Plus، Gemini Pro و Claude Pro با ضمانت سلامت اکانت در فروشگاه VAICH.",
+        content: "خرید آنلاین، قانونی و با تحویل فوری اشتراک‌های هوش مصنوعی (ChatGPT, Gemini, Claude)، پلنرهای تخصصی دیجیتال و خدمات آنلاین در فروشگاه VAICH.",
       },
       { name: "keywords", content: "خرید اکانت chatgpt, خرید اشتراک gemini pro, خرید اکانت claude pro, خرید هوش مصنوعی, vaich" },
       { name: "author", content: "VAICH" },

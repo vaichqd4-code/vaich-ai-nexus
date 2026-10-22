@@ -19,18 +19,18 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "خرید آنلاین و ارزان اشتراک‌های هوش مصنوعی با تحویل سریع؛ خرید قانونی اکانت ChatGPT Plus، اشتراک Gemini Pro و Claude Pro با ضمانت ۱۰۰٪ سلامت اکانت در VAICH.",
+          "مرجع تخصصی خدمات دیجیتال و خرید مستقیم اشتراک‌های هوش مصنوعی با تحویل فوری؛ خرید قانونی اکانت ChatGPT Plus، اشتراک Gemini Pro، Claude Pro و پلنرهای تخصصی با تضمین ۱۰۰٪ در VAICH.",
       },
       {
         name: "keywords",
         content:
-          "خرید اکانت chatgpt plus, خرید اشتراک چت جی پی تی, خرید اکانت gemini pro, خرید اشتراک جمینای, خرید اکانت claude pro, خرید اشتراک هوش مصنوعی, اکانت chatgpt 4o, خرید هوش مصنوعی ارزان, vaich",
+          "خرید اکانت chatgpt plus, خرید اشتراک چت جی پی تی, خرید اکانت gemini pro, خرید اشتراک جمینای, خرید اکانت claude pro, خرید اشتراک هوش مصنوعی, پلنر برنامه ریزی, خدمات دیجیتال, vaich",
       },
-      { property: "og:title", content: "خرید اشتراک هوش مصنوعی | اکانت چت جی پی تی، جمینای، کلود | VAICH" },
+      { property: "og:title", content: "VAICH | مرجع خدمات دیجیتال و خرید اشتراک‌های هوش مصنوعی" },
       {
         property: "og:description",
         content:
-          "خرید قانونی و تحویل سریع اکانت‌های هوش مصنوعی (ChatGPT Plus, Gemini Pro, Claude Pro) با قیمت شفاف و گارانتی کامل در VAICH.",
+          "خرید مستقیم، تحویل فوری و ضمانت پایداری اشتراک‌های هوش مصنوعی (ChatGPT Plus, Gemini Pro, Claude Pro) و ابزارهای دیجیتال در VAICH.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://vaich.ir" },
@@ -74,15 +74,16 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
             <span>مرجع تخصصی خدمات دیجیتالی و اشتراک‌های هوش مصنوعی</span>
           </div>
 
-          <h1 className="mt-5 text-2xl font-black tracking-tight sm:text-4xl lg:text-[2.6rem] leading-[1.45] sm:leading-[1.35] text-foreground">
+          <h1 className="mt-4 text-2xl font-black sm:text-4xl lg:text-[2.75rem] leading-[1.3] text-foreground tracking-tight">
             خرید مستقیم و مطمئن{" "}
-            <span className="gradient-text font-black">
-              خدمات دیجیتال و اشتراک‌های هوش مصنوعی
+            <span className="gradient-text">اشتراک‌های هوش مصنوعی</span>
+            <span className="block mt-1 sm:mt-1.5 text-xl sm:text-3xl lg:text-4xl font-extrabold text-foreground/90">
+              و ابزارهای دیجیتال
             </span>
           </h1>
 
-          <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground sm:text-base font-normal">
-            خرید مطمئن و تحویل فوری اکانت‌های رسمی هوش مصنوعی (ChatGPT, Gemini, Claude)، پلنرهای تخصصی دیجیتال و انواع خدمات نوین آنلاین با تضمین ۱۰۰٪ کیفیت و اصالت.
+          <p className="mt-3.5 max-w-lg text-xs sm:text-sm leading-6 sm:leading-7 text-muted-foreground font-medium">
+            دسترسی آنی و قانونی به اشتراک‌های هوش مصنوعی، پلنرهای تخصصی و خدمات آنلاین با تضمین کیفیت و پشتیبانی دائمی.
           </p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">

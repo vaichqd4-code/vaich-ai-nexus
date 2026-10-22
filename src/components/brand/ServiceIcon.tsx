@@ -27,11 +27,13 @@ export function ServiceIcon({
   iconUrl,
   className,
   imgClassName,
+  imageFit = "contain",
 }: {
   slug: string;
   iconUrl?: string;
   className?: string;
   imgClassName?: string;
+  imageFit?: "contain" | "cover";
 }) {
   const logo = getProductLogo(slug, iconUrl);
   const cleanSlug = slug ? slug.replace(/^vaich[-_]?/i, "") : "";
@@ -40,7 +42,8 @@ export function ServiceIcon({
   return (
     <span
       className={cn(
-        "grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-border/80 bg-linear-to-b from-secondary/70 to-secondary/40 p-2 shadow-[0_0_28px_-16px_var(--neon-blue)] transition-all overflow-hidden",
+        "grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-border/80 bg-linear-to-b from-secondary/70 to-secondary/40 shadow-[0_0_28px_-16px_var(--neon-blue)] transition-all overflow-hidden",
+        imageFit === "cover" ? "p-0" : "p-2",
         className,
       )}
     >
@@ -48,10 +51,15 @@ export function ServiceIcon({
         <img
           src={logo}
           alt={slug}
-          width={48}
-          height={48}
+          width={96}
+          height={96}
           decoding="async"
-          className={cn("max-h-full max-w-full rounded-xl object-contain drop-shadow-sm", imgClassName)}
+          className={cn(
+            imageFit === "cover"
+              ? "h-full w-full object-cover"
+              : "max-h-full max-w-full rounded-xl object-contain drop-shadow-sm",
+            imgClassName,
+          )}
           loading="lazy"
         />
       ) : (

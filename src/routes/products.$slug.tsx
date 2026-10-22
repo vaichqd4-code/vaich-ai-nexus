@@ -3,6 +3,7 @@ import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { Section } from "@/components/layout/Section";
 import { NeonLink } from "@/components/ui/NeonButton";
 import { formatPrice, toPersianDigits, getProduct } from "@/lib/products";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/products/$slug")({
   loader: ({ params }) => {
@@ -37,6 +38,15 @@ export const Route = createFileRoute("/products/$slug")({
 
 function ProductDetail() {
   const { product } = Route.useLoaderData();
+
+  const badgeColorMap: Record<string, string> = {
+    fire: "bg-linear-to-r from-rose-500 to-amber-500 text-white shadow-rose-500/20",
+    purple: "bg-linear-to-r from-primary to-accent text-white shadow-primary/20",
+    emerald: "bg-emerald-600 text-white shadow-emerald-600/20",
+    blue: "bg-blue-600 text-white shadow-blue-600/20",
+    amber: "bg-amber-400 text-slate-950 font-black shadow-amber-400/20",
+  };
+  const badgeClass = (product.badgeColor && badgeColorMap[product.badgeColor]) || badgeColorMap.purple;
 
   const productSchema = {
     "@context": "https://schema.org",
@@ -84,14 +94,19 @@ function ProductDetail() {
           <div className="grid gap-6 sm:gap-8 lg:grid-cols-[1.4fr_1fr]">
             <div className="min-w-0">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <ServiceIcon slug={product.slug} iconUrl={product.iconUrl} className="h-16 w-16 sm:h-20 sm:w-20 shrink-0" />
+                <ServiceIcon
+                  slug={product.slug}
+                  iconUrl={product.iconUrl}
+                  imageFit={product.imageFit}
+                  className="h-20 w-20 sm:h-24 sm:w-24 shrink-0 aspect-square rounded-2xl sm:rounded-3xl border border-border/90 shadow-md bg-secondary/60"
+                />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <h1 className="text-xl sm:text-3xl font-extrabold text-foreground break-words">
                       {product.name}
                     </h1>
                     {product.badge && (
-                      <span className="rounded-full bg-linear-to-r from-primary to-accent px-2.5 py-0.5 text-xs font-bold text-white shadow-xs">
+                      <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-bold text-white shadow-xs", badgeClass)}>
                         {product.badge}
                       </span>
                     )}

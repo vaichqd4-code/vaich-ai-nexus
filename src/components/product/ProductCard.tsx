@@ -1,4 +1,5 @@
 import { useState, useRef, type MouseEvent } from "react";
+import { Link } from "@tanstack/react-router";
 import { getProductLogo } from "@/components/brand/ServiceIcon";
 import { NeonLink } from "@/components/ui/NeonButton";
 import { formatPrice, toPersianDigits, type Product } from "@/lib/products";
@@ -58,7 +59,7 @@ export function ProductCard({
         transition: tilt.active ? "transform 0.1s ease-out" : "transform 0.4s ease-out, box-shadow 0.3s ease",
       }}
       className={cn(
-        "group relative flex w-[185px] xs:w-[210px] sm:w-[285px] shrink-0 snap-start flex-col gap-2.5 sm:gap-3 overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-2.5 sm:p-3.5 shadow-xs hover:border-primary/50 hover:shadow-2xl transition-all select-none",
+        "group relative flex w-[185px] xs:w-[210px] sm:w-[285px] shrink-0 snap-start flex-col gap-2.5 sm:gap-3 overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-2.5 sm:p-3.5 shadow-xs hover:border-primary/50 hover:shadow-2xl transition-all select-none touch-manipulation",
         className,
       )}
     >
@@ -68,65 +69,90 @@ export function ProductCard({
         className="pointer-events-none absolute inset-x-0 -top-24 h-40 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-40 neon-gradient"
       />
 
-      {/* Top Image Banner: BodoCP-Style Rounded Frame */}
-      <div
-        className={cn(
-          "relative w-full aspect-16/10 xs:aspect-4/3 sm:aspect-16/10 rounded-xl sm:rounded-2xl overflow-hidden bg-linear-to-b from-secondary/70 via-secondary/35 to-background/60 flex items-center justify-center border border-border/50 group-hover:border-primary/40 transition-colors",
-          product.imageFit === "cover" ? "p-0" : "p-2.5 sm:p-3"
-        )}
+      {/* Clickable Card Header: Image Banner + Title */}
+      <Link
+        to="/products/$slug"
+        params={{ slug: product.slug }}
+        preload="intent"
+        aria-label={`مشاهده جزئیات ${product.name}`}
+        className="group/link flex flex-col gap-2.5 focus:outline-none"
       >
-        {/* Subtle Ambient Glow */}
+        {/* Top Image Banner: BodoCP-Style Rounded Frame */}
         <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-primary/10 opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-100"
-        />
-
-        {logoUrl ? (
-          <img
-            src={logoUrl}
-            alt={product.name}
-            width={280}
-            height={175}
-            decoding="async"
-            className={cn(
-              "drop-shadow-md group-hover:scale-105 transition-transform duration-300",
-              product.imageFit === "cover"
-                ? "h-full w-full object-cover rounded-xl sm:rounded-2xl"
-                : "max-h-full max-w-full object-contain rounded-lg sm:rounded-xl"
-            )}
-            loading="lazy"
-          />
-        ) : (
-          <span className="text-2xl sm:text-3xl font-black text-primary">
-            {initial}
-          </span>
-        )}
-
-        {/* Floating Special / Featured Badge */}
-        {hasBadge && badgeLabel && (
-          <span
-            className={cn(
-              "absolute right-2 top-2 z-10 rounded-full px-2 py-0.5 sm:px-2.5 sm:py-0.5 text-[9px] sm:text-[11px] font-bold shadow-md",
-              badgeClass,
-            )}
-          >
-            {badgeLabel}
-          </span>
-        )}
-      </div>
-
-      {/* Card Content: Title & Subtitle */}
-      <div className="flex flex-col gap-0.5 px-0.5">
-        <h3
-          className="truncate text-xs sm:text-sm font-bold tracking-tight text-foreground"
-          title={product.name}
+          className={cn(
+            "relative w-full aspect-16/10 xs:aspect-4/3 sm:aspect-16/10 rounded-xl sm:rounded-2xl overflow-hidden bg-linear-to-b from-secondary/70 via-secondary/35 to-background/60 flex items-center justify-center border border-border/50 group-hover:border-primary/40 transition-colors",
+            product.imageFit === "cover" ? "p-0" : "p-2.5 sm:p-3.5"
+          )}
         >
-          {product.name}
-        </h3>
-        <p className="line-clamp-1 text-[10px] sm:text-xs text-muted-foreground">
-          {product.description || (product.duration ? `اشتراک معتبر • ${product.duration}` : "تحویل فوری و قانونی")}
-        </p>
-      </div>
+          {/* Subtle Ambient Glow */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-primary/10 opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-100"
+          />
+
+          {product.imageFit === "cover" ? (
+            logoUrl ? (
+              <img
+                src={logoUrl}
+                alt={product.name}
+                width={280}
+                height={175}
+                decoding="async"
+                className="h-full w-full object-cover rounded-xl sm:rounded-2xl group-hover:scale-105 transition-transform duration-300"
+                loading="lazy"
+              />
+            ) : (
+              <span className="text-2xl sm:text-3xl font-black text-primary">
+                {initial}
+              </span>
+            )
+          ) : (
+            /* Standard Product Logo Tile: App-Icon Squircle Frame with border & margin */
+            <div className="relative flex items-center justify-center p-2.5 sm:p-3 rounded-2xl sm:rounded-3xl bg-secondary/80 border border-border/90 shadow-md group-hover:border-primary/50 group-hover:shadow-primary/10 group-hover:scale-105 transition-all duration-300 max-h-[85%] aspect-square">
+              {logoUrl ? (
+                <img
+                  src={logoUrl}
+                  alt={product.name}
+                  width={80}
+                  height={80}
+                  decoding="async"
+                  className="max-h-full max-w-full object-contain rounded-xl sm:rounded-2xl drop-shadow-sm"
+                  loading="lazy"
+                />
+              ) : (
+                <span className="text-xl sm:text-2xl font-black text-primary">
+                  {initial}
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Floating Special / Featured Badge */}
+          {hasBadge && badgeLabel && (
+            <span
+              className={cn(
+                "absolute right-2 top-2 z-10 rounded-full px-2 py-0.5 sm:px-2.5 sm:py-0.5 text-[9px] sm:text-[11px] font-bold shadow-md",
+                badgeClass,
+              )}
+            >
+              {badgeLabel}
+            </span>
+          )}
+        </div>
+
+        {/* Card Content: Title & Subtitle */}
+        <div className="flex flex-col gap-0.5 px-0.5">
+          <h3
+            className="truncate text-xs sm:text-sm font-bold tracking-tight text-foreground group-hover/link:text-primary transition-colors"
+            title={product.name}
+          >
+            {product.name}
+          </h3>
+          <p className="line-clamp-1 text-[10px] sm:text-xs text-muted-foreground">
+            {product.description || (product.duration ? `اشتراک معتبر • ${product.duration}` : "تحویل فوری و قانونی")}
+          </p>
+        </div>
+      </Link>
 
       {/* Pricing Block */}
       <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-secondary/30 p-2 sm:p-2.5 mt-auto">
@@ -163,10 +189,11 @@ export function ProductCard({
         <NeonLink
           to="/products/$slug"
           params={{ slug: product.slug }}
+          preload="intent"
           variant="outline"
           size="sm"
           aria-label={`مشاهده جزئیات ${product.name}`}
-          className="text-center text-[10px] sm:text-xs py-1.5 px-1 rounded-xl"
+          className="text-center text-[10px] sm:text-xs py-1.5 px-1 rounded-xl touch-manipulation cursor-pointer"
         >
           جزئیات
         </NeonLink>
@@ -174,9 +201,10 @@ export function ProductCard({
         <NeonLink
           to="/checkout/$slug"
           params={{ slug: product.slug }}
+          preload="intent"
           size="sm"
           aria-label={`خرید اشتراک ${product.name}`}
-          className="text-center text-[10px] sm:text-xs font-bold py-1.5 px-1 rounded-xl"
+          className="text-center text-[10px] sm:text-xs font-bold py-1.5 px-1 rounded-xl touch-manipulation cursor-pointer"
         >
           خرید آنی
         </NeonLink>

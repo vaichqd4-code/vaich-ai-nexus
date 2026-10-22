@@ -1,11 +1,11 @@
 import { Section } from "@/components/layout/Section";
 import { toPersianDigits } from "@/lib/products";
 
-const steps = ["انتخاب اشتراک", "ثبت سفارش و پرداخت", "دریافت اطلاعات اشتراک"];
+const steps = ["انتخاب محصول یا سرویس", "ثبت سفارش و پرداخت امن", "تحویل فوری و شروع استفاده"];
 
 export function HowItWorks() {
   return (
-    <Section title="چطور کار می‌کند" subtitle="فقط سه قدم تا استفاده از سرویس‌های هوش مصنوعی.">
+    <Section title="چطور کار می‌کند" subtitle="تنها سه قدم ساده تا دسترسی آنی به خدمات دیجیتال و ابزارهای هوش مصنوعی.">
       <ol className="grid gap-4 md:grid-cols-3">
         {steps.map((step, i) => (
           <li
