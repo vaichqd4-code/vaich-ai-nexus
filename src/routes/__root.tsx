@@ -107,6 +107,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&display=swap",
+        media: "print",
+        onLoad: "this.media='all'",
       },
       {
         rel: "preload",
@@ -140,6 +142,9 @@ function RootShell({ children }: { children: ReactNode }) {
           }}
         />
         <HeadContent />
+        <noscript>
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&display=swap" />
+        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -181,10 +186,10 @@ function RootShell({ children }: { children: ReactNode }) {
             }),
           }}
         />
-        {/* Crisp live chat deferred loader — loads on idle to prevent mobile TBT / main-thread blocking */}
+        {/* Crisp live chat on-demand loader — loads strictly on user interaction or explicit chat request to ensure 90+ Lighthouse Performance */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){window.$crisp=[];window.CRISP_WEBSITE_ID="7751150b-b8d0-4953-8745-021b7d8a730c";var loaded=false;function initCrisp(){if(loaded)return;loaded=true;var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=true;d.head.appendChild(s);}window.loadCrispNow=initCrisp;if('requestIdleCallback' in window){requestIdleCallback(function(){setTimeout(initCrisp,7500);});}else{setTimeout(initCrisp,8500);}})();`,
+            __html: `(function(){window.$crisp=[];window.CRISP_WEBSITE_ID="7751150b-b8d0-4953-8745-021b7d8a730c";var loaded=false;function initCrisp(){if(loaded)return;loaded=true;['scroll','touchstart','pointerdown','keydown'].forEach(function(e){window.removeEventListener(e,initCrisp,{passive:true});});var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=true;d.head.appendChild(s);}window.loadCrispNow=initCrisp;['scroll','touchstart','pointerdown','keydown'].forEach(function(e){window.addEventListener(e,initCrisp,{once:true,passive:true});});})();`,
           }}
         />
       </head>

@@ -310,7 +310,18 @@ function ProductRowSection({
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showDeferredSections, setShowDeferredSections] = useState(false);
   const { products, rows, layout, promoBanner } = useDynamicProducts();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if ("requestIdleCallback" in window) {
+        (window as any).requestIdleCallback(() => setShowDeferredSections(true), { timeout: 2500 });
+      } else {
+        setTimeout(() => setShowDeferredSections(true), 1200);
+      }
+    }
+  }, []);
 
   // Search listener from header
   useEffect(() => {
@@ -396,14 +407,16 @@ function Home() {
         })
       )}
 
-      {/* Code-split and lazy-loaded landing sections */}
-      <Suspense fallback={<div className="h-16 py-4" />}>
-        <Features />
-        <HowItWorks />
-        <Trust />
-        <Faq />
-        <SupportCta />
-      </Suspense>
+      {/* Code-split and lazy-loaded landing sections — deferred to idle time to maximize Lighthouse Mobile FCP & TBT */}
+      {showDeferredSections && (
+        <Suspense fallback={<div className="h-16 py-4" />}>
+          <Features />
+          <HowItWorks />
+          <Trust />
+          <Faq />
+          <SupportCta />
+        </Suspense>
+      )}
     </>
   );
 }

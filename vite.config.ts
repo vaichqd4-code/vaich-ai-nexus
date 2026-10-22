@@ -17,7 +17,7 @@ export default defineConfig({
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes("routes/admin") || id.includes("routes\\admin")) {
+            if (id.includes("admin") || id.includes("components/admin") || id.includes("components\\admin")) {
               return "admin-portal";
             }
             if (id.includes("node_modules")) {

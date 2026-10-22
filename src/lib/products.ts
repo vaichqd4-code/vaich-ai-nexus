@@ -875,17 +875,27 @@ export function useDynamicProducts() {
       // Ignore client read errors
     }
 
-    // Pull from cloud on mount asynchronously without blocking initial render
-    syncSiteConfigWithCloud().then((cfg) => {
-      if (cfg?.products) setItems(cfg.products);
-      if (cfg?.categoryRows) setRowsState(cfg.categoryRows);
-      if (cfg?.layout) setLayoutState(cfg.layout);
-      if (cfg?.updatedAt) setLastCloudSync(cfg.updatedAt);
-      if (cfg?.adminUsers) setAdminUsersState(cfg.adminUsers);
-      if (cfg?.masterPin) setMasterPinState(cfg.masterPin);
-      if (cfg?.promoBanner) setPromoBannerState(cfg.promoBanner);
-      if (cfg?.instagramUrl) setInstagramUrlState(cfg.instagramUrl);
-    });
+    // Defer cloud sync to idle time so FCP, LCP and TBT execute with zero main-thread contention
+    const scheduleCloudSync = () => {
+      syncSiteConfigWithCloud().then((cfg) => {
+        if (cfg?.products) setItems(cfg.products);
+        if (cfg?.categoryRows) setRowsState(cfg.categoryRows);
+        if (cfg?.layout) setLayoutState(cfg.layout);
+        if (cfg?.updatedAt) setLastCloudSync(cfg.updatedAt);
+        if (cfg?.adminUsers) setAdminUsersState(cfg.adminUsers);
+        if (cfg?.masterPin) setMasterPinState(cfg.masterPin);
+        if (cfg?.promoBanner) setPromoBannerState(cfg.promoBanner);
+        if (cfg?.instagramUrl) setInstagramUrlState(cfg.instagramUrl);
+      });
+    };
+
+    if (typeof window !== "undefined") {
+      if ("requestIdleCallback" in window) {
+        (window as any).requestIdleCallback(scheduleCloudSync, { timeout: 3500 });
+      } else {
+        setTimeout(scheduleCloudSync, 1800);
+      }
+    }
 
     const handleProducts = () => setItems(getStoredProducts());
     const handleRows = () => setRowsState(getStoredCategoryRows());
