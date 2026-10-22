@@ -785,14 +785,70 @@ export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
 }
 
 export function useDynamicProducts() {
-  // Deterministic initial state for 100% clean SSR hydration (no mismatch)
-  const [items, setItems] = useState<Product[]>(DEFAULT_PRODUCTS);
-  const [rows, setRowsState] = useState<ProductCategoryRow[]>(DEFAULT_CATEGORY_ROWS);
-  const [layout, setLayoutState] = useState<LayoutMode>("1-row");
-  const [adminUsers, setAdminUsersState] = useState<AdminUser[]>(DEFAULT_ADMIN_USERS);
-  const [masterPin, setMasterPinState] = useState<string>(DEFAULT_ADMIN_PIN);
-  const [promoBanner, setPromoBannerState] = useState<PromoBannerConfig>(DEFAULT_PROMO_BANNER);
-  const [instagramUrl, setInstagramUrlState] = useState<string>(DEFAULT_INSTAGRAM_URL);
+  // Zero-flash client initialization from persistent storage
+  const [items, setItems] = useState<Product[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredProducts();
+        if (stored && stored.length > 0) return stored;
+      } catch {}
+    }
+    return DEFAULT_PRODUCTS;
+  });
+  const [rows, setRowsState] = useState<ProductCategoryRow[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredCategoryRows();
+        if (stored && stored.length > 0) return stored;
+      } catch {}
+    }
+    return DEFAULT_CATEGORY_ROWS;
+  });
+  const [layout, setLayoutState] = useState<LayoutMode>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredLayout();
+        if (stored) return stored;
+      } catch {}
+    }
+    return "1-row";
+  });
+  const [adminUsers, setAdminUsersState] = useState<AdminUser[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredAdminUsers();
+        if (stored && stored.length > 0) return stored;
+      } catch {}
+    }
+    return DEFAULT_ADMIN_USERS;
+  });
+  const [masterPin, setMasterPinState] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredMasterPin();
+        if (stored) return stored;
+      } catch {}
+    }
+    return DEFAULT_ADMIN_PIN;
+  });
+  const [promoBanner, setPromoBannerState] = useState<PromoBannerConfig>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredPromoBanner();
+        if (stored && stored.imageUrl) return stored;
+      } catch {}
+    }
+    return DEFAULT_PROMO_BANNER;
+  });
+  const [instagramUrl, setInstagramUrlState] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredInstagramUrl();
+        if (stored) return stored;
+      } catch {}
+    }
+    return DEFAULT_INSTAGRAM_URL;
+  });
   const [isCloudSyncing, setIsCloudSyncing] = useState(false);
   const [lastCloudSync, setLastCloudSync] = useState<string | null>(null);
 

@@ -1438,7 +1438,7 @@ export function AdminPage() {
                   </span>
                   <div className="relative aspect-4/3 w-full overflow-hidden rounded-3xl border border-border/70 bg-secondary/30 shadow-xl group">
                     <img
-                      src={bannerConfig.imageUrl || "/hero-ai.webp"}
+                      src={bannerConfig.imageUrl || "/promo-banner.webp"}
                       alt={bannerConfig.altText || "پیش‌نمایش بنر تبلیغاتی"}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-102"
                     />
