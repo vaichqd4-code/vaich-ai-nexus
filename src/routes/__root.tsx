@@ -95,14 +95,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:image", content: "https://vaich.ir/vaich-logo.png" },
     ],
     links: [
+      {
+        rel: "preload",
+        as: "font",
+        type: "font/woff2",
+        href: "/fonts/vazirmatn-arabic.woff2",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "preload",
+        as: "image",
+        type: "image/webp",
+        href: "/promo-banner.webp",
+        fetchPriority: "high",
+      },
       { rel: "stylesheet", href: appCss },
       { rel: "canonical", href: "https://vaich.ir" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&display=swap",
-      },
       { rel: "icon", type: "image/png", sizes: "192x192", href: "/favicon-192x192.png?v=5" },
       { rel: "icon", type: "image/png", sizes: "96x96", href: "/favicon-96x96.png?v=5" },
       { rel: "icon", type: "image/png", sizes: "48x48", href: "/favicon-48x48.png?v=5" },
