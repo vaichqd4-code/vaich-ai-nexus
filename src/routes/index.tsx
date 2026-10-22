@@ -89,7 +89,10 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
   };
 
   const imageElement = (
-    <div className="float-slow glow-strong overflow-hidden rounded-3xl sm:rounded-4xl border border-border shadow-2xl bg-card aspect-4/3 group">
+    <div
+      className="float-slow glow-strong overflow-hidden rounded-3xl sm:rounded-4xl border border-border shadow-2xl bg-card aspect-[4/3] group"
+      style={{ aspectRatio: "4/3" }}
+    >
       <img
         src={bannerImage}
         alt={bannerAlt}
@@ -396,14 +399,37 @@ function Home() {
         })
       )}
 
-      {/* Code-split and lazy-loaded landing sections */}
-      <Suspense fallback={<div className="h-16 py-4" />}>
-        <Features />
-        <HowItWorks />
-        <Trust />
-        <Faq />
-        <SupportCta />
-      </Suspense>
+      {/* Below-the-fold landing sections mounted on idle */}
+      <BelowFoldSections />
     </>
+  );
+}
+
+function BelowFoldSections() {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if ("requestIdleCallback" in window) {
+      const id = (window as any).requestIdleCallback(() => setShow(true), { timeout: 3500 });
+      return () => (window as any).cancelIdleCallback?.(id);
+    } else {
+      const t = setTimeout(() => setShow(true), 1500);
+      return () => clearTimeout(t);
+    }
+  }, []);
+
+  if (!show) {
+    return <div className="h-16 py-4" />;
+  }
+
+  return (
+    <Suspense fallback={<div className="h-16 py-4" />}>
+      <Features />
+      <HowItWorks />
+      <Trust />
+      <Faq />
+      <SupportCta />
+    </Suspense>
   );
 }
