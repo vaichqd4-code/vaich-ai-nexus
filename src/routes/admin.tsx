@@ -174,7 +174,7 @@ export function AdminPage() {
     try {
       setIsCompressingBanner(true);
       setBannerUploadError("");
-      const compressedDataUrl = await compressAndResizeImage(file, 1024, 768, 0.85);
+      const compressedDataUrl = await compressAndResizeImage(file, 960, 640, 0.82);
       setBannerConfig((prev) => ({ ...prev, imageUrl: compressedDataUrl }));
     } catch (err: any) {
       setBannerUploadError(err.message || "خطا در پردازش تصویر بنر");
@@ -235,7 +235,7 @@ export function AdminPage() {
     setIsCompressingImage(true);
 
     try {
-      const compressedDataUrl = await compressAndResizeImage(file, 480, 480, 0.85);
+      const compressedDataUrl = await compressAndResizeImage(file, 400, 400, 0.82);
       setEditProduct((prev) => (prev ? { ...prev, iconUrl: compressedDataUrl } : null));
     } catch (err) {
       console.error("Image processing error:", err);

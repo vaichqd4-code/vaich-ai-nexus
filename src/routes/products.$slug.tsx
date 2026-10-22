@@ -1,4 +1,4 @@
-import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { createFileRoute, notFound, Link, redirect } from "@tanstack/react-router";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { Section } from "@/components/layout/Section";
 import { NeonLink } from "@/components/ui/NeonButton";
@@ -7,6 +7,10 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/products/$slug")({
   loader: async ({ params }) => {
+    const raw = (params.slug || "").toLowerCase();
+    if (raw === "planners" || raw === "planner" || raw.includes("پلنر")) {
+      throw redirect({ to: "/", hash: "planners" });
+    }
     let product = getProduct(params.slug);
     if (!product) {
       try {

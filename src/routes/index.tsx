@@ -48,13 +48,22 @@ export const Route = createFileRoute("/")({
 function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
   const bannerImage = promoBanner?.imageUrl || "/promo-banner.webp";
   const bannerAlt = promoBanner?.altText || "خرید مستقیم و مطمئن خدمات دیجیتالی و اشتراک‌های هوش مصنوعی VAICH";
-  const bannerLink = promoBanner?.linkUrl?.trim();
+  const bannerLink = promoBanner?.linkUrl?.trim() || "";
 
-  const isExternal = Boolean(bannerLink && /^https?:\/\//i.test(bannerLink));
-  const isHash = Boolean(bannerLink && (bannerLink.startsWith("#") || bannerLink.startsWith("/#")));
+  const isExternal = /^https?:\/\//i.test(bannerLink);
+  const isSpecificProduct = bannerLink.startsWith("/products/") || bannerLink.startsWith("products/");
+  const isPlannerTarget =
+    !isExternal &&
+    !isSpecificProduct &&
+    (bannerLink.startsWith("#") ||
+      bannerLink.startsWith("/#") ||
+      bannerLink === "planners" ||
+      bannerLink === "/planners" ||
+      bannerLink.toLowerCase().includes("planner") ||
+      bannerLink.includes("پلنر"));
 
-  let internalPath = bannerLink || "";
-  if (bannerLink && !isExternal && !isHash) {
+  let internalPath = bannerLink;
+  if (!isExternal && !isPlannerTarget && bannerLink) {
     if (!internalPath.startsWith("/")) {
       if (internalPath.startsWith("products/")) {
         internalPath = `/${internalPath}`;
@@ -64,20 +73,25 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
     }
   }
 
-  const handleHashClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!bannerLink) return;
-    const targetId = bannerLink.replace(/^(\/#|#)/, "");
-    const targetEl = document.getElementById(targetId);
-    if (targetEl) {
-      e.preventDefault();
-      targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
-      window.history.pushState(null, "", `#${targetId}`);
+  const handlePlannerScroll = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    const target =
+      document.getElementById("planners") ||
+      document.getElementById("row-mvampt3r") ||
+      document.querySelector('[id*="planner"]') ||
+      document.querySelector('section[id*="row-"]');
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (typeof window !== "undefined") {
+        window.history.pushState(null, "", "#planners");
+      }
     }
   };
 
   const imageElement = (
     <div className="float-slow glow-strong overflow-hidden rounded-3xl sm:rounded-4xl border border-border shadow-2xl bg-card aspect-4/3 group">
       <img
+        key={bannerImage}
         src={bannerImage}
         alt={bannerAlt}
         width={568}
@@ -99,11 +113,14 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
             <span>مرجع تخصصی خدمات دیجیتالی و اشتراک‌های هوش مصنوعی</span>
           </div>
 
-          <h1 className="mt-4 text-2xl font-black sm:text-4xl lg:text-[2.75rem] leading-[1.3] text-foreground tracking-tight">
-            خرید مستقیم و مطمئن{" "}
-            <span className="gradient-text">اشتراک‌های هوش مصنوعی</span>
-            <span className="block mt-1 sm:mt-1.5 text-xl sm:text-3xl lg:text-4xl font-extrabold text-foreground/90">
-              و ابزارهای دیجیتال
+          <h1 className="mt-4 text-2xl font-black sm:text-4xl lg:text-[2.75rem] leading-[1.35] sm:leading-[1.3] text-foreground tracking-tight">
+            <span>خرید مستقیم و مطمئن اشتراک‌های </span>
+            <span className="bg-linear-to-r from-purple-400 via-fuchsia-400 to-indigo-400 bg-clip-text text-transparent font-black drop-shadow-[0_0_24px_rgba(168,85,247,0.35)]">
+              هوش مصنوعی
+            </span>
+            <span className="text-foreground"> و </span>
+            <span className="bg-linear-to-r from-purple-400 via-fuchsia-400 to-indigo-400 bg-clip-text text-transparent font-black drop-shadow-[0_0_24px_rgba(168,85,247,0.35)]">
+              ابزارهای دیجیتال
             </span>
           </h1>
 
@@ -163,10 +180,10 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
               >
                 {imageElement}
               </a>
-            ) : isHash ? (
+            ) : isPlannerTarget ? (
               <a
-                href={bannerLink}
-                onClick={handleHashClick}
+                href="#planners"
+                onClick={handlePlannerScroll}
                 className="block cursor-pointer focus:outline-none"
               >
                 {imageElement}
@@ -226,7 +243,7 @@ function ProductRowSection({
           )}
         </div>
 
-        {layout !== "grid" && products.length > 1 && (
+        {layout !== "grid" && products.length >= 4 && (
           <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
