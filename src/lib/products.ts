@@ -344,9 +344,9 @@ export interface PromoBannerConfig {
 }
 
 export const DEFAULT_PROMO_BANNER: PromoBannerConfig = {
-  imageUrl: "/hero-ai.webp",
-  altText: "خرید مستقیم و مطمئن خدمات دیجیتالی و اشتراک‌های هوش مصنوعی VAICH",
-  linkUrl: "/products",
+  imageUrl: "/promo-banner.webp",
+  altText: "خرید پلنر برنامه‌ریزی هوشمند و ردیاب عادات روزانه VAICH",
+  linkUrl: "/#planners",
 };
 
 export const DEFAULT_INSTAGRAM_URL = "https://www.instagram.com/vaich_ir";
@@ -357,7 +357,12 @@ export function getStoredPromoBanner(): PromoBannerConfig {
     const raw = localStorage.getItem("vaich_promo_banner");
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed.imageUrl === "string" && parsed.imageUrl.trim()) {
+      if (
+        parsed &&
+        typeof parsed.imageUrl === "string" &&
+        parsed.imageUrl.trim() &&
+        parsed.imageUrl !== "/hero-ai.webp"
+      ) {
         return parsed;
       }
     }
@@ -759,13 +764,69 @@ export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
 }
 
 export function useDynamicProducts() {
-  const [items, setItems] = useState<Product[]>(DEFAULT_PRODUCTS);
-  const [rows, setRowsState] = useState<ProductCategoryRow[]>(DEFAULT_CATEGORY_ROWS);
-  const [layout, setLayoutState] = useState<LayoutMode>("1-row");
-  const [adminUsers, setAdminUsersState] = useState<AdminUser[]>(DEFAULT_ADMIN_USERS);
-  const [masterPin, setMasterPinState] = useState<string>(DEFAULT_ADMIN_PIN);
-  const [promoBanner, setPromoBannerState] = useState<PromoBannerConfig>(DEFAULT_PROMO_BANNER);
-  const [instagramUrl, setInstagramUrlState] = useState<string>(DEFAULT_INSTAGRAM_URL);
+  const [items, setItems] = useState<Product[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredProducts();
+        if (stored && stored.length > 0) return stored;
+      } catch {}
+    }
+    return DEFAULT_PRODUCTS;
+  });
+  const [rows, setRowsState] = useState<ProductCategoryRow[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredCategoryRows();
+        if (stored && stored.length > 0) return stored;
+      } catch {}
+    }
+    return DEFAULT_CATEGORY_ROWS;
+  });
+  const [layout, setLayoutState] = useState<LayoutMode>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredLayout();
+        if (stored) return stored;
+      } catch {}
+    }
+    return "1-row";
+  });
+  const [adminUsers, setAdminUsersState] = useState<AdminUser[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredAdminUsers();
+        if (stored && stored.length > 0) return stored;
+      } catch {}
+    }
+    return DEFAULT_ADMIN_USERS;
+  });
+  const [masterPin, setMasterPinState] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredMasterPin();
+        if (stored) return stored;
+      } catch {}
+    }
+    return DEFAULT_ADMIN_PIN;
+  });
+  const [promoBanner, setPromoBannerState] = useState<PromoBannerConfig>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredPromoBanner();
+        if (stored && stored.imageUrl && stored.imageUrl !== "/hero-ai.webp") return stored;
+      } catch {}
+    }
+    return DEFAULT_PROMO_BANNER;
+  });
+  const [instagramUrl, setInstagramUrlState] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredInstagramUrl();
+        if (stored) return stored;
+      } catch {}
+    }
+    return DEFAULT_INSTAGRAM_URL;
+  });
   const [isCloudSyncing, setIsCloudSyncing] = useState(false);
   const [lastCloudSync, setLastCloudSync] = useState<string | null>(null);
 

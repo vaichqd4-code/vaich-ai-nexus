@@ -119,7 +119,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "preload",
         as: "image",
         type: "image/webp",
-        href: "/hero-ai.webp",
+        href: "/promo-banner.webp",
       },
       { rel: "icon", type: "image/png", sizes: "64x64", href: "/favicon.png?v=4" },
       { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png?v=4" },

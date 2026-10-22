@@ -46,7 +46,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
-  const bannerImage = promoBanner?.imageUrl || "/hero-ai.webp";
+  const bannerImage = promoBanner?.imageUrl || "/promo-banner.webp";
   const bannerAlt = promoBanner?.altText || "خرید مستقیم و مطمئن خدمات دیجیتالی و اشتراک‌های هوش مصنوعی VAICH";
   const bannerLink = promoBanner?.linkUrl?.trim();
 

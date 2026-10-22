@@ -196,11 +196,7 @@ export function AdminPage() {
   };
 
   const handleResetBanner = async () => {
-    const defaultBanner: PromoBannerConfig = {
-      imageUrl: "/hero-ai.webp",
-      linkUrl: "/products",
-      altText: "خرید مستقیم و مطمئن خدمات دیجیتالی و اشتراک‌های هوش مصنوعی VAICH",
-    };
+    const defaultBanner: PromoBannerConfig = DEFAULT_PROMO_BANNER;
     setBannerConfig(defaultBanner);
     setPromoBanner(defaultBanner);
     setBannerSaveMsg("در حال بازنشانی به بنر پیش‌فرض...");
