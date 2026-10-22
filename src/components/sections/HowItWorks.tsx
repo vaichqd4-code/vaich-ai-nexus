@@ -5,7 +5,7 @@ const steps = ["انتخاب محصول یا سرویس", "ثبت سفارش و 
 
 export function HowItWorks() {
   return (
-    <Section title="چطور کار می‌کند" subtitle="تنها سه قدم ساده تا دسترسی آنی به خدمات دیجیتال و ابزارهای هوش مصنوعی.">
+    <Section title="چطور کار می‌کند" subtitle="تنها سه قدم ساده تا دسترسی مستقیم به خدمات دیجیتال و اشتراک‌های هوش مصنوعی.">
       <ol className="grid gap-4 md:grid-cols-3">
         {steps.map((step, i) => (
           <li

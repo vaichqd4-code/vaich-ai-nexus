@@ -83,7 +83,7 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
           </h1>
 
           <p className="mt-3.5 max-w-lg text-xs sm:text-sm leading-6 sm:leading-7 text-muted-foreground font-medium">
-            دسترسی آنی و قانونی به اشتراک‌های هوش مصنوعی، پلنرهای تخصصی و خدمات آنلاین با تضمین کیفیت و پشتیبانی دائمی.
+            دسترسی آنی و قانونی به خدمات دیجیتال و اشتراک‌های هوش مصنوعی با تضمین کیفیت و پشتیبانی دائمی.
           </p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -95,25 +95,32 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
             </NeonLink>
           </div>
 
-          {/* نوار اعتمادسازی مینیمال و خلوت */}
+          {/* نوار اعتمادسازی مینیمال و حرفه‌ای */}
           <div className="mt-7 flex flex-wrap items-center gap-2.5">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/25 bg-secondary/70 px-3.5 py-1.5 text-xs font-medium text-foreground backdrop-blur-md">
-              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-white text-[10px]">
-                ⚡
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/30 bg-secondary/70 px-3.5 py-1.5 text-xs font-medium text-foreground backdrop-blur-md">
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-linear-to-r from-blue-600 to-cyan-500 text-white shadow-xs">
+                <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" />
+                </svg>
               </span>
               <span>تحویل سریع</span>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-secondary/70 px-3.5 py-1.5 text-xs font-medium text-foreground backdrop-blur-md">
-              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-white text-[10px]">
-                ✓
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-secondary/70 px-3.5 py-1.5 text-xs font-medium text-foreground backdrop-blur-md">
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-white shadow-xs">
+                <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
               </span>
               <span>تضمین ۱۰۰٪ اصالت و کیفیت</span>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-purple-500/25 bg-secondary/70 px-3.5 py-1.5 text-xs font-medium text-foreground backdrop-blur-md">
-              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-white text-[10px]">
-                💬
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-secondary/70 px-3.5 py-1.5 text-xs font-medium text-foreground backdrop-blur-md">
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-linear-to-r from-purple-600 to-indigo-500 text-white shadow-xs">
+                <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5a9 9 0 0 1 18 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3" />
+                  <path d="M21 16v2a3 3 0 0 1-3 3h-5" />
+                </svg>
               </span>
               <span>پشتیبانی ۲۴ ساعته</span>
             </div>
