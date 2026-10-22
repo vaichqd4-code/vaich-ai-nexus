@@ -184,6 +184,11 @@ export const DEFAULT_PRODUCTS: Product[] = [
 
 export const products = DEFAULT_PRODUCTS;
 
+export function isMojibakeText(str?: string): boolean {
+  if (!str) return false;
+  return /[\u00C0-\u00FF]{2,}/.test(str);
+}
+
 export function getStoredProducts(): Product[] {
   if (typeof window === "undefined") return DEFAULT_PRODUCTS;
   try {
@@ -191,6 +196,10 @@ export function getStoredProducts(): Product[] {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
+        if (parsed.some((p: any) => isMojibakeText(p.name) || isMojibakeText(p.description))) {
+          localStorage.removeItem("vaich_custom_products");
+          return DEFAULT_PRODUCTS;
+        }
         return parsed;
       }
     }
@@ -217,6 +226,10 @@ export function getStoredCategoryRows(): ProductCategoryRow[] {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
+        if (parsed.some((r: any) => isMojibakeText(r.title) || isMojibakeText(r.subtitle))) {
+          localStorage.removeItem("vaich_category_rows");
+          return DEFAULT_CATEGORY_ROWS;
+        }
         return parsed;
       }
     }
@@ -363,6 +376,10 @@ export function getStoredPromoBanner(): PromoBannerConfig {
         parsed.imageUrl.trim() &&
         parsed.imageUrl !== "/hero-ai.webp"
       ) {
+        if (isMojibakeText(parsed.altText)) {
+          localStorage.removeItem("vaich_promo_banner");
+          return DEFAULT_PROMO_BANNER;
+        }
         return parsed;
       }
     }
@@ -674,16 +691,57 @@ export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
   try {
     let fetchedData: SiteConfig | null = null;
 
-    // Fast static config fetch cached by CDN
+    // 1. Live static file with cache-buster
     try {
-      const res = await fetch("/site-config.json");
+      const res = await fetch(`/site-config.json?v=${Date.now()}`, {
+        cache: "no-store",
+      });
       if (res.ok) {
         const json = await res.json();
         if (json && Array.isArray(json.products) && json.products.length > 0) {
-          fetchedData = json as SiteConfig;
+          if (!json.products.some((p: any) => isMojibakeText(p.name))) {
+            fetchedData = json as SiteConfig;
+          }
         }
       }
     } catch (e) {}
+
+    // 2. Real-time fallback: If static file is missing, stale, or lacks promoBanner/instagramUrl, pull direct from GitHub
+    const localUpdatedAt = localStorage.getItem("vaich_config_updated_at");
+    const isStaticStale =
+      !fetchedData ||
+      !fetchedData.promoBanner ||
+      !fetchedData.instagramUrl ||
+      (localUpdatedAt && fetchedData.updatedAt && new Date(localUpdatedAt) > new Date(fetchedData.updatedAt));
+
+    if (isStaticStale) {
+      try {
+        const ghRes = await fetch(
+          `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main&_t=${Date.now()}`,
+          {
+            headers: {
+              Authorization: `Bearer ${GITHUB_TOKEN}`,
+              Accept: "application/vnd.github.v3+json",
+            },
+          }
+        );
+        if (ghRes.ok) {
+          const ghJson = await ghRes.json();
+          if (ghJson && ghJson.content) {
+            const rawDecoded = decodeUtf8Base64(ghJson.content.replace(/\s/g, ""));
+            const parsed = JSON.parse(rawDecoded);
+            if (parsed && Array.isArray(parsed.products) && parsed.products.length > 0) {
+              if (!parsed.products.some((p: any) => isMojibakeText(p.name))) {
+                fetchedData = parsed as SiteConfig;
+                if (ghJson.sha && typeof ghJson.sha === "string") {
+                  latestKnownSha = ghJson.sha;
+                }
+              }
+            }
+          }
+        }
+      } catch (e) {}
+    }
 
     if (fetchedData) {
       localStorage.setItem("vaich_custom_products", JSON.stringify(fetchedData.products));

@@ -2,14 +2,6 @@
 @source "../src";
 @import "tw-animate-css";
 
-/* Self-hosted Vazirmatn Variable Font (100-900) for instant 0ms offline/Iran CDN loading */
-@font-face {
-  font-family: "Vazirmatn";
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url("/fonts/vazirmatn.woff2") format("woff2");
-}
 
 /*
  * VAICH design system — premium dark/light AI brand.
