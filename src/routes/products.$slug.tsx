@@ -9,7 +9,7 @@ export const Route = createFileRoute("/products/$slug")({
   loader: async ({ params }) => {
     const raw = (params.slug || "").toLowerCase();
     if (raw === "planners" || raw === "planner" || raw.includes("پلنر")) {
-      throw redirect({ to: "/", hash: "planners" });
+      throw redirect({ to: "/" });
     }
     let product = getProduct(params.slug);
     if (!product && typeof window !== "undefined") {

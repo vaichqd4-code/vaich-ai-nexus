@@ -165,7 +165,7 @@ export function AdminPage() {
     try {
       setIsCompressingBanner(true);
       setBannerUploadError("");
-      const compressedDataUrl = await compressAndResizeImage(file, 800, 533, 0.75);
+      const compressedDataUrl = await compressAndResizeImage(file, 800, 600, 0.80);
       setBannerConfig((prev) => ({ ...prev, imageUrl: compressedDataUrl }));
     } catch (err: any) {
       setBannerUploadError(err.message || "خطا در پردازش تصویر بنر");
@@ -270,6 +270,8 @@ export function AdminPage() {
     layout?: LayoutMode;
     masterPin?: string;
     adminUsers?: AdminUser[];
+    promoBanner?: PromoBannerConfig;
+    instagramUrl?: string;
   }) => {
     setCloudSyncMsg("⏳ در حال ذخیره و همگام‌سازی ابری با سرور جهانی...");
     const res = await publishToCloud(override);
