@@ -20,7 +20,7 @@ export const Route = createFileRoute("/checkout/$slug")({
   loader: async ({ params }) => {
     let product = getProduct(params.slug);
 
-    if (!product) {
+    if (!product && typeof window !== "undefined") {
       try {
         const res = await fetch("/site-config.json");
         if (res.ok) {

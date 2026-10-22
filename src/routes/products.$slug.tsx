@@ -12,7 +12,7 @@ export const Route = createFileRoute("/products/$slug")({
       throw redirect({ to: "/", hash: "planners" });
     }
     let product = getProduct(params.slug);
-    if (!product) {
+    if (!product && typeof window !== "undefined") {
       try {
         const res = await fetch("/site-config.json");
         if (res.ok) {
