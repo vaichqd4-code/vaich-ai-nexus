@@ -65,7 +65,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "قابلیت شخصی‌سازی نامحدود اهداف، روتین‌ها و عنوان عادات روزانه.",
       "پشتیبانی اختصاصی برای راهنمایی راه‌اندازی و اجرای اسکریپت‌ها"
     ],
-    "iconUrl": "/promo-banner.webp",
+    "iconUrl": "/planner-cover.webp",
     "imageFit": "cover"
   },
   {

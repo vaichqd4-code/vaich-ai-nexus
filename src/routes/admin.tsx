@@ -982,7 +982,7 @@ export function AdminPage() {
                     >
                       {/* Product Info */}
                       <div className="flex items-center gap-3.5">
-                        <ServiceIcon slug={p.slug} iconUrl={p.iconUrl} className="h-12 w-12" />
+                        <ServiceIcon slug={p.slug} iconUrl={p.iconUrl} imageFit={p.imageFit} className="h-12 w-12" />
                         <div>
                           <div className="flex items-center gap-2">
                             <h3 className="font-bold text-foreground">{p.name}</h3>

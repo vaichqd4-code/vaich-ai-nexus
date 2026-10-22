@@ -15,6 +15,9 @@
 /promo-banner.webp
   Cache-Control: public, max-age=86400, stale-while-revalidate=604800
 
+/planner-cover.webp
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
 /hero-ai.webp
   Cache-Control: public, max-age=86400, stale-while-revalidate=604800
 
