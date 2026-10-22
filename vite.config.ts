@@ -13,30 +13,7 @@ export default defineConfig({
     build: {
       target: "es2022",
       cssCodeSplit: true,
-      chunkSizeWarningLimit: 600,
-      rollupOptions: {
-        output: {
-          manualChunks(id) {
-            if (id.includes("components/admin") || id.includes("components\\admin") || id.includes("AdminPage")) {
-              return "admin-portal";
-            }
-            if (id.includes("node_modules")) {
-              if (id.includes("@supabase")) {
-                return "supabase-vendor";
-              }
-              if (id.includes("lucide-react")) {
-                return "lucide-icons";
-              }
-              if (id.includes("@tanstack")) {
-                return "tanstack-framework";
-              }
-              if (id.includes("@radix-ui")) {
-                return "radix-primitives";
-              }
-            }
-          },
-        },
-      },
+      chunkSizeWarningLimit: 1000,
     },
   },
   tanstackStart: {
