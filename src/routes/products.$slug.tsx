@@ -6,8 +6,19 @@ import { formatPrice, toPersianDigits, getProduct } from "@/lib/products";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/products/$slug")({
-  loader: ({ params }) => {
-    const product = getProduct(params.slug);
+  loader: async ({ params }) => {
+    let product = getProduct(params.slug);
+    if (!product) {
+      try {
+        const res = await fetch("/site-config.json");
+        if (res.ok) {
+          const config = await res.json();
+          product = config.products?.find((p: any) => p.slug === params.slug);
+        }
+      } catch {
+        // network error fallback
+      }
+    }
     if (!product) throw notFound();
     return { product };
   },

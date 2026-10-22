@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useRef, useMemo, lazy, Suspense } from "react";
 import { Section } from "@/components/layout/Section";
 import { ProductCard } from "@/components/product/ProductCard";
@@ -48,7 +48,32 @@ export const Route = createFileRoute("/")({
 function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
   const bannerImage = promoBanner?.imageUrl || "/hero-ai.webp";
   const bannerAlt = promoBanner?.altText || "خرید مستقیم و مطمئن خدمات دیجیتالی و اشتراک‌های هوش مصنوعی VAICH";
-  const bannerLink = promoBanner?.linkUrl;
+  const bannerLink = promoBanner?.linkUrl?.trim();
+
+  const isExternal = Boolean(bannerLink && /^https?:\/\//i.test(bannerLink));
+  const isHash = Boolean(bannerLink && (bannerLink.startsWith("#") || bannerLink.startsWith("/#")));
+
+  let internalPath = bannerLink || "";
+  if (bannerLink && !isExternal && !isHash) {
+    if (!internalPath.startsWith("/")) {
+      if (internalPath.startsWith("products/")) {
+        internalPath = `/${internalPath}`;
+      } else {
+        internalPath = `/products/${internalPath}`;
+      }
+    }
+  }
+
+  const handleHashClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!bannerLink) return;
+    const targetId = bannerLink.replace(/^(\/#|#)/, "");
+    const targetEl = document.getElementById(targetId);
+    if (targetEl) {
+      e.preventDefault();
+      targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.history.pushState(null, "", `#${targetId}`);
+    }
+  };
 
   const imageElement = (
     <div className="float-slow glow-strong overflow-hidden rounded-3xl sm:rounded-4xl border border-border shadow-2xl bg-card aspect-4/3 group">
@@ -129,14 +154,32 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
 
         <div className="relative">
           {bannerLink ? (
-            <a
-              href={bannerLink}
-              target={bannerLink.startsWith("http") ? "_blank" : undefined}
-              rel={bannerLink.startsWith("http") ? "noopener noreferrer" : undefined}
-              className="block cursor-pointer focus:outline-none"
-            >
-              {imageElement}
-            </a>
+            isExternal ? (
+              <a
+                href={bannerLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block cursor-pointer focus:outline-none"
+              >
+                {imageElement}
+              </a>
+            ) : isHash ? (
+              <a
+                href={bannerLink}
+                onClick={handleHashClick}
+                className="block cursor-pointer focus:outline-none"
+              >
+                {imageElement}
+              </a>
+            ) : (
+              <Link
+                to={internalPath as any}
+                preload="intent"
+                className="block cursor-pointer focus:outline-none"
+              >
+                {imageElement}
+              </Link>
+            )
           ) : (
             imageElement
           )}
@@ -265,6 +308,20 @@ function Home() {
       window.removeEventListener("header-search", handleHeaderSearch);
     };
   }, []);
+
+  // Smooth scroll if URL contains hash (e.g. /#planners)
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash) {
+      const id = window.location.hash.replace(/^(\/#|#)/, "");
+      const timer = setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [rows]);
 
   // Filter products by search query with memoization
   const filteredProducts = useMemo(() => {
