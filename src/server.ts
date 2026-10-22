@@ -49,7 +49,27 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      const normalized = await normalizeCatastrophicSsrResponse(response);
+
+      // Edge caching on Cloudflare CDN to eliminate cold-start TTFB and accelerate FCP/LCP
+      const url = new URL(request.url);
+      const isPublicHtml =
+        (url.pathname === "/" || url.pathname === "/products" || url.pathname.startsWith("/products/")) &&
+        request.method === "GET" &&
+        normalized.status === 200 &&
+        (normalized.headers.get("content-type") || "").includes("text/html");
+
+      if (isPublicHtml && !normalized.headers.has("Cache-Control")) {
+        const newHeaders = new Headers(normalized.headers);
+        newHeaders.set("Cache-Control", "public, max-age=0, s-maxage=180, stale-while-revalidate=86400");
+        return new Response(normalized.body, {
+          status: normalized.status,
+          statusText: normalized.statusText,
+          headers: newHeaders,
+        });
+      }
+
+      return normalized;
     } catch (error) {
       console.error(error);
       return new Response(renderErrorPage(), {

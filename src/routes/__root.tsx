@@ -107,8 +107,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&display=swap",
-        media: "print",
-        onLoad: "this.media='all'",
       },
       {
         rel: "preload",
@@ -142,9 +140,6 @@ function RootShell({ children }: { children: ReactNode }) {
           }}
         />
         <HeadContent />
-        <noscript>
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&display=swap" />
-        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
