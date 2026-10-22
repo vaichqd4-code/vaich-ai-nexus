@@ -82,9 +82,6 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
       document.querySelector('section[id*="row-"]');
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
-      if (typeof window !== "undefined") {
-        window.history.pushState(null, "", "#planners");
-      }
     }
   };
 
@@ -183,13 +180,14 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
                 {imageElement}
               </a>
             ) : isPlannerTarget ? (
-              <a
-                href="#planners"
+              <button
+                type="button"
                 onClick={handlePlannerScroll}
-                className="block cursor-pointer focus:outline-none"
+                className="block w-full text-right cursor-pointer focus:outline-none"
+                aria-label="مشاهده پلنرها"
               >
                 {imageElement}
-              </a>
+              </button>
             ) : (
               <Link
                 to={internalPath as any}
@@ -328,19 +326,15 @@ function Home() {
     };
   }, []);
 
-  // Smooth scroll if URL contains hash (e.g. /#planners)
+  // Ensure homepage always opens cleanly at the top and clean any leftover planner hash from previous sessions
   useEffect(() => {
-    if (typeof window !== "undefined" && window.location.hash) {
-      const id = window.location.hash.replace(/^(\/#|#)/, "");
-      const timer = setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }, 350);
-      return () => clearTimeout(timer);
+    if (typeof window !== "undefined") {
+      if (window.location.hash && window.location.hash.includes("planner")) {
+        window.history.replaceState(null, "", window.location.pathname + window.location.search);
+        window.scrollTo(0, 0);
+      }
     }
-  }, [rows]);
+  }, []);
 
   // Filter products by search query with memoization
   const filteredProducts = useMemo(() => {
