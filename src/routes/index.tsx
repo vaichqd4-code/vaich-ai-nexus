@@ -167,7 +167,10 @@ function ProductRowSection({
   if (products.length === 0) return null;
 
   return (
-    <section id={row.id} className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
+    <section id={row.id} className="relative scroll-mt-20 sm:scroll-mt-24 mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
+      {(row.id === "row-mvampt3r" || row.title.includes("پلنر")) && (
+        <span id="planners" aria-hidden="true" className="absolute -top-24 pointer-events-none" />
+      )}
       {/* Title & Navigation Arrows Header */}
       <div className="flex items-center justify-between gap-3 mb-3">
         <div>
