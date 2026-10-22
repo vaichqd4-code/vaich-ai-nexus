@@ -174,7 +174,7 @@ export function AdminPage() {
     try {
       setIsCompressingBanner(true);
       setBannerUploadError("");
-      const compressedDataUrl = await compressAndResizeImage(file, 960, 640, 0.82);
+      const compressedDataUrl = await compressAndResizeImage(file, 800, 533, 0.75);
       setBannerConfig((prev) => ({ ...prev, imageUrl: compressedDataUrl }));
     } catch (err: any) {
       setBannerUploadError(err.message || "خطا در پردازش تصویر بنر");
@@ -235,7 +235,7 @@ export function AdminPage() {
     setIsCompressingImage(true);
 
     try {
-      const compressedDataUrl = await compressAndResizeImage(file, 400, 400, 0.82);
+      const compressedDataUrl = await compressAndResizeImage(file, 360, 360, 0.78);
       setEditProduct((prev) => (prev ? { ...prev, iconUrl: compressedDataUrl } : null));
     } catch (err) {
       console.error("Image processing error:", err);
@@ -1499,7 +1499,7 @@ export function AdminPage() {
                       onChange={(e) =>
                         setBannerConfig((prev) => ({ ...prev, imageUrl: e.target.value }))
                       }
-                      placeholder="/hero-ai.webp یا https://..."
+                      placeholder="/promo-banner.webp یا https://..."
                       className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-xs outline-none focus:border-primary"
                     />
                   </div>

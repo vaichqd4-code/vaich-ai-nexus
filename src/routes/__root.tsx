@@ -97,23 +97,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "canonical", href: "https://vaich.ir" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "preload",
         as: "font",
         type: "font/woff2",
-        href: "https://fonts.gstatic.com/s/vazirmatn/v16/Dxxo8j6PP2D_kU2muijlGMWWIGroe7ll.woff2",
+        href: "/fonts/vazirmatn.woff2",
         crossOrigin: "anonymous",
-      },
-      {
-        rel: "preload",
-        as: "style",
-        href: "https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap",
-      },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap",
       },
       {
         rel: "preload",
@@ -188,10 +177,10 @@ function RootShell({ children }: { children: ReactNode }) {
             }),
           }}
         />
-        {/* Crisp live chat deferred loader — loads on first user interaction or idle to prevent TBT / main-thread blocking */}
+        {/* Crisp live chat deferred loader — loads on idle to prevent mobile TBT / main-thread blocking */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){window.$crisp=[];window.CRISP_WEBSITE_ID="7751150b-b8d0-4953-8745-021b7d8a730c";var loaded=false;function initCrisp(){if(loaded)return;loaded=true;var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=true;d.head.appendChild(s);['scroll','mousemove','touchstart','keydown'].forEach(function(e){window.removeEventListener(e,initCrisp,{passive:true});});}['scroll','mousemove','touchstart','keydown'].forEach(function(e){window.addEventListener(e,initCrisp,{once:true,passive:true});});if('requestIdleCallback' in window){requestIdleCallback(function(){setTimeout(initCrisp,4000);});}else{setTimeout(initCrisp,5000);}})();`,
+            __html: `(function(){window.$crisp=[];window.CRISP_WEBSITE_ID="7751150b-b8d0-4953-8745-021b7d8a730c";var loaded=false;function initCrisp(){if(loaded)return;loaded=true;var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=true;d.head.appendChild(s);}window.loadCrispNow=initCrisp;if('requestIdleCallback' in window){requestIdleCallback(function(){setTimeout(initCrisp,7500);});}else{setTimeout(initCrisp,8500);}})();`,
           }}
         />
       </head>

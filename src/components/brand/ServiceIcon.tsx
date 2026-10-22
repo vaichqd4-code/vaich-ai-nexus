@@ -3,9 +3,9 @@ import { cn } from "@/lib/utils";
 export const PRESET_LOGOS: Record<string, string> = {
   gemini: "/gemini-logo.webp",
   "gemini-pro": "/gemini-pro-logo.webp",
-  chatgpt: "/chatgpt-logo.svg",
-  "chatgpt-plus": "/chatgpt-logo.svg",
-  "اشتراک chatgpt plus شخصی": "/chatgpt-logo.svg",
+  chatgpt: "/chatgpt-logo.webp",
+  "chatgpt-plus": "/chatgpt-logo.webp",
+  "اشتراک chatgpt plus شخصی": "/chatgpt-logo.webp",
   claude: "/Claude-.webp",
   "claude-pro": "/Claude-.webp",
 };

@@ -91,7 +91,6 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
   const imageElement = (
     <div className="float-slow glow-strong overflow-hidden rounded-3xl sm:rounded-4xl border border-border shadow-2xl bg-card aspect-4/3 group">
       <img
-        key={bannerImage}
         src={bannerImage}
         alt={bannerAlt}
         width={568}
@@ -115,11 +114,11 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
 
           <h1 className="mt-4 text-2xl font-black sm:text-4xl lg:text-[2.75rem] leading-[1.35] sm:leading-[1.3] text-foreground tracking-tight">
             <span>خرید مستقیم و مطمئن اشتراک‌های </span>
-            <span className="bg-linear-to-r from-purple-400 via-fuchsia-400 to-indigo-400 bg-clip-text text-transparent font-black drop-shadow-[0_0_24px_rgba(168,85,247,0.35)]">
+            <span className="text-primary font-black">
               هوش مصنوعی
             </span>
             <span className="text-foreground"> و </span>
-            <span className="bg-linear-to-r from-purple-400 via-fuchsia-400 to-indigo-400 bg-clip-text text-transparent font-black drop-shadow-[0_0_24px_rgba(168,85,247,0.35)]">
+            <span className="text-primary font-black">
               ابزارهای دیجیتال
             </span>
           </h1>

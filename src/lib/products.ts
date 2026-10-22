@@ -674,11 +674,9 @@ export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
   try {
     let fetchedData: SiteConfig | null = null;
 
-    // 1. Live static file with cache-buster
+    // Fast static config fetch cached by CDN
     try {
-      const res = await fetch(`/site-config.json?v=${Date.now()}`, {
-        cache: "no-store",
-      });
+      const res = await fetch("/site-config.json");
       if (res.ok) {
         const json = await res.json();
         if (json && Array.isArray(json.products) && json.products.length > 0) {
@@ -686,41 +684,6 @@ export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
         }
       }
     } catch (e) {}
-
-    // 2. Real-time fallback: If static file is missing, stale, or lacks promoBanner/instagramUrl, pull direct from GitHub
-    const localUpdatedAt = localStorage.getItem("vaich_config_updated_at");
-    const isStaticStale =
-      !fetchedData ||
-      !fetchedData.promoBanner ||
-      !fetchedData.instagramUrl ||
-      (localUpdatedAt && fetchedData.updatedAt && new Date(localUpdatedAt) > new Date(fetchedData.updatedAt));
-
-    if (isStaticStale) {
-      try {
-        const ghRes = await fetch(
-          `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main&_t=${Date.now()}`,
-          {
-            headers: {
-              Authorization: `Bearer ${GITHUB_TOKEN}`,
-              Accept: "application/vnd.github.v3+json",
-            },
-          }
-        );
-        if (ghRes.ok) {
-          const ghJson = await ghRes.json();
-          if (ghJson && ghJson.content) {
-            const rawDecoded = decodeUtf8Base64(ghJson.content.replace(/\s/g, ""));
-            const parsed = JSON.parse(rawDecoded);
-            if (parsed && Array.isArray(parsed.products) && parsed.products.length > 0) {
-              fetchedData = parsed as SiteConfig;
-              if (ghJson.sha && typeof ghJson.sha === "string") {
-                latestKnownSha = ghJson.sha;
-              }
-            }
-          }
-        }
-      } catch (e) {}
-    }
 
     if (fetchedData) {
       localStorage.setItem("vaich_custom_products", JSON.stringify(fetchedData.products));
@@ -764,69 +727,14 @@ export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
 }
 
 export function useDynamicProducts() {
-  const [items, setItems] = useState<Product[]>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredProducts();
-        if (stored && stored.length > 0) return stored;
-      } catch {}
-    }
-    return DEFAULT_PRODUCTS;
-  });
-  const [rows, setRowsState] = useState<ProductCategoryRow[]>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredCategoryRows();
-        if (stored && stored.length > 0) return stored;
-      } catch {}
-    }
-    return DEFAULT_CATEGORY_ROWS;
-  });
-  const [layout, setLayoutState] = useState<LayoutMode>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredLayout();
-        if (stored) return stored;
-      } catch {}
-    }
-    return "1-row";
-  });
-  const [adminUsers, setAdminUsersState] = useState<AdminUser[]>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredAdminUsers();
-        if (stored && stored.length > 0) return stored;
-      } catch {}
-    }
-    return DEFAULT_ADMIN_USERS;
-  });
-  const [masterPin, setMasterPinState] = useState<string>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredMasterPin();
-        if (stored) return stored;
-      } catch {}
-    }
-    return DEFAULT_ADMIN_PIN;
-  });
-  const [promoBanner, setPromoBannerState] = useState<PromoBannerConfig>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredPromoBanner();
-        if (stored && stored.imageUrl && stored.imageUrl !== "/hero-ai.webp") return stored;
-      } catch {}
-    }
-    return DEFAULT_PROMO_BANNER;
-  });
-  const [instagramUrl, setInstagramUrlState] = useState<string>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredInstagramUrl();
-        if (stored) return stored;
-      } catch {}
-    }
-    return DEFAULT_INSTAGRAM_URL;
-  });
+  // Deterministic initial state for 100% clean SSR hydration (no mismatch)
+  const [items, setItems] = useState<Product[]>(DEFAULT_PRODUCTS);
+  const [rows, setRowsState] = useState<ProductCategoryRow[]>(DEFAULT_CATEGORY_ROWS);
+  const [layout, setLayoutState] = useState<LayoutMode>("1-row");
+  const [adminUsers, setAdminUsersState] = useState<AdminUser[]>(DEFAULT_ADMIN_USERS);
+  const [masterPin, setMasterPinState] = useState<string>(DEFAULT_ADMIN_PIN);
+  const [promoBanner, setPromoBannerState] = useState<PromoBannerConfig>(DEFAULT_PROMO_BANNER);
+  const [instagramUrl, setInstagramUrlState] = useState<string>(DEFAULT_INSTAGRAM_URL);
   const [isCloudSyncing, setIsCloudSyncing] = useState(false);
   const [lastCloudSync, setLastCloudSync] = useState<string | null>(null);
 
