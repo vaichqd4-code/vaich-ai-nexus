@@ -35,9 +35,7 @@
       "discountPercent": 91,
       "duration": "۱۸ ماهه",
       "description": "اشتراک Gemini pro ۱۸ ماهه.",
-      "featured": true,
-      "badge": "ویژه",
-      "badgeColor": "purple",
+      "featured": false,
       "categoryId": "ai",
       "features": [
         "🔥 ۱۸,۰۰۰ کردیت گوگل فلو (۱,۰۰۰ تا در هر ماه) + ۵۰ کردیت روزانه برای ساخت ویدیو",
@@ -174,5 +172,5 @@
     "altText": "خرید پلنر برنامه‌ریزی هوشمند و ردیاب عادات روزانه VAICH"
   },
   "instagramUrl": "https://www.instagram.com/vaich.ir?psln=MXJkZ2xtaWg1cHo5dQ==",
-  "updatedAt": "2026-10-23T13:57:22.647Z"
+  "updatedAt": "2026-10-23T13:57:29.528Z"
 }
