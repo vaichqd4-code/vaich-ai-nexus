@@ -30,9 +30,7 @@
     {
       "slug": "gemini",
       "name": "Gemini pro",
-      "price": 399000,
-      "originalPrice": 4700000,
-      "discountPercent": 91,
+      "price": 4700000,
       "duration": "۱۸ ماهه",
       "description": "اشتراک Gemini pro ۱۸ ماهه.",
       "featured": false,
@@ -172,5 +170,5 @@
     "altText": "خرید پلنر برنامه‌ریزی هوشمند و ردیاب عادات روزانه VAICH"
   },
   "instagramUrl": "https://www.instagram.com/vaich.ir?psln=MXJkZ2xtaWg1cHo5dQ==",
-  "updatedAt": "2026-10-23T13:57:29.528Z"
+  "updatedAt": "2026-10-23T13:57:32.758Z"
 }
