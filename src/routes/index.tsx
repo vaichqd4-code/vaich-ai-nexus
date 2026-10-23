@@ -73,8 +73,18 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
     }
   }
 
+  const onBannerClick = (dest: string) => {
+    import("@/lib/analytics").then(({ trackEvent }) => {
+      trackEvent("banner_click", {
+        title: "کلیک روی بنر تبلیغاتی هیرو",
+        details: { destination: dest },
+      });
+    });
+  };
+
   const handlePlannerScroll = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
+    onBannerClick("planners");
     const target =
       document.getElementById("planners") ||
       document.getElementById("row-mvampt3r") ||
@@ -175,6 +185,7 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
                 href={bannerLink}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => onBannerClick(bannerLink)}
                 className="block cursor-pointer focus:outline-none"
               >
                 {imageElement}
@@ -192,13 +203,16 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
               <Link
                 to={internalPath as any}
                 preload="intent"
+                onClick={() => onBannerClick(internalPath)}
                 className="block cursor-pointer focus:outline-none"
               >
                 {imageElement}
               </Link>
             )
           ) : (
-            imageElement
+            <div onClick={() => onBannerClick("banner_click")} className="cursor-pointer">
+              {imageElement}
+            </div>
           )}
         </div>
       </div>

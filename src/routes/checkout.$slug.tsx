@@ -71,6 +71,17 @@ const fieldClass =
 function Checkout() {
   const { product } = Route.useLoaderData();
 
+  useEffect(() => {
+    if (typeof window === "undefined" || !product) return;
+    import("@/lib/analytics").then(({ trackEvent }) => {
+      trackEvent("checkout_view", {
+        productSlug: product.slug,
+        productName: product.name,
+        amount: product.price,
+      });
+    });
+  }, [product?.slug]);
+
   const [copied, setCopied] = useState(false);
   const [msgCopied, setMsgCopied] = useState(false);
 
@@ -476,6 +487,19 @@ function Checkout() {
                             price: product.price,
                           },
                         }),
+                      });
+
+                      // ثبت در آنالیتیکس اختصاصی
+                      import("@/lib/analytics").then(({ trackEvent }) => {
+                        trackEvent("checkout_submit", {
+                          customerName: customer.fullName,
+                          customerPhone: customer.phone,
+                          customerEmail: customer.email,
+                          productName: product.name,
+                          productSlug: product.slug,
+                          amount: product.price,
+                          details: { notes: customer.note },
+                        });
                       });
 
                       setSubmitted(true);

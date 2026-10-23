@@ -1,4 +1,5 @@
 import { createFileRoute, notFound, Link, redirect } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { Section } from "@/components/layout/Section";
 import { NeonLink } from "@/components/ui/NeonButton";
@@ -53,6 +54,17 @@ export const Route = createFileRoute("/products/$slug")({
 
 function ProductDetail() {
   const { product } = Route.useLoaderData();
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !product) return;
+    import("@/lib/analytics").then(({ trackEvent }) => {
+      trackEvent("product_view", {
+        productSlug: product.slug,
+        productName: product.name,
+        amount: product.price,
+      });
+    });
+  }, [product?.slug]);
 
   const badgeColorMap: Record<string, string> = {
     fire: "bg-linear-to-r from-rose-500 to-amber-500 text-white shadow-rose-500/20",
