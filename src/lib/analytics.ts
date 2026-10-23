@@ -78,7 +78,9 @@ function saveEventLocally(event: AnalyticsEvent): void {
       list.length = MAX_LOCAL_EVENTS;
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    window.dispatchEvent(new CustomEvent("vaich_analytics_new_event", { detail: event }));
+    if (window.location.pathname.startsWith("/overview")) {
+      window.dispatchEvent(new CustomEvent("vaich_analytics_new_event", { detail: event }));
+    }
   } catch {
     // Ignore storage quota errors
   }

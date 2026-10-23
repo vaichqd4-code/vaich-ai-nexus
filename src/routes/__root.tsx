@@ -196,29 +196,6 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    let cleanup: (() => void) | undefined;
-    const startTracker = async () => {
-      const { initSessionTracking } = await import("@/lib/analytics");
-      cleanup = initSessionTracking();
-    };
-
-    if ("requestIdleCallback" in window) {
-      const id = (window as any).requestIdleCallback(startTracker, { timeout: 3500 });
-      return () => {
-        (window as any).cancelIdleCallback?.(id);
-        cleanup?.();
-      };
-    } else {
-      const t = setTimeout(startTracker, 2000);
-      return () => {
-        clearTimeout(t);
-        cleanup?.();
-      };
-    }
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col">
