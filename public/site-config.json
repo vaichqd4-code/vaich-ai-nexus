@@ -30,9 +30,7 @@
     {
       "slug": "gemini",
       "name": "Gemini pro",
-      "price": 160000,
-      "originalPrice": 380000,
-      "discountPercent": 60,
+      "price": 380000,
       "duration": "60 روزه",
       "description": "اشتراک سرویس هوش مصنوعی Gemini، 60 روزه.",
       "featured": false,
@@ -172,5 +170,5 @@
     "altText": "خرید پلنر برنامه‌ریزی هوشمند و ردیاب عادات روزانه VAICH"
   },
   "instagramUrl": "https://www.instagram.com/vaich.ir?psln=MXJkZ2xtaWg1cHo5dQ==",
-  "updatedAt": "2026-10-23T14:15:00.000Z"
+  "updatedAt": "2026-10-23T14:26:47.833Z"
 }
