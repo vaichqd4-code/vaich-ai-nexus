@@ -15,6 +15,11 @@ import {
   type LayoutMode,
   type AdminUser,
   type PromoBannerConfig,
+  fetchRemoteHistory,
+  fetchSnapshotConfig,
+  getLocalSnapshots,
+  type ConfigSnapshot,
+  type SiteConfig,
 } from "@/lib/products";
 import { ServiceIcon, getProductLogo, PRESET_LOGOS } from "@/components/brand/ServiceIcon";
 import {
@@ -46,6 +51,10 @@ import {
   ImageIcon,
   Instagram,
   BarChart3,
+  History,
+  RotateCcw,
+  Eye,
+  CheckCircle2,
 } from "lucide-react";
 
 // Client-side image compressor for mobile and desktop uploads
@@ -108,9 +117,19 @@ export function AdminPage() {
     setInstagramUrl,
     resetToDefault,
     publishToCloud,
+    restoreSnapshot,
     isCloudSyncing,
     lastCloudSync,
   } = useDynamicProducts();
+
+  // History / Undo / Rollback State
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [snapshots, setSnapshots] = useState<ConfigSnapshot[]>([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+  const [selectedSnapshot, setSelectedSnapshot] = useState<ConfigSnapshot | null>(null);
+  const [previewConfig, setPreviewConfig] = useState<SiteConfig | null>(null);
+  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(false);
 
   // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -668,6 +687,65 @@ export function AdminPage() {
     }
   };
 
+  // Open and load version history
+  const handleOpenHistory = async () => {
+    setIsHistoryOpen(true);
+    setIsLoadingHistory(true);
+    setSelectedSnapshot(null);
+    setPreviewConfig(null);
+    try {
+      const remote = await fetchRemoteHistory();
+      setSnapshots(remote.length > 0 ? remote : getLocalSnapshots());
+    } catch {
+      setSnapshots(getLocalSnapshots());
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  };
+
+  // Select a snapshot to inspect differences
+  const handleSelectSnapshot = async (snap: ConfigSnapshot) => {
+    setSelectedSnapshot(snap);
+    if (snap.config) {
+      setPreviewConfig(snap.config);
+      return;
+    }
+    if (snap.sha) {
+      setIsLoadingPreview(true);
+      try {
+        const cfg = await fetchSnapshotConfig(snap.sha);
+        setPreviewConfig(cfg);
+      } catch (e) {
+        alert("خطا در بارگذاری پیش‌نمایش نسخه");
+      } finally {
+        setIsLoadingPreview(false);
+      }
+    }
+  };
+
+  // Confirm rollback to the previewed version
+  const handleConfirmRestore = async () => {
+    if (!previewConfig) return;
+    const timeLabel = selectedSnapshot?.timestamp
+      ? new Date(selectedSnapshot.timestamp).toLocaleString("fa-IR")
+      : "انتخابی";
+    if (!confirm(`آیا مطمئن هستید که می‌خواهید فروشگاه به نسخه تاریخ ${timeLabel} بازگردانی شود؟`)) {
+      return;
+    }
+    setIsRestoring(true);
+    try {
+      const res = await restoreSnapshot(previewConfig);
+      if (res.success) {
+        alert("فروشگاه با موفقیت به نسخه انتخابی بازگردانی و منتشر شد! ✓");
+        setIsHistoryOpen(false);
+      } else {
+        alert(`خطا در بازگردانی: ${res.error || "خطای ناشناخته"}`);
+      }
+    } finally {
+      setIsRestoring(false);
+    }
+  };
+
   // ---------------- LOGIN SCREEN ----------------
   if (!isAuthenticated) {
     return (
@@ -905,12 +983,22 @@ export function AdminPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={handleOpenHistory}
+              className="flex items-center gap-1.5 rounded-xl border border-primary/40 bg-card hover:bg-secondary active:scale-95 text-foreground px-3.5 py-2 text-xs font-bold shadow-xs transition-all cursor-pointer"
+              title="مشاهده تاریخچه تغییرات، پیش‌نمایش و بازگردانی در صورت اشتباه"
+            >
+              <History className="h-3.5 w-3.5 text-primary" />
+              <span>تاریخچه و بازگردانی ↺</span>
+            </button>
+
             <button
               type="button"
               disabled={isCloudSyncing}
               onClick={() => handlePublishCloud()}
-              className="flex items-center gap-2 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-4 py-2 text-xs font-bold shadow-md transition-all disabled:opacity-50"
+              className="flex items-center gap-2 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white px-4 py-2 text-xs font-bold shadow-md transition-all disabled:opacity-50 cursor-pointer"
             >
               <RefreshCw className={`h-3.5 w-3.5 ${isCloudSyncing ? "animate-spin" : ""}`} />
               <span>{isCloudSyncing ? "در حال ذخیره در سرور ابری..." : "انتشار سراسری در سرور"}</span>
@@ -2294,6 +2382,194 @@ export function AdminPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ---------------- HISTORY & ROLLBACK MODAL ---------------- */}
+      {isHistoryOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 overflow-y-auto">
+          <div className="relative w-full max-w-4xl rounded-3xl border border-border/80 bg-card p-5 sm:p-7 shadow-2xl max-h-[90vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-border/70 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="grid h-10 w-10 place-items-center rounded-2xl bg-primary/10 border border-primary/20 text-primary">
+                  <History className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-base sm:text-lg font-black text-foreground">
+                    تاریخچه تغییرات و بازگردانی هوشمند (Undo / Rollback)
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    هر نسخه‌ای از قبل را انتخاب کنید، تفاوت‌ها را پیش‌نمایش ببینید و با ۱ کلیک برگردانید.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsHistoryOpen(false)}
+                className="grid h-9 w-9 place-items-center rounded-xl border border-border bg-card text-muted-foreground hover:text-foreground cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="mt-4 flex-1 grid grid-cols-1 md:grid-cols-12 gap-5 overflow-hidden">
+              {/* Snapshot List (5 cols) */}
+              <div className="md:col-span-5 flex flex-col space-y-2 overflow-y-auto max-h-[55vh] pr-1">
+                <div className="flex items-center justify-between pb-1 text-xs font-bold text-muted-foreground">
+                  <span>نسخه‌های پیشین فروشگاه</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (confirm("آیا می‌خواهید همه تنظیمات به حالت اولیه کارخانه بازگردد؟")) {
+                        handleResetToDefault();
+                        setIsHistoryOpen(false);
+                      }
+                    }}
+                    className="text-[11px] text-amber-500 hover:underline inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <RotateCcw className="h-3 w-3" />
+                    <span>تنظیمات کارخانه</span>
+                  </button>
+                </div>
+
+                {isLoadingHistory ? (
+                  <div className="py-12 text-center text-xs text-muted-foreground">
+                    <RefreshCw className="h-6 w-6 animate-spin mx-auto text-primary mb-2" />
+                    <span>در حال بارگذاری تاریخچه تغییرات...</span>
+                  </div>
+                ) : snapshots.length === 0 ? (
+                  <div className="rounded-2xl border border-border p-6 text-center text-xs text-muted-foreground">
+                    تاریخچه‌ای یافت نشد.
+                  </div>
+                ) : (
+                  snapshots.map((snap) => {
+                    const isSelected = selectedSnapshot?.id === snap.id;
+                    const dateObj = new Date(snap.timestamp);
+                    const jalaliDate = dateObj.toLocaleDateString("fa-IR");
+                    const jalaliTime = dateObj.toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" });
+
+                    return (
+                      <button
+                        key={snap.id}
+                        type="button"
+                        onClick={() => handleSelectSnapshot(snap)}
+                        className={`w-full text-right p-3 rounded-2xl border transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-primary bg-primary/10 shadow-sm"
+                            : "border-border/70 bg-card hover:bg-secondary/40"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-foreground">
+                            {jalaliDate} — ساعت {jalaliTime}
+                          </span>
+                          {isSelected && <CheckCircle2 className="h-4 w-4 text-primary" />}
+                        </div>
+                        <p className="mt-1 text-[11px] text-muted-foreground truncate">
+                          {snap.label || "تغییرات ذخیره‌شده ادمین"}
+                        </p>
+                      </button>
+                    );
+                  })
+                )}
+              </div>
+
+              {/* Snapshot Preview & Confirm (7 cols) */}
+              <div className="md:col-span-7 rounded-2xl border border-border/80 bg-secondary/20 p-4 flex flex-col justify-between overflow-y-auto max-h-[55vh]">
+                {isLoadingPreview ? (
+                  <div className="py-20 text-center text-xs text-muted-foreground">
+                    <RefreshCw className="h-7 w-7 animate-spin mx-auto text-primary mb-2" />
+                    <span>در حال آماده‌سازی پیش‌نمایش نسخه...</span>
+                  </div>
+                ) : !selectedSnapshot ? (
+                  <div className="py-20 text-center text-xs text-muted-foreground">
+                    <Eye className="h-8 w-8 mx-auto text-muted-foreground/50 mb-2" />
+                    <p className="font-bold text-foreground">یک نسخه را از لیست سمت راست انتخاب کنید</p>
+                    <p className="mt-1 text-[11px]">تا جزئیات محصولات و قیمت‌ها در آن تاریخ به شما نمایش داده شود.</p>
+                  </div>
+                ) : !previewConfig ? (
+                  <div className="py-20 text-center text-xs text-rose-500 font-bold">
+                    اطلاعات این نسخه در دسترس نیست.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                      <div>
+                        <span className="text-xs font-bold text-foreground">
+                          پیش‌نمایش محصولات در نسخه انتخابی:
+                        </span>
+                        <span className="text-[11px] text-muted-foreground mr-2">
+                          ({toPersianDigits(previewConfig.products?.length || 0)} محصول)
+                        </span>
+                      </div>
+                      <span className="rounded-md bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5">
+                        نسخه تاریخ: {new Date(selectedSnapshot.timestamp).toLocaleTimeString("fa-IR")}
+                      </span>
+                    </div>
+
+                    <div className="space-y-2 overflow-y-auto max-h-[35vh] pr-1">
+                      {previewConfig.products?.map((p) => {
+                        const currentMatch = products.find((cp) => cp.slug === p.slug);
+                        const isPriceDifferent = currentMatch && currentMatch.price !== p.price;
+                        const isDurationDifferent = currentMatch && currentMatch.duration !== p.duration;
+
+                        return (
+                          <div
+                            key={p.slug}
+                            className={`rounded-xl border p-2.5 text-xs transition-colors ${
+                              isPriceDifferent || isDurationDifferent
+                                ? "border-amber-500/50 bg-amber-500/10"
+                                : "border-border/60 bg-card"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between font-bold text-foreground">
+                              <span>{p.name}</span>
+                              <span className="text-primary">{formatPrice(p.price)}</span>
+                            </div>
+                            <div className="mt-1 flex items-center justify-between text-[11px] text-muted-foreground">
+                              <span>مدت: {p.duration || "—"}</span>
+                              {p.discountPercent ? (
+                                <span className="text-rose-500">تخفیف: {toPersianDigits(p.discountPercent)}٪</span>
+                              ) : null}
+                            </div>
+                            {isPriceDifferent && (
+                              <div className="mt-1 text-[10px] text-amber-600 dark:text-amber-400 font-semibold">
+                                ⚠️ قیمت در سایت فعلی: {formatPrice(currentMatch.price)} (با این بازگردانی به {formatPrice(p.price)} تغییر خواهد کرد)
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Confirm Action Button */}
+                {selectedSnapshot && previewConfig && (
+                  <div className="pt-4 border-t border-border/60 mt-3 flex items-center justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsHistoryOpen(false)}
+                      className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-muted-foreground hover:bg-secondary cursor-pointer"
+                    >
+                      انصراف
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isRestoring}
+                      onClick={handleConfirmRestore}
+                      className="flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 text-xs font-bold shadow-md transition-all cursor-pointer disabled:opacity-50"
+                    >
+                      <RotateCcw className={`h-3.5 w-3.5 ${isRestoring ? "animate-spin" : ""}`} />
+                      <span>{isRestoring ? "در حال بازگردانی..." : "تایید و بازگردانی به این نسخه ✓"}</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -71,12 +71,13 @@ export const DEFAULT_PRODUCTS: Product[] = [
   {
     slug: "gemini",
     name: "Gemini pro",
-    price: 275000,
-    originalPrice: 392000,
-    discountPercent: 30,
+    price: 160000,
+    originalPrice: 380000,
+    discountPercent: 60,
     duration: "60 روزه",
     description: "اشتراک سرویس هوش مصنوعی Gemini، 60 روزه.",
     featured: false,
+    badgeColor: "purple",
     categoryId: "ai",
     purchaseInfo: [
       "اشتراک Gemini به مدت 60 روز ارائه می‌شود.",
@@ -102,11 +103,12 @@ export const DEFAULT_PRODUCTS: Product[] = [
     name: "Gemini pro",
     price: 399000,
     originalPrice: 4700000,
+    discountPercent: 91,
     duration: "۱۸ ماهه",
     description: "اشتراک Gemini pro ۱۸ ماهه.",
     featured: true,
-    badge: "پیشنهاد ویژه 🔥",
-    badgeColor: "fire",
+    badge: "ویژه",
+    badgeColor: "purple",
     categoryId: "ai",
     purchaseInfo: [
       "اشتراک Gemini pro به مدت ۱۸ ماه ارائه می‌شود.",
@@ -428,6 +430,92 @@ export type SiteConfig = {
   instagramUrl?: string;
   updatedAt: string;
 };
+
+export interface ConfigSnapshot {
+  id: string;
+  sha?: string;
+  timestamp: string;
+  label: string;
+  config?: SiteConfig;
+}
+
+const SNAPSHOTS_KEY = "vaich_config_snapshots";
+
+export function saveLocalSnapshot(config: SiteConfig, label?: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    const raw = localStorage.getItem(SNAPSHOTS_KEY);
+    const list: ConfigSnapshot[] = raw ? JSON.parse(raw) : [];
+    const snapshot: ConfigSnapshot = {
+      id: `snap_${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      label: label || `نسخه ذخیره‌شده ${new Date().toLocaleTimeString("fa-IR")}`,
+      config,
+    };
+    list.unshift(snapshot);
+    if (list.length > 20) list.length = 20;
+    localStorage.setItem(SNAPSHOTS_KEY, JSON.stringify(list));
+  } catch (e) {}
+}
+
+export function getLocalSnapshots(): ConfigSnapshot[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(SNAPSHOTS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchRemoteHistory(): Promise<ConfigSnapshot[]> {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/commits?path=${CONFIG_FILE_PATH}&per_page=12`,
+      {
+        headers: {
+          Authorization: `Bearer ${GITHUB_TOKEN}`,
+          Accept: "application/vnd.github.v3+json",
+        },
+      }
+    );
+    if (!res.ok) return getLocalSnapshots();
+    const data = await res.json();
+    if (!Array.isArray(data)) return getLocalSnapshots();
+
+    return data.map((c: any) => ({
+      id: c.sha,
+      sha: c.sha,
+      timestamp: c.commit?.author?.date || new Date().toISOString(),
+      label: c.commit?.message?.replace("[Admin] ", "") || "تغییرات ادمین",
+    }));
+  } catch {
+    return getLocalSnapshots();
+  }
+}
+
+export async function fetchSnapshotConfig(sha: string): Promise<SiteConfig | null> {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=${sha}`,
+      {
+        headers: {
+          Authorization: `Bearer ${GITHUB_TOKEN}`,
+          Accept: "application/vnd.github.v3+json",
+        },
+      }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data?.content) {
+      const decoded = decodeUtf8Base64(data.content.replace(/\s/g, ""));
+      return JSON.parse(decoded) as SiteConfig;
+    }
+  } catch (e) {
+    console.warn("fetchSnapshotConfig error:", e);
+  }
+  return null;
+}
 
 const GITHUB_REPO_OWNER = "vaichqd4-code";
 const GITHUB_REPO_NAME = "vaich-ai-nexus";
@@ -991,6 +1079,19 @@ export function useDynamicProducts() {
     return queueCloudSync(async () => {
       setIsCloudSyncing(true);
       try {
+        // Save previous state to local snapshots for undo / rollback
+        const prevConfig: SiteConfig = {
+          products: typeof window !== "undefined" ? getStoredProducts() : items,
+          categoryRows: typeof window !== "undefined" ? getStoredCategoryRows() : rows,
+          layout: typeof window !== "undefined" ? getStoredLayout() : layout,
+          masterPin: typeof window !== "undefined" ? getStoredMasterPin() : masterPin,
+          adminUsers: typeof window !== "undefined" ? getStoredAdminUsers() : adminUsers,
+          promoBanner: typeof window !== "undefined" ? getStoredPromoBanner() : promoBanner,
+          instagramUrl: typeof window !== "undefined" ? getStoredInstagramUrl() : instagramUrl,
+          updatedAt: new Date().toISOString(),
+        };
+        saveLocalSnapshot(prevConfig);
+
         const currentProducts = override?.products ?? (typeof window !== "undefined" ? getStoredProducts() : items);
         const currentRows = override?.rows ?? (typeof window !== "undefined" ? getStoredCategoryRows() : rows);
         const currentLayout = override?.layout ?? (typeof window !== "undefined" ? getStoredLayout() : layout);
@@ -1032,6 +1133,27 @@ export function useDynamicProducts() {
     });
   };
 
+  const restoreSnapshot = (cfg: SiteConfig): Promise<{ success: boolean; error?: string }> => {
+    if (!cfg || !Array.isArray(cfg.products)) return Promise.resolve({ success: false, error: "داده‌های نسخه نامعتبر است" });
+    setItems(cfg.products);
+    if (cfg.categoryRows) setRowsState(cfg.categoryRows);
+    if (cfg.layout) setLayoutState(cfg.layout);
+    if (cfg.adminUsers) setAdminUsersState(cfg.adminUsers);
+    if (cfg.masterPin) setMasterPinState(cfg.masterPin);
+    if (cfg.promoBanner) setPromoBannerState(cfg.promoBanner);
+    if (cfg.instagramUrl) setInstagramUrlState(cfg.instagramUrl);
+
+    return publishToCloud({
+      products: cfg.products,
+      rows: cfg.categoryRows,
+      layout: cfg.layout,
+      adminUsers: cfg.adminUsers,
+      masterPin: cfg.masterPin,
+      promoBanner: cfg.promoBanner,
+      instagramUrl: cfg.instagramUrl,
+    });
+  };
+
   return {
     products: items,
     rows,
@@ -1049,6 +1171,7 @@ export function useDynamicProducts() {
     setInstagramUrl: updateInstagramUrl,
     resetToDefault: resetProductsToDefault,
     publishToCloud,
+    restoreSnapshot,
     isCloudSyncing,
     lastCloudSync,
     syncFromCloud: syncSiteConfigWithCloud,
