@@ -66,10 +66,14 @@ export const Route = createFileRoute("/api/analytics")({
         try {
           const url = new URL(request.url);
           const reqPin = url.searchParams.get("pin") || request.headers.get("x-admin-pin") || "";
-          const effectivePin = normalizePin(process.env["ADMIN_MASTER_PIN"] || DEFAULT_ADMIN_PIN);
+          const normReq = normalizePin(reqPin);
+          const defaultPin = normalizePin(DEFAULT_ADMIN_PIN);
+          const envPin = process.env["ADMIN_MASTER_PIN"] ? normalizePin(process.env["ADMIN_MASTER_PIN"]) : "";
 
-          // Verify authorization
-          if (normalizePin(reqPin) !== effectivePin) {
+          // Verify authorization: accept either default master PIN (Yh111111) or server env override
+          const isAuthorized = Boolean(normReq && (normReq === defaultPin || (envPin && normReq === envPin)));
+
+          if (!isAuthorized) {
             return Response.json({ success: false, message: "دسترسی غیرمجاز. رمز عبور نامعتبر است." }, { status: 401 });
           }
 
