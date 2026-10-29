@@ -143,14 +143,15 @@ function ProductDetail() {
   const badgeClass = (product.badgeColor && badgeColorMap[product.badgeColor]) || badgeColorMap.purple;
 
   const isOutOfStock = product.inStock === false;
-  const avgRating = product.rating || 4.9;
+  const isPlanner = product.slug.includes("planner") || product.categoryId === "row-mvampt3r";
+  const avgRating = product.rating || (isPlanner ? 4.9 : 4.8);
   const countReviews = (product.reviewCount || 0) + (reviews.length - (product.reviews?.length || 0));
 
   // Google Search Console JSON-LD Structured Data with AggregateRating and Reviews
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: `اشتراک ${product.name}`,
+    name: isPlanner ? product.name : `اشتراک ${product.name}`,
     description: product.description,
     image: "https://vaich.ir/vaich-logo.png",
     offers: {
@@ -239,6 +240,13 @@ function ProductDetail() {
                     )}
                   </div>
 
+                  {isPlanner && (
+                    <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400">
+                      <span>✨</span>
+                      <span>خرید دائمی و مادام‌العمر • بدون نیاز به تمدید یا هزینه اشتراک ماهانه</span>
+                    </div>
+                  )}
+
                   {/* Rating summary line */}
                   <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
                     <div className="flex items-center gap-1 text-amber-400 font-bold">
@@ -285,11 +293,11 @@ function ProductDetail() {
               )}
 
               <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">قیمت سرویس:</span>
+                <span className="text-xs text-muted-foreground">{isPlanner ? "مبلغ خرید دائمی:" : "قیمت سرویس:"}</span>
                 {product.duration && (
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-secondary/60 px-2.5 py-0.5 text-xs font-medium text-foreground">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    مدت: {product.duration}
+                    {isPlanner ? "دسترسی مادام‌العمر" : `مدت: ${product.duration}`}
                   </span>
                 )}
               </div>
@@ -304,8 +312,11 @@ function ProductDetail() {
                   </span>
                 )}
                 {product.discountPercent ? (
-                  <span className="rounded-md bg-rose-500/10 px-1.5 py-0.5 text-xs font-bold text-rose-500 border border-rose-500/20">
-                    %{toPersianDigits(product.discountPercent)}
+                  <span
+                    dir="ltr"
+                    className="rounded-lg bg-rose-500 font-sans text-xs font-black text-white px-2 py-0.5 shadow-xs tracking-tight"
+                  >
+                    -{product.discountPercent}%
                   </span>
                 ) : null}
               </div>
@@ -320,8 +331,8 @@ function ProductDetail() {
                     ناموجود (اتمام موجودی)
                   </button>
                 ) : (
-                  <NeonLink to="/checkout/$slug" params={{ slug: product.slug }} size="lg" className="w-full text-center">
-                    خرید آنلاین و تحویل فوری
+                  <NeonLink to="/checkout/$slug" params={{ slug: product.slug }} size="lg" className="w-full text-center font-bold">
+                    {isPlanner ? "خرید مستقیم و تحویل آنی فایل" : "خرید آنلاین و تحویل فوری"}
                   </NeonLink>
                 )}
                 <NeonLink to="/support" variant="outline" size="lg" className="w-full text-center">
@@ -330,35 +341,59 @@ function ProductDetail() {
               </div>
 
               {/* Conversion Trust Checklist */}
-              <div className="mt-5 space-y-2 border-t border-border/60 pt-4 text-xs text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <span className="text-emerald-500 font-bold">✓</span>
-                  <span>فعال‌سازی قانونی با گارانتی سلامت اکانت</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-emerald-500 font-bold">✓</span>
-                  <span>تحویل سریع پس از واریز و تأیید فاکتور</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-emerald-500 font-bold">✓</span>
-                  <span>پشتیبانی اختصاصی در صورت بروز هرگونه مشکل</span>
-                </div>
+              <div className="mt-5 space-y-2.5 border-t border-border/60 pt-4 text-xs text-muted-foreground">
+                {isPlanner ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-500 font-bold">✓</span>
+                      <span className="text-foreground font-semibold">دسترسی دائمی و مادام‌العمر (بدون هزینه اشتراک ماهانه)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-500 font-bold">✓</span>
+                      <span>تحویل آنی لینک کپی اختصاصی در گوگل درایو بلافاصله پس از پرداخت</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-500 font-bold">✓</span>
+                      <span>پشتیبانی اختصاصی و راهنمای کامل راه‌اندازی فارسی در ۳ دقیقه</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-500 font-bold">✓</span>
+                      <span>فعال‌سازی ۱۰۰٪ قانونی با گارانتی سلامت اکانت</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-500 font-bold">✓</span>
+                      <span>تحویل سریع اطلاعات اشتراک پس از تأیید فاکتور</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-emerald-500 font-bold">✓</span>
+                      <span>پشتیبانی اختصاصی در تمام طول دوره اشتراک</span>
+                    </div>
+                  </>
+                )}
               </div>
 
               {product.features && product.features.length > 0 && (
                 <div className="mt-6 rounded-2xl border border-border/80 bg-background/50 p-4">
-                  <h3 className="mb-3 flex items-center gap-2 text-sm font-bold text-foreground">
-                    <span>✨</span> قابلیت‌ها و دسترسی‌های این پلن
+                  <h3 className="mb-3.5 flex items-center gap-2 text-sm font-bold text-foreground">
+                    <span className="h-2 w-2 rounded-full bg-primary" />
+                    <span>قابلیت‌ها و دسترسی‌های این محصول</span>
                   </h3>
-                  <ul className="space-y-2.5">
-                    {product.features.map((feature, idx) => (
-                      <li
-                        key={idx}
-                        className="text-xs leading-6 text-muted-foreground"
-                      >
-                        {feature}
-                      </li>
-                    ))}
+                  <ul className="space-y-2">
+                    {product.features.map((feature, idx) => {
+                      const cleanFeature = feature.replace(/^[\p{Emoji}\s\u200d]+/u, "").trim();
+                      return (
+                        <li
+                          key={idx}
+                          className="flex items-start gap-2.5 text-xs leading-6 text-muted-foreground"
+                        >
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
+                          <span className="flex-1">{cleanFeature || feature}</span>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}

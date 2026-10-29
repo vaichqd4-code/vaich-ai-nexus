@@ -47,6 +47,7 @@ export function ProductCard({
   const logoUrl = getProductLogo(product.slug, product.iconUrl);
   const initial = product.slug ? product.slug.charAt(0).toUpperCase() : "AI";
   const isOutOfStock = product.inStock === false;
+  const isPlanner = product.slug.includes("planner") || product.categoryId === "row-mvampt3r";
 
   return (
     <article
@@ -160,7 +161,7 @@ export function ProductCard({
             {product.name}
           </h3>
           <p className="line-clamp-1 text-[10px] sm:text-xs text-muted-foreground">
-            {product.description || (product.duration ? `اشتراک معتبر • ${product.duration}` : "تحویل فوری و قانونی")}
+            {product.description || (isPlanner ? "خرید دائمی و مادام‌العمر • بدون اشتراک" : (product.duration ? `اشتراک معتبر • ${product.duration}` : "تحویل فوری و قانونی"))}
           </p>
 
           {/* Star Rating & Review count */}
@@ -188,8 +189,11 @@ export function ProductCard({
               </span>
             )}
             {product.discountPercent ? (
-              <span className="rounded-md bg-rose-500/10 px-1 py-0.2 sm:px-1.5 sm:py-0.5 text-[9px] sm:text-[10px] font-bold text-rose-500 border border-rose-500/20">
-                %{toPersianDigits(product.discountPercent)}
+              <span
+                dir="ltr"
+                className="inline-flex items-center justify-center rounded-lg bg-rose-500 font-sans text-[11px] sm:text-xs font-black text-white px-1.5 py-0.5 shadow-xs tracking-tight"
+              >
+                -{product.discountPercent}%
               </span>
             ) : null}
           </div>
@@ -199,11 +203,15 @@ export function ProductCard({
           <p className="gradient-text text-sm sm:text-base font-extrabold tracking-tight">
             {formatPrice(product.price)}
           </p>
-          {product.duration && (
+          {isPlanner ? (
+            <span className="text-[9px] sm:text-[11px] text-emerald-400 font-bold truncate">
+              دسترسی دائمی
+            </span>
+          ) : product.duration ? (
             <span className="text-[9px] sm:text-[11px] text-muted-foreground font-medium truncate">
               {product.duration}
             </span>
-          )}
+          ) : null}
         </div>
       </div>
 
@@ -236,10 +244,10 @@ export function ProductCard({
             params={{ slug: product.slug }}
             preload="intent"
             size="sm"
-            aria-label={`خرید اشتراک ${product.name}`}
+            aria-label={isPlanner ? `خرید ${product.name}` : `خرید اشتراک ${product.name}`}
             className="text-center text-[10px] sm:text-xs font-bold py-1.5 px-1 rounded-xl touch-manipulation cursor-pointer"
           >
-            خرید آنی
+            {isPlanner ? "خرید مستقیم" : "خرید آنی"}
           </NeonLink>
         </div>
       )}

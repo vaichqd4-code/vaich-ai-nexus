@@ -49,6 +49,7 @@ export const Route = createFileRoute("/checkout/$slug")({
       };
     }
 
+    const isPlanner = loaderData.product.slug.includes("planner");
     return {
       meta: [
         {
@@ -56,7 +57,9 @@ export const Route = createFileRoute("/checkout/$slug")({
         },
         {
           name: "description",
-          content: `پرداخت اشتراک ${loaderData.product.name} در VAICH`,
+          content: isPlanner
+            ? `پرداخت و دریافت مستقیم ${loaderData.product.name} در VAICH`
+            : `پرداخت اشتراک ${loaderData.product.name} در VAICH`,
         },
       ],
     };
@@ -299,7 +302,7 @@ function Checkout() {
       <Section
         className="aurora overflow-x-hidden"
         title="پرداخت و ارسال رسید"
-        subtitle={`تکمیل سفارش ${product.name}`}
+        subtitle={product.slug.includes("planner") ? `تکمیل خرید ${product.name}` : `تکمیل سفارش ${product.name}`}
       >
         {product.inStock === false && (
           <div className="mb-6 rounded-2xl border border-rose-500/40 bg-rose-500/15 p-4 text-center">
@@ -320,10 +323,12 @@ function Checkout() {
                   />
 
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs text-muted-foreground">محصول / خدمت</p>
+                    <p className="text-xs text-muted-foreground">{product.slug.includes("planner") ? "محصول دیجیتال (دائمی)" : "محصول / اشتراک"}</p>
                     <h1 className="text-lg sm:text-xl font-bold text-foreground break-words">{product.name}</h1>
                     {product.duration && (
-                      <p className="mt-0.5 text-xs text-muted-foreground">{product.duration}</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">
+                        {product.slug.includes("planner") ? "دسترسی دائمی و مادام‌العمر (بدون اشتراک)" : product.duration}
+                      </p>
                     )}
                   </div>
                 </div>

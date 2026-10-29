@@ -145,6 +145,11 @@ export function Header() {
               <Link
                 to="/"
                 activeOptions={{ exact: true }}
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.scrollTo({ top: 0, behavior: "instant" });
+                  }
+                }}
                 className="rounded-full px-3.5 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground data-[status=active]:text-foreground font-medium"
               >
                 خانه
@@ -471,7 +476,12 @@ export function Header() {
                 <li>
                   <Link
                     to="/"
-                    onClick={() => setOpen(false)}
+                    onClick={() => {
+                      setOpen(false);
+                      if (typeof window !== "undefined") {
+                        window.scrollTo({ top: 0, behavior: "instant" });
+                      }
+                    }}
                     activeOptions={{ exact: true }}
                     className="flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-all hover:bg-secondary/70 hover:text-foreground data-[status=active]:bg-primary/10 data-[status=active]:text-primary data-[status=active]:font-extrabold border border-transparent data-[status=active]:border-primary/20"
                   >
