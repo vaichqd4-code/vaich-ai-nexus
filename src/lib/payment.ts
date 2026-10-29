@@ -6,7 +6,7 @@
  * Telegram for manual verification.
  */
 
-import { formatPrice, type Product } from "@/lib/products";
+import { formatPrice, isProductLifetime, type Product } from "@/lib/products";
 
 export const CARD_NUMBER = "6219861452374472";
 export const CARD_NUMBER_GROUPED = "6219 8614 5237 4472";
@@ -29,7 +29,7 @@ export function buildOrderMessage(product: Product, customer: CustomerInfo): str
     "🧾 رسید پرداخت جدید — VAICH",
     "",
     `سرویس: ${product.name}`,
-    `محصول / پلن: اشتراک ${product.name}${product.duration ? ` (${product.duration})` : ""}`,
+    `محصول / نوع دسترسی: ${product.name}${isProductLifetime(product) ? " (دسترسی دائمی و مادام‌العمر)" : (product.duration ? ` (${product.duration})` : "")}`,
     `قیمت محصول: ${formatPrice(product.price)}`,
     `مبلغ نهایی پرداخت: ${formatPrice(product.price)}`,
     "",

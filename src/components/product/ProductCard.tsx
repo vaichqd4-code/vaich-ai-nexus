@@ -2,7 +2,7 @@ import { useState, useRef, type MouseEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import { getProductLogo } from "@/components/brand/ServiceIcon";
 import { NeonLink } from "@/components/ui/NeonButton";
-import { formatPrice, toPersianDigits, type Product } from "@/lib/products";
+import { formatPrice, toPersianDigits, isProductLifetime, type Product } from "@/lib/products";
 import { cn } from "@/lib/utils";
 
 export function ProductCard({
@@ -47,7 +47,7 @@ export function ProductCard({
   const logoUrl = getProductLogo(product.slug, product.iconUrl);
   const initial = product.slug ? product.slug.charAt(0).toUpperCase() : "AI";
   const isOutOfStock = product.inStock === false;
-  const isPlanner = product.slug.includes("planner") || product.categoryId === "row-mvampt3r";
+  const isLifetime = isProductLifetime(product);
 
   return (
     <article
@@ -161,7 +161,7 @@ export function ProductCard({
             {product.name}
           </h3>
           <p className="line-clamp-1 text-[10px] sm:text-xs text-muted-foreground">
-            {product.description || (isPlanner ? "خرید دائمی و مادام‌العمر • بدون اشتراک" : (product.duration ? `اشتراک معتبر • ${product.duration}` : "تحویل فوری و قانونی"))}
+            {product.description || (isLifetime ? "خرید دائمی و مادام‌العمر • بدون اشتراک" : (product.duration ? `اشتراک معتبر • ${product.duration}` : "تحویل فوری و قانونی"))}
           </p>
 
           {/* Star Rating & Review count */}
@@ -203,7 +203,7 @@ export function ProductCard({
           <p className="gradient-text text-sm sm:text-base font-extrabold tracking-tight">
             {formatPrice(product.price)}
           </p>
-          {isPlanner ? (
+          {isLifetime ? (
             <span className="text-[9px] sm:text-[11px] text-emerald-400 font-bold truncate">
               دسترسی دائمی
             </span>
@@ -244,10 +244,10 @@ export function ProductCard({
             params={{ slug: product.slug }}
             preload="intent"
             size="sm"
-            aria-label={isPlanner ? `خرید ${product.name}` : `خرید اشتراک ${product.name}`}
+            aria-label={isLifetime ? `خرید ${product.name}` : `خرید اشتراک ${product.name}`}
             className="text-center text-[10px] sm:text-xs font-bold py-1.5 px-1 rounded-xl touch-manipulation cursor-pointer"
           >
-            {isPlanner ? "خرید مستقیم" : "خرید آنی"}
+            {isLifetime ? "خرید مستقیم" : "خرید آنی"}
           </NeonLink>
         </div>
       )}

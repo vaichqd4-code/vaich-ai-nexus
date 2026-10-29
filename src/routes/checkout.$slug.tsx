@@ -7,7 +7,7 @@ import {
   neonButtonClass,
 } from "@/components/ui/NeonButton";
 import { CONTACT_TELEGRAM_ID } from "@/components/brand/ContactLinks";
-import { formatPrice, getProduct } from "@/lib/products";
+import { formatPrice, getProduct, isProductLifetime } from "@/lib/products";
 import {
   buildOrderMessage,
   CARD_HOLDER,
@@ -49,7 +49,7 @@ export const Route = createFileRoute("/checkout/$slug")({
       };
     }
 
-    const isPlanner = loaderData.product.slug.includes("planner");
+    const isLifetime = isProductLifetime(loaderData.product);
     return {
       meta: [
         {
@@ -57,7 +57,7 @@ export const Route = createFileRoute("/checkout/$slug")({
         },
         {
           name: "description",
-          content: isPlanner
+          content: isLifetime
             ? `پرداخت و دریافت مستقیم ${loaderData.product.name} در VAICH`
             : `پرداخت اشتراک ${loaderData.product.name} در VAICH`,
         },
@@ -118,6 +118,7 @@ function Checkout() {
   const emailRef = useRef<HTMLInputElement>(null);
   const hasTriggeredPaymentNotice = useRef(false);
 
+  const isLifetime = isProductLifetime(product);
   const orderMessage = buildOrderMessage(product, customer);
 
   const nameError =
@@ -302,7 +303,7 @@ function Checkout() {
       <Section
         className="aurora overflow-x-hidden"
         title="پرداخت و ارسال رسید"
-        subtitle={product.slug.includes("planner") ? `تکمیل خرید ${product.name}` : `تکمیل سفارش ${product.name}`}
+        subtitle={isLifetime ? `تکمیل خرید ${product.name}` : `تکمیل سفارش ${product.name}`}
       >
         {product.inStock === false && (
           <div className="mb-6 rounded-2xl border border-rose-500/40 bg-rose-500/15 p-4 text-center">
@@ -323,11 +324,11 @@ function Checkout() {
                   />
 
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs text-muted-foreground">{product.slug.includes("planner") ? "محصول دیجیتال (دائمی)" : "محصول / اشتراک"}</p>
+                    <p className="text-xs text-muted-foreground">{isLifetime ? "محصول دیجیتال (دائمی)" : "محصول / اشتراک"}</p>
                     <h1 className="text-lg sm:text-xl font-bold text-foreground break-words">{product.name}</h1>
                     {product.duration && (
                       <p className="mt-0.5 text-xs text-muted-foreground">
-                        {product.slug.includes("planner") ? "دسترسی دائمی و مادام‌العمر (بدون اشتراک)" : product.duration}
+                        {isLifetime ? "دسترسی دائمی و مادام‌العمر (بدون اشتراک)" : product.duration}
                       </p>
                     )}
                   </div>

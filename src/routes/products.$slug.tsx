@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { Section } from "@/components/layout/Section";
 import { NeonLink } from "@/components/ui/NeonButton";
-import { formatPrice, toPersianDigits, getProduct, type ProductReview } from "@/lib/products";
+import { formatPrice, toPersianDigits, getProduct, isProductLifetime, type ProductReview } from "@/lib/products";
 import { cn } from "@/lib/utils";
 import { Star, MessageSquarePlus, CheckCircle2 } from "lucide-react";
 
@@ -33,15 +33,20 @@ export const Route = createFileRoute("/products/$slug")({
       return { meta: [{ title: "محصول یافت نشد | VAICH" }, { name: "robots", content: "noindex" }] };
     }
     const { product } = loaderData;
+    const isLifetime = isProductLifetime(product);
     const isPlanner = product.slug.includes("planner");
-    const title = isPlanner
-      ? `خرید ${product.name} | پلنر برنامه ریزی هوشمند گوگل شیت | VAICH`
+    const title = isLifetime
+      ? (isPlanner ? `خرید ${product.name} | پلنر برنامه ریزی هوشمند گوگل شیت | VAICH` : `خرید ${product.name} | دسترسی دائمی بدون اشتراک | VAICH`)
       : `خرید اشتراک ${product.name} (${product.duration || "قانونی"}) | VAICH`;
-    const description = isPlanner
-      ? `خرید آنلاین ${product.name} در گوگل شیت با ردیاب عادات ماهانه، نمودارهای تحلیلی داینامیک، نسخه‌های دوبعدی و سه‌بعدی و تحویل آنی. بدون نیاز به اشتراک ماهانه.`
+    const description = isLifetime
+      ? (isPlanner
+          ? `خرید آنلاین ${product.name} در گوگل شیت با ردیاب عادات ماهانه، نمودارهای تحلیلی داینامیک، نسخه‌های دوبعدی و سه‌بعدی و تحویل آنی. بدون نیاز به اشتراک ماهانه.`
+          : `خرید آنلاین و دسترسی دائمی ${product.name} با تحویل فوری و ضمانت اصالت. بدون نیاز به پرداخت مجدد یا هزینه اشتراک ماهانه. ${product.description}`)
       : `خرید آنلاین اشتراک قانونی ${product.name} با تحویل فوری، پشتیبانی ۲۴ ساعته و ضمانت سلامت اکانت. ${product.description} قیمت: ${formatPrice(product.price)}`;
-    const keywords = isPlanner
-      ? "خرید پلنر برنامه ریزی, پلنر گوگل شیت, پلنر دیجیتال, ردیاب عادات روزانه, پلنر هوشمند, مدیریت زمان, پلنر 1403, پلنر 1404"
+    const keywords = isLifetime
+      ? (isPlanner
+          ? "خرید پلنر برنامه ریزی, پلنر گوگل شیت, پلنر دیجیتال, ردیاب عادات روزانه, پلنر هوشمند, مدیریت زمان, پلنر 1403, پلنر 1404"
+          : `خرید ${product.name}, دسترسی دائمی ${product.name}, خرید مستقیم ${product.name}, فایل دیجیتال`)
       : `خرید اشتراک ${product.name}, خرید اکانت ${product.name}, اکانت قانونی ${product.name}, هوش مصنوعی`;
     const canonicalUrl = `https://vaich.ir/products/${encodeURIComponent(product.slug)}`;
 
@@ -143,15 +148,16 @@ function ProductDetail() {
   const badgeClass = (product.badgeColor && badgeColorMap[product.badgeColor]) || badgeColorMap.purple;
 
   const isOutOfStock = product.inStock === false;
+  const isLifetime = isProductLifetime(product);
   const isPlanner = product.slug.includes("planner") || product.categoryId === "row-mvampt3r";
-  const avgRating = product.rating || (isPlanner ? 4.9 : 4.8);
+  const avgRating = product.rating || (isLifetime ? 4.9 : 4.8);
   const countReviews = (product.reviewCount || 0) + (reviews.length - (product.reviews?.length || 0));
 
   // Google Search Console JSON-LD Structured Data with AggregateRating and Reviews
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: isPlanner ? product.name : `اشتراک ${product.name}`,
+    name: isLifetime ? product.name : `اشتراک ${product.name}`,
     description: product.description,
     image: "https://vaich.ir/vaich-logo.png",
     offers: {
@@ -240,7 +246,7 @@ function ProductDetail() {
                     )}
                   </div>
 
-                  {isPlanner && (
+                  {isLifetime && (
                     <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400">
                       <span>✨</span>
                       <span>خرید دائمی و مادام‌العمر • بدون نیاز به تمدید یا هزینه اشتراک ماهانه</span>
@@ -293,11 +299,11 @@ function ProductDetail() {
               )}
 
               <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">{isPlanner ? "مبلغ خرید دائمی:" : "قیمت سرویس:"}</span>
+                <span className="text-xs text-muted-foreground">{isLifetime ? "مبلغ خرید دائمی:" : "قیمت سرویس:"}</span>
                 {product.duration && (
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-secondary/60 px-2.5 py-0.5 text-xs font-medium text-foreground">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    {isPlanner ? "دسترسی مادام‌العمر" : `مدت: ${product.duration}`}
+                    {isLifetime ? "دسترسی مادام‌العمر" : `مدت: ${product.duration}`}
                   </span>
                 )}
               </div>
@@ -332,7 +338,7 @@ function ProductDetail() {
                   </button>
                 ) : (
                   <NeonLink to="/checkout/$slug" params={{ slug: product.slug }} size="lg" className="w-full text-center font-bold">
-                    {isPlanner ? "خرید مستقیم و تحویل آنی فایل" : "خرید آنلاین و تحویل فوری"}
+                    {isLifetime ? "خرید مستقیم و دریافت فایل" : "خرید آنلاین و تحویل فوری"}
                   </NeonLink>
                 )}
                 <NeonLink to="/support" variant="outline" size="lg" className="w-full text-center">
@@ -342,7 +348,7 @@ function ProductDetail() {
 
               {/* Conversion Trust Checklist */}
               <div className="mt-5 space-y-2.5 border-t border-border/60 pt-4 text-xs text-muted-foreground">
-                {isPlanner ? (
+                {isLifetime ? (
                   <>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-500 font-bold">✓</span>
@@ -350,11 +356,11 @@ function ProductDetail() {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-500 font-bold">✓</span>
-                      <span>تحویل آنی لینک کپی اختصاصی در گوگل درایو بلافاصله پس از پرداخت</span>
+                      <span>{isPlanner ? "تحویل آنی لینک کپی اختصاصی در گوگل درایو بلافاصله پس از پرداخت" : "تحویل فوری لینک دسترسی به فایل‌ها بلافاصله پس از پرداخت"}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-500 font-bold">✓</span>
-                      <span>پشتیبانی اختصاصی و راهنمای کامل راه‌اندازی فارسی در ۳ دقیقه</span>
+                      <span>{isPlanner ? "پشتیبانی اختصاصی و راهنمای کامل راه‌اندازی فارسی در ۳ دقیقه" : "پشتیبانی اختصاصی و تضمین مادام‌العمر فایل‌ها"}</span>
                     </div>
                   </>
                 ) : (

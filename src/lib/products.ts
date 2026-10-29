@@ -36,10 +36,28 @@ export type Product = {
   iconUrl?: string;
   imageFit?: "contain" | "cover";
   inStock?: boolean; // موجود بودن (پیش‌فرض true، اگر false باشد ناموجود است)
+  isLifetime?: boolean; // نوع دسترسی: دائمی و مادام‌العمر (true) یا اشتراکی زمان‌دار (false)
   rating?: number; // میانگین امتیاز (مثلاً 4.9)
   reviewCount?: number; // تعداد کل نظرات
   reviews?: ProductReview[]; // لیست نظرات ثبت‌شده
 };
+
+export function isProductLifetime(p?: Partial<Product> | null): boolean {
+  if (!p) return false;
+  if (p.isLifetime === true) return true;
+  if (p.isLifetime === false) return false;
+  const dur = (p.duration || "").toLowerCase();
+  const slug = (p.slug || "").toLowerCase();
+  const cat = (p.categoryId || "").toLowerCase();
+  return (
+    dur.includes("دائمی") ||
+    dur.includes("نامحدود") ||
+    dur.includes("lifetime") ||
+    slug.includes("planner") ||
+    cat.includes("planner") ||
+    cat === "row-mvampt3r"
+  );
+}
 
 export const DEFAULT_CATEGORY_ROWS: ProductCategoryRow[] = [
   {

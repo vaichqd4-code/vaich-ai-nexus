@@ -20,6 +20,7 @@ import {
   getLocalSnapshots,
   type ConfigSnapshot,
   type SiteConfig,
+  isProductLifetime,
 } from "@/lib/products";
 import { ServiceIcon, getProductLogo, PRESET_LOGOS } from "@/components/brand/ServiceIcon";
 import {
@@ -540,6 +541,7 @@ export function AdminPage() {
       ...product,
       imageFit: product.imageFit || "contain",
       inStock: product.inStock !== false,
+      isLifetime: isProductLifetime(product),
     });
     setFeaturesText(product.features ? product.features.join("\n") : "");
     setPurchaseInfoText(product.purchaseInfo ? product.purchaseInfo.join("\n") : "");
@@ -560,6 +562,7 @@ export function AdminPage() {
       discountPercent: undefined,
       duration: "۱ ماهه",
       description: "",
+      isLifetime: false,
       featured: false,
       badge: "",
       badgeColor: "purple",
@@ -607,6 +610,7 @@ export function AdminPage() {
       .filter(Boolean);
 
     const existingProd = products.find((p) => p.slug === cleanSlug);
+    const isLifetime = Boolean(editProduct.isLifetime ?? isProductLifetime(editProduct));
 
     const fullProduct: Product = {
       slug: cleanSlug,
@@ -614,8 +618,9 @@ export function AdminPage() {
       price: Number(editProduct.price),
       originalPrice: editProduct.originalPrice ? Number(editProduct.originalPrice) : undefined,
       discountPercent: editProduct.discountPercent ? Number(editProduct.discountPercent) : undefined,
-      duration: editProduct.duration || "۱ ماهه",
-      description: editProduct.description || `اشتراک ${editProduct.name}`,
+      duration: isLifetime ? (editProduct.duration?.trim() || "دائمی (بدون اشتراک)") : (editProduct.duration || "۱ ماهه"),
+      description: editProduct.description || (isLifetime ? `خرید و دسترسی دائمی به ${editProduct.name}` : `اشتراک ${editProduct.name}`),
+      isLifetime: isLifetime,
       featured: Boolean(editProduct.featured || editProduct.badge),
       badge: editProduct.badge?.trim() || (editProduct.featured ? "پیشنهاد ویژه 🔥" : undefined),
       badgeColor: editProduct.badgeColor || "purple",
@@ -1246,7 +1251,13 @@ export function AdminPage() {
                           </div>
                           <div className="mt-1 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                             <span>شناسه: <code className="text-foreground">{p.slug}</code></span>
-                            {p.duration && <span>مدت: {p.duration}</span>}
+                            {isProductLifetime(p) ? (
+                              <span className="inline-flex items-center gap-1 font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20 text-[11px]">
+                                <span>♾️</span> دسترسی دائمی
+                              </span>
+                            ) : (
+                              p.duration && <span>مدت: {p.duration}</span>
+                            )}
                             <span>ردیف: <span className="font-medium text-foreground">{rowObj?.title || "اصلی"}</span></span>
                           </div>
                         </div>
@@ -2224,32 +2235,88 @@ export function AdminPage() {
                 </div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
+              {/* Product Access Type Selector: Lifetime vs Subscription */}
+              <div className="rounded-2xl border border-border/80 bg-secondary/30 p-3.5 space-y-3">
                 <div>
-                  <label className="block text-xs font-medium text-foreground mb-1">
-                    مدت اعتبار:
+                  <label className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                    <span>نوع فروش و دسترسی محصول:</span>
                   </label>
-                  <input
-                    type="text"
-                    value={editProduct.duration || ""}
-                    onChange={(e) => setEditProduct({ ...editProduct, duration: e.target.value })}
-                    placeholder="مثلاً: ۱ ماهه، ۶۰ روزه، ۱۸ ماهه"
-                    className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary"
-                  />
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                    مشخص کنید این محصول اشتراک اکانت هوش مصنوعی است یا خرید فایلی / دسترسی مادام‌العمر (مانند پلنر)
+                  </p>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-1">
-                    متن برچسب (دلخواه):
-                  </label>
-                  <input
-                    type="text"
-                    value={editProduct.badge || ""}
-                    onChange={(e) => setEditProduct({ ...editProduct, badge: e.target.value })}
-                    placeholder="مثلاً: پیشنهاد ویژه 🔥 (یا خالی)"
-                    className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditProduct({
+                        ...editProduct,
+                        isLifetime: false,
+                        duration: editProduct.duration?.includes("دائمی") ? "۱ ماهه" : (editProduct.duration || "۱ ماهه"),
+                      });
+                    }}
+                    className={`flex items-center justify-center gap-2 rounded-xl py-2.5 px-3 text-xs font-bold transition-all border ${
+                      !editProduct.isLifetime
+                        ? "border-primary bg-primary/15 text-primary shadow-sm ring-1 ring-primary/40"
+                        : "border-border/70 bg-card/60 text-muted-foreground hover:bg-card hover:text-foreground"
+                    }`}
+                  >
+                    <span>⏳</span>
+                    <span>اشتراک مدت‌دار (اکانت هوش مصنوعی)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditProduct({
+                        ...editProduct,
+                        isLifetime: true,
+                        duration: "دائمی (بدون اشتراک)",
+                      });
+                    }}
+                    className={`flex items-center justify-center gap-2 rounded-xl py-2.5 px-3 text-xs font-bold transition-all border ${
+                      editProduct.isLifetime
+                        ? "border-emerald-500 bg-emerald-500/15 text-emerald-400 shadow-sm ring-1 ring-emerald-500/40"
+                        : "border-border/70 bg-card/60 text-muted-foreground hover:bg-card hover:text-foreground"
+                    }`}
+                  >
+                    <span>♾️</span>
+                    <span>دسترسی دائمی (مادام‌العمر / فایلی)</span>
+                  </button>
                 </div>
+
+                {editProduct.isLifetime ? (
+                  <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-[11px] text-emerald-400 leading-5">
+                    ✨ <strong>حالت دسترسی دائمی فعال است:</strong> در صفحه محصول و کارت‌ها عبارت «خرید دائمی»، «دسترسی مادام‌العمر» و تحویل مستقیم فایل درج می‌شود و کلمه «اشتراک» حذف می‌گردد.
+                  </div>
+                ) : (
+                  <div>
+                    <label className="block text-xs font-medium text-foreground mb-1">
+                      مدت اشتراک / اعتبار:
+                    </label>
+                    <input
+                      type="text"
+                      value={editProduct.duration || ""}
+                      onChange={(e) => setEditProduct({ ...editProduct, duration: e.target.value })}
+                      placeholder="مثلاً: ۱ ماهه، ۶۰ روزه، ۱۸ ماهه"
+                      className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">
+                  متن برچسب (دلخواه):
+                </label>
+                <input
+                  type="text"
+                  value={editProduct.badge || ""}
+                  onChange={(e) => setEditProduct({ ...editProduct, badge: e.target.value })}
+                  placeholder="مثلاً: پیشنهاد ویژه 🔥 (یا خالی)"
+                  className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary"
+                />
               </div>
 
               {/* Badge Customizer & Color Picker */}
