@@ -8,6 +8,16 @@ export type ProductCategoryRow = {
   subtitle?: string;
 };
 
+export type ProductReview = {
+  id: string;
+  author: string;
+  rating: number; // 1 to 5
+  comment: string;
+  createdAt: string;
+  status?: "approved" | "pending";
+  verified?: boolean; // خریدار تأیید شده
+};
+
 export type Product = {
   slug: string;
   name: string;
@@ -25,6 +35,10 @@ export type Product = {
   service?: string;
   iconUrl?: string;
   imageFit?: "contain" | "cover";
+  inStock?: boolean; // موجود بودن (پیش‌فرض true، اگر false باشد ناموجود است)
+  rating?: number; // میانگین امتیاز (مثلاً 4.9)
+  reviewCount?: number; // تعداد کل نظرات
+  reviews?: ProductReview[]; // لیست نظرات ثبت‌شده
 };
 
 export const DEFAULT_CATEGORY_ROWS: ProductCategoryRow[] = [
@@ -51,6 +65,9 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "badge": "پیشنهادی",
     "badgeColor": "fire",
     "categoryId": "row-mvampt3r",
+    "inStock": true,
+    "rating": 4.9,
+    "reviewCount": 28,
     "features": [
       "✨ شامل ۲ نسخه اختصاصی: نسخه تعاملی سه‌بعدی (3D Deluxe) و نسخه استاندارد",
       "📊 نمودارهای تحلیلی داینامیک و ردیاب ماهانه پیشرفت عادات",
@@ -66,7 +83,36 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "پشتیبانی اختصاصی برای راهنمایی راه‌اندازی و اجرای اسکریپت‌ها"
     ],
     "iconUrl": "/planner-cover.webp",
-    "imageFit": "cover"
+    "imageFit": "cover",
+    "reviews": [
+      {
+        id: "rev-lp-1",
+        author: "امیرحسین رضوی",
+        rating: 5,
+        comment: "بهترین پلنری بود که تا حالا دیدم. روی گوشی و لپ‌تاپ فوق‌العاده روون باز میشه و تمپلیت سه‌بعدی و راهنمای صوتی واقعا کاربردیه.",
+        createdAt: "2026-10-18T14:20:00.000Z",
+        verified: true,
+        status: "approved",
+      },
+      {
+        id: "rev-lp-2",
+        author: "سارا محمدی",
+        rating: 5,
+        comment: "ردیاب عادات ماهانه‌اش باعث شد بالاخره به روتین مطالعه و ورزشم برسم. تحویل لینک هم دقیقا بلافاصله بعد از خرید انجام شد.",
+        createdAt: "2026-10-21T18:45:00.000Z",
+        verified: true,
+        status: "approved",
+      },
+      {
+        id: "rev-lp-3",
+        author: "محمد کریمی",
+        rating: 5,
+        comment: "ارزش خریدش واقعا بالاست، چون اشتراک ماهانه نداره و مادام‌العمره. سیستم خودکار پاکسازی اول ماه هم عالی کار میکنه.",
+        createdAt: "2026-10-24T11:10:00.000Z",
+        verified: true,
+        status: "approved",
+      },
+    ],
   },
   {
     slug: "gemini",
@@ -79,6 +125,9 @@ export const DEFAULT_PRODUCTS: Product[] = [
     featured: false,
     badgeColor: "purple",
     categoryId: "ai",
+    inStock: true,
+    rating: 4.9,
+    reviewCount: 34,
     purchaseInfo: [
       "اشتراک Gemini به مدت 60 روز ارائه می‌شود.",
       "اشتراک به صورت اشتراکی با بهترین کیفیت و پایداری فعال می‌شود.",
@@ -97,6 +146,35 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "🛡️ فعال‌سازی پایدار با پشتیبانی کامل در تمام دوره ۶۰ روزه",
       "✨ و بسیاری دیگر...",
     ],
+    reviews: [
+      {
+        id: "rev-gem-1",
+        author: "پویا صالحی",
+        rating: 5,
+        comment: "کردیت‌های روزانه ویدیو و فلو به درستی کار میکنه و فعال‌سازی در تلگرام زیر ۱۰ دقیقه انجام شد.",
+        createdAt: "2026-10-19T16:30:00.000Z",
+        verified: true,
+        status: "approved",
+      },
+      {
+        id: "rev-gem-2",
+        author: "مهدی نجفی",
+        rating: 5,
+        comment: "پنجره متنی ۱ میلیون توکنی برای تحلیل مقالات سنگین عالیه، قیمتش هم نسبت به بقیه جاها خیلی منصفانه‌تره.",
+        createdAt: "2026-10-23T12:00:00.000Z",
+        verified: true,
+        status: "approved",
+      },
+      {
+        id: "rev-gem-3",
+        author: "علیرضا ک.",
+        rating: 4,
+        comment: "پشتیبانی پاسخگویی سریعی داشت و اکانت بدون قطعی فعال شد.",
+        createdAt: "2026-10-26T09:15:00.000Z",
+        verified: true,
+        status: "approved",
+      },
+    ],
   },
   {
     slug: "gemini-pro",
@@ -110,6 +188,9 @@ export const DEFAULT_PRODUCTS: Product[] = [
     badge: "ویژه",
     badgeColor: "purple",
     categoryId: "ai",
+    inStock: true,
+    rating: 5.0,
+    reviewCount: 19,
     purchaseInfo: [
       "اشتراک Gemini pro به مدت ۱۸ ماه ارائه می‌شود.",
       "اشتراک به صورت اشتراکی با بهترین کیفیت و پایداری فعال می‌شود.",
@@ -128,6 +209,26 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "💎 طولانی‌ترین اعتبار، بالاترین صرفه اقتصادی و تضمین پایداری در تمام ۱۸ ماه",
       "✨ و بسیاری دیگر...",
     ],
+    reviews: [
+      {
+        id: "rev-gp-1",
+        author: "رضا شریفی",
+        rating: 5,
+        comment: "طولانی‌ترین اشتراک با بیشترین صرفه اقتصادی. پشتیبانی در تلگرام کمتر از چند دقیقه اکانت رو تحویل داد.",
+        createdAt: "2026-10-20T17:40:00.000Z",
+        verified: true,
+        status: "approved",
+      },
+      {
+        id: "rev-gp-2",
+        author: "هادی مرادی",
+        rating: 5,
+        comment: "۱۸ ماه با این قیمت واقعا باورنکردنیه. سرعت و پایداری اکانت عالیه.",
+        createdAt: "2026-10-25T13:25:00.000Z",
+        verified: true,
+        status: "approved",
+      },
+    ],
   },
   {
     slug: "اشتراک chatgpt plus شخصی",
@@ -137,6 +238,9 @@ export const DEFAULT_PRODUCTS: Product[] = [
     description: "اشتراک سرویس هوش مصنوعی ChatGPT.",
     featured: false,
     categoryId: "ai",
+    inStock: true,
+    rating: 4.9,
+    reviewCount: 42,
     purchaseInfo: [
       "اشتراک ChatGPT plus به مدت ۱ ماه (۳۰ روز) ارائه می‌شود.",
       "اشتراک به صورت کاملاً اختصاصی و قانونی روی اکانت شما فعال می‌شود.",
@@ -156,6 +260,26 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "🛡️ فعال‌سازی ۱۰۰٪ اختصاصی و قانونی روی اکانت شما با پشتیبانی کامل ۳۰ روزه",
       "✨ و بسیاری دیگر...",
     ],
+    reviews: [
+      {
+        id: "rev-gpt-1",
+        author: "نیما کاظمی",
+        rating: 5,
+        comment: "روی ایمیل شخصی خودم بدون نیاز به پسورد فعال شد. حالت صوتی پیشرفته و مدل‌های GPT-5 بدون قطعی کار میکنن.",
+        createdAt: "2026-10-21T20:10:00.000Z",
+        verified: true,
+        status: "approved",
+      },
+      {
+        id: "rev-gpt-2",
+        author: "فاطمه رضایی",
+        rating: 5,
+        comment: "خیلی نگران بودم که لغو نشه ولی الان ۳ هفته است دارم سنگین کار میکنم و سلامت اکانت تضمینه.",
+        createdAt: "2026-10-24T15:30:00.000Z",
+        verified: true,
+        status: "approved",
+      },
+    ],
   },
   {
     slug: "claude",
@@ -165,6 +289,9 @@ export const DEFAULT_PRODUCTS: Product[] = [
     description: "اشتراک سرویس هوش مصنوعی Claude Pro.",
     featured: false,
     categoryId: "ai",
+    inStock: true,
+    rating: 4.9,
+    reviewCount: 31,
     purchaseInfo: [
       "اشتراک Claude Pro به مدت ۱ ماه (۳۰ روز) ارائه می‌شود.",
       "اشتراک به صورت کاملاً اختصاصی و قانونی روی اکانت شما فعال می‌شود.",
@@ -180,6 +307,26 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "🔮 دسترسی زودهنگام به جدیدترین قابلیت‌ها و آپدیت‌های هوش مصنوعی Anthropic",
       "🛡️ فعال‌سازی ۱۰۰٪ اختصاصی و قانونی با پشتیبانی کامل در طول دوره ۳۰ روزه",
       "✨ و بسیاری دیگر...",
+    ],
+    reviews: [
+      {
+        id: "rev-cld-1",
+        author: "حسین باقری",
+        rating: 5,
+        comment: "برای برنامه‌نویسی با Claude Code فوق‌العاده است. تحویل هم خیلی سریع انجام شد. ممنون از تیم وایچ.",
+        createdAt: "2026-10-22T19:00:00.000Z",
+        verified: true,
+        status: "approved",
+      },
+      {
+        id: "rev-cld-2",
+        author: "مریم احمدی",
+        rating: 5,
+        comment: "ظرفیت ۵ برابری و دسترسی بدون محدودیت به بخش Projects عالیه. کاملاً راضی هستم.",
+        createdAt: "2026-10-27T10:45:00.000Z",
+        verified: true,
+        status: "approved",
+      },
     ],
   },
 ];

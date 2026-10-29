@@ -1,26 +1,31 @@
 User-agent: Googlebot
 Allow: /
 Disallow: /admin
+Disallow: /overview
 Disallow: /checkout/
 
 User-agent: Bingbot
 Allow: /
 Disallow: /admin
+Disallow: /overview
 Disallow: /checkout/
 
 User-agent: Twitterbot
 Allow: /
 Disallow: /admin
+Disallow: /overview
 Disallow: /checkout/
 
 User-agent: facebookexternalhit
 Allow: /
 Disallow: /admin
+Disallow: /overview
 Disallow: /checkout/
 
 User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /overview
 Disallow: /checkout/
 
 Sitemap: https://vaich.ir/sitemap.xml

@@ -301,6 +301,12 @@ function Checkout() {
         title="پرداخت و ارسال رسید"
         subtitle={`تکمیل سفارش ${product.name}`}
       >
+        {product.inStock === false && (
+          <div className="mb-6 rounded-2xl border border-rose-500/40 bg-rose-500/15 p-4 text-center">
+            <p className="text-sm font-bold text-rose-400">⚠️ این محصول در حال حاضر ناموجود است</p>
+            <p className="mt-1 text-xs text-muted-foreground">ظرفیت این سرویس تکمیل شده است و امکان ثبت سفارش یا واریز وجود ندارد. جهت اطلاعات بیشتر با پشتیبانی در ارتباط باشید.</p>
+          </div>
+        )}
         <div className="grid gap-6 lg:grid-cols-[1fr_360px] overflow-hidden">
           <div className="space-y-5 min-w-0">
             <div className="glass-panel rounded-3xl p-4 sm:p-6">
@@ -448,8 +454,9 @@ function Checkout() {
               <div className="mt-4">
                 <button
                   type="button"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || product.inStock === false}
                   onClick={async () => {
+                    if (product.inStock === false) return;
                     if (!validateBeforeSend()) return;
                     if (isSubmitting) return;
 

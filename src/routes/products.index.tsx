@@ -9,16 +9,16 @@ import { useDynamicProducts } from "@/lib/products";
 export const Route = createFileRoute("/products/")({
   head: () => ({
     meta: [
-      { title: "خرید انواع اشتراک‌های هوش مصنوعی (ChatGPT, Gemini, Claude) | VAICH" },
+      { title: "خرید انواع اشتراک‌های هوش مصنوعی و پلنرهای دیجیتال | VAICH" },
       {
         name: "description",
         content:
-          "فروشگاه اشتراک‌های رسمی هوش مصنوعی؛ خرید اشتراک ChatGPT Plus، اکانت رسمی Gemini Pro و سرویس Claude Pro با تحویل فوری، بهترین قیمت و ضمانت ۱۰۰٪ سلامت اکانت در VAICH.",
+          "فروشگاه رسمی VAICH؛ خرید اشتراک قانونی ChatGPT Plus، اکانت رسمی Gemini Pro، سرویس Claude Pro و کامل‌ترین پلنر هوشمند مدیریت سبک زندگی و ردیاب عادات با تحویل فوری.",
       },
-      { property: "og:title", content: "خرید اشتراک‌های رسمی هوش مصنوعی | VAICH" },
+      { property: "og:title", content: "محصولات و اشتراک‌های رسمی | VAICH" },
       {
         property: "og:description",
-        content: "خرید ارزان و مطمئن اکانت‌های ChatGPT Plus، Gemini Pro و Claude Pro با پشتیبانی ۲۴ ساعته.",
+        content: "خرید ارزان و مطمئن اکانت‌های ChatGPT Plus، Gemini Pro، Claude Pro و پلنرهای دیجیتال با پشتیبانی ۲۴ ساعته.",
       },
       { property: "og:url", content: "https://vaich.ir/products" },
       { property: "og:type", content: "website" },
@@ -36,7 +36,8 @@ function ProductsPage() {
   const { products } = useDynamicProducts();
 
   const categories = [
-    { id: "all", label: "همه اشتراک‌ها" },
+    { id: "all", label: "همه محصولات" },
+    { id: "planner", label: "پلنرهای دیجیتال 📊" },
     { id: "chatgpt", label: "ChatGPT Plus" },
     { id: "gemini", label: "Gemini Pro" },
     { id: "claude", label: "Claude Pro" },
@@ -48,7 +49,10 @@ function ProductsPage() {
     // Filter by selected category pill
     if (selectedCategory !== "all") {
       result = result.filter((p) => {
-        const text = (p.name + " " + p.slug).toLowerCase();
+        const text = (p.name + " " + p.slug + " " + (p.categoryId || "")).toLowerCase();
+        if (selectedCategory === "planner") {
+          return text.includes("planner") || text.includes("پلنر") || p.categoryId === "row-mvampt3r";
+        }
         return text.includes(selectedCategory);
       });
     }
@@ -74,7 +78,7 @@ function ProductsPage() {
     <>
       <Section
         className="aurora"
-        title="اشتراک‌های هوش مصنوعی"
+        title="محصولات و اشتراک‌های وایچ"
         subtitle="سرویس مورد نظر خود را انتخاب کنید، تفاوت پلن‌ها را بررسی کنید و با تحویل فوری سفارش دهید."
       >
         {/* Search & Category Filter Pills */}
@@ -89,7 +93,7 @@ function ProductsPage() {
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="جستجوی اشتراک (مثال: Gemini, ChatGPT, Claude)..."
+              placeholder="جستجوی محصول (مثال: پلنر، Gemini, ChatGPT, Claude)..."
               className="w-full rounded-2xl border border-border bg-card/70 px-5 py-3.5 pr-5 pl-12 text-right text-sm sm:text-base outline-none transition-all duration-300 placeholder:text-muted-foreground focus:border-neon-purple/60 focus:ring-2 focus:ring-neon-purple/20 shadow-xs"
               dir="rtl"
               autoComplete="off"
@@ -136,7 +140,7 @@ function ProductsPage() {
           <div className="rounded-3xl border border-border bg-card/70 px-6 py-12 text-center">
             <p className="text-lg font-bold">محصولی با این مشخصات پیدا نشد</p>
             <p className="mt-2 text-sm text-muted-foreground">
-              فیلتر را به حالت «همه اشتراک‌ها» برگردانید یا عبارت دیگری را جستجو کنید.
+              فیلتر را به حالت «همه محصولات» برگردانید یا عبارت دیگری را جستجو کنید.
             </p>
             <button
               type="button"
@@ -146,7 +150,7 @@ function ProductsPage() {
               }}
               className="mt-4 rounded-full bg-primary px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary/90 transition-all"
             >
-              نمایش همه اشتراک‌ها
+              نمایش همه محصولات
             </button>
           </div>
         )}

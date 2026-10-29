@@ -137,7 +137,16 @@ export function AdminPage() {
   const [inputEmail, setInputEmail] = useState("");
   const [inputPin, setInputPin] = useState("");
   const [authError, setAuthError] = useState("");
-  const [activeTab, setActiveTab] = useState<"products" | "rows" | "layout" | "admins" | "banner" | "settings">("products");
+  const [activeTab, setActiveTab] = useState<"products" | "rows" | "layout" | "admins" | "banner" | "reviews" | "settings">("products");
+
+  // Reviews moderation state
+  const [selectedReviewFilter, setSelectedReviewFilter] = useState<string>("all");
+  const [isAddingReviewModal, setIsAddingReviewModal] = useState(false);
+  const [newReviewAuthor, setNewReviewAuthor] = useState("");
+  const [newReviewRating, setNewReviewRating] = useState(5);
+  const [newReviewComment, setNewReviewComment] = useState("");
+  const [newReviewTargetSlug, setNewReviewTargetSlug] = useState<string>("");
+  const [newReviewVerified, setNewReviewVerified] = useState(true);
 
   // Promo Banner State
   const [bannerConfig, setBannerConfig] = useState<PromoBannerConfig>(promoBanner || DEFAULT_PROMO_BANNER);
@@ -425,9 +434,113 @@ export function AdminPage() {
     handlePublishCloud({ products: updated });
   };
 
+  // 1-Click Toggle موجود / ناموجود
+  const handleToggleInStock = (slug: string) => {
+    const updated = products.map((p) => {
+      if (p.slug === slug) {
+        return {
+          ...p,
+          inStock: p.inStock === false ? true : false,
+        };
+      }
+      return p;
+    });
+    setProducts(updated);
+    handlePublishCloud({ products: updated });
+  };
+
+  const handleToggleReviewStatus = (productSlug: string, reviewId: string) => {
+    const updated = products.map((p) => {
+      if (p.slug === productSlug && p.reviews) {
+        const nextReviews = p.reviews.map((r) => {
+          if (r.id === reviewId) {
+            return {
+              ...r,
+              status: (r.status === "pending" ? "approved" : "pending") as "approved" | "pending",
+            };
+          }
+          return r;
+        });
+        const approved = nextReviews.filter((r) => r.status !== "pending");
+        const nextAvg = approved.length > 0 ? Number((approved.reduce((acc, r) => acc + r.rating, 0) / approved.length).toFixed(1)) : 5.0;
+        return {
+          ...p,
+          reviews: nextReviews,
+          rating: nextAvg,
+          reviewCount: nextReviews.length,
+        };
+      }
+      return p;
+    });
+    setProducts(updated);
+    handlePublishCloud({ products: updated });
+  };
+
+  const handleDeleteReview = (productSlug: string, reviewId: string) => {
+    if (!confirm("آیا از حذف این نظر اطمینان دارید؟")) return;
+    const updated = products.map((p) => {
+      if (p.slug === productSlug && p.reviews) {
+        const nextReviews = p.reviews.filter((r) => r.id !== reviewId);
+        const approved = nextReviews.filter((r) => r.status !== "pending");
+        const nextAvg = approved.length > 0 ? Number((approved.reduce((acc, r) => acc + r.rating, 0) / approved.length).toFixed(1)) : 5.0;
+        return {
+          ...p,
+          reviews: nextReviews,
+          rating: nextAvg,
+          reviewCount: nextReviews.length,
+        };
+      }
+      return p;
+    });
+    setProducts(updated);
+    handlePublishCloud({ products: updated });
+  };
+
+  const handleCreateAdminReview = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newReviewComment.trim()) return;
+
+    const targetSlug = newReviewTargetSlug || products[0]?.slug || "vaich-life-planner";
+    const newRev = {
+      id: "rev-adm-" + Date.now().toString(36),
+      author: newReviewAuthor.trim() || "خریدار تأیید شده",
+      rating: newReviewRating,
+      comment: newReviewComment.trim(),
+      createdAt: new Date().toISOString(),
+      verified: newReviewVerified,
+      status: "approved" as const,
+    };
+
+    const updated = products.map((p) => {
+      if (p.slug === targetSlug) {
+        const nextReviews = [newRev, ...(p.reviews || [])];
+        const approved = nextReviews.filter((r) => r.status !== "pending");
+        const nextAvg = Number((approved.reduce((acc, r) => acc + r.rating, 0) / approved.length).toFixed(1));
+        return {
+          ...p,
+          reviews: nextReviews,
+          rating: nextAvg,
+          reviewCount: (p.reviewCount || 0) + 1,
+        };
+      }
+      return p;
+    });
+
+    setProducts(updated);
+    handlePublishCloud({ products: updated });
+    setIsAddingReviewModal(false);
+    setNewReviewAuthor("");
+    setNewReviewComment("");
+    setNewReviewRating(5);
+  };
+
   // Open Edit Form for Product
   const handleOpenEditProduct = (product: Product) => {
-    setEditProduct({ ...product, imageFit: product.imageFit || "contain" });
+    setEditProduct({
+      ...product,
+      imageFit: product.imageFit || "contain",
+      inStock: product.inStock !== false,
+    });
     setFeaturesText(product.features ? product.features.join("\n") : "");
     setPurchaseInfoText(product.purchaseInfo ? product.purchaseInfo.join("\n") : "");
     setImageUploadError("");
@@ -452,6 +565,10 @@ export function AdminPage() {
       badgeColor: "purple",
       categoryId: rows[0]?.id || "ai",
       imageFit: "contain",
+      inStock: true,
+      rating: 5.0,
+      reviewCount: 0,
+      reviews: [],
       purchaseInfo: [
         "اشتراک با بالاترین پایداری و سلامت فعال می‌شود.",
         "دارای پشتیبانی ۲۴ ساعته در صورت بروز هرگونه مشکل.",
@@ -489,6 +606,8 @@ export function AdminPage() {
       .map((s) => s.trim())
       .filter(Boolean);
 
+    const existingProd = products.find((p) => p.slug === cleanSlug);
+
     const fullProduct: Product = {
       slug: cleanSlug,
       name: editProduct.name.trim(),
@@ -505,6 +624,10 @@ export function AdminPage() {
       purchaseInfo: parsedPurchaseInfo.length > 0 ? parsedPurchaseInfo : ["اطلاعات پس از خرید ارسال می‌شود."],
       iconUrl: editProduct.iconUrl?.trim() || undefined,
       imageFit: editProduct.imageFit || "contain",
+      inStock: editProduct.inStock !== false,
+      rating: editProduct.rating || existingProd?.rating || 5.0,
+      reviewCount: editProduct.reviewCount || existingProd?.reviewCount || existingProd?.reviews?.length || 0,
+      reviews: editProduct.reviews || existingProd?.reviews || [],
     };
 
     const exists = products.some((p) => p.slug === fullProduct.slug);
@@ -941,6 +1064,19 @@ export function AdminPage() {
 
           <button
             type="button"
+            onClick={() => setActiveTab("reviews")}
+            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
+              activeTab === "reviews"
+                ? "bg-primary text-white shadow-md"
+                : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
+            <span>نظرات و امتیازها ({toPersianDigits(products.reduce((acc, p) => acc + (p.reviews?.length || 0), 0))})</span>
+          </button>
+
+          <button
+            type="button"
             onClick={() => setActiveTab("settings")}
             className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
               activeTab === "settings"
@@ -1142,6 +1278,21 @@ export function AdminPage() {
                         >
                           <Star className={`h-3.5 w-3.5 ${hasBadge ? "fill-primary text-primary" : "text-muted-foreground"}`} />
                           <span>{hasBadge ? "برچسب فعال" : "افزودن برچسب"}</span>
+                        </button>
+
+                        {/* 1-Click Toggle موجود / ناموجود */}
+                        <button
+                          type="button"
+                          onClick={() => handleToggleInStock(p.slug)}
+                          className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition-all ${
+                            p.inStock !== false
+                              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20"
+                              : "border-rose-500/30 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20"
+                          }`}
+                          title="تغییر وضعیت موجودی"
+                        >
+                          <span className={`h-2 w-2 rounded-full ${p.inStock !== false ? "bg-emerald-400" : "bg-rose-400"}`} />
+                          <span>{p.inStock !== false ? "موجود است ✓" : "ناموجود ✕"}</span>
                         </button>
 
                         {/* Quick Discount Presets */}
@@ -1666,6 +1817,183 @@ export function AdminPage() {
           </div>
         )}
 
+        {/* ---------------- TAB: REVIEWS & RATINGS MODERATION ---------------- */}
+        {activeTab === "reviews" && (
+          <div className="mt-6 space-y-6">
+            {/* Stats Overview */}
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-3xl border border-border/80 bg-card p-4">
+                <span className="text-xs text-muted-foreground">کل نظرات ثبت‌شده</span>
+                <p className="mt-1 text-2xl font-black text-foreground">
+                  {toPersianDigits(
+                    products.reduce((acc, p) => acc + (p.reviews?.length || 0), 0)
+                  )}
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-border/80 bg-card p-4">
+                <span className="text-xs text-muted-foreground">میانگین امتیاز فروشگاه</span>
+                <p className="mt-1 text-2xl font-black text-amber-400 flex items-center gap-1">
+                  <span>★</span>
+                  <span>
+                    {toPersianDigits(
+                      (
+                        products.reduce((acc, p) => acc + (p.rating || 5), 0) /
+                        (products.length || 1)
+                      ).toFixed(1)
+                    )}
+                  </span>
+                </p>
+              </div>
+
+              <div className="rounded-3xl border border-border/80 bg-card p-4">
+                <span className="text-xs text-muted-foreground">نظرات تأیید شده</span>
+                <p className="mt-1 text-2xl font-black text-emerald-400">
+                  {toPersianDigits(
+                    products.reduce(
+                      (acc, p) =>
+                        acc +
+                        (p.reviews?.filter((r) => r.status !== "pending").length || 0),
+                      0
+                    )
+                  )}
+                </p>
+              </div>
+
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  onClick={() => setIsAddingReviewModal(true)}
+                  className="neon-gradient flex h-full w-full items-center justify-center gap-2 rounded-3xl p-4 text-sm font-extrabold text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                >
+                  <Plus className="h-5 w-5" />
+                  <span>افزودن نظر خریدار (تأیید شده)</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Filter by Product & List Container */}
+            <div className="rounded-3xl border border-border/80 bg-card overflow-hidden shadow-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/60 p-4 sm:px-6">
+                <div>
+                  <h2 className="text-base font-bold text-foreground">
+                    نظرات و بازخوردهای خریداران
+                  </h2>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    می‌توانید نظرات را تأیید، لغو تأیید، یا حذف نمایید. همچنین می‌توانید نظر رسمی به عنوان خریدار ثبت کنید.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <label htmlFor="filter-prod-rev" className="text-xs text-muted-foreground shrink-0">
+                    فیلتر بر اساس محصول:
+                  </label>
+                  <select
+                    id="filter-prod-rev"
+                    value={selectedReviewFilter}
+                    onChange={(e) => setSelectedReviewFilter(e.target.value)}
+                    className="rounded-xl border border-border bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-primary"
+                  >
+                    <option value="all">همه محصولات ({toPersianDigits(products.reduce((acc, p) => acc + (p.reviews?.length || 0), 0))})</option>
+                    {products.map((p) => (
+                      <option key={p.slug} value={p.slug}>
+                        {p.name} ({toPersianDigits(p.reviews?.length || 0)})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Reviews List */}
+              <div className="divide-y divide-border/60">
+                {products
+                  .flatMap((p) =>
+                    (p.reviews || []).map((r) => ({
+                      ...r,
+                      productSlug: p.slug,
+                      productName: p.name,
+                    }))
+                  )
+                  .filter((r) =>
+                    selectedReviewFilter === "all" ? true : r.productSlug === selectedReviewFilter
+                  )
+                  .map((rev) => {
+                    const isApproved = rev.status !== "pending";
+                    return (
+                      <div
+                        key={rev.id}
+                        className="flex flex-col gap-3 p-4 sm:p-5 hover:bg-secondary/15 transition-colors"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-bold text-sm text-foreground">
+                              {rev.author}
+                            </span>
+                            <span className="rounded-lg bg-secondary/80 px-2 py-0.5 text-[10px] font-medium text-muted-foreground border border-border/60">
+                              {rev.productName}
+                            </span>
+                            {rev.verified && (
+                              <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-1.5 py-0.5 text-[9px] font-bold text-emerald-400 border border-emerald-500/20">
+                                <CheckCircle2 className="h-3 w-3" />
+                                خریدار تأیید شده
+                              </span>
+                            )}
+                            <span
+                              className={`rounded-md px-1.5 py-0.5 text-[9px] font-bold border ${
+                                isApproved
+                                  ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30"
+                                  : "bg-amber-500/15 text-amber-400 border-amber-500/30"
+                              }`}
+                            >
+                              {isApproved ? "تأیید شده ✓" : "در انتظار بررسی ⏳"}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            <div className="flex text-amber-400 text-xs">
+                              {"★".repeat(rev.rating)}
+                              {"☆".repeat(5 - rev.rating)}
+                            </div>
+                            <span className="text-[10px] text-muted-foreground">
+                              {rev.createdAt.split("T")[0]}
+                            </span>
+                          </div>
+                        </div>
+
+                        <p className="text-xs leading-6 text-muted-foreground break-words bg-background/40 p-3 rounded-2xl border border-border/50">
+                          {rev.comment}
+                        </p>
+
+                        <div className="flex items-center justify-end gap-2 pt-1">
+                          <button
+                            type="button"
+                            onClick={() => handleToggleReviewStatus(rev.productSlug, rev.id)}
+                            className={`rounded-xl px-3 py-1.5 text-xs font-semibold border transition-colors cursor-pointer ${
+                              isApproved
+                                ? "border-border bg-card text-muted-foreground hover:bg-secondary"
+                                : "border-emerald-500/40 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20"
+                            }`}
+                          >
+                            {isApproved ? "لغو تأیید" : "تأیید و انتشار ✓"}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteReview(rev.productSlug, rev.id)}
+                            className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-rose-400 hover:bg-rose-500/20 transition-colors inline-flex items-center gap-1 cursor-pointer"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                            <span>حذف</span>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ---------------- TAB 5: SETTINGS ---------------- */}
         {activeTab === "settings" && (
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -2147,6 +2475,29 @@ export function AdminPage() {
                 </div>
               </div>
 
+              {/* Product Inventory / Stock Toggle */}
+              <div className="rounded-2xl border border-border/80 bg-secondary/30 p-4 flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-bold text-foreground block">
+                    وضعیت موجودی در انبار:
+                  </span>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                    اگر ناموجود انتخاب شود، کارت محصول در سایت سیاه و سفید شده، نشان قرمز ناموجود می‌خورد و دکمه‌های خرید غیرفعال می‌شوند.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setEditProduct((prev) => prev ? ({ ...prev, inStock: prev.inStock === false ? true : false }) : null)}
+                  className={`rounded-xl px-4 py-2 text-xs font-bold transition-all border cursor-pointer ${
+                    editProduct.inStock !== false
+                      ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40"
+                      : "bg-rose-500/20 text-rose-400 border-rose-500/40"
+                  }`}
+                >
+                  {editProduct.inStock !== false ? "موجود در انبار ✓" : "ناموجود در انبار ✕"}
+                </button>
+              </div>
+
               <div>
                 <label className="block text-xs font-medium text-foreground mb-1">
                   توضیح کوتاه محصول:
@@ -2379,6 +2730,126 @@ export function AdminPage() {
                   className="neon-gradient rounded-2xl px-5 py-2 text-xs font-bold text-white shadow-md transition-transform hover:scale-105"
                 >
                   ذخیره اطلاعات مدیر
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Add Verified Review from Admin */}
+      {isAddingReviewModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-4 backdrop-blur-xs">
+          <div className="w-full max-w-lg rounded-3xl border border-border bg-card p-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-border/60 pb-3">
+              <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+                <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
+                <span>افزودن نظر خریدار جدید</span>
+              </h2>
+              <button
+                type="button"
+                onClick={() => setIsAddingReviewModal(false)}
+                className="grid h-8 w-8 place-items-center rounded-xl bg-secondary text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateAdminReview} className="mt-4 space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">
+                  انتخاب محصول: *
+                </label>
+                <select
+                  value={newReviewTargetSlug || (products[0]?.slug ?? "")}
+                  onChange={(e) => setNewReviewTargetSlug(e.target.value)}
+                  className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-xs outline-none focus:border-primary"
+                >
+                  {products.map((p) => (
+                    <option key={p.slug} value={p.slug}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">
+                  نام خریدار: *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newReviewAuthor}
+                  onChange={(e) => setNewReviewAuthor(e.target.value)}
+                  placeholder="مثال: پویا صالحی"
+                  className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-xs outline-none focus:border-primary"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">
+                  امتیاز ستاره (از ۱ تا ۵): *
+                </label>
+                <div className="flex items-center gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      type="button"
+                      key={star}
+                      onClick={() => setNewReviewRating(star)}
+                      className="p-1 text-xl transition-transform hover:scale-125 focus:outline-none"
+                    >
+                      <span className={newReviewRating >= star ? "text-amber-400 font-bold" : "text-muted/40"}>
+                        ★
+                      </span>
+                    </button>
+                  ))}
+                  <span className="text-xs text-muted-foreground">
+                    ({toPersianDigits(newReviewRating)} از ۵)
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-foreground mb-1">
+                  متن دیدگاه خریدار: *
+                </label>
+                <textarea
+                  required
+                  rows={3}
+                  value={newReviewComment}
+                  onChange={(e) => setNewReviewComment(e.target.value)}
+                  placeholder="تجربه کاربر از کیفیت، سرعت تحویل و ارزش خرید..."
+                  className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-xs outline-none focus:border-primary resize-none"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="chk-verified"
+                  checked={newReviewVerified}
+                  onChange={(e) => setNewReviewVerified(e.target.checked)}
+                  className="h-4 w-4 rounded accent-primary cursor-pointer"
+                />
+                <label htmlFor="chk-verified" className="text-xs text-foreground cursor-pointer select-none">
+                  نمایش نشان «خریدار تأیید شده ✓» کنار نظر
+                </label>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-border/60">
+                <button
+                  type="button"
+                  onClick={() => setIsAddingReviewModal(false)}
+                  className="rounded-xl border border-border px-4 py-2 text-xs font-semibold text-muted-foreground hover:bg-secondary cursor-pointer"
+                >
+                  انصراف
+                </button>
+                <button
+                  type="submit"
+                  className="rounded-xl bg-primary px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary/90 cursor-pointer"
+                >
+                  ثبت و انتشار نظر
                 </button>
               </div>
             </form>

@@ -46,6 +46,7 @@ export function ProductCard({
 
   const logoUrl = getProductLogo(product.slug, product.iconUrl);
   const initial = product.slug ? product.slug.charAt(0).toUpperCase() : "AI";
+  const isOutOfStock = product.inStock === false;
 
   return (
     <article
@@ -60,6 +61,7 @@ export function ProductCard({
       }}
       className={cn(
         "group relative flex w-[185px] xs:w-[210px] sm:w-[285px] shrink-0 snap-start flex-col gap-2.5 sm:gap-3 overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-2.5 sm:p-3.5 shadow-xs hover:border-primary/50 hover:shadow-2xl transition-all select-none touch-manipulation",
+        isOutOfStock && "opacity-90 grayscale-[0.85] contrast-95",
         className,
       )}
     >
@@ -81,7 +83,7 @@ export function ProductCard({
         <div
           className={cn(
             "relative w-full aspect-16/10 xs:aspect-4/3 sm:aspect-16/10 rounded-xl sm:rounded-2xl overflow-hidden bg-linear-to-b from-secondary/70 via-secondary/35 to-background/60 flex items-center justify-center border border-border/50 group-hover:border-primary/40 transition-colors",
-            product.imageFit === "cover" ? "p-0" : "p-2.5 sm:p-3.5"
+            product.imageFit === "cover" ? "p-0" : "p-1.5 sm:p-2"
           )}
         >
           {/* Subtle Ambient Glow */}
@@ -107,16 +109,16 @@ export function ProductCard({
               </span>
             )
           ) : (
-            /* Standard Product Logo Tile: App-Icon Squircle Frame with border & margin */
-            <div className="relative flex items-center justify-center p-2.5 sm:p-3 rounded-2xl sm:rounded-3xl bg-secondary/80 border border-border/90 shadow-md group-hover:border-primary/50 group-hover:shadow-primary/10 group-hover:scale-105 transition-all duration-300 max-h-[85%] aspect-square">
+            /* Standard Product Logo Tile: App-Icon Squircle Frame with border & margin - enlarged */
+            <div className="relative flex items-center justify-center p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl bg-secondary/90 border border-border/90 shadow-md group-hover:border-primary/50 group-hover:shadow-primary/10 group-hover:scale-105 transition-all duration-300 w-[88%] h-[88%] max-w-[130px] aspect-square">
               {logoUrl ? (
                 <img
                   src={logoUrl}
                   alt={product.name}
-                  width={80}
-                  height={80}
+                  width={96}
+                  height={96}
                   decoding="async"
-                  className="max-h-full max-w-full object-contain rounded-xl sm:rounded-2xl drop-shadow-sm"
+                  className="h-full w-full object-contain rounded-xl sm:rounded-2xl drop-shadow-sm"
                   loading="lazy"
                 />
               ) : (
@@ -127,8 +129,17 @@ export function ProductCard({
             </div>
           )}
 
+          {/* Out of stock circular badge (BodoCP-style) */}
+          {isOutOfStock && (
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-background/50 backdrop-blur-[2px] rounded-xl sm:rounded-2xl">
+              <div className="flex flex-col items-center justify-center h-13 w-13 sm:h-16 sm:w-16 rounded-full bg-rose-600/95 text-white shadow-xl border-2 border-white/20 select-none">
+                <span className="text-[10px] sm:text-xs font-black tracking-tight">ناموجود</span>
+              </div>
+            </div>
+          )}
+
           {/* Floating Special / Featured Badge */}
-          {hasBadge && badgeLabel && (
+          {hasBadge && badgeLabel && !isOutOfStock && (
             <span
               className={cn(
                 "absolute right-2 top-2 z-10 rounded-full px-2 py-0.5 sm:px-2.5 sm:py-0.5 text-[9px] sm:text-[11px] font-bold shadow-md",
@@ -140,7 +151,7 @@ export function ProductCard({
           )}
         </div>
 
-        {/* Card Content: Title & Subtitle */}
+        {/* Card Content: Title & Subtitle & Rating */}
         <div className="flex flex-col gap-0.5 px-0.5">
           <h3
             className="truncate text-xs sm:text-sm font-bold tracking-tight text-foreground group-hover/link:text-primary transition-colors"
@@ -151,6 +162,18 @@ export function ProductCard({
           <p className="line-clamp-1 text-[10px] sm:text-xs text-muted-foreground">
             {product.description || (product.duration ? `اشتراک معتبر • ${product.duration}` : "تحویل فوری و قانونی")}
           </p>
+
+          {/* Star Rating & Review count */}
+          {product.rating ? (
+            <div className="mt-0.5 flex items-center gap-1 text-[10px] sm:text-xs">
+              <span className="text-amber-400 font-bold">★ {toPersianDigits(product.rating.toFixed(1))}</span>
+              {product.reviewCount ? (
+                <span className="text-muted-foreground text-[9px] sm:text-[10px]">
+                  ({toPersianDigits(product.reviewCount)} نظر)
+                </span>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </Link>
 
@@ -185,30 +208,41 @@ export function ProductCard({
       </div>
 
       {/* Action Buttons: 2-column Side-by-Side */}
-      <div className="grid grid-cols-2 gap-1.5">
-        <NeonLink
-          to="/products/$slug"
-          params={{ slug: product.slug }}
-          preload="intent"
-          variant="outline"
-          size="sm"
-          aria-label={`مشاهده جزئیات ${product.name}`}
-          className="text-center text-[10px] sm:text-xs py-1.5 px-1 rounded-xl touch-manipulation cursor-pointer"
-        >
-          جزئیات
-        </NeonLink>
+      {isOutOfStock ? (
+        <div className="grid grid-cols-2 gap-1.5">
+          <span className="text-center text-[10px] sm:text-xs py-1.5 px-1 rounded-xl bg-secondary/50 text-muted-foreground/60 border border-border/50 cursor-not-allowed select-none">
+            جزئیات
+          </span>
+          <span className="text-center text-[10px] sm:text-xs font-bold py-1.5 px-1 rounded-xl bg-rose-500/15 text-rose-400 border border-rose-500/30 cursor-not-allowed select-none">
+            ناموجود
+          </span>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-1.5">
+          <NeonLink
+            to="/products/$slug"
+            params={{ slug: product.slug }}
+            preload="intent"
+            variant="outline"
+            size="sm"
+            aria-label={`مشاهده جزئیات ${product.name}`}
+            className="text-center text-[10px] sm:text-xs py-1.5 px-1 rounded-xl touch-manipulation cursor-pointer"
+          >
+            جزئیات
+          </NeonLink>
 
-        <NeonLink
-          to="/checkout/$slug"
-          params={{ slug: product.slug }}
-          preload="intent"
-          size="sm"
-          aria-label={`خرید اشتراک ${product.name}`}
-          className="text-center text-[10px] sm:text-xs font-bold py-1.5 px-1 rounded-xl touch-manipulation cursor-pointer"
-        >
-          خرید آنی
-        </NeonLink>
-      </div>
+          <NeonLink
+            to="/checkout/$slug"
+            params={{ slug: product.slug }}
+            preload="intent"
+            size="sm"
+            aria-label={`خرید اشتراک ${product.name}`}
+            className="text-center text-[10px] sm:text-xs font-bold py-1.5 px-1 rounded-xl touch-manipulation cursor-pointer"
+          >
+            خرید آنی
+          </NeonLink>
+        </div>
+      )}
     </article>
   );
 }
