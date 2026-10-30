@@ -127,16 +127,7 @@ function ProductDetail() {
     setTimeout(() => setReviewSubmittedMsg(""), 6000);
   };
 
-  useEffect(() => {
-    if (typeof window === "undefined" || !product) return;
-    import("@/lib/analytics").then(({ trackEvent }) => {
-      trackEvent("product_view", {
-        productSlug: product.slug,
-        productName: product.name,
-        amount: product.price,
-      });
-    });
-  }, [product?.slug]);
+  
 
   const badgeColorMap: Record<string, string> = {
     fire: "bg-linear-to-r from-rose-500 to-amber-500 text-white shadow-rose-500/20",

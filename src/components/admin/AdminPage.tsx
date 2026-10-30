@@ -51,7 +51,6 @@ import {
   Upload,
   ImageIcon,
   Instagram,
-  BarChart3,
   History,
   RotateCcw,
   Eye,
@@ -972,15 +971,6 @@ export function AdminPage() {
 
           <div className="flex items-center gap-2">
             <Link
-              to="/overview"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary hover:text-white transition-all shadow-sm"
-              title="مشاهده آمار کلیک روی بنر، خریدها، بازدیدها و مدت حضور کاربران"
-            >
-              <BarChart3 className="h-3.5 w-3.5" />
-              <span className="hidden xs:inline sm:inline">آمار و تحلیل (Overview)</span>
-              <span className="xs:hidden sm:hidden">آمار</span>
-            </Link>
-            <Link
               to="/"
               className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-border px-3.5 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary transition-colors"
             >
@@ -1093,14 +1083,7 @@ export function AdminPage() {
             <span>تنظیمات و اینستاگرام</span>
           </button>
 
-          <Link
-            to="/overview"
-            className="inline-flex items-center gap-2 rounded-2xl border border-primary/40 bg-linear-to-r from-primary/10 via-accent/10 to-primary/10 px-4 py-2 text-xs sm:text-sm font-black text-primary hover:bg-primary hover:text-white transition-all shadow-sm mr-auto"
-          >
-            <BarChart3 className="h-4 w-4" />
-            <span>آمار زنده، مدت حضور و لیدها 🚀</span>
-          </Link>
-        </div>
+          </div>
 
         {/* Global Cloud Persistence & Multi-Device Sync Bar */}
         <div className="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-purple-500/30 bg-purple-500/10 p-4">

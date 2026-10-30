@@ -73,14 +73,7 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
     }
   }
 
-  const onBannerClick = (dest: string) => {
-    import("@/lib/analytics").then(({ trackEvent }) => {
-      trackEvent("banner_click", {
-        title: "کلیک روی بنر تبلیغاتی هیرو",
-        details: { destination: dest },
-      });
-    });
-  };
+  const onBannerClick = (_dest: string) => {};
 
   const handlePlannerScroll = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
