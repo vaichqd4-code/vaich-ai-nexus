@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { Section } from "@/components/layout/Section";
 import { NeonLink } from "@/components/ui/NeonButton";
-import { formatPrice, toPersianDigits, getProduct, isProductLifetime, type Product, type ProductReview } from "@/lib/products";
+import { formatPrice, toPersianDigits, getProduct, isProductLifetime, getStoredProducts, saveStoredProducts, type Product, type ProductReview } from "@/lib/products";
 import { cn } from "@/lib/utils";
 import { Star, MessageSquarePlus, CheckCircle2 } from "lucide-react";
 
@@ -135,6 +135,21 @@ function ProductDetail() {
         const userSaved = localStorage.getItem(`vaich_user_reviews_${product.slug}`);
         const parsed = userSaved ? JSON.parse(userSaved) : [];
         localStorage.setItem(`vaich_user_reviews_${product.slug}`, JSON.stringify([rev, ...parsed]));
+
+        // Synchronize with stored products globally so outer preview cards instantly reflect the new review count
+        const storedProducts = getStoredProducts();
+        const updatedProducts = storedProducts.map((p) => {
+          if (p.slug === product.slug) {
+            const currentTotal = (p.reviewCount || p.reviews?.length || 0) + 1;
+            return {
+              ...p,
+              reviewCount: currentTotal,
+              reviews: [rev, ...(p.reviews || [])],
+            };
+          }
+          return p;
+        });
+        saveStoredProducts(updatedProducts);
       } catch {}
     }
 

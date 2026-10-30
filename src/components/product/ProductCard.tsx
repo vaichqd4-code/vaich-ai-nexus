@@ -1,4 +1,4 @@
-import { useState, useRef, type MouseEvent } from "react";
+import { useState, useEffect, useRef, type MouseEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import { getProductLogo } from "@/components/brand/ServiceIcon";
 import { NeonLink } from "@/components/ui/NeonButton";
@@ -48,6 +48,42 @@ export function ProductCard({
   const initial = product.slug ? product.slug.charAt(0).toUpperCase() : "AI";
   const isOutOfStock = product.inStock === false;
   const isLifetime = isProductLifetime(product);
+
+  const [extraReviews, setExtraReviews] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    try {
+      const local = localStorage.getItem(`vaich_user_reviews_${product.slug}`);
+      if (local) {
+        const parsed = JSON.parse(local);
+        return Array.isArray(parsed) ? parsed.length : 0;
+      }
+    } catch {}
+    return 0;
+  });
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      try {
+        const local = localStorage.getItem(`vaich_user_reviews_${product.slug}`);
+        if (local) {
+          const parsed = JSON.parse(local);
+          setExtraReviews(Array.isArray(parsed) ? parsed.length : 0);
+        }
+      } catch {}
+    };
+
+    window.addEventListener("vaich_products_updated", handleUpdate);
+    window.addEventListener("storage", handleUpdate);
+    return () => {
+      window.removeEventListener("vaich_products_updated", handleUpdate);
+      window.removeEventListener("storage", handleUpdate);
+    };
+  }, [product.slug]);
+
+  const totalReviewsCount = Math.max(
+    (product.reviewCount || 0) + extraReviews,
+    (product.reviews?.length || 0) + extraReviews
+  );
 
   return (
     <article
@@ -168,9 +204,9 @@ export function ProductCard({
           {product.rating ? (
             <div className="mt-0.5 flex items-center gap-1 text-[10px] sm:text-xs">
               <span className="text-amber-400 font-bold">★ {toPersianDigits(product.rating.toFixed(1))}</span>
-              {product.reviewCount ? (
+              {totalReviewsCount > 0 ? (
                 <span className="text-muted-foreground text-[9px] sm:text-[10px]">
-                  ({toPersianDigits(product.reviewCount)} نظر)
+                  ({toPersianDigits(totalReviewsCount)} نظر)
                 </span>
               ) : null}
             </div>
