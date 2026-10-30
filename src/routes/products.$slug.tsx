@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { Section } from "@/components/layout/Section";
 import { NeonLink } from "@/components/ui/NeonButton";
-import { formatPrice, toPersianDigits, getProduct, isProductLifetime, type ProductReview } from "@/lib/products";
+import { formatPrice, toPersianDigits, getProduct, isProductLifetime, type Product, type ProductReview } from "@/lib/products";
 import { cn } from "@/lib/utils";
 import { Star, MessageSquarePlus, CheckCircle2 } from "lucide-react";
 
@@ -72,7 +72,7 @@ export const Route = createFileRoute("/products/$slug")({
 function ProductDetail() {
   const { product } = Route.useLoaderData();
 
-  // Reviews state with persistence to localStorage
+  // Reviews state with persistence to localStorage and real-time cloud sync
   const [reviews, setReviews] = useState<ProductReview[]>(() => {
     const defaultRevs = product.reviews || [];
     if (typeof window !== "undefined") {
@@ -88,6 +88,24 @@ function ProductDetail() {
     }
     return defaultRevs;
   });
+
+  const [showAllReviews, setShowAllReviews] = useState(false);
+
+  // Sync reviews immediately when product changes or cloud updates
+  useEffect(() => {
+    if (product?.reviews) {
+      let userRevs: ProductReview[] = [];
+      if (typeof window !== "undefined") {
+        try {
+          const local = localStorage.getItem(`vaich_user_reviews_${product.slug}`);
+          if (local) userRevs = JSON.parse(local);
+        } catch {}
+      }
+      setReviews([...userRevs, ...product.reviews]);
+    }
+  }, [product?.slug, product?.reviews]);
+
+  const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 5);
 
   const [newAuthor, setNewAuthor] = useState("");
   const [newRating, setNewRating] = useState(5);
@@ -433,44 +451,61 @@ function ProductDetail() {
                     هنوز نظری برای این سرویس ثبت نشده است. اولین نفری باشید که تجربه خود را می‌نویسد!
                   </div>
                 ) : (
-                  reviews.map((rev) => (
-                    <article
-                      key={rev.id}
-                      className="rounded-2xl border border-border/80 bg-background/60 p-4 transition-all hover:border-primary/40 shadow-xs"
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2.5">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/80 font-bold text-xs text-foreground">
-                            {rev.author.charAt(0)}
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <h4 className="text-xs font-bold text-foreground">{rev.author}</h4>
-                              {rev.verified && (
-                                <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-1.5 py-0.5 text-[9px] font-bold text-emerald-400 border border-emerald-500/20">
-                                  <CheckCircle2 className="h-3 w-3" />
-                                  خریدار تأیید شده
-                                </span>
-                              )}
+                  <>
+                    {displayedReviews.map((rev) => (
+                      <article
+                        key={rev.id}
+                        className="rounded-2xl border border-border/80 bg-background/60 p-3.5 sm:p-4 transition-all hover:border-primary/40 shadow-xs"
+                      >
+                        <div className="flex items-start sm:items-center justify-between gap-2">
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary/80 font-bold text-xs text-foreground">
+                              {rev.author.charAt(0)}
                             </div>
-                            <span className="text-[10px] text-muted-foreground">
-                              {rev.createdAt.split("T")[0]}
-                            </span>
+                            <div className="min-w-0">
+                              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                <h4 className="text-xs font-bold text-foreground truncate">{rev.author}</h4>
+                                {rev.verified && (
+                                  <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-1.5 py-0.5 text-[9px] font-bold text-emerald-400 border border-emerald-500/20 shrink-0">
+                                    <CheckCircle2 className="h-3 w-3" />
+                                    خریدار تأیید شده
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-[10px] text-muted-foreground block mt-0.5">
+                                {rev.createdAt.split("T")[0]}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Stars */}
+                          <div className="flex text-amber-400 text-xs shrink-0">
+                            {"★".repeat(rev.rating)}
+                            {"☆".repeat(5 - rev.rating)}
                           </div>
                         </div>
 
-                        {/* Stars */}
-                        <div className="flex text-amber-400 text-xs">
-                          {"★".repeat(rev.rating)}
-                          {"☆".repeat(5 - rev.rating)}
-                        </div>
-                      </div>
+                        <p className="mt-2.5 sm:mt-3 text-xs leading-6 text-muted-foreground break-words">
+                          {rev.comment}
+                        </p>
+                      </article>
+                    ))}
 
-                      <p className="mt-3 text-xs leading-6 text-muted-foreground break-words">
-                        {rev.comment}
-                      </p>
-                    </article>
-                  ))
+                    {reviews.length > 5 && (
+                      <button
+                        type="button"
+                        onClick={() => setShowAllReviews(!showAllReviews)}
+                        className="w-full rounded-2xl border border-border/80 bg-secondary/50 hover:bg-secondary py-3 px-4 text-xs font-bold text-foreground transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer active:scale-[0.99]"
+                      >
+                        <span>
+                          {showAllReviews
+                            ? "نمایش کمتر (فقط ۵ نظر اول)"
+                            : `مشاهده همه ${toPersianDigits(reviews.length)} نظر خریداران (${toPersianDigits(reviews.length - 5)} نظر دیگر)`}
+                        </span>
+                        <span className="text-primary text-[10px]">{showAllReviews ? "▲" : "▼"}</span>
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
 

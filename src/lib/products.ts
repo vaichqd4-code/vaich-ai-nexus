@@ -1303,7 +1303,10 @@ export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
 
     if (fetchedData) {
       const localUpdatedAt = typeof window !== "undefined" ? localStorage.getItem("vaich_config_updated_at") : null;
-      if (localUpdatedAt && fetchedData.updatedAt && localUpdatedAt === fetchedData.updatedAt) {
+      const storedProductsRaw = typeof window !== "undefined" ? localStorage.getItem("vaich_custom_products") : null;
+      const hasProductsChanged = !storedProductsRaw || storedProductsRaw !== JSON.stringify(fetchedData.products);
+
+      if (!hasProductsChanged && localUpdatedAt && fetchedData.updatedAt && localUpdatedAt === fetchedData.updatedAt) {
         // Config is up-to-date. Skip redundant localStorage writes and re-renders.
         return fetchedData;
       }

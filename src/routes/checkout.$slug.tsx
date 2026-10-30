@@ -18,11 +18,11 @@ import {
 
 export const Route = createFileRoute("/checkout/$slug")({
   loader: async ({ params }) => {
-    let product = getProduct(params.slug);
+    let product: any = undefined;
 
-    if (!product && typeof window !== "undefined") {
+    if (typeof window !== "undefined") {
       try {
-        const res = await fetch("/site-config.json");
+        const res = await fetch(`/site-config.json?v=${Date.now()}`, { cache: "no-store" });
         if (res.ok) {
           const config = await res.json();
           product = config.products?.find((p: any) => p.slug === params.slug);
@@ -30,6 +30,10 @@ export const Route = createFileRoute("/checkout/$slug")({
       } catch {
         // network error fallback
       }
+    }
+
+    if (!product) {
+      product = getProduct(params.slug);
     }
 
     if (!product) {
