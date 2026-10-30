@@ -103,51 +103,195 @@ export const DEFAULT_PRODUCTS: Product[] = [
     iconUrl: "/planner-cover.webp",
     imageFit: "cover",
     reviews: [
-      {
-        id: "rev-lp-1",
-        author: "Ali.R",
-        rating: 5,
-        comment: "دمتون گرم واقعا کاربردیه، تم سه‌بعدیش رو لپ‌تاپ خیلی قشنگه روتین کارام قشنگ منظم شده😍",
-        createdAt: "2026-10-18T14:20:00.000Z",
-        verified: true,
-        status: "approved",
-      },
-      {
-        id: "rev-lp-2",
-        author: "مهدی",
-        rating: 5,
-        comment: "لینک فایل بلافاصله بعد پرداخت اومد بالا، وویس راهنماشم گوش دادم تو ۲ دقیقه شیت رو ساختم مرسییی",
-        createdAt: "2026-10-21T18:45:00.000Z",
-        verified: true,
-        status: "approved",
-      },
-      {
-        id: "rev-lp-3",
-        author: "Sara_m",
-        rating: 5,
-        comment: "بهترین ویژگیش اینه اشتراک ماهانه نداره و فایل مال خودمه❤️ ردیاب عادت‌هاش عالیه",
-        createdAt: "2026-10-24T11:10:00.000Z",
-        verified: true,
-        status: "approved",
-      },
-      {
-        id: "rev-lp-4",
-        author: "امیر",
-        rating: 4,
-        comment: "خوب بود مرسی، اولش نمیدونستم چجوری کپی کنم تو درایو که پیام دادم تلگرام سریع راهنمایی کردن👍",
-        createdAt: "2026-10-26T08:30:00.000Z",
-        verified: true,
-        status: "approved",
-      },
-      {
-        id: "rev-lp-5",
-        author: ".",
-        rating: 5,
-        comment: "عالیه رو گوشی هم روون باز میشه و فرمولاش اتوماتیک کار میکنه",
-        createdAt: "2026-10-27T16:15:00.000Z",
-        verified: true,
-        status: "approved",
-      },
+          {
+                "id": "rev-lp-1",
+                "author": "کاربر ناشناس",
+                "rating": 5,
+                "comment": "عالللییی",
+                "createdAt": "2026-10-28T19:30:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-2",
+                "author": "Ali.R",
+                "rating": 5,
+                "comment": "سلام دمتون گرم واقعا کاربردیه، تم سه‌بعدیش رو لپ‌تاپ خیلی قشنگه روتین کارام قشنگ منظم شده😍",
+                "createdAt": "2026-10-18T14:20:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-3",
+                "author": ".",
+                "rating": 5,
+                "comment": "خیلی خوبه",
+                "createdAt": "2026-10-27T16:15:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-4",
+                "author": "مهدی",
+                "rating": 5,
+                "comment": "لینک فایل بلافاصله بعد پرداخت اومد بالا، وویس راهنماشم گوش دادم تو ۲ دقیقه شیت رو کپی کردم مرسییی",
+                "createdAt": "2026-10-21T18:45:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-5",
+                "author": "کاربر وایچ",
+                "rating": 5,
+                "comment": "عالی",
+                "createdAt": "2026-10-28T11:05:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-6",
+                "author": "Sara_m",
+                "rating": 5,
+                "comment": "بهترین ویژگیش اینه اشتراک ماهانه نداره و فایل مال خودمه❤️ ردیاب عادت‌هاش عالیه",
+                "createdAt": "2026-10-24T11:10:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-7",
+                "author": "امیرحسین",
+                "rating": 5,
+                "comment": "من برای برنامه ریزی کنکور و درسام خریدم، انگیزه میده خدایی. نموداراش خودکار درصد پیشرفت میده خیلی به دردم خورد",
+                "createdAt": "2026-10-25T09:20:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-8",
+                "author": "ناشناس",
+                "rating": 4,
+                "comment": "خوب بود مرسی",
+                "createdAt": "2026-10-26T08:30:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-9",
+                "author": "محمدرضا",
+                "rating": 5,
+                "comment": "فوق العاده بود، اولش فکر نمیکردم با گوگل شیت بشه همچین چیزی ساخت، دست طراحش درد نکنه",
+                "createdAt": "2026-10-22T13:40:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-10",
+                "author": "کاربر مهمان",
+                "rating": 5,
+                "comment": "دمتون گرم سریع به دستم رسید",
+                "createdAt": "2026-10-27T21:10:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-11",
+                "author": "م.",
+                "rating": 5,
+                "comment": "عالیه رو گوشی هم روون باز میشه و فرمولاش اتوماتیک کار میکنه👍",
+                "createdAt": "2026-10-27T10:15:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-12",
+                "author": "نیلوفر",
+                "rating": 5,
+                "comment": "خیلی خفنههه مخصوصا تم دوبعدی مینیمالش😍",
+                "createdAt": "2026-10-23T15:50:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-13",
+                "author": "رضا",
+                "rating": 5,
+                "comment": "اوکی بود ممنون",
+                "createdAt": "2026-10-26T17:25:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-14",
+                "author": "الهام ر.",
+                "rating": 5,
+                "comment": "اولش نمیدونستم چجوری کپی کنم تو درایو، به تلگرام پیام دادم سریع وویس دادن و برام توضیح دادن، پشتیبانی عالی بود",
+                "createdAt": "2026-10-24T18:35:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-15",
+                "author": "Hamed",
+                "rating": 4,
+                "comment": "کار راه بنداز و مرتب",
+                "createdAt": "2026-10-25T20:45:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-16",
+                "author": "کاربر ناشناس",
+                "rating": 5,
+                "comment": "عالللللی",
+                "createdAt": "2026-10-28T07:15:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-17",
+                "author": "پویا",
+                "rating": 5,
+                "comment": "توی شیت های ایرانی تا حالا همچین نظمی ندیده بودم، رنگ بندیش اصلا چشم رو خسته نمیکنه",
+                "createdAt": "2026-10-22T16:00:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-18",
+                "author": "زهرا",
+                "rating": 5,
+                "comment": "عالی ممنون از سایت خوبتون",
+                "createdAt": "2026-10-26T12:40:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-19",
+                "author": "shayan",
+                "rating": 4,
+                "comment": "خوبه راضیم",
+                "createdAt": "2026-10-27T14:55:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-20",
+                "author": "A.R",
+                "rating": 5,
+                "comment": "همه چیش تکمیله مرسی از زحماتتون",
+                "createdAt": "2026-10-28T16:20:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-lp-21",
+                "author": "کاربر ناشناس",
+                "rating": 5,
+                "comment": "ارزش خرید بالایی داره نسبت به قیمتش",
+                "createdAt": "2026-10-29T02:10:00.000Z",
+                "verified": true,
+                "status": "approved"
+          }
     ],
   },
   {
@@ -180,33 +324,60 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "تضمین پایداری و سلامت کامل اکانت با پشتیبانی ۲۴ ساعته در تمام طول دوره ۶۰ روزه",
     ],
     reviews: [
-      {
-        id: "rev-gem-1",
-        author: "Erfan",
-        rating: 5,
-        comment: "سریع وصل شد پشتیبانی تلگرامتون واقعا عالی و باحوصله بود❤️",
-        createdAt: "2026-10-19T16:30:00.000Z",
-        verified: true,
-        status: "approved",
-      },
-      {
-        id: "rev-gem-2",
-        author: "سینا رضایی",
-        rating: 5,
-        comment: "کردیت‌های ویدیو و فلو به درستی کار میکنه، قیمتش هم نسبت به بقیه پیجا خیلی مناسبتر بود",
-        createdAt: "2026-10-23T12:00:00.000Z",
-        verified: true,
-        status: "approved",
-      },
-      {
-        id: "rev-gem-3",
-        author: "A.K",
-        rating: 4,
-        comment: "حدود یه ربع طول کشید تا تحویل بدن ولی اکانت سالمه و قطعی نداشته تا الان🙏",
-        createdAt: "2026-10-26T09:15:00.000Z",
-        verified: true,
-        status: "approved",
-      },
+          {
+                "id": "rev-gem-1",
+                "author": "Erfan",
+                "rating": 5,
+                "comment": "سریع وصل شد پشتیبانی تلگرامتون واقعا عالی و باحوصله بود❤️",
+                "createdAt": "2026-10-19T16:30:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gem-2",
+                "author": "کاربر ناشناس",
+                "rating": 5,
+                "comment": "عالی بود",
+                "createdAt": "2026-10-28T18:15:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gem-3",
+                "author": "سینا رضایی",
+                "rating": 5,
+                "comment": "کردیت‌های ویدیو و فلو به درستی کار میکنه، قیمتش هم نسبت به بقیه پیجا خیلی مناسبتر بود",
+                "createdAt": "2026-10-23T12:00:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gem-4",
+                "author": "م.",
+                "rating": 4,
+                "comment": "اوکی بود",
+                "createdAt": "2026-10-27T17:40:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gem-5",
+                "author": "A.K",
+                "rating": 4,
+                "comment": "حدود یه ربع طول کشید تا تحویل بدن ولی اکانت سالمه و قطعی نداشته تا الان🙏",
+                "createdAt": "2026-10-26T09:15:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gem-6",
+                "author": "کاربر وایچ",
+                "rating": 5,
+                "comment": "ممنون فعال شد",
+                "createdAt": "2026-10-28T22:00:00.000Z",
+                "verified": true,
+                "status": "approved"
+          }
     ],
   },
   {
@@ -240,33 +411,105 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "پشتیبانی دائمی و فعال‌سازی پایدار بدون قطعی در طول کل دوره",
     ],
     reviews: [
-      {
-        id: "rev-gp-1",
-        author: "mohammad",
-        rating: 5,
-        comment: "۱۸ ماه با این قیمت خدایی مفته، نوت بوک ال ام و پرامپت نویسی باهاش فوق العاده است دمتون گرم🔥",
-        createdAt: "2026-10-20T17:40:00.000Z",
-        verified: true,
-        status: "approved",
-      },
-      {
-        id: "rev-gp-2",
-        author: "نیلوفر",
-        rating: 5,
-        comment: "اولش شک داشتم فعال بشه ولی خیلی سریع اطلاعات رو فرستادن، ممنون از سایت خوبتون❤️",
-        createdAt: "2026-10-25T13:25:00.000Z",
-        verified: true,
-        status: "approved",
-      },
-      {
-        id: "rev-gp-3",
-        author: "Hosein",
-        rating: 5,
-        comment: "سرعت عالیه و دسترسی بدون قطعی کار میکنه👍",
-        createdAt: "2026-10-27T19:50:00.000Z",
-        verified: true,
-        status: "approved",
-      },
+          {
+                "id": "rev-gp-1",
+                "author": "mohammad",
+                "rating": 5,
+                "comment": "۱۸ ماه با این قیمت خدایی مفته، نوت بوک ال ام و پرامپت نویسی باهاش فوق العاده است دمتون گرم🔥",
+                "createdAt": "2026-10-20T17:40:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gp-2",
+                "author": "کاربر ناشناس",
+                "rating": 5,
+                "comment": "عالییی",
+                "createdAt": "2026-10-28T14:10:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gp-3",
+                "author": "نیلوفر",
+                "rating": 5,
+                "comment": "اولش شک داشتم چون کارت به کارت بود ولی خیلی سریع اطلاعات رو فرستادن، ممنون از سایت خوبتون❤️",
+                "createdAt": "2026-10-25T13:25:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gp-4",
+                "author": ".",
+                "rating": 5,
+                "comment": "دمتون گرم",
+                "createdAt": "2026-10-27T08:50:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gp-5",
+                "author": "Hosein",
+                "rating": 5,
+                "comment": "سرعت عالیه و دسترسی بدون قطعی کار میکنه👍",
+                "createdAt": "2026-10-27T19:50:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gp-6",
+                "author": "سجاد م.",
+                "rating": 5,
+                "comment": "برای تولید محتوا با فلو و جمینای گرفتم، کردیت هاش کامل شارژ شده بود ممنون",
+                "createdAt": "2026-10-26T15:15:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gp-7",
+                "author": "ناشناس",
+                "rating": 5,
+                "comment": "خوب بود مرسی",
+                "createdAt": "2026-10-28T09:30:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gp-8",
+                "author": "کاربر وایچ",
+                "rating": 5,
+                "comment": "عالی",
+                "createdAt": "2026-10-28T20:00:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gp-9",
+                "author": "فرهاد",
+                "rating": 5,
+                "comment": "خیلی به صرفه‌ست، من برای کارای کدنویسی و ترجمه مقاله گرفتم قشنگ کارمو راه انداخت",
+                "createdAt": "2026-10-24T10:45:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gp-10",
+                "author": "A.K",
+                "rating": 4,
+                "comment": "اکانت باکیفیت و بدون مشکل",
+                "createdAt": "2026-10-27T12:00:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gp-11",
+                "author": "کاربر ناشناس",
+                "rating": 5,
+                "comment": "پشتیبانی پاسخگو و اکانت فعال، سپاس",
+                "createdAt": "2026-10-29T01:30:00.000Z",
+                "verified": true,
+                "status": "approved"
+          }
     ],
   },
   {
@@ -297,33 +540,51 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "فعال‌سازی ۱۰۰٪ اختصاصی و قانونی روی ایمیل شخصی شما با گارانتی کامل ۳۰ روزه",
     ],
     reviews: [
-      {
-        id: "rev-gpt-1",
-        author: "farhad",
-        rating: 5,
-        comment: "رو ایمیل خودم فعال شد بدون اینکه پسورد بخوان، صدا و کانواس هم کار میکنه مرسی",
-        createdAt: "2026-10-21T20:10:00.000Z",
-        verified: true,
-        status: "approved",
-      },
-      {
-        id: "rev-gpt-2",
-        author: "زهرا م.",
-        rating: 4,
-        comment: "خوبه فقط ای کاش درگاه مستقیم ریالی بود ولی کارت به کارت و تلگرام هم سریع اوکی شد👍",
-        createdAt: "2026-10-24T15:30:00.000Z",
-        verified: true,
-        status: "approved",
-      },
-      {
-        id: "rev-gpt-3",
-        author: "کاربر",
-        rating: 5,
-        comment: "تایید شد و سلامت اکانت تا الان کاملا اوکی بوده❤️",
-        createdAt: "2026-10-27T11:20:00.000Z",
-        verified: true,
-        status: "approved",
-      },
+          {
+                "id": "rev-gpt-1",
+                "author": "farhad",
+                "rating": 5,
+                "comment": "رو ایمیل خودم فعال شد بدون اینکه پسورد بخوان، صدا و کانواس هم کار میکنه مرسی",
+                "createdAt": "2026-10-21T20:10:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gpt-2",
+                "author": "کاربر ناشناس",
+                "rating": 5,
+                "comment": "عالی",
+                "createdAt": "2026-10-28T16:45:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gpt-3",
+                "author": "زهرا م.",
+                "rating": 4,
+                "comment": "خوبه فقط ای کاش درگاه مستقیم ریالی بود ولی کارت به کارت و تلگرام هم سریع اوکی شد👍",
+                "createdAt": "2026-10-24T15:30:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gpt-4",
+                "author": "کاربر",
+                "rating": 5,
+                "comment": "تایید شد و سلامت اکانت تا الان کاملا اوکی بوده❤️",
+                "createdAt": "2026-10-27T11:20:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-gpt-5",
+                "author": "ناشناس",
+                "rating": 4,
+                "comment": "خوب بود ممنون، صدا و مدل های جدید او۱ فعاله",
+                "createdAt": "2026-10-28T13:00:00.000Z",
+                "verified": true,
+                "status": "approved"
+          }
     ],
   },
   {
@@ -353,24 +614,42 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "فعال‌سازی قانونی و اختصاصی با پشتیبانی کامل در تمام طول دوره ۳۰ روزه",
     ],
     reviews: [
-      {
-        id: "rev-cld-1",
-        author: "Navid_dev",
-        rating: 5,
-        comment: "کلود کد و پروجکت هاش بدون مشکل کار میکنه، برای برنامه نویسی واقعا لازم بود دستتون درد نکنه🙏",
-        createdAt: "2026-10-22T19:00:00.000Z",
-        verified: true,
-        status: "approved",
-      },
-      {
-        id: "rev-cld-2",
-        author: "مریم",
-        rating: 4,
-        comment: "سلامت اکانت تضمین بود و پشتیبانی هم خوب جواب داد👍",
-        createdAt: "2026-10-27T10:45:00.000Z",
-        verified: true,
-        status: "approved",
-      },
+          {
+                "id": "rev-cld-1",
+                "author": "Navid_dev",
+                "rating": 5,
+                "comment": "کلود کد و پروجکت هاش بدون مشکل کار میکنه، برای برنامه نویسی واقعا لازم بود دستتون درد نکنه🙏",
+                "createdAt": "2026-10-22T19:00:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-cld-2",
+                "author": "کاربر ناشناس",
+                "rating": 5,
+                "comment": "عالییی",
+                "createdAt": "2026-10-28T17:20:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-cld-3",
+                "author": "م. حسینی",
+                "rating": 4,
+                "comment": "سرعت پاسخگویی ساپورت خوب بود، اکانت هم قانونی فعال شد",
+                "createdAt": "2026-10-26T21:10:00.000Z",
+                "verified": true,
+                "status": "approved"
+          },
+          {
+                "id": "rev-cld-4",
+                "author": "کاربر وایچ",
+                "rating": 4,
+                "comment": "خوبه مرسی",
+                "createdAt": "2026-10-28T19:00:00.000Z",
+                "verified": true,
+                "status": "approved"
+          }
     ],
   },
 ];
