@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useRef } from "react";
 import { Section } from "@/components/layout/Section";
-import { BLOG_POSTS } from "@/lib/blog-data";
+import { useBlogPosts } from "@/lib/blog-data";
 import { BlogCoverGraphic } from "@/components/blog/BlogCoverGraphic";
 import { Clock, ArrowLeft, ChevronRight, ChevronLeft, BookOpen } from "lucide-react";
 
@@ -62,7 +62,7 @@ export function BlogSection() {
           WebkitOverflowScrolling: "touch",
         }}
       >
-        {BLOG_POSTS.map((post) => (
+        {posts.map((post) => (
           <article
             key={post.slug}
             style={{ scrollSnapAlign: "start" }}
@@ -74,7 +74,20 @@ export function BlogSection() {
               params={{ slug: post.slug }}
               className="block relative aspect-[16/10] w-full overflow-hidden bg-neutral-950"
             >
-              <BlogCoverGraphic slug={post.slug} category={post.category} />
+              <img
+                src={post.coverImage}
+                alt={post.title}
+                loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                onError={(e) => {
+                  (e.currentTarget as HTMLElement).style.display = "none";
+                  const fallback = e.currentTarget.parentElement?.querySelector(".blog-fallback-cover");
+                  if (fallback) (fallback as HTMLElement).style.display = "block";
+                }}
+              />
+              <div className="blog-fallback-cover absolute inset-0 hidden">
+                <BlogCoverGraphic slug={post.slug} category={post.category} />
+              </div>
 
               <div className="absolute top-3 right-3 z-20">
                 <span className="rounded-full bg-background/90 backdrop-blur-md border border-border/70 px-2.5 py-0.5 text-[11px] font-bold text-primary shadow-xs">
@@ -82,7 +95,7 @@ export function BlogSection() {
                 </span>
               </div>
 
-              <div className="absolute bottom-3 right-3 z-20 flex items-center gap-1.5 text-[11px] text-neutral-300 bg-background/80 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-border/40">
+              <div className="absolute bottom-3 right-3 z-20 flex items-center gap-1.5 text-[11px] text-foreground font-semibold bg-background/90 dark:bg-background/80 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-border/60 shadow-xs">
                 <Clock className="h-3.5 w-3.5 text-neutral-400" />
                 <span>{post.readTime}</span>
               </div>
@@ -98,7 +111,7 @@ export function BlogSection() {
                 >
                   {post.title}
                 </Link>
-                <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed font-normal">
                   {post.excerpt}
                 </p>
               </div>

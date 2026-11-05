@@ -401,6 +401,11 @@ function Home() {
         })
       )}
 
+      {/* اسلایدر مجله و مقالات بلافاصله بعد از آخرین ردیف محصولات */}
+      <Suspense fallback={<div className="h-16 py-4" />}>
+        <BlogSection />
+      </Suspense>
+
       {/* Below-the-fold landing sections mounted on idle */}
       <BelowFoldSections />
     </>
@@ -435,11 +440,8 @@ function BelowFoldSections() {
 
   return (
     <Suspense fallback={<div className="h-16 py-4" />}>
-      <Features />
-      <HowItWorks />
       <Trust />
       <Faq />
-      <BlogSection />
       <SupportCta />
     </Suspense>
   );

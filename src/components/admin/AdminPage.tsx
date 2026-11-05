@@ -23,6 +23,7 @@ import {
   isProductLifetime,
 } from "@/lib/products";
 import { ServiceIcon, getProductLogo, PRESET_LOGOS } from "@/components/brand/ServiceIcon";
+import { type BlogPost, BLOG_POSTS, getStoredBlogPosts, saveStoredBlogPosts } from "@/lib/blog-data";
 import {
   ShieldCheck,
   Lock,
@@ -55,6 +56,7 @@ import {
   RotateCcw,
   Eye,
   CheckCircle2,
+  BookOpen,
 } from "lucide-react";
 
 // Client-side image compressor for mobile and desktop uploads
@@ -137,7 +139,7 @@ export function AdminPage() {
   const [inputEmail, setInputEmail] = useState("");
   const [inputPin, setInputPin] = useState("");
   const [authError, setAuthError] = useState("");
-  const [activeTab, setActiveTab] = useState<"products" | "rows" | "layout" | "admins" | "banner" | "reviews" | "settings">("products");
+  const [activeTab, setActiveTab] = useState<"products" | "rows" | "layout" | "admins" | "banner" | "reviews" | "blog" | "settings">("products");
 
   // Reviews moderation state
   const [selectedReviewFilter, setSelectedReviewFilter] = useState<string>("all");
@@ -172,6 +174,144 @@ export function AdminPage() {
 
   // Cloud Sync Status Message
   const [cloudSyncMsg, setCloudSyncMsg] = useState("");
+
+  // Blog Management State
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const raw = localStorage.getItem("vaich_blog_posts");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {}
+    }
+    return BLOG_POSTS;
+  });
+  const [isEditingBlog, setIsEditingBlog] = useState(false);
+  const [editingBlogPost, setEditingBlogPost] = useState<Partial<BlogPost> | null>(null);
+  const [blogSaveMsg, setBlogSaveMsg] = useState("");
+  const [blogDeleteSlug, setBlogDeleteSlug] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleBlogUpdate = () => {
+      setBlogPosts(getStoredBlogPosts());
+    };
+    window.addEventListener("vaich_blog_updated", handleBlogUpdate);
+    return () => window.removeEventListener("vaich_blog_updated", handleBlogUpdate);
+  }, []);
+
+  const handleOpenAddBlog = () => {
+    setEditingBlogPost({
+      slug: "",
+      title: "",
+      category: "برنامه‌ریزی دیجیتال",
+      readTime: "۵ دقیقه",
+      date: new Intl.DateTimeFormat("fa-IR", { dateStyle: "long" }).format(new Date()),
+      publishIsoDate: new Date().toISOString(),
+      coverImage: "/blog/planner-procrastination.webp",
+      targetProductType: "planner",
+      excerpt: "",
+      keywords: ["وایچ", "مقاله آموزشی"],
+      author: {
+        name: "یونس حیاتی",
+        role: "موسس وایچ و طراح سیستم‌های بهره‌وری فردی",
+        avatar: "/vaich-logo.png",
+        bio: "طراح سیستم‌های نوین بهره‌وری فردی و ابزارهای هوش مصنوعی کاربردی.",
+      },
+      sections: [
+        {
+          heading: "۱. مقدمه و بررسی موضوع",
+          paragraphs: ["متن پاراگراف اول مقاله..."],
+        },
+      ],
+      conclusion: {
+        heading: "نتیجه‌گیری نهایی",
+        text: "خلاصه و نتیجه‌گیری کاربردی برای خوانندگان...",
+      },
+    });
+    setIsEditingBlog(true);
+  };
+
+  const handleOpenEditBlog = (post: BlogPost) => {
+    setEditingBlogPost(JSON.parse(JSON.stringify(post)));
+    setIsEditingBlog(true);
+  };
+
+  const handleSaveBlog = async () => {
+    if (!editingBlogPost || !editingBlogPost.title || !editingBlogPost.slug) {
+      alert("لطفاً عنوان و نامک (Slug) مقاله را وارد کنید.");
+      return;
+    }
+
+    const cleanSlug = editingBlogPost.slug.trim().toLowerCase().replace(/\s+/g, "-");
+    const updatedPost: BlogPost = {
+      slug: cleanSlug,
+      title: editingBlogPost.title.trim(),
+      excerpt: editingBlogPost.excerpt?.trim() || "",
+      category: editingBlogPost.category?.trim() || "عمومی",
+      readTime: editingBlogPost.readTime?.trim() || "۵ دقیقه",
+      date: editingBlogPost.date || "امروز",
+      publishIsoDate: editingBlogPost.publishIsoDate || new Date().toISOString(),
+      coverImage: editingBlogPost.coverImage?.trim() || "/blog/planner-procrastination.webp",
+      targetProductType: editingBlogPost.targetProductType || "planner",
+      keywords: editingBlogPost.keywords || ["وایچ"],
+      author: editingBlogPost.author || {
+        name: "یونس حیاتی",
+        role: "موسس وایچ",
+        avatar: "/vaich-logo.png",
+        bio: "",
+      },
+      sections: editingBlogPost.sections || [
+        {
+          heading: "بخش اول",
+          paragraphs: [editingBlogPost.excerpt || "محتوای مقاله"],
+        },
+      ],
+      conclusion: editingBlogPost.conclusion || {
+        heading: "جمع‌بندی",
+        text: "امیدواریم این مقاله برای شما مفید واقع شده باشد.",
+      },
+    };
+
+    let nextPosts: BlogPost[];
+    const exists = blogPosts.some((p) => p.slug === cleanSlug);
+    if (exists) {
+      nextPosts = blogPosts.map((p) => (p.slug === cleanSlug ? updatedPost : p));
+    } else {
+      nextPosts = [updatedPost, ...blogPosts];
+    }
+
+    setBlogPosts(nextPosts);
+    saveStoredBlogPosts(nextPosts);
+    setIsEditingBlog(false);
+    setEditingBlogPost(null);
+
+    setBlogSaveMsg("در حال ذخیره و همگام‌سازی ابری...");
+    const res = await publishToCloud({ blogPosts: nextPosts });
+    if (res.success) {
+      setBlogSaveMsg("مقاله با موفقیت ذخیره و در سرور جهانی منتشر شد! ✓");
+    } else {
+      setBlogSaveMsg("مقاله در مرورگر ذخیره شد.");
+    }
+    setTimeout(() => setBlogSaveMsg(""), 4000);
+  };
+
+  const handleDeleteBlog = async (slug: string) => {
+    const nextPosts = blogPosts.filter((p) => p.slug !== slug);
+    setBlogPosts(nextPosts);
+    saveStoredBlogPosts(nextPosts);
+    setBlogDeleteSlug(null);
+
+    setBlogSaveMsg("در حال حذف و به‌روزرسانی ابری...");
+    const res = await publishToCloud({ blogPosts: nextPosts });
+    if (res.success) {
+      setBlogSaveMsg("مقاله با موفقیت حذف شد. ✓");
+    } else {
+      setBlogSaveMsg("مقاله حذف شد.");
+    }
+    setTimeout(() => setBlogSaveMsg(""), 4000);
+  };
 
   // Product Add / Edit Modal State
   const [isEditing, setIsEditing] = useState(false);
@@ -1068,6 +1208,19 @@ export function AdminPage() {
           >
             <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
             <span>نظرات و امتیازها ({toPersianDigits(products.reduce((acc, p) => acc + (p.reviews?.length || 0), 0))})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("blog")}
+            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
+              activeTab === "blog"
+                ? "bg-primary text-white shadow-md"
+                : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <BookOpen className="h-4 w-4" />
+            <span>مدیریت مقالات ({toPersianDigits(blogPosts.length)})</span>
           </button>
 
           <button
@@ -1983,6 +2136,130 @@ export function AdminPage() {
                       </div>
                     );
                   })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ---------------- TAB: BLOG / ARTICLES MANAGEMENT ---------------- */}
+        {activeTab === "blog" && (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border/80 bg-card p-6 shadow-sm">
+              <div>
+                <h2 className="text-xl font-black text-foreground flex items-center gap-2">
+                  <BookOpen className="h-5 w-5 text-primary" />
+                  <span>مدیریت مقالات و وبلاگ تخصصی</span>
+                </h2>
+                <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+                  مشاهده، ویرایش محتوا، افزودن مقاله جدید و همگام‌سازی مستقیم با سرور ابری سایت
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleOpenAddBlog}
+                className="inline-flex items-center gap-2 rounded-2xl bg-primary px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-primary/20 hover:bg-primary/90 transition-all cursor-pointer self-start sm:self-auto"
+              >
+                <Plus className="h-4 w-4" />
+                <span>افزودن مقاله جدید</span>
+              </button>
+            </div>
+
+            {blogSaveMsg && (
+              <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-xs sm:text-sm font-bold text-emerald-400 flex items-center gap-2">
+                <Check className="h-4 w-4" />
+                <span>{blogSaveMsg}</span>
+              </div>
+            )}
+
+            {/* Articles Table */}
+            <div className="overflow-hidden rounded-3xl border border-border/80 bg-card shadow-sm">
+              <div className="overflow-x-auto">
+                <table className="w-full text-right text-xs sm:text-sm">
+                  <thead className="border-b border-border/60 bg-muted/40 text-muted-foreground">
+                    <tr>
+                      <th className="py-3.5 px-4 font-bold">کاور</th>
+                      <th className="py-3.5 px-4 font-bold">عنوان مقاله</th>
+                      <th className="py-3.5 px-4 font-bold hidden md:table-cell">دسته‌بندی</th>
+                      <th className="py-3.5 px-4 font-bold hidden sm:table-cell">زمان مطالعه</th>
+                      <th className="py-3.5 px-4 font-bold hidden lg:table-cell">محصول هدف</th>
+                      <th className="py-3.5 px-4 font-bold text-left">عملیات</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border/50">
+                    {blogPosts.map((post) => (
+                      <tr key={post.slug} className="hover:bg-muted/20 transition-colors">
+                        <td className="py-3 px-4">
+                          <div className="h-12 w-16 sm:h-14 sm:w-20 overflow-hidden rounded-xl border border-border/80 bg-neutral-950 shrink-0">
+                            <img
+                              src={post.coverImage}
+                              alt={post.title}
+                              className="h-full w-full object-cover"
+                              onError={(e) => {
+                                (e.currentTarget as HTMLElement).style.display = "none";
+                              }}
+                            />
+                          </div>
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="font-bold text-foreground leading-snug max-w-xs sm:max-w-md line-clamp-2">
+                            {post.title}
+                          </div>
+                          <div className="text-[11px] text-muted-foreground mt-0.5 font-mono dir-ltr text-right">
+                            /blog/{post.slug}
+                          </div>
+                        </td>
+                        <td className="py-3 px-4 hidden md:table-cell">
+                          <span className="rounded-full bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[11px] font-bold text-primary">
+                            {post.category}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 hidden sm:table-cell text-muted-foreground font-medium">
+                          {post.readTime}
+                        </td>
+                        <td className="py-3 px-4 hidden lg:table-cell">
+                          <span
+                            className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${
+                              post.targetProductType === "planner"
+                                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                                : "bg-purple-500/10 text-purple-400 border border-purple-500/20"
+                            }`}
+                          >
+                            {post.targetProductType === "planner" ? "پلنر هوشمند" : "هوش مصنوعی"}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-left">
+                          <div className="inline-flex items-center gap-1.5">
+                            <a
+                              href={`/blog/${post.slug}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="grid h-8 w-8 place-items-center rounded-xl border border-border/70 bg-secondary/50 text-foreground hover:bg-secondary hover:text-primary transition-all cursor-pointer"
+                              title="مشاهده در سایت"
+                            >
+                              <ExternalLink className="h-3.5 w-3.5" />
+                            </a>
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEditBlog(post)}
+                              className="grid h-8 w-8 place-items-center rounded-xl border border-border/70 bg-secondary/50 text-foreground hover:border-primary/50 hover:bg-secondary hover:text-primary transition-all cursor-pointer"
+                              title="ویرایش مقاله"
+                            >
+                              <Edit3 className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setBlogDeleteSlug(post.slug)}
+                              className="grid h-8 w-8 place-items-center rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all cursor-pointer"
+                              title="حذف مقاله"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -3090,6 +3367,188 @@ export function AdminPage() {
                   </div>
                 )}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Blog Edit / Add Modal */}
+      {isEditingBlog && editingBlogPost && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md overflow-y-auto">
+          <div className="w-full max-w-2xl rounded-3xl border border-border bg-card p-6 shadow-2xl space-y-4 my-8">
+            <div className="flex items-center justify-between border-b border-border/60 pb-3">
+              <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-primary" />
+                <span>{editingBlogPost.slug ? "ویرایش مقاله" : "افزودن مقاله جدید"}</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsEditingBlog(false)}
+                className="rounded-xl p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 max-h-[70vh] overflow-y-auto px-1">
+              <div>
+                <label className="block text-xs font-bold text-foreground mb-1.5">
+                  عنوان مقاله *
+                </label>
+                <input
+                  type="text"
+                  value={editingBlogPost.title || ""}
+                  onChange={(e) => setEditingBlogPost({ ...editingBlogPost, title: e.target.value })}
+                  className="w-full rounded-2xl border border-border/80 bg-background px-4 py-2.5 text-xs sm:text-sm text-foreground focus:border-primary focus:outline-none"
+                  placeholder="مثال: راهنمای غلبه بر اهمال‌کاری با پلنر هوشمند"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-foreground mb-1.5">
+                    نامک یکتا (Slug انگلیسی) *
+                  </label>
+                  <input
+                    type="text"
+                    dir="ltr"
+                    value={editingBlogPost.slug || ""}
+                    onChange={(e) => setEditingBlogPost({ ...editingBlogPost, slug: e.target.value })}
+                    className="w-full rounded-2xl border border-border/80 bg-background px-4 py-2.5 text-xs sm:text-sm text-foreground focus:border-primary focus:outline-none font-mono"
+                    placeholder="defeat-procrastination-guide"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-foreground mb-1.5">
+                    دسته‌بندی مقاله *
+                  </label>
+                  <input
+                    type="text"
+                    value={editingBlogPost.category || ""}
+                    onChange={(e) => setEditingBlogPost({ ...editingBlogPost, category: e.target.value })}
+                    className="w-full rounded-2xl border border-border/80 bg-background px-4 py-2.5 text-xs sm:text-sm text-foreground focus:border-primary focus:outline-none"
+                    placeholder="مثال: روانشناسی و برنامه‌ریزی"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-foreground mb-1.5">
+                    زمان مطالعه
+                  </label>
+                  <input
+                    type="text"
+                    value={editingBlogPost.readTime || ""}
+                    onChange={(e) => setEditingBlogPost({ ...editingBlogPost, readTime: e.target.value })}
+                    className="w-full rounded-2xl border border-border/80 bg-background px-4 py-2.5 text-xs sm:text-sm text-foreground focus:border-primary focus:outline-none"
+                    placeholder="۷ دقیقه"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-foreground mb-1.5">
+                    تاریخ انتشار
+                  </label>
+                  <input
+                    type="text"
+                    value={editingBlogPost.date || ""}
+                    onChange={(e) => setEditingBlogPost({ ...editingBlogPost, date: e.target.value })}
+                    className="w-full rounded-2xl border border-border/80 bg-background px-4 py-2.5 text-xs sm:text-sm text-foreground focus:border-primary focus:outline-none"
+                    placeholder="۱۴ آبان ۱۴۰۳"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-foreground mb-1.5">
+                    محصول بنر انتهای مقاله
+                  </label>
+                  <select
+                    value={editingBlogPost.targetProductType || "planner"}
+                    onChange={(e) => setEditingBlogPost({ ...editingBlogPost, targetProductType: e.target.value as any })}
+                    className="w-full rounded-2xl border border-border/80 bg-background px-3 py-2.5 text-xs sm:text-sm text-foreground focus:border-primary focus:outline-none cursor-pointer"
+                  >
+                    <option value="planner">پلنر دیجیتال گوگل‌شیت</option>
+                    <option value="ai">اشتراک‌های هوش مصنوعی</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-foreground mb-1.5">
+                  آدرس تصویر کاور (لوکال یا وب)
+                </label>
+                <input
+                  type="text"
+                  dir="ltr"
+                  value={editingBlogPost.coverImage || ""}
+                  onChange={(e) => setEditingBlogPost({ ...editingBlogPost, coverImage: e.target.value })}
+                  className="w-full rounded-2xl border border-border/80 bg-background px-4 py-2.5 text-xs sm:text-sm text-foreground focus:border-primary focus:outline-none font-mono"
+                  placeholder="/blog/planner-procrastination.webp"
+                />
+                <p className="mt-1 text-[11px] text-muted-foreground">
+                  پیشنهاد: از تصاویر سبک فولدر /blog/ مانند /blog/planner-procrastination.webp استفاده کنید.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-foreground mb-1.5">
+                  خلاصه کوتاه مقاله (Excerpt برای کارت‌ها و متای سئو)
+                </label>
+                <textarea
+                  rows={3}
+                  value={editingBlogPost.excerpt || ""}
+                  onChange={(e) => setEditingBlogPost({ ...editingBlogPost, excerpt: e.target.value })}
+                  className="w-full rounded-2xl border border-border/80 bg-background px-4 py-2.5 text-xs sm:text-sm text-foreground focus:border-primary focus:outline-none leading-relaxed"
+                  placeholder="توضیح کوتاه ۱ الی ۲ خطی برای پیش‌نمایش در صفحه اصلی و متاتگ‌های گوگل..."
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-border/60">
+              <button
+                type="button"
+                onClick={() => setIsEditingBlog(false)}
+                className="rounded-2xl border border-border/80 bg-secondary/50 px-4 py-2.5 text-xs sm:text-sm font-bold text-foreground hover:bg-secondary cursor-pointer"
+              >
+                انصراف
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveBlog}
+                className="rounded-2xl bg-primary px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-primary/20 hover:bg-primary/90 transition-all cursor-pointer"
+              >
+                ذخیره و همگام‌سازی ابری
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Blog Delete Confirmation Modal */}
+      {blogDeleteSlug && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md">
+          <div className="w-full max-w-md rounded-3xl border border-border bg-card p-6 shadow-2xl space-y-4">
+            <h3 className="text-base font-bold text-foreground">حذف مقاله</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              آیا از حذف مقاله با نامک <span className="font-mono text-foreground font-bold">{blogDeleteSlug}</span> اطمینان دارید؟ این عمل پس از همگام‌سازی ابری اعمال خواهد شد.
+            </p>
+            <div className="flex items-center justify-end gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => setBlogDeleteSlug(null)}
+                className="rounded-2xl border border-border/80 bg-secondary/50 px-4 py-2 text-xs sm:text-sm font-bold text-foreground hover:bg-secondary cursor-pointer"
+              >
+                انصراف
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDeleteBlog(blogDeleteSlug)}
+                className="rounded-2xl bg-red-600 px-4 py-2 text-xs sm:text-sm font-bold text-white hover:bg-red-500 cursor-pointer shadow-md shadow-red-600/20"
+              >
+                بله، حذف کن
+              </button>
             </div>
           </div>
         </div>

@@ -23,9 +23,12 @@ import {
   Moon,
   MessageCircleQuestion,
   Compass,
+  X,
 } from "lucide-react";
 import { useDynamicProducts, formatPrice, toPersianDigits } from "@/lib/products";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
+import { BLOG_POSTS } from "@/lib/blog-data";
+import { isProductLifetime } from "@/lib/products";
 
 type Theme = "dark" | "light";
 
@@ -39,6 +42,16 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [drawerCategoriesOpen, setDrawerCategoriesOpen] = useState(true);
+  const [accordionState, setAccordionState] = useState<{ [key: string]: boolean }>({
+    planners: true,
+    ai: true,
+    blog: false,
+    support: false,
+  });
+
+  const toggleAccordion = (key: string) => {
+    setAccordionState((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
   const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -343,7 +356,7 @@ export function Header() {
                     }}
                     className="text-muted-foreground hover:text-foreground text-[10px] cursor-pointer"
                   >
-                    بستن ✕
+                    <span>بستن</span><X className="h-3 w-3 inline mr-1" />
                   </button>
                 </div>
 
@@ -469,7 +482,7 @@ export function Header() {
 
           <button
             type="button"
-            onClick={() => setOpen((v) => !v)}
+            onClick={(e) => { e.preventDefault(); setOpen((v) => !v); }}
             aria-expanded={open}
             aria-label="باز و بسته کردن منو"
             className="grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary active:scale-95 lg:hidden"
@@ -525,130 +538,302 @@ export function Header() {
               </button>
             </div>
 
-            {/* Navigation Links — Minimal, Linear, BodoCP-Style */}
-            <nav className="flex-1 overflow-y-auto py-2 divide-y divide-border/40">
-              {/* پلنرهای هوشمند دیجیتال */}
-              <a
-                href="/#planners"
-                onClick={(e) => {
-                  setOpen(false);
-                  if (typeof window !== "undefined" && window.location.pathname === "/") {
+            {/* Navigation Links — Accordion BodoCP Architecture */}
+            <nav className="flex-1 overflow-y-auto py-2 space-y-2 select-none">
+              {/* Accordion 1: پلنرهای هوشمند دیجیتال */}
+              <div className="rounded-2xl border border-border/60 bg-secondary/20 overflow-hidden">
+                <button
+                  type="button"
+                  onClick={(e) => {
                     e.preventDefault();
-                    const el =
-                      document.getElementById("planners") ||
-                      document.getElementById("row-mvampt3r") ||
-                      document.querySelector('[id*="planner"]');
-                    if (el) el.scrollIntoView({ behavior: "smooth" });
-                    else router.navigate({ to: "/products/$slug", params: { slug: "life-planner-google-sheets" } });
-                  } else {
-                    router.navigate({ to: "/products/$slug", params: { slug: "life-planner-google-sheets" } });
-                  }
-                }}
-                className="group flex items-center justify-between py-3.5 px-2 text-sm font-bold text-foreground transition-all hover:text-primary active:scale-[0.99] cursor-pointer"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                    <FileSpreadsheet className="h-4 w-4" />
-                  </span>
-                  <div>
-                    <span className="block text-xs font-bold leading-tight group-hover:text-primary transition-colors">
-                      پلنرهای هوشمند دیجیتال
+                    toggleAccordion("planners");
+                  }}
+                  className="w-full flex items-center justify-between p-3.5 text-xs font-bold text-foreground hover:bg-secondary/40 transition-colors cursor-pointer text-right"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                      <FileSpreadsheet className="h-4 w-4" />
                     </span>
-                    <span className="block text-[10px] text-muted-foreground font-normal mt-0.5">
-                      پلنر جامع گوگل‌شیت و ردیاب عادات
-                    </span>
+                    <div>
+                      <span className="block font-black text-xs leading-tight">
+                        پلنرهای هوشمند دیجیتال
+                      </span>
+                      <span className="block text-[10px] text-muted-foreground font-normal">
+                        گوگل‌شیت و ردیاب عادات
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <ChevronLeft className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-[-2px] transition-all shrink-0" />
-              </a>
+                  <ChevronDown
+                    className={`h-4 w-4 text-muted-foreground/70 transition-transform duration-200 ${
+                      accordionState.planners ? "rotate-180 text-primary" : ""
+                    }`}
+                  />
+                </button>
 
-              {/* اشتراک‌های ابزارهای هوش مصنوعی */}
-              <Link
-                to="/products"
-                onClick={() => setOpen(false)}
-                className="group flex items-center justify-between py-3.5 px-2 text-sm font-bold text-foreground transition-all hover:text-primary active:scale-[0.99] cursor-pointer"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary">
-                    <Sparkles className="h-4 w-4" />
-                  </span>
-                  <div>
-                    <span className="block text-xs font-bold leading-tight group-hover:text-primary transition-colors">
-                      اشتراک‌های ابزارهای هوش مصنوعی
-                    </span>
-                    <span className="block text-[10px] text-muted-foreground font-normal mt-0.5">
-                      ChatGPT • Claude Pro • Gemini Pro
-                    </span>
+                {accordionState.planners && (
+                  <div className="px-2.5 pb-2.5 pt-1 border-t border-border/40 space-y-1">
+                    {products
+                      .filter((p) => isProductLifetime(p))
+                      .map((p) => (
+                        <Link
+                          key={p.slug}
+                          to="/products/$slug"
+                          params={{ slug: p.slug }}
+                          onClick={() => setOpen(false)}
+                          className="flex items-center justify-between rounded-xl p-2 text-xs font-medium text-foreground hover:bg-secondary/70 transition-colors group"
+                        >
+                          <div className="min-w-0 pr-1">
+                            <span className="block truncate font-bold text-xs group-hover:text-primary transition-colors">
+                              {p.name}
+                            </span>
+                            <span className="block text-[10px] text-muted-foreground truncate">
+                              {p.duration || "دسترسی مادام‌العمر"}
+                            </span>
+                          </div>
+                          <span className="text-[11px] font-black text-emerald-400 shrink-0">
+                            {formatPrice(p.price)}
+                          </span>
+                        </Link>
+                      ))}
+
+                    <a
+                      href="/#planners"
+                      onClick={(e) => {
+                        setOpen(false);
+                        if (typeof window !== "undefined" && window.location.pathname === "/") {
+                          e.preventDefault();
+                          const el =
+                            document.getElementById("planners") ||
+                            document.getElementById("row-mvampt3r") ||
+                            document.querySelector('[id*="planner"]');
+                          if (el) el.scrollIntoView({ behavior: "smooth" });
+                        }
+                      }}
+                      className="mt-1 flex items-center justify-center gap-1 rounded-xl border border-dashed border-border/80 py-2 text-[11px] font-bold text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
+                    >
+                      <span>مشاهده کامل بخش پلنرها در صفحه اصلی</span>
+                      <ChevronLeft className="h-3 w-3" />
+                    </a>
                   </div>
-                </div>
-                <ChevronLeft className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-[-2px] transition-all shrink-0" />
-              </Link>
+                )}
+              </div>
 
-              {/* مجله و آموزش‌ها */}
-              <a
-                href="/#blog"
-                onClick={(e) => {
-                  setOpen(false);
-                  if (typeof window !== "undefined" && window.location.pathname === "/") {
+              {/* Accordion 2: اشتراک‌های ابزارهای هوش مصنوعی */}
+              <div className="rounded-2xl border border-border/60 bg-secondary/20 overflow-hidden">
+                <button
+                  type="button"
+                  onClick={(e) => {
                     e.preventDefault();
-                    const el = document.getElementById("blog");
-                    if (el) el.scrollIntoView({ behavior: "smooth" });
-                    else router.navigate({ to: "/blog" });
-                  } else {
-                    router.navigate({ to: "/blog" });
-                  }
-                }}
-                className="group flex items-center justify-between py-3.5 px-2 text-sm font-bold text-foreground transition-all hover:text-primary active:scale-[0.99] cursor-pointer"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
-                    <BookOpen className="h-4 w-4" />
-                  </span>
-                  <div>
-                    <span className="block text-xs font-bold leading-tight group-hover:text-primary transition-colors">
-                      مجله و آموزش‌ها
+                    toggleAccordion("ai");
+                  }}
+                  className="w-full flex items-center justify-between p-3.5 text-xs font-bold text-foreground hover:bg-secondary/40 transition-colors cursor-pointer text-right"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary">
+                      <Sparkles className="h-4 w-4" />
                     </span>
-                    <span className="block text-[10px] text-muted-foreground font-normal mt-0.5">
-                      راهنماهای کاربردی و مقالات تخصصی
-                    </span>
+                    <div>
+                      <span className="block font-black text-xs leading-tight">
+                        اشتراک‌های هوش مصنوعی
+                      </span>
+                      <span className="block text-[10px] text-muted-foreground font-normal">
+                        ChatGPT • Claude • Gemini
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <ChevronLeft className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-[-2px] transition-all shrink-0" />
-              </a>
+                  <ChevronDown
+                    className={`h-4 w-4 text-muted-foreground/70 transition-transform duration-200 ${
+                      accordionState.ai ? "rotate-180 text-primary" : ""
+                    }`}
+                  />
+                </button>
 
-              {/* ارتباط با پشتیبانی */}
-              <button
-                type="button"
-                onClick={handleOpenCrisp}
-                className="w-full group flex items-center justify-between py-3.5 px-2 text-sm font-bold text-foreground transition-all hover:text-primary active:scale-[0.99] cursor-pointer text-right"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-neon-blue/10 border border-neon-blue/20 text-neon-blue">
-                    <Headphones className="h-4 w-4 animate-pulse" />
-                  </span>
-                  <div>
-                    <span className="block text-xs font-bold leading-tight group-hover:text-primary transition-colors">
-                      ارتباط با پشتیبانی
-                    </span>
-                    <span className="block text-[10px] text-muted-foreground font-normal mt-0.5">
-                      پاسخگویی آنلاین ۲۴ ساعته و تحویل فوری
-                    </span>
+                {accordionState.ai && (
+                  <div className="px-2.5 pb-2.5 pt-1 border-t border-border/40 space-y-1">
+                    {products
+                      .filter((p) => !isProductLifetime(p))
+                      .map((p) => (
+                        <Link
+                          key={p.slug}
+                          to="/products/$slug"
+                          params={{ slug: p.slug }}
+                          onClick={() => setOpen(false)}
+                          className="flex items-center justify-between rounded-xl p-2 text-xs font-medium text-foreground hover:bg-secondary/70 transition-colors group"
+                        >
+                          <div className="min-w-0 pr-1">
+                            <span className="block truncate font-bold text-xs group-hover:text-primary transition-colors">
+                              {p.name}
+                            </span>
+                            <span className="block text-[10px] text-muted-foreground truncate">
+                              {p.duration || "تحویل فوری"}
+                            </span>
+                          </div>
+                          <span className="text-[11px] font-black text-primary shrink-0">
+                            {formatPrice(p.price)}
+                          </span>
+                        </Link>
+                      ))}
+
+                    <Link
+                      to="/products"
+                      onClick={() => setOpen(false)}
+                      className="mt-1 flex items-center justify-center gap-1 rounded-xl border border-dashed border-border/80 py-2 text-[11px] font-bold text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
+                    >
+                      <span>کاتالوگ کامل اشتراک‌ها در فروشگاه</span>
+                      <ChevronLeft className="h-3 w-3" />
+                    </Link>
                   </div>
-                </div>
-                <div className="flex items-center gap-1.5 shrink-0">
-                  <span className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[9px] font-bold text-emerald-400">
-                    آنلاین
-                  </span>
-                  <ChevronLeft className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-[-2px] transition-all" />
-                </div>
-              </button>
+                )}
+              </div>
+
+              {/* Accordion 3: مجله و آموزش‌ها */}
+              <div className="rounded-2xl border border-border/60 bg-secondary/20 overflow-hidden">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleAccordion("blog");
+                  }}
+                  className="w-full flex items-center justify-between p-3.5 text-xs font-bold text-foreground hover:bg-secondary/40 transition-colors cursor-pointer text-right"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
+                      <BookOpen className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <span className="block font-black text-xs leading-tight">
+                        مجله تخصصی و مقالات
+                      </span>
+                      <span className="block text-[10px] text-muted-foreground font-normal">
+                        آموزش‌های کاربردی بهره‌وری و AI
+                      </span>
+                    </div>
+                  </div>
+                  <ChevronDown
+                    className={`h-4 w-4 text-muted-foreground/70 transition-transform duration-200 ${
+                      accordionState.blog ? "rotate-180 text-primary" : ""
+                    }`}
+                  />
+                </button>
+
+                {accordionState.blog && (
+                  <div className="px-2.5 pb-2.5 pt-1 border-t border-border/40 space-y-1">
+                    {BLOG_POSTS.slice(0, 4).map((post) => (
+                      <Link
+                        key={post.slug}
+                        to="/blog/$slug"
+                        params={{ slug: post.slug }}
+                        onClick={() => setOpen(false)}
+                        className="flex items-center justify-between rounded-xl p-2 text-xs font-medium text-foreground hover:bg-secondary/70 transition-colors group"
+                      >
+                        <span className="truncate text-xs group-hover:text-primary transition-colors">
+                          {post.title}
+                        </span>
+                        <ChevronLeft className="h-3 w-3 text-muted-foreground/60 shrink-0" />
+                      </Link>
+                    ))}
+
+                    <a
+                      href="/#blog"
+                      onClick={(e) => {
+                        setOpen(false);
+                        if (typeof window !== "undefined" && window.location.pathname === "/") {
+                          e.preventDefault();
+                          const el = document.getElementById("blog");
+                          if (el) el.scrollIntoView({ behavior: "smooth" });
+                        }
+                      }}
+                      className="mt-1 flex items-center justify-center gap-1 rounded-xl border border-dashed border-border/80 py-2 text-[11px] font-bold text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors"
+                    >
+                      <span>مشاهده همه مقالات در صفحه اصلی</span>
+                      <ChevronLeft className="h-3 w-3" />
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              {/* Accordion 4: راهنما و پشتیبانی */}
+              <div className="rounded-2xl border border-border/60 bg-secondary/20 overflow-hidden">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleAccordion("support");
+                  }}
+                  className="w-full flex items-center justify-between p-3.5 text-xs font-bold text-foreground hover:bg-secondary/40 transition-colors cursor-pointer text-right"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-neon-blue/10 border border-neon-blue/20 text-neon-blue">
+                      <Headphones className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <span className="block font-black text-xs leading-tight">
+                        راهنما و پشتیبانی
+                      </span>
+                      <span className="block text-[10px] text-muted-foreground font-normal">
+                        چت زنده، راهنمای خرید و سوالات
+                      </span>
+                    </div>
+                  </div>
+                  <ChevronDown
+                    className={`h-4 w-4 text-muted-foreground/70 transition-transform duration-200 ${
+                      accordionState.support ? "rotate-180 text-primary" : ""
+                    }`}
+                  />
+                </button>
+
+                {accordionState.support && (
+                  <div className="px-2.5 pb-2.5 pt-1 border-t border-border/40 space-y-1">
+                    <button
+                      type="button"
+                      onClick={handleOpenCrisp}
+                      className="w-full flex items-center justify-between rounded-xl p-2 text-xs font-bold text-foreground hover:bg-secondary/70 transition-colors text-right cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        <span>گفت‌وگوی آنلاین ۲۴ ساعته</span>
+                      </span>
+                      <span className="rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[9px] px-2 py-0.5 text-emerald-400 font-bold">
+                        پاسخ فوری
+                      </span>
+                    </button>
+
+                    <Link
+                      to="/why"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-between rounded-xl p-2 text-xs font-medium text-foreground hover:bg-secondary/70 transition-colors"
+                    >
+                      <span>راهنمای خرید و چرا VAICH</span>
+                      <ChevronLeft className="h-3 w-3 text-muted-foreground/60" />
+                    </Link>
+
+                    <Link
+                      to="/faq"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-between rounded-xl p-2 text-xs font-medium text-foreground hover:bg-secondary/70 transition-colors"
+                    >
+                      <span>سوالات متداول خریداران</span>
+                      <ChevronLeft className="h-3 w-3 text-muted-foreground/60" />
+                    </Link>
+
+                    <Link
+                      to="/support"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-between rounded-xl p-2 text-xs font-medium text-foreground hover:bg-secondary/70 transition-colors"
+                    >
+                      <span>صفحه رسمی پشتیبانی سایت</span>
+                      <ChevronLeft className="h-3 w-3 text-muted-foreground/60" />
+                    </Link>
+                  </div>
+                )}
+              </div>
             </nav>
 
-            {/* Drawer Footer — Discreet Metallic Support Box */}
-            <div className="pt-3 border-t border-border/70 flex flex-col gap-3">
+            {/* Drawer Footer — Metallic Support Box */}
+            <div className="pt-3 border-t border-border/70 flex flex-col gap-2.5">
               <div className="rounded-2xl border border-border/70 bg-secondary/35 p-3 space-y-2 select-none">
                 <div className="flex items-center justify-between text-[11px] font-bold text-muted-foreground px-0.5">
-                  <span>پشتیبانی اختصاصی وایچ</span>
+                  <span>ارتباط مستقیم با وایچ</span>
                   <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     پاسخگویی فعال
@@ -658,7 +843,7 @@ export function Header() {
                 <div className="flex flex-col gap-1.5 pt-1 border-t border-border/40">
                   <a
                     href="tel:09193872172"
-                    className="flex items-center justify-between rounded-xl px-2 py-1.5 text-xs text-foreground hover:bg-secondary/70 transition-colors"
+                    className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs text-foreground hover:bg-secondary/70 transition-colors"
                   >
                     <div className="flex items-center gap-2">
                       <Phone className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
@@ -671,7 +856,7 @@ export function Header() {
                     href="https://t.me/vaich_ir"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between rounded-xl px-2 py-1.5 text-xs text-foreground hover:bg-secondary/70 transition-colors"
+                    className="flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs text-foreground hover:bg-secondary/70 transition-colors"
                   >
                     <div className="flex items-center gap-2">
                       <Send className="h-3.5 w-3.5 text-neon-blue shrink-0" />
@@ -698,16 +883,15 @@ export function Header() {
                 </button>
               </div>
 
-              <NeonLink
+              <Link
                 to="/products"
                 onClick={() => setOpen(false)}
-                size="md"
-                className="w-full text-center py-2.5 font-bold"
+                className="w-full text-center py-2.5 rounded-2xl neon-gradient text-primary-foreground text-xs sm:text-sm font-bold shadow-md transition-all active:scale-[0.98]"
               >
                 مشاهده همه محصولات
-              </NeonLink>
+              </Link>
             </div>
-          </aside>
+</aside>
         </div>,
         document.body
       )}

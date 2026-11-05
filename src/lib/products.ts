@@ -898,6 +898,7 @@ export type SiteConfig = {
   adminUsers?: AdminUser[];
   promoBanner?: PromoBannerConfig;
   instagramUrl?: string;
+  blogPosts?: any[];
   updatedAt: string;
 };
 
@@ -1334,6 +1335,10 @@ export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
         localStorage.setItem("vaich_instagram_url", fetchedData.instagramUrl);
         window.dispatchEvent(new CustomEvent("vaich_instagram_url_updated", { detail: fetchedData.instagramUrl }));
       }
+      if (fetchedData.blogPosts && Array.isArray(fetchedData.blogPosts)) {
+        localStorage.setItem("vaich_blog_posts", JSON.stringify(fetchedData.blogPosts));
+        window.dispatchEvent(new CustomEvent("vaich_blog_updated", { detail: fetchedData.blogPosts }));
+      }
       if (fetchedData.updatedAt) {
         localStorage.setItem("vaich_config_updated_at", fetchedData.updatedAt);
       }
@@ -1548,6 +1553,7 @@ export function useDynamicProducts() {
     adminUsers?: AdminUser[];
     promoBanner?: PromoBannerConfig;
     instagramUrl?: string;
+    blogPosts?: any[];
   }): Promise<{ success: boolean; error?: string }> => {
     return queueCloudSync(async () => {
       setIsCloudSyncing(true);
@@ -1572,6 +1578,7 @@ export function useDynamicProducts() {
         const currentAdminUsers = override?.adminUsers ?? (typeof window !== "undefined" ? getStoredAdminUsers() : adminUsers);
         const currentPromoBanner = override?.promoBanner ?? (typeof window !== "undefined" ? getStoredPromoBanner() : promoBanner);
         const currentInstagramUrl = override?.instagramUrl ?? (typeof window !== "undefined" ? getStoredInstagramUrl() : instagramUrl);
+        const currentBlogPosts = override?.blogPosts ?? (typeof window !== "undefined" ? JSON.parse(localStorage.getItem("vaich_blog_posts") || "null") : null);
 
         const fullConfig: SiteConfig = {
           products: currentProducts,
@@ -1581,6 +1588,7 @@ export function useDynamicProducts() {
           adminUsers: currentAdminUsers,
           promoBanner: currentPromoBanner,
           instagramUrl: currentInstagramUrl,
+          blogPosts: currentBlogPosts || undefined,
           updatedAt: new Date().toISOString(),
         };
 
@@ -1652,12 +1660,62 @@ export function useDynamicProducts() {
 }
 
 export function getProduct(slug: string): Product | undefined {
+  if (!slug) return undefined;
+  let decoded = "";
+  try {
+    decoded = decodeURIComponent(slug).trim().toLowerCase();
+  } catch {
+    decoded = slug.trim().toLowerCase();
+  }
+  const raw = slug.trim().toLowerCase();
+
+  const resolveAlias = (s: string) => {
+    if (
+      s === "life-planner-google-sheets" ||
+      s === "life-planner" ||
+      s === "planner" ||
+      s === "google-sheets-planner" ||
+      s === "planner-digital"
+    ) {
+      return "vaich-life-planner";
+    }
+    if (
+      s === "chatgpt-plus" ||
+      s === "chatgpt" ||
+      s === "chatgpt-plus-subscription" ||
+      s === "chatgpt-4o"
+    ) {
+      return "اشتراک chatgpt plus شخصی";
+    }
+    if (s === "claude-pro" || s === "claude-3-5-sonnet") {
+      return "claude";
+    }
+    if (s === "gemini-pro-18") {
+      return "gemini-pro";
+    }
+    return s;
+  };
+
+  const targetSlug = resolveAlias(decoded);
+  const targetRaw = resolveAlias(raw);
+
+  const finder = (p: Product) => {
+    const pSlug = (p.slug || "").trim().toLowerCase();
+    return (
+      pSlug === targetSlug ||
+      pSlug === targetRaw ||
+      pSlug === decoded ||
+      pSlug === raw ||
+      encodeURIComponent(p.slug) === slug
+    );
+  };
+
   if (typeof window !== "undefined") {
     const list = getStoredProducts();
-    const found = list.find((p) => p.slug === slug);
+    const found = list.find(finder);
     if (found) return found;
   }
-  return DEFAULT_PRODUCTS.find((p) => p.slug === slug);
+  return DEFAULT_PRODUCTS.find(finder);
 }
 
 const faDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];

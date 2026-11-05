@@ -153,14 +153,27 @@ function BlogPostPage() {
             {post.title}
           </h1>
 
-          <p className="text-sm sm:text-base text-neutral-700 dark:text-slate-200 leading-relaxed pt-1">
+          <p className="text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed pt-1 font-medium">
             {post.excerpt}
           </p>
         </header>
 
         {/* Cover Artwork — Guaranteed 100% Crisp Metallic Visual (No Broken Images) */}
-        <div className="mb-10 overflow-hidden rounded-3xl border border-border/80 bg-neutral-950 shadow-xl aspect-[16/9] w-full">
-          <BlogCoverGraphic slug={post.slug} category={post.category} className="w-full h-full" />
+        <div className="mb-10 overflow-hidden rounded-3xl border border-border/80 bg-neutral-950 shadow-xl aspect-[16/9] w-full relative">
+          <img
+            src={post.coverImage}
+            alt={post.title}
+            loading="lazy"
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              (e.currentTarget as HTMLElement).style.display = "none";
+              const fb = e.currentTarget.parentElement?.querySelector(".blog-article-fallback");
+              if (fb) (fb as HTMLElement).style.display = "block";
+            }}
+          />
+          <div className="blog-article-fallback absolute inset-0 hidden">
+            <BlogCoverGraphic slug={post.slug} category={post.category} className="w-full h-full" />
+          </div>
         </div>
 
         {/* Article Body with High Readability Contrast */}
@@ -174,7 +187,7 @@ function BlogPostPage() {
               {section.paragraphs.map((p, pIdx) => (
                 <p
                   key={pIdx}
-                  className="leading-8 text-neutral-800 dark:text-slate-100 font-normal"
+                  className="leading-8 text-slate-900 dark:text-slate-100 font-normal"
                 >
                   {p}
                 </p>
@@ -186,7 +199,7 @@ function BlogPostPage() {
                     <Lightbulb className="h-5 w-5 text-primary shrink-0" />
                     <span>{section.callout.title}</span>
                   </div>
-                  <p className="text-xs sm:text-sm text-neutral-800 dark:text-slate-100 leading-relaxed font-medium">
+                  <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-100 leading-relaxed font-medium">
                     {section.callout.text}
                   </p>
                 </div>
@@ -197,7 +210,7 @@ function BlogPostPage() {
                   {section.bulletPoints.map((bp, bpIdx) => (
                     <li
                       key={bpIdx}
-                      className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-800 dark:text-slate-100"
+                      className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-900 dark:text-slate-100 font-medium"
                     >
                       <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-1" />
                       <span>{bp}</span>
@@ -219,13 +232,13 @@ function BlogPostPage() {
               <Sparkles className="h-5 w-5 text-primary" />
               <span>{post.conclusion.heading}</span>
             </h3>
-            <p className="text-sm text-neutral-800 dark:text-slate-200 leading-relaxed">
+            <p className="text-sm text-slate-800 dark:text-slate-200 leading-relaxed">
               {post.conclusion.text}
             </p>
           </div>
 
           {/* Minimal, Discreet Author Signature as Requested */}
-          <div className="mt-8 pt-4 border-t border-border/50 text-[12px] text-muted-foreground text-center sm:text-right">
+          <div className="mt-8 pt-4 border-t border-border/50 text-[12px] text-slate-500 dark:text-slate-400 font-medium text-center sm:text-right">
             نویسنده: یونس حیاتی
           </div>
         </article>
@@ -251,8 +264,21 @@ function BlogPostPage() {
                   params={{ slug: rPost.slug }}
                   className="group block rounded-2xl border border-border/80 bg-card/60 p-4 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
                 >
-                  <div className="aspect-[16/10] w-full overflow-hidden rounded-xl bg-neutral-950 mb-3">
-                    <BlogCoverGraphic slug={rPost.slug} category={rPost.category} className="w-full h-full" />
+                  <div className="aspect-[16/10] w-full overflow-hidden rounded-xl bg-neutral-950 mb-3 relative">
+                    <img
+                      src={rPost.coverImage}
+                      alt={rPost.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLElement).style.display = "none";
+                        const fb = e.currentTarget.parentElement?.querySelector(".blog-rpost-fallback");
+                        if (fb) (fb as HTMLElement).style.display = "block";
+                      }}
+                    />
+                    <div className="blog-rpost-fallback absolute inset-0 hidden">
+                      <BlogCoverGraphic slug={rPost.slug} category={rPost.category} className="w-full h-full" />
+                    </div>
                   </div>
                   <span className="text-[11px] font-semibold text-primary">
                     {rPost.category}
@@ -316,7 +342,7 @@ function ProductRecommendationBanner({
           </div>
           <Link
             to="/products/$slug"
-            params={{ slug: "life-planner-google-sheets" }}
+            params={{ slug: "vaich-life-planner" }}
             className="inline-flex items-center gap-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 text-xs sm:text-sm font-bold shadow-lg shadow-emerald-600/20 transition-all shrink-0 hover:scale-105"
           >
             <ShoppingBag className="h-4 w-4" />
@@ -348,7 +374,7 @@ function ProductRecommendationBanner({
           </p>
         </div>
         <Link
-          to="/"
+          to="/products"
           className="inline-flex items-center gap-2 rounded-full neon-gradient text-primary-foreground px-5 py-2.5 text-xs sm:text-sm font-bold shadow-lg transition-all shrink-0 hover:scale-105"
         >
           <ShoppingBag className="h-4 w-4" />

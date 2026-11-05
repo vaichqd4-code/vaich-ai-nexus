@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 // Blog data for VAICH - Articles authored by Younes Hayati (یونس حیاتی)
 // Optimized for SEO, JSON-LD Schema.org, and direct human-centric conversion.
 
@@ -48,7 +49,7 @@ export const BLOG_POSTS: BlogPost[] = [
     "readTime": "۷ دقیقه",
     "date": "۱۴ آبان ۱۴۰۳",
     "publishIsoDate": "2024-11-04T08:00:00+03:30",
-    "coverImage": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1200&q=80",
+    "coverImage": "/blog/planner-procrastination.webp",
     "targetProductType": "planner",
     "keywords": [
       "اهمال کاری",
@@ -122,7 +123,7 @@ export const BLOG_POSTS: BlogPost[] = [
     "readTime": "۸ دقیقه",
     "date": "۱۳ آبان ۱۴۰۳",
     "publishIsoDate": "2024-11-03T09:30:00+03:30",
-    "coverImage": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1200&q=80",
+    "coverImage": "/blog/study-planning.webp",
     "targetProductType": "planner",
     "keywords": [
       "برنامه ریزی کنکور",
@@ -190,7 +191,7 @@ export const BLOG_POSTS: BlogPost[] = [
     "readTime": "۶ دقیقه",
     "date": "۱۲ آبان ۱۴۰۳",
     "publishIsoDate": "2024-11-02T10:00:00+03:30",
-    "coverImage": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
+    "coverImage": "/blog/daily-habits.webp",
     "targetProductType": "planner",
     "keywords": [
       "عادت های روزانه",
@@ -260,7 +261,7 @@ export const BLOG_POSTS: BlogPost[] = [
     "readTime": "۸ دقیقه",
     "date": "۱۱ آبان ۱۴۰۳",
     "publishIsoDate": "2024-11-01T11:00:00+03:30",
-    "coverImage": "https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?auto=format&fit=crop&w=1200&q=80",
+    "coverImage": "/blog/habit-tracking.webp",
     "targetProductType": "planner",
     "keywords": [
       "هبیت ترکر",
@@ -330,7 +331,7 @@ export const BLOG_POSTS: BlogPost[] = [
     "readTime": "۹ دقیقه",
     "date": "۱۰ آبان ۱۴۰۳",
     "publishIsoDate": "2024-10-31T12:00:00+03:30",
-    "coverImage": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+    "coverImage": "/blog/ai-models-comparison.webp",
     "targetProductType": "ai",
     "keywords": [
       "خرید اکانت چت جی پی تی",
@@ -404,7 +405,7 @@ export const BLOG_POSTS: BlogPost[] = [
     "readTime": "۷ دقیقه",
     "date": "۹ آبان ۱۴۰۳",
     "publishIsoDate": "2024-10-30T14:20:00+03:30",
-    "coverImage": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1200&q=80",
+    "coverImage": "/blog/ai-tools-productivity.webp",
     "targetProductType": "ai",
     "keywords": [
       "آموزش پرامپت نویسی",
