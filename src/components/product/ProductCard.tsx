@@ -147,7 +147,7 @@ export function ProductCard({
             )
           ) : (
             /* Standard Product Logo Tile: App-Icon Squircle Frame with border & margin - enlarged */
-            <div className="relative flex items-center justify-center p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl bg-secondary/90 border border-border/90 shadow-md group-hover:border-primary/50 group-hover:shadow-primary/10 group-hover:scale-105 transition-all duration-300 w-[88%] h-[88%] max-w-[130px] aspect-square">
+            <div className="relative flex items-center justify-center p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl bg-secondary/90 border border-border/90 shadow-md group-hover:border-primary/50 group-hover:shadow-primary/10 group-hover:scale-105 transition-all duration-300 w-[88%] h-[88%] max-w-[130px] aspect-square overflow-hidden">
               {logoUrl ? (
                 <img
                   src={logoUrl}
@@ -155,7 +155,7 @@ export function ProductCard({
                   width={96}
                   height={96}
                   decoding="async"
-                  className="h-full w-full object-contain rounded-xl sm:rounded-2xl drop-shadow-sm"
+                  className="h-full w-full object-contain rounded-2xl sm:rounded-3xl overflow-hidden drop-shadow-sm"
                   loading="lazy"
                 />
               ) : (

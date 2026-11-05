@@ -1,17 +1,22 @@
 import { cn } from "@/lib/utils";
 
 export const PRESET_LOGOS: Record<string, string> = {
-  gemini: "/gemini-logo.webp",
-  "gemini-pro": "/gemini-pro-logo.webp",
+  gemini: "/gemini-logo.svg",
+  "gemini-pro": "/gemini-logo.svg",
   chatgpt: "/chatgpt-logo.svg",
   "chatgpt-plus": "/chatgpt-logo.svg",
   "اشتراک chatgpt plus شخصی": "/chatgpt-logo.svg",
-  claude: "/Claude-.webp",
-  "claude-pro": "/Claude-.webp",
+  claude: "/claude-logo.svg",
+  "claude-pro": "/claude-logo.svg",
 };
 
 export function getProductLogo(slug: string, iconUrl?: string): string | undefined {
-  if (iconUrl && iconUrl.trim().length > 0) return iconUrl.trim();
+  if (iconUrl && iconUrl.trim().length > 0) {
+    const raw = iconUrl.trim();
+    if (raw.includes("Claude-") || raw.toLowerCase().includes("claude")) return "/claude-logo.svg";
+    if (raw.includes("gemini")) return "/gemini-logo.svg";
+    return raw;
+  }
   if (!slug) return undefined;
   if (PRESET_LOGOS[slug]) return PRESET_LOGOS[slug];
 
@@ -57,7 +62,7 @@ export function ServiceIcon({
           className={cn(
             imageFit === "cover"
               ? "h-full w-full object-cover"
-              : "max-h-full max-w-full rounded-xl object-contain drop-shadow-sm",
+              : "max-h-full max-w-full rounded-2xl overflow-hidden object-contain drop-shadow-sm",
             imgClassName,
           )}
           loading="lazy"
