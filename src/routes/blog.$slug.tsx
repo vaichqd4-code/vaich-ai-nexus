@@ -13,6 +13,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {
@@ -220,6 +221,38 @@ function BlogPostPage() {
                     </li>
                   ))}
                 </ul>
+              )}
+
+              {(section as any).table && (
+                <div className="my-6 overflow-hidden rounded-2xl border border-border/80 bg-card/60 backdrop-blur-md shadow-xs">
+                  {(section as any).table.caption && (
+                    <div className="bg-secondary/40 px-4 py-2.5 text-xs font-bold text-primary border-b border-border/60">
+                      {(section as any).table.caption}
+                    </div>
+                  )}
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-right text-xs sm:text-sm">
+                      <thead className="bg-secondary/70 border-b border-border/80 text-foreground font-bold">
+                        <tr>
+                          {(section as any).table.headers.map((h: string, hIdx: number) => (
+                            <th key={hIdx} className="p-3 sm:p-3.5 whitespace-nowrap">{h}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border/50">
+                        {(section as any).table.rows.map((row: string[], rIdx: number) => (
+                          <tr key={rIdx} className="hover:bg-primary/5 transition-colors">
+                            {row.map((cell: string, cIdx: number) => (
+                              <td key={cIdx} className={cn("p-3 sm:p-3.5 leading-relaxed", cIdx === 0 ? "font-bold text-foreground" : "text-muted-foreground")}>
+                                {cell}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               )}
 
               {/* Mid-article Product CTA on Section 2 */}

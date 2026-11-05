@@ -38,6 +38,12 @@ import {
   Briefcase,
   GraduationCap,
   Users,
+  Eye,
+  Camera,
+  Activity,
+  Layers3,
+  Bot,
+  Terminal,
 } from "lucide-react";
 
 interface ProductRichContentProps {
@@ -55,7 +61,6 @@ export function ProductRichContent({ product, isPlanner, isLifetime }: ProductRi
   const isChatGPT = product.slug.includes("chatgpt");
   const isClaude = product.slug.includes("claude");
   const isGemini = product.slug.includes("gemini");
-  const isCopilot = product.slug.includes("copilot");
   const is18Month = product.slug === "gemini-pro";
 
   const toggleFaq = (idx: number) => {
@@ -65,57 +70,27 @@ export function ProductRichContent({ product, isPlanner, isLifetime }: ProductRi
   const tabs: { key: TabKey; label: string; icon: any }[] = [
     { key: "features", label: "ویژگی‌ها و مشخصات فنی", icon: Cpu },
     { key: "usecases", label: "موارد استفاده تخصصی", icon: Briefcase },
-    { key: "comparison", label: "مزایای نسخه اختصاصی", icon: Layers },
-    { key: "delivery", label: "تحویل، فعال‌سازی و گارانتی", icon: ShieldCheck },
-    { key: "faq", label: "مشخصات سریع و FAQ", icon: HelpCircle },
+    { key: "comparison", label: "مقایسه نسخه اختصاصی و رایگان", icon: Layers },
+    { key: "delivery", label: "نحوه فعال‌سازی و تضمین سلامت", icon: ShieldCheck },
+    { key: "faq", label: "پرسش‌های متداول", icon: HelpCircle },
   ];
 
   return (
-    <section className="mt-14 space-y-10 border-t border-border/80 pt-10">
-      {/* هدر بخش جزئیات محصول با استایل دارک متالیک و هایلایت نئونی */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
-        <div className="space-y-1.5">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
-            <Sparkles className="h-3.5 w-3.5 text-primary" />
-            <span>راهنمای جامع، مشخصات فنی و شرایط خرید قانونی</span>
-          </div>
-          <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
-            بررسی تخصصی {product.name}
-          </h2>
-        </div>
-
-        {/* بج‌های اعتبارسنجی اعتماد */}
-        <div className="flex flex-wrap items-center gap-2 text-xs">
-          <span className="inline-flex items-center gap-1 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 font-bold text-emerald-400">
-            <CheckCircle2 className="h-3.5 w-3.5" />
-            تحویل قانونی و فوری
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-xl border border-purple-500/30 bg-purple-500/10 px-2.5 py-1 font-bold text-purple-400">
-            <ShieldCheck className="h-3.5 w-3.5" />
-            گارانتی سلامت ۱۰۰٪
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-xl border border-neon-blue/30 bg-neon-blue/10 px-2.5 py-1 font-bold text-neon-blue">
-            <Clock className="h-3.5 w-3.5" />
-            پشتیبانی ۲۴ ساعته
-          </span>
-        </div>
-      </div>
-
-      {/* تب‌های تعاملی با افکت متالیک نئونی */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none select-none border-b border-border/70">
+    <div className="mt-8 space-y-6">
+      {/* Tab Navigation with Dark Metallic Glassmorphism */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none rounded-2xl bg-secondary/40 p-1.5 border border-border/70 backdrop-blur-md">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.key;
           return (
             <button
               key={tab.key}
-              type="button"
               onClick={() => setActiveTab(tab.key)}
               className={cn(
-                "inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer touch-manipulation",
+                "flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer select-none",
                 isActive
-                  ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-[1.02]"
-                  : "bg-secondary/40 text-muted-foreground hover:bg-secondary hover:text-foreground border border-border/60"
+                  ? "bg-linear-to-r from-primary to-purple-600 text-white shadow-md shadow-primary/25 border border-primary/40"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
               )}
             >
               <Icon className="h-4 w-4" />
@@ -125,8 +100,8 @@ export function ProductRichContent({ product, isPlanner, isLifetime }: ProductRi
         })}
       </div>
 
-      {/* محتوای اختصاصی هر محصول بر اساس تب انتخابی */}
-      <div className="transition-all duration-200">
+      {/* Tab Contents */}
+      <div className="rounded-3xl border border-border/80 bg-card/60 backdrop-blur-xl p-5 sm:p-7 shadow-xl shadow-black/20">
         {isChatGPT && (
           <ChatGPTDetailContent
             product={product}
@@ -148,16 +123,7 @@ export function ProductRichContent({ product, isPlanner, isLifetime }: ProductRi
         {isGemini && (
           <GeminiDetailContent
             product={product}
-            activeTab={activeTab}
-            openFaqIndex={openFaqIndex}
-            toggleFaq={toggleFaq}
             is18Month={is18Month}
-          />
-        )}
-
-        {isCopilot && (
-          <CopilotDetailContent
-            product={product}
             activeTab={activeTab}
             openFaqIndex={openFaqIndex}
             toggleFaq={toggleFaq}
@@ -174,38 +140,39 @@ export function ProductRichContent({ product, isPlanner, isLifetime }: ProductRi
         )}
       </div>
 
-      {/* بنر CTA خرید سریع در انتهای جزئیات */}
-      <div className="rounded-3xl border border-primary/30 bg-linear-to-r from-primary/10 via-secondary/20 to-card p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+      {/* Persistent Bottom CTA Card with Neon Glow */}
+      <div className="rounded-3xl border border-primary/40 bg-linear-to-r from-primary/10 via-purple-600/10 to-cyan-500/10 p-5 sm:p-6 backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-primary/5">
         <div className="space-y-1 text-center sm:text-right">
-          <p className="text-xs text-muted-foreground font-medium">سفارش قانونی با تحویل سریع و ضمانت تعویض</p>
-          <h3 className="text-base sm:text-lg font-black text-foreground">
-            آماده شروع استفاده از {product.name} هستید؟
-          </h3>
-        </div>
-
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="text-left hidden xs:block">
-            <span className="text-[11px] text-muted-foreground block">مبلغ نهایی:</span>
-            <span className="gradient-text font-black text-lg">{formatPrice(product.price)}</span>
+          <div className="text-sm font-black text-foreground flex items-center justify-center sm:justify-start gap-2">
+            <Sparkles className="h-4 w-4 text-primary" />
+            ضمانت اصالت ۱۰۰٪ قانونی و سلامت پایدار در وایچ
           </div>
-
+          <p className="text-xs text-muted-foreground">
+            تحویل فوری پس از ثبت سفارش همراه با پشتیبانی تخصصی در تمام طول دوره اشتراک.
+          </p>
+        </div>
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+          <div className="text-left hidden xs:block">
+            <div className="text-[11px] text-muted-foreground">قیمت با تخفیف</div>
+            <div className="text-base font-black text-primary">{formatPrice(product.price)}</div>
+          </div>
           <Link
             to="/checkout/$slug"
             params={{ slug: product.slug }}
-            className="w-full sm:w-auto text-center inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-3 text-sm font-black text-primary-foreground shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all cursor-pointer"
+            className="neon-button-glow flex-1 sm:flex-none inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-black text-white bg-linear-to-r from-primary via-purple-600 to-primary hover:from-primary/90 hover:to-purple-600/90 transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 cursor-pointer"
           >
-            <span>{isLifetime ? "خرید مستقیم و مادام‌العمر" : "خرید اشتراک قانونی"}</span>
+            <span>خرید و فعال‌سازی فوری</span>
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
 
-// =========================================================================
-// ۱. جزئیات محصول ChatGPT Plus (OpenAI)
-// =========================================================================
+/* =========================================================================
+   ChatGPT Plus (OpenAI) - 2026 Researched Specs & GPT-6 Astra
+   ========================================================================= */
 function ChatGPTDetailContent({
   product,
   activeTab,
@@ -215,196 +182,209 @@ function ChatGPTDetailContent({
   product: Product;
   activeTab: TabKey;
   openFaqIndex: number | null;
-  toggleFaq: (idx: number) => void;
+  toggleFaq: (i: number) => void;
 }) {
   return (
-    <div className="space-y-8">
-      {/* تب ۱: ویژگی‌ها و مشخصات فنی رسمی */}
+    <div className="space-y-6">
+      {/* 1. Features & Tech Specs */}
       {activeTab === "features" && (
         <div className="space-y-6">
-          <div className="space-y-3">
+          <div className="space-y-2">
             <h3 className="text-lg font-black text-foreground flex items-center gap-2">
               <Cpu className="h-5 w-5 text-primary" />
-              مدل‌های فعال و مشخصات رسمی ChatGPT Plus (OpenAI)
+              مدل‌های نسل ۲۰۲۶ و مشخصات فنی رسمی ChatGPT Plus (OpenAI)
             </h3>
             <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              اشتراک رسمی ChatGPT Plus مجهز به آخرین معماری‌های استدلالی و چندرسانه‌ای شرکت OpenAI است؛ شامل موتور اصلی استدلال و هوش پیشرفته <strong>GPT-6.1 Terra</strong> و مدل همه‌منظوره چندوجهی <strong>GPT-5.6</strong>، مدل‌های تخصصی منطق و ریاضیات <strong>o1</strong> و <strong>o3-mini</strong>، مدل پرسرعت <strong>GPT-4o</strong>، فضای کاری نوین <strong>Prism</strong>، بوم تعاملی <strong>Canvas</strong> و تولید ویدیو با <strong>Sora</strong>.
+              اشتراک رسمی ChatGPT Plus مجهز به آخرین معماری‌های استدلالی و عامل‌محور شرکت OpenAI است؛ شامل پرچمدار ارشد هوش مرزی <strong>GPT-6 Astra</strong> (با قابلیت خودمختار کنترل رایانه و مرورگر وب)، مدل‌های تعادلی <strong>GPT-6 Sol</strong> و <strong>GPT-6 Luna</strong>، خانواده استدلال عمیق <strong>o1</strong> و <strong>o3-mini</strong>، مدل پرسرعت <strong>GPT-4o</strong>، فضای کاری <strong>Prism</strong>، بوم تعاملی <strong>Canvas</strong> و تولید ویدیوی <strong>Sora</strong>.
             </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-primary/50 transition-all">
+            {/* GPT-6 Astra */}
+            <div className="rounded-3xl border border-primary/40 bg-primary/5 p-5 space-y-2.5 hover:border-primary transition-all">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 text-primary">
-                <Brain className="h-5 w-5" />
+                <Bot className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">مدل‌های پرچم‌دار GPT-6.1 Terra و GPT-5.6</h4>
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-bold text-foreground">پرچمدار ارشد: GPT-6 Astra</h4>
+                <span className="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded-full font-bold">فرانتیر ۲۰۲۶</span>
+              </div>
               <p className="text-xs leading-6 text-muted-foreground">
-                موتور اصلی استدلال و هوش پیشرفته GPT-6.1 Terra به همراه مدل همه‌منظوره چندوجهی GPT-5.6 برای پاسخگویی به پیچیده‌ترین مسائل علمی، تحلیل داده و تولید محتوای چندرسانه‌ای.
+                هوشمندترین و توانمندترین مدل OpenAI با هوش خودمختار رایانه‌ای (Autonomous Computer & Browser Use)، رتبه بحرانی امنیت سایبری و بالاترین رکورد حل مسائل مهندسی نرم‌افزار.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-emerald-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                <Code className="h-5 w-5" />
+            {/* GPT-6 Sol & Luna */}
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-cyan-500/50 transition-all">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+                <Zap className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">خانواده استدلال عمیق o1 و o3-mini</h4>
+              <h4 className="text-sm font-bold text-foreground">مدل‌های تعادلی GPT-6 Sol و Luna</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                حل مسائل پیچیده المپیادی، مهندسی پیشرفته، اثبات‌های ریاضی و خطایابی ساختاری عمیق کدها با تفکر گام‌به‌گام و قابلیت تنظیم سطح تفکر.
+                مدل همه‌کاره GPT-6 Sol برای امور روزمره با سرعت بالا و رده GPT-6 Luna با توان تولید رعدآسای توکن برای استخراج و خلاصه مقالات حجیم بدون تاخیر.
               </p>
             </div>
 
+            {/* o1 & o3-mini Reasoning */}
             <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-purple-500/50 transition-all">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
+                <Brain className="h-5 w-5" />
+              </div>
+              <h4 className="text-sm font-bold text-foreground">استدلال عمیق o1 و o3-mini</h4>
+              <p className="text-xs leading-6 text-muted-foreground">
+                حل مسائل ریاضیات المپیادی، فیزیک کوانتوم و دیباگ معماری با قابلیت تنظیم سطح تفکر (Reasoning Effort: Low, Med, High) جهت صرفه‌جویی یا حداکثر دقت.
+              </p>
+            </div>
+
+            {/* Prism Workspace */}
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-amber-500/50 transition-all">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
                 <FileText className="h-5 w-5" />
               </div>
               <h4 className="text-sm font-bold text-foreground">محیط کاری Prism و بوم Canvas</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                ورک‌اسپیس اختصاصی Prism برای اسناد ساختاریافته و پژوهش‌های چندمرحله‌ای، در کنار بوم تعاملی Canvas برای ویرایش سایدبای‌ساید کدها و مقالات بدون پرامپت تکراری.
+                ورک‌اسپیس اختصاصی Prism برای اسناد ساختاریافته و پژوهش‌های گام‌به‌گام با اتصال مراجع؛ در کنار بوم تعاملی Canvas برای ویرایش ساید‌بای‌ساید کدها و متون.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-blue-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400">
-                <FolderGit2 className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">پروژه‌ها و حافظه ایزوله (Projects & Memory)</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                پوشه‌های کاری اختصاصی با حافظه تفکیک‌شده (تا سقف ۲۵ فایل ۵۱۲ مگابایتی در پلن Plus) بدون تداخل اطلاعات، به همراه قابلیت چندحسابی (Account Switching) در اپلیکیشن.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-amber-400/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-400/10 border border-amber-400/20 text-amber-300">
-                <Mic className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">حالت صوتی زنده با نمایش در Dynamic Island</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                حالت صوتی پیشرفته (Advanced Voice Mode) با پردازش بلادرنگ تن صدا، پشتیبانی از تعامل در پس‌زمینه و نمایش زنده وضعیت گفتگو در داینامیک آیلند.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-rose-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400">
+            {/* Sora Video & DALL-E 3 Ultra HD */}
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-pink-500/50 transition-all">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400">
                 <Palette className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">تولید ویدیو با Sora و تصاویر Ultra HD با DALL-E 3</h4>
+              <h4 className="text-sm font-bold text-foreground">تولید ویدیو با Sora و DALL-E 3</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                ساخت ویدیوهای کوتاه واقع‌گرایانه با موتور Sora و خلق تصاویر خیره‌کننده با وضوح Ultra HD توسط DALL-E 3 و مدل چندرسانه‌ای سبک GPT-4o.
+                خلق صحنه‌های ویدیویی خیره‌کننده با موتور ویدیوساز Sora و تولید تصاویر با رزولوشن Ultra HD با پایبندی عمیق به جزئیات پرامپت.
+              </p>
+            </div>
+
+            {/* Dynamic Island Voice Mode */}
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-emerald-500/50 transition-all">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                <Mic className="h-5 w-5" />
+              </div>
+              <h4 className="text-sm font-bold text-foreground">حالت صوتی زنده با Dynamic Island</h4>
+              <p className="text-xs leading-6 text-muted-foreground">
+                مکالمه صوتی طبیعی با پردازش لحن و احساسات، قطع صحبت (Interruption) و نمایش زنده در Dynamic Island آیفون و پس‌زمینه اندروید.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* تب ۲: موارد استفاده تخصصی */}
+      {/* 2. Specialized Use Cases */}
       {activeTab === "usecases" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Briefcase className="h-5 w-5 text-emerald-400" />
-              سناریوهای کاری و موارد استفاده تخصصی ChatGPT Plus
-            </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              چت‌جی‌پی‌تی پلاس ابزاری جامع برای ارتقای بازدهی تیم‌های مهندسی، پژوهشگران و مدیران محصول است:
-            </p>
-          </div>
-
+        <div className="space-y-5">
+          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
+            <Briefcase className="h-5 w-5 text-purple-400" />
+            کاربردهای تخصصی اشتراک ChatGPT Plus
+          </h3>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <Code className="h-4 w-4 text-primary" />
-                <span>برنامه‌نویسان و مهندسان سیستم</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                استفاده از مدل‌های o1 و o3-mini برای خطایابی ساختار کد و الگوریتم‌های پیچیده، در کنار بوم تعاملی Canvas برای ویرایش سایدبای‌ساید کدهای فرانت‌اند و بک‌اند.
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Terminal className="h-4 w-4 text-primary" />
+                توسعه‌دهندگان و مهندسان سیستم
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                استفاده از هوش خودمختار رایانه‌ای GPT-6 Astra برای بررسی ریپازیتوری‌ها، تست خودکار و رفع باگ‌های امنیتی، همراه با اجرای اسکریپت‌های پایتون در محیط ایزوله ابری.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <FileText className="h-4 w-4 text-emerald-400" />
-                <span>پژوهشگران، نویسندگان و تولیدکنندگان محتوا</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                بهره‌گیری از محیط کاری Prism برای اسناد ساختاریافته، پژوهش‌های چندمرحله‌ای، ادغام منابع و تولید ویدیو با Sora و تصاویر Ultra HD با DALL-E 3.
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <GraduationCap className="h-4 w-4 text-emerald-400" />
+                دانشجویان، پژوهشگران و اساتید
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                پژوهش‌های چندمرحله‌ای با Prism، تحلیل داده‌های حجیم اکسل و CSV، حل مسائل ریاضیات دانشگاهی با استدلال o1 و خلاصه‌سازی مقالات رفرنس.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <FolderGit2 className="h-4 w-4 text-purple-400" />
-                <span>مدیران پروژه و کسب‌وکارها</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                تفکیک پروژه‌ها در پوشه‌های کاری مستقل با حافظه ایزوله (تا سقف ۲۵ فایل ۵۱۲ مگابایتی) و جابه‌جایی سریع میان حساب‌های فعال با Account Switching.
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <FileText className="h-4 w-4 text-amber-400" />
+                کپی‌رایترها، مدیران محتوا و بازاریابان
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                تدوین کمپین‌های ۳۶۰ درجه، ویرایش زنده متون در بوم Canvas، تولید استوری‌بورد و تیزرهای ویدیویی با Sora و خروجی‌های بصری چشم‌نواز با DALL-E 3.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <Mic className="h-4 w-4 text-amber-300" />
-                <span>دانشجویان و متخصصان در حال حرکت</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                مکالمه صوتی طبیعی بدون تأخیر با Advanced Voice Mode، تعامل در پس‌زمینه و پایش وضعیت گفتگو از طریق Dynamic Island در گوشی‌های هوشمند.
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Users className="h-4 w-4 text-cyan-400" />
+                مدیران عامل و استارتاپ‌ها
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                سازماندهی پروژه‌ها با حافظه ایزوله اختصاصی تا ۲۵ فایل ۵۱۲ مگابایتی برای هر بخش، بررسی قراردادهای حقوقی و خودکارسازی فرآیندهای اداری با اتوماسیون وب.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* تب ۳: مزایای نسخه اختصاصی و قانونی نسبت به نسخه رایگان */}
+      {/* 3. Free vs Plus Comparison Table */}
       {activeTab === "comparison" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Layers className="h-5 w-5 text-primary" />
-              جدول مقایسه سرشاخ‌به‌سرشاخ: ChatGPT Plus (وایچ) در برابر نسخه رایگان
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
+              <Layers className="h-5 w-5 text-cyan-400" />
+              جدول مقایسه رسمی نسخه رایگان در برابر ChatGPT Plus وایچ
             </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              تفاوت‌های بنیادین نسخه رسمی Plus با اکانت رایگان:
+            <p className="text-xs text-muted-foreground">
+              بررسی تفاوت‌های سقف دسترسی، پهنای باند و مدل‌های فعال در سال ۲۰۲۶
             </p>
           </div>
 
-          <div className="overflow-x-auto rounded-3xl border border-border/80 bg-card/50 shadow-sm">
+          <div className="overflow-x-auto rounded-2xl border border-border/80 bg-secondary/20">
             <table className="w-full text-right text-xs sm:text-sm">
-              <thead>
-                <tr className="border-b border-border/80 bg-secondary/50 text-foreground font-bold">
-                  <th className="p-3.5 sm:p-4">قابلیت و امکانات</th>
-                  <th className="p-3.5 sm:p-4 text-emerald-400 font-black">ChatGPT Plus (VAICH)</th>
-                  <th className="p-3.5 sm:p-4 text-muted-foreground font-medium">اکانت رایگان (Free)</th>
+              <thead className="border-b border-border/80 bg-secondary/60 text-muted-foreground">
+                <tr>
+                  <th className="p-3.5 sm:p-4 font-bold text-foreground">معیار مقایسه</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-muted-foreground">نسخه رایگان (Free)</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-primary">اشتراک اختصاصی Plus (VAICH)</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border/60 text-muted-foreground">
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل‌های پرچم‌دار GPT-6.1 Terra و o3</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">دسترسی بالا با اولویت مطلق پهنای باند</td>
-                  <td className="p-3.5 sm:p-4">عدم دسترسی دائم و سقف بسیار فشرده</td>
+              <tbody className="divide-y divide-border/60">
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">دسترسی به پرچمدار GPT-6 Astra</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground flex items-center gap-1.5"><X className="h-4 w-4 text-rose-500" /> غیرفعال</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400 flex items-center gap-1.5"><Check className="h-4 w-4" /> دسترسی کامل با استدلال رایانه‌ای</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">محیط‌های کاری Prism و Canvas</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">دسترسی نامحدود جهت نگارش و ویرایش همزمان</td>
-                  <td className="p-3.5 sm:p-4">مسدود شدن امکانات در ساعات شلوغی</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل‌های استدلال o1 و o3-mini</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">محدود به چند پیام روزانه</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">دسترسی وسیع با تنظیم Reasoning Effort</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">پروژه‌ها و ظرفیت حافظه (Project Memory)</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">پشتیبانی کامل از ۲۵ فایل ۵۱۲ مگابایتی</td>
-                  <td className="p-3.5 sm:p-4">تنها ۵ فایل در پروژه‌ها با ظرفیت محدود</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">فضای کاری Prism و بوم Canvas</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">نسخه محدود آزمایشی</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">دسترسی نامحدود و فول آنلاک</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">تولید محتوای پیشرفته (Sora و DALL-E 3)</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">تولید ویدیو با Sora و تصاویر Ultra HD با DALL-E 3</td>
-                  <td className="p-3.5 sm:p-4">محدودیت شدید و کیفیت استاندارد</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">تولید ویدیو با Sora</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground flex items-center gap-1.5"><X className="h-4 w-4 text-rose-500" /> غیرفعال</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400 flex items-center gap-1.5"><Check className="h-4 w-4" /> فعال با سهمیه تولید اختصاصی</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">حالت صوتی زنده Advanced Voice</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">فعال با پشتیبانی از Dynamic Island و تعامل پس‌زمینه</td>
-                  <td className="p-3.5 sm:p-4">محدود به تست چند دقیقه‌ای</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">پروژه‌ها و حافظه ایزوله (Projects)</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">حداکثر ۵ فایل سبک</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">تا ۲۵ فایل ۵۱۲ مگابایتی در هر پروژه</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">تحلیل کدهای پایتون و فایل‌های حجیم</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">اجرای کدهای تحلیلی در محیط امن بدون قطعی</td>
-                  <td className="p-3.5 sm:p-4">محدودیت‌های مکرر در پردازش داده‌ها</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">اولویت سرور در ساعات شلوغی</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">انتظار در صف یا تنزل به مدل ضعیف</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">اولویت ترافیک سرور بدون قطعی</td>
+                </tr>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">تحلیل پیشرفته داده‌ها (پایتون ابری)</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">بسیار محدود با قطع نشست</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">اجرای نامحدود کدهای سنگین پایتون</td>
+                </tr>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">حالت صوتی پیشرفته (Advanced Voice)</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">نسخه معمولی با تاخیر</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">مکالمه روان زنده با پشتیبانی از Dynamic Island</td>
                 </tr>
               </tbody>
             </table>
@@ -412,155 +392,94 @@ function ChatGPTDetailContent({
         </div>
       )}
 
-      {/* تب ۴: نحوه تحویل، فعال‌سازی و گارانتی سلامت اکانت */}
+      {/* 4. Delivery & Guarantee */}
       {activeTab === "delivery" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-emerald-400" />
-              نحوه فعال‌سازی قانونی و تضمین سلامت ۱۰۰٪ در وایچ
-            </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              سفارش‌های چت‌جی‌پی‌تی پلاس در وایچ به صورت ۱۰۰٪ قانونی روی ایمیل کاربر یا اکانت اختصاصی فعال می‌شوند؛ بدون ریسک لیمیت منطقه‌ای و با تضمین پایداری کامل تا آخرین روز اشتراک.
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۱
-              </div>
-              <h4 className="text-sm font-bold text-foreground">ثبت قانونی روی ایمیل شخصی</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                فعال‌سازی مستقیم با کارت‌های اعتباری معتبر بین‌المللی بدون نیاز به ارسال رمز عبور جیمیل.
+        <div className="space-y-4">
+          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-emerald-400" />
+            نحوه فعال‌سازی، تحویل و تضمین سلامت اشتراک
+          </h3>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                فعال‌سازی ۱۰۰٪ قانونی و اختصاصی
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                فعال‌سازی بر روی ایمیل شخصی خود کاربر یا ارائه اکانت کاملاً اختصاصی انجام می‌شود. بدون به اشتراک‌گذاری با اشخاص ثالث، تمام تاریخچه چت‌ها و پروژه‌ها خصوصی می‌ماند.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۲
-              </div>
-              <h4 className="text-sm font-bold text-foreground">بدون ریسک لیمیت یا بن</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                به دلیل پرداخت قانونی و تمیز، هیچ خطری حساب کاربری، تاریخچه گفتگوها یا پروژه‌های شما را تهدید نمی‌کند.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۳
-              </div>
-              <h4 className="text-sm font-bold text-foreground">پوشش کامل گارانتی ۳۰ روزه</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                تضمین پایداری کامل تا آخرین روز اشتراک با پشتیبانی سریع و شبانه‌روزی تیم وایچ در تلگرام.
+            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Award className="h-4 w-4 text-amber-400" />
+                گارانتی سلامت تا آخرین روز اشتراک
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                تمام ۳۰ روز اشتراک تحت پوشش گارانتی سلامت ۱۰۰٪ وایچ است. در صورت بروز هرگونه مشکل یا قطعی از سوی سرورهای بین‌المللی، تعویض یا رفع عیب فوری صورت می‌گیرد.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* تب ۵: جدول مشخصات سریع و پرسش‌های متداول (FAQ با Accordion) */}
+      {/* 5. FAQ Accordion */}
       {activeTab === "faq" && (
-        <div className="space-y-8">
-          {/* جدول مشخصات سریع */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Zap className="h-5 w-5 text-amber-300" />
-              جدول مشخصات سریع ChatGPT Plus در یک نگاه
-            </h3>
-            <div className="overflow-x-auto rounded-3xl border border-border/80 bg-card/50 shadow-sm">
-              <table className="w-full text-right text-xs sm:text-sm">
-                <tbody className="divide-y divide-border/60">
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground w-1/3">شرکت توسعه‌دهنده</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">OpenAI (ایالات متحده آمریکا)</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">موتورهای استدلال و هوش پیشرفته</td>
-                    <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">GPT-6.1 Terra + GPT-5.6 + خانواده استدلال o1 و o3-mini + GPT-4o</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">محیط‌های کاری اختصاصی</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">ورک‌اسپیس Prism، بوم تعاملی Canvas، قابلیت چندحسابی Account Switching</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">تولید چندرسانه‌ای و صوت</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">تولید ویدیو با Sora، تصاویر Ultra HD با DALL-E 3، حالت صوتی با نمایش در Dynamic Island</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">ظرفیت پروژه‌ها (Project Memory)</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">تا سقف ۲۵ فایل ۵۱۲ مگابایتی با حافظه کاملاً تفکیک‌شده</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">مدت اعتبار و ضمانت</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">۱ ماهه قانونی با ضمانت سلامت و پایداری کامل تا آخرین روز</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* پرسش‌های متداول (Accordion) */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <HelpCircle className="h-5 w-5 text-primary" />
-              پرسش‌های متداول خریداران ChatGPT Plus
-            </h3>
-
-            <div className="space-y-3">
-              {[
-                {
-                  q: "محیط کاری Prism چه تفاوتی با چت معمولی دارد؟",
-                  a: "محیط کاری Prism یک فضای سازمان‌یافته برای نگارش اسناد ساختاریافته، مقالات طولانی و پژوهش‌های چندمرحله‌ای است که امکان ضمیمه کردن منابع و ارجاعات متنی را به صورت مستقیم در اختیار کاربر قرار می‌دهد.",
-                },
-                {
-                  q: "آیا مدل‌های استدلالی o3-mini و o1 دارای سهمیه استفاده در پلاس هستند؟",
-                  a: "بله؛ کاربران پلن Plus به بالاترین سقف بین‌المللی استفاده از مدل‌های سری استدلال عمیق o1 و o3-mini با اولویت پردازش سرورها دسترسی دارند.",
-                },
-                {
-                  q: "قابلیت Account Switching و حافظه پروژه‌ها چگونه عمل می‌کند؟",
-                  a: "این قابلیت به شما اجازه می‌دهد بین ۲ حساب فعال روی اپلیکیشن بدون نیاز به خروج جا‌به‌جا شوید. همچنین بخش Projects با ایزوله‌سازی حافظه هر پروژه، مانع از تداخل اطلاعات کاری شما می‌شود.",
-                },
-                {
-                  q: "نحوه فعال‌سازی روی ایمیل شخصی به چه صورت است؟",
-                  a: "اشتراک به صورت ۱۰۰٪ قانونی و رسمی روی ایمیل شخصی خودتان فعال می‌شود و نیازی به ارسال پسورد ایمیل نیست. تمامی چت‌ها و اسناد خصوصی باقی می‌مانند.",
-                },
-              ].map((faq, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-2xl border border-border/80 bg-secondary/30 overflow-hidden transition-all"
-                >
-                  <button
-                    type="button"
-                    onClick={() => toggleFaq(idx)}
-                    className="w-full flex items-center justify-between p-4 text-right font-bold text-xs sm:text-sm text-foreground hover:text-primary transition-colors cursor-pointer select-none"
-                  >
-                    <span>{faq.q}</span>
-                    <ChevronDown
-                      className={cn(
-                        "h-4 w-4 shrink-0 transition-transform duration-200 text-muted-foreground",
-                        openFaqIndex === idx && "rotate-180 text-primary"
-                      )}
-                    />
-                  </button>
-                  {openFaqIndex === idx && (
-                    <div className="px-4 pb-4 pt-1 text-xs leading-6 text-muted-foreground border-t border-border/40">
-                      {faq.a}
-                    </div>
+        <div className="space-y-3">
+          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2 mb-4">
+            <HelpCircle className="h-5 w-5 text-primary" />
+            پرسش‌های متداول درباره ChatGPT Plus
+          </h3>
+          {[
+            {
+              q: "آیا مدل GPT-6 Astra برای همه خریداران اشتراک پلاس فعال است؟",
+              a: "بله، با تهیه اشتراک ChatGPT Plus از وایچ، دسترسی مستقیم به مدل‌های پرچمدار نسل GPT-6 شامل GPT-6 Astra، GPT-6 Sol و مدل‌های استدلال عمیق o1 و o3-mini در پنل شما فعال است.",
+            },
+            {
+              q: "آیا برای فعال‌سازی اشتراک نیاز به ارسال پسورد ایمیل است؟",
+              a: "خیر، امنیت کاربران اولویت ماست. فعال‌سازی بدون نیاز به رمز عبور ایمیل شما انجام می‌شود و تمام اطلاعات اکانت و پروژه‌ها کاملاً خصوصی می‌ماند.",
+            },
+            {
+              q: "تفاوت فضای کاری Prism با چت معمولی چیست؟",
+              a: "ورک‌اسپیس Prism محیطی ساختاریافته برای تدوین مقالات طولانی، پروژه‌های تحقیقاتی و اسناد چندفایلی است که منابع و پیوست‌ها را به‌صورت یکپارچه در کنار ویرایشگر زنده قرار می‌دهد.",
+            },
+            {
+              q: "آیا امکان استفاده همزمان روی گوشی و لپ‌تاپ وجود دارد؟",
+              a: "بله، می‌توانید روی اپلیکیشن‌های رسمی iOS، اندروید، مک و نسخه وب بدون مشکل لاگین کرده و تاریخچه گفتگوی خود را به‌صورت لحظه‌ای همگام داشته باشید.",
+            },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className="rounded-2xl border border-border/80 bg-secondary/20 overflow-hidden transition-all"
+            >
+              <button
+                onClick={() => toggleFaq(idx)}
+                className="w-full flex items-center justify-between p-4 text-right text-xs sm:text-sm font-bold text-foreground hover:bg-secondary/40 transition-colors"
+              >
+                <span>{item.q}</span>
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 text-muted-foreground shrink-0 transition-transform duration-300",
+                    openFaqIndex === idx && "rotate-180 text-primary"
                   )}
+                />
+              </button>
+              {openFaqIndex === idx && (
+                <div className="px-4 pb-4 pt-1 text-xs leading-6 text-muted-foreground border-t border-border/50">
+                  {item.a}
                 </div>
-              ))}
+              )}
             </div>
-          </div>
+          ))}
         </div>
       )}
     </div>
   );
 }
 
-// =========================================================================
-// ۲. جزئیات محصول Claude Pro (Anthropic)
-// =========================================================================
+/* =========================================================================
+   Claude Pro (Anthropic) - Claude Sonnet 5.5 & Adaptive Thinking
+   ========================================================================= */
 function ClaudeDetailContent({
   product,
   activeTab,
@@ -570,191 +489,190 @@ function ClaudeDetailContent({
   product: Product;
   activeTab: TabKey;
   openFaqIndex: number | null;
-  toggleFaq: (idx: number) => void;
+  toggleFaq: (i: number) => void;
 }) {
   return (
-    <div className="space-y-8">
-      {/* تب ۱: ویژگی‌ها و مشخصات فنی رسمی */}
+    <div className="space-y-6">
+      {/* 1. Features */}
       {activeTab === "features" && (
         <div className="space-y-6">
-          <div className="space-y-3">
+          <div className="space-y-2">
             <h3 className="text-lg font-black text-foreground flex items-center gap-2">
               <Cpu className="h-5 w-5 text-primary" />
-              مدل‌های نسل جدید و مشخصات پردازشی Claude Pro (Anthropic)
+              مدل‌های نسل جدید و مشخصات رسمی Claude Pro (Anthropic)
             </h3>
             <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              سرویس Claude Pro مجهز به برترین مدل‌های توسعه نرم‌افزار و استدلال جهان از شرکت Anthropic است؛ شامل مدل پرچم‌دار <strong>Claude Sonnet 5.5</strong> (صدرنشین جهانی برنامه‌نویسی و ساخت کامپوننت)، مدل فوق‌سنگین استدلالی <strong>Claude Opus 5.5</strong>، رده پردازشی <strong>Claude Fable 5.1</strong> برای اسناد چندصدصفحه‌ای، مدل سریع <strong>Claude Haiku 5.5</strong> با کانتکست ۱ میلیون توکنی، سیستم تفکر تطبیقی <strong>Adaptive Thinking</strong>، محیط زنده <strong>Artifacts 2.0</strong> و دستیار مهندسی ترمینال <strong>Claude Code</strong>.
+              اشتراک رسمی Claude Pro پرچمدار بلامنازع مهندسی نرم‌افزار در جهان است؛ مجهز به مدل سرآمد <strong>Claude Sonnet 5.5</strong>، مدل استدلالی فوق‌سنگین <strong>Claude Opus 5.5</strong>، رده پردازشی <strong>Claude Fable 5.1</strong>، مدل فوق‌سریع <strong>Claude Haiku 5.5</strong>، سیستم تفکر تطبیقی <strong>Adaptive Thinking</strong> و محیط کاری <strong>Artifacts 2.0</strong>.
             </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-primary/50 transition-all">
+            <div className="rounded-3xl border border-primary/40 bg-primary/5 p-5 space-y-2.5 hover:border-primary transition-all">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 text-primary">
                 <Code className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">پرچم‌دار توسعه نرم‌افزار Claude Sonnet 5.5</h4>
+              <h4 className="text-sm font-bold text-foreground">پرچمدار مهندسی: Claude Sonnet 5.5</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                برترین مدل کدنویسی حال حاضر جهان با تسلط بی‌رقیب بر ریفکتورینگ پروژه‌های بزرگ، حل باگ‌های ریشه‌ای و ساخت کدهای ماژولار.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-emerald-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                <Brain className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">مدل فوق‌سنگین Claude Opus 5.5 و Fable 5.1</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                طراحی‌شده برای پروژه‌های طولانی، محاسبات آکادمیک و اسناد چندصدصفحه‌ای همراه با سیستم تفکر تطبیقی (Adaptive Thinking) برای افزایش دقت تا ۱۰۰٪.
+                رتبه نخست بنچمارک SWE-bench در دنیا، با تسلط حیرت‌انگیز بر ریفکتورینگ پروژه‌های چند ده‌هزار خطی، درک معماری میکروسرویس و طراحی کامپوننت‌های مدرن.
               </p>
             </div>
 
             <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-purple-500/50 transition-all">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
-                <Laptop className="h-5 w-5" />
+                <Brain className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">فضای کاری زنده Artifacts 2.0</h4>
+              <h4 className="text-sm font-bold text-foreground">سیستم تفکر تطبیقی (Adaptive Thinking)</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                رندر زنده و تعاملی کامپوننت‌های مدرن، وب‌اپلیکیشن‌های کامل، شبیه‌سازها و نمودارهای SVG در صفحه‌ای مجزا بدون نیاز به لوکال هاست.
+                امکان تنظیم هوشمند بودجه تفکر مدل پیش از پاسخ‌دهی؛ مدل با بازبینی مرحله‌به‌مرحله فرضیه‌ها، ضریب خطای کد و منطق را به صفر نزدیک می‌کند.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-blue-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400">
-                <Layers className="h-5 w-5" />
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-cyan-500/50 transition-all">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+                <Layers3 className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">کانتکست ۱ میلیون توکنی با خروجی ۱۲۸K</h4>
+              <h4 className="text-sm font-bold text-foreground">محیط تعاملی Artifacts 2.0</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                مطالعه و خلاصه‌سازی کل مخزن‌های GitHub یا کتاب‌های چندجلدی در یک درخواست با پنجره متنی عظیم ۱M توکنی و خروجی فوق‌العاده ۱۲۸,۰۰۰ توکنی.
+                رندر بلادرنگ وب‌اپلیکیشن‌های کامل (React, Tailwind)، نمودارهای تعاملی SVG و شبیه‌سازها در پنل کناری بدون نیاز به کامپایل یا لوکال هاست.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-amber-400/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-400/10 border border-amber-400/20 text-amber-300">
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-amber-500/50 transition-all">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
                 <FolderGit2 className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">دستیار ترمینال Claude Code و Projects</h4>
+              <h4 className="text-sm font-bold text-foreground">کانتکست ۱ میلیون توکنی (128K Output)</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                تحلیل و اجرای دستورات مستقیم ترمینال و پوش به گیت‌هاب با Claude Code، در کنار ساخت پروژه‌های تیمی و آپلود راهنمای برند و پایگاه‌های دانش محلی.
+                توانایی خواندن همزمان کل سورس‌کد یک پروژه عظیم گیت‌هاب یا یک کتاب مرجع دانشگاهی در یک درخواست و ارائه خروجی فوق‌العاده تا ۱۲۸,۰۰۰ توکن.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-rose-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400">
-                <Sparkles className="h-5 w-5" />
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-emerald-500/50 transition-all">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                <Terminal className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">مدل فوق‌سریع Claude Haiku 5.5</h4>
+              <h4 className="text-sm font-bold text-foreground">دستیار کدهای ترمینال (Claude Code CLI)</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                پردازش فوق‌سریع کارهای روتین و کم‌هزینه با حفظ کانتکست ۱ میلیون توکنی و نثر فارسی بی‌رقیب بدون لحن ماشینی و ترجمه‌ای.
+                اجرای مستقیم دستورات در خط فرمان سیستم‌عامل، اجرای تست‌های واحد، رفع خودکار خطاهای کامپایلر و پوش مستقیم روی گیت‌هاب.
+              </p>
+            </div>
+
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-pink-500/50 transition-all">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400">
+                <BookOpen className="h-5 w-5" />
+              </div>
+              <h4 className="text-sm font-bold text-foreground">پروژه‌های تیمی (Claude Projects)</h4>
+              <p className="text-xs leading-6 text-muted-foreground">
+                آپلود راهنماهای معماری، استایل‌گایدها و پایگاه‌های دانش سازمانی جهت پایبندی دائمی به استانداردهای نرم‌افزاری و حفظ لحن برند.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* تب ۲: موارد استفاده تخصصی */}
+      {/* 2. Usecases */}
       {activeTab === "usecases" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Briefcase className="h-5 w-5 text-emerald-400" />
-              موارد استفاده تخصصی و صنعتی Claude Pro
-            </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              کلود پرو در حوزه‌هایی که نیازمند دقت کدنویسی ۱۰۰٪ و تفکر تحلیلی عمیق هستند استاندارد طلایی صنعت است:
-            </p>
-          </div>
-
+        <div className="space-y-5">
+          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
+            <Briefcase className="h-5 w-5 text-purple-400" />
+            موارد استفاده تخصصی اشتراک Claude Pro
+          </h3>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Code className="h-4 w-4 text-primary" />
-                <span>مهندسان ارشد نرم‌افزار و تیم‌های DevOps</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                بهره‌گیری از Claude Sonnet 5.5 و ابزار Claude Code CLI برای تحلیل مستقیم ترمینال، اجرای تست‌ها، رفع باگ‌های پیچیده و پوش کدهای تست‌شده روی GitHub.
+                توسعه‌دهندگان فرانت‌اند و فول‌استک
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                ساخت پروتوتایپ‌های زنده با کامپوننت‌های React و Tailwind در محیط Artifacts و مشاهده فوری عملکرد دکمه‌ها و فرم‌ها بدون راه‌اندازی سرور لوکال.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <Laptop className="h-4 w-4 text-emerald-400" />
-                <span>طراحان فرانت‌اند و سازندگان وب‌اپلیکیشن</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                رندر بلادرنگ اپلیکیشن‌های کامل و نمودارهای وکتور SVG در پنل مستقل Artifacts 2.0 بدون نیاز به راه‌اندازی سرور محلی.
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <FolderGit2 className="h-4 w-4 text-emerald-400" />
+                مهندسان ارشد معماری نرم‌افزار
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                تحلیل سورس‌کدهای قدیمی (Legacy Code)، ریفکتورینگ و مهاجرت معماری به فریم‌ورک‌های مدرن با حفظ کامل منطق برنامه و پوشش تست‌ها.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <Brain className="h-4 w-4 text-purple-400" />
-                <span>محققان آکادمیک و تیم‌های حقوقی</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                استفاده از مدل‌های Claude Opus 5.5 و Claude Fable 5.1 با تفکر تطبیقی (Adaptive Thinking) برای پردازش اسناد چندصدصفحه‌ای با خروجی تا ۱۲۸K توکن.
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <FileText className="h-4 w-4 text-amber-400" />
+                نویسندگان و ویراستاران تخصصی
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                طبیعی‌ترین، فصیح‌ترین و ادبی‌ترین لحن زبان فارسی میان تمام هوش‌های مصنوعی جهان بدون جمله‌بندی ماشینی و ترجمه‌های تحت‌اللفظی.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <FolderGit2 className="h-4 w-4 text-amber-300" />
-                <span>تیم‌های سازمانی و شرکت‌های فناوری</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                ایجاد پروژه‌های تیمی در Claude Projects، بارگذاری راهنماهای برند و استانداردهای کدنویسی سازمانی و یکپارچه‌سازی پایگاه‌های دانش محلی.
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Brain className="h-4 w-4 text-cyan-400" />
+                محققان داده و هوش مصنوعی
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                تحلیل مقالات چندصدصفحه‌ای arXiv، بررسی فرضیات با حالت Adaptive Thinking و استخراج دقیق اطلاعات از هزاران ردیف دیتا.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* تب ۳: مزایای نسخه اختصاصی و قانونی نسبت به نسخه رایگان */}
+      {/* 3. Comparison Table */}
       {activeTab === "comparison" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Layers className="h-5 w-5 text-primary" />
-              جدول مقایسه: اشتراک Claude Pro (وایچ) در برابر نسخه رایگان
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
+              <Layers className="h-5 w-5 text-cyan-400" />
+              جدول مقایسه نسخه رایگان کلود در برابر Claude Pro وایچ
             </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              تفاوت‌های بنیادین نسخه حرفه‌ای کلود در مقایسه با محدودیت‌های نسخه رایگان:
+            <p className="text-xs text-muted-foreground">
+              تفاوت‌های بنیادین در سقف مجاز پیام‌ها، مدل‌های فعال و محیط Artifacts
             </p>
           </div>
 
-          <div className="overflow-x-auto rounded-3xl border border-border/80 bg-card/50 shadow-sm">
+          <div className="overflow-x-auto rounded-2xl border border-border/80 bg-secondary/20">
             <table className="w-full text-right text-xs sm:text-sm">
-              <thead>
-                <tr className="border-b border-border/80 bg-secondary/50 text-foreground font-bold">
-                  <th className="p-3.5 sm:p-4">ویژگی و دسترسی</th>
-                  <th className="p-3.5 sm:p-4 text-emerald-400 font-black">Claude Pro (VAICH)</th>
-                  <th className="p-3.5 sm:p-4 text-muted-foreground font-medium">اکانت رایگان (Free)</th>
+              <thead className="border-b border-border/80 bg-secondary/60 text-muted-foreground">
+                <tr>
+                  <th className="p-3.5 sm:p-4 font-bold text-foreground">شاخص</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-muted-foreground">نسخه رایگان (Free)</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-primary">اشتراک اختصاصی Pro (VAICH)</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border/60 text-muted-foreground">
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل‌های Sonnet 5.5 و Opus 5.5</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">دسترسی دائم در شلوغ‌ترین ساعات کاری بدون صف</td>
-                  <td className="p-3.5 sm:p-4">سوییچ سریع به مدل‌های پایه و محدود</td>
+              <tbody className="divide-y divide-border/60">
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">سقف پیام در هر نشست کاری</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">اخطار اتمام پیام پس از ۳ الی ۵ سوال</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400 flex items-center gap-1.5"><Check className="h-4 w-4" /> بیش از ۵ برابر ظرفیت مصرف بیشتر</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">سقف ارسال پیام و حجم پردازش</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">افزایش سقف استفاده تا بیش از ۵ برابر نسخه عادی</td>
-                  <td className="p-3.5 sm:p-4">اخطار سریع اتمام پیام بعد از چند پرسش</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">دسترسی به Claude Sonnet 5.5 و Opus 5.5</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">سقوط به مدل‌های سبک در ساعات شلوغی</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">دسترسی دائم و بدون وقفه به برترین مدل‌ها</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">سیستم تفکر تطبیقی (Adaptive Thinking)</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">فعال با تفکر عمیق و تنظیم هوشمند زمان تحلیل</td>
-                  <td className="p-3.5 sm:p-4">عدم دسترسی پایدار به تفکر عمیق</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">تفکر تطبیقی (Adaptive Thinking)</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">غیرفعال یا سقف زمانی بسیار کوتاه</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">تنظیم دستی بودجه تفکر تا بالاترین ضریب دقت</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">آپلود اسناد و مخازن کد (Claude Projects)</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">پنجره متنی ۱ میلیون توکنی با خروجی ۱۲۸K توکن</td>
-                  <td className="p-3.5 sm:p-4">محدودیت جدی در آپلود داکیومنت و حجم فایل</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">محیط تعاملی Artifacts 2.0</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">محدود با خطای حافظه در کدهای حجیم</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">رندر نامحدود پروژه‌ها و شبیه‌سازهای پیچیده</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">محیط زنده Artifacts 2.0 و Claude Code</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">اجرای نامحدود وب‌اپلیکیشن‌ها و دستورات ترمینال</td>
-                  <td className="p-3.5 sm:p-4">دسترسی با تأخیر و محدود به ترافیک سرور</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">دستیار ترمینال Claude Code CLI</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground flex items-center gap-1.5"><X className="h-4 w-4 text-rose-500" /> مسدود</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400 flex items-center gap-1.5"><Check className="h-4 w-4" /> پشتیبانی کامل در ترمینال سیستم‌عامل</td>
+                </tr>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">پنجره متنی و سقف خروجی</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">خروجی محدود به ۴,۰۰۰ توکن</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">۱ میلیون کانتکست با خروجی فوق‌العاده ۱۲۸K</td>
                 </tr>
               </tbody>
             </table>
@@ -762,535 +680,156 @@ function ClaudeDetailContent({
         </div>
       )}
 
-      {/* تب ۴: نحوه تحویل، فعال‌سازی و گارانتی سلامت اکانت */}
+      {/* 4. Delivery */}
       {activeTab === "delivery" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-emerald-400" />
-              تحویل اختصاصی، فعال‌سازی قانونی و گارانتی سلامت کلود پرو
-            </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              سرویس کلود پرو وایچ با پرداخت مستقیم ارزی روی ایمیل شخصی شما فعال می‌شود و کاملاً قانونی و بدون ریسک لیمیت منطقه‌ای است.
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۱
-              </div>
-              <h4 className="text-sm font-bold text-foreground">شارژ قانونی روی ایمیل شما</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                فعال‌سازی اختصاصی بدون واسطه و بدون نیاز به ارسال رمز عبور جیمیل شخصی.
+        <div className="space-y-4">
+          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-emerald-400" />
+            نحوه فعال‌سازی، تحویل و تضمین سلامت Claude Pro
+          </h3>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                فعال‌سازی قانونی بدون تحریم
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                فعال‌سازی ۱۰۰٪ قانونی و اختصاصی بر روی ایمیل شخصی کاربر با پرداخت کارت‌های بین‌المللی بدون ریسک بن شدن یا لیمیت اکانت.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۲
-              </div>
-              <h4 className="text-sm font-bold text-foreground">پایداری دائم بدون مسدودی</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                پرداخت از طریق مسترکارت‌های معتبر شرکتی جهت جلوگیری از هرگونه حساسیت سرورهای آنتروپیک.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۳
-              </div>
-              <h4 className="text-sm font-bold text-foreground">ضمانت کامل ۳۰ روزه</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                پوشش ۱۰۰٪ گارانتی تعویض و پاسخگویی سریع تلگرام در تمام ۳۰ روز استفاده.
+            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Award className="h-4 w-4 text-amber-400" />
+                گارانتی کامل سلامت در تمام ۳۰ روز
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                اشتراک Claude Pro دارای گارانتی تعویض و پشتیبانی ۲۴ ساعته در تلگرام است تا بدون کوچک‌ترین دغدغه روی کدهایتان تمرکز کنید.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* تب ۵: جدول مشخصات سریع و پرسش‌های متداول (FAQ با Accordion) */}
+      {/* 5. FAQ */}
       {activeTab === "faq" && (
-        <div className="space-y-8">
-          {/* جدول مشخصات سریع */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Zap className="h-5 w-5 text-amber-300" />
-              جدول مشخصات سریع Claude Pro
-            </h3>
-            <div className="overflow-x-auto rounded-3xl border border-border/80 bg-card/50 shadow-sm">
-              <table className="w-full text-right text-xs sm:text-sm">
-                <tbody className="divide-y divide-border/60">
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground w-1/3">شرکت توسعه‌دهنده</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">Anthropic (ایالات متحده آمریکا)</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">مدل‌های پرچم‌دار پردازشی</td>
-                    <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">Claude Sonnet 5.5 + Claude Opus 5.5 + Claude Fable 5.1 + Claude Haiku 5.5</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">پنجره متنی و خروجی توکن</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">کانتکست عظیم ۱ میلیون توکنی (1M) با خروجی فوق‌العاده ۱۲۸,۰۰۰ توکنی</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">امکانات مهندسی انحصاری</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">سیستم تفکر تطبیقی Adaptive Thinking، محیط زنده Artifacts 2.0، دستیار ترمینال Claude Code</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">مدت اعتبار و پشتیبانی</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">۳۰ روز کامل قانونی با پوشش ۱۰۰٪ گارانتی تعویض و پشتیبانی تلگرام</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* پرسش‌های متداول (Accordion) */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <HelpCircle className="h-5 w-5 text-primary" />
-              پرسش‌های متداول خریداران Claude Pro
-            </h3>
-
-            <div className="space-y-3">
-              {[
-                {
-                  q: "سیستم تفکر تطبیقی (Adaptive Thinking) چیست و چه مزیتی دارد؟",
-                  a: "این فناوری به کاربر اجازه می‌دهد زمان فکر کردن مدل را پیش از پاسخ‌دهی به صورت هوشمند تنظیم کند؛ این امر ضریب دقت را در حل پروژه‌های پیچیده معماری نرم‌افزار و ریاضیات سنگین تا ۱۰۰٪ افزایش می‌دهد.",
-                },
-                {
-                  q: "خروجی ۱۲۸,۰۰۰ توکنی به چه معناست؟",
-                  a: "برخلاف اکثر مدل‌ها که طول پاسخ محدودی دارند، کلود پرو می‌تواند تا ۱۲۸ هزار توکن (معادل کل کدهای چند ماژول یا کتابچه‌ای کامل) را در یک نوبت به عنوان خروجی تحویل دهد.",
-                },
-                {
-                  q: "دستیار ترمینال Claude Code چگونه کار می‌کند؟",
-                  a: "ابزار Claude Code به شما اجازه می‌دهد مستقیماً از طریق ترمینال کدهای خود را ادیت کنید، تست‌های خودکار را اجرا کرده و تغییرات را مستقیماً روی مخازن گیت‌هاب پوش نمایید.",
-                },
-                {
-                  q: "آیا تاریخچه پروژه‌ها در اکانت من خصوصی می‌ماند؟",
-                  a: "بله؛ فعال‌سازی به صورت اختصاصی بر روی ایمیل شخصی خودتان انجام می‌شود و تمام پروژه‌ها، پرامپت‌ها و اسناد در محیط کاربری شما امن و خصوصی باقی می‌مانند.",
-                },
-              ].map((faq, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-2xl border border-border/80 bg-secondary/30 overflow-hidden transition-all"
-                >
-                  <button
-                    type="button"
-                    onClick={() => toggleFaq(idx)}
-                    className="w-full flex items-center justify-between p-4 text-right font-bold text-xs sm:text-sm text-foreground hover:text-primary transition-colors cursor-pointer select-none"
-                  >
-                    <span>{faq.q}</span>
-                    <ChevronDown
-                      className={cn(
-                        "h-4 w-4 shrink-0 transition-transform duration-200 text-muted-foreground",
-                        openFaqIndex === idx && "rotate-180 text-primary"
-                      )}
-                    />
-                  </button>
-                  {openFaqIndex === idx && (
-                    <div className="px-4 pb-4 pt-1 text-xs leading-6 text-muted-foreground border-t border-border/40">
-                      {faq.a}
-                    </div>
+        <div className="space-y-3">
+          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2 mb-4">
+            <HelpCircle className="h-5 w-5 text-primary" />
+            پرسش‌های متداول درباره Claude Pro
+          </h3>
+          {[
+            {
+              q: "چرا کلود برای برنامه‌نویسان بهتر از چت‌جی‌پی‌تی است؟",
+              a: "مدل Claude Sonnet 5.5 با تسلط بر ساختار پروژه‌های چندفایلی و قابلیت رندر زنده کدهای فرانت‌اند در Artifacts 2.0، امکان تست بلادرنگ رابط کاربری را بدون نیاز به کپی-پیست در ادیتور فراهم می‌کند.",
+            },
+            {
+              q: "آیا ابزار Claude Code روی سیستم‌های ویندوز و مک کار می‌کند؟",
+              a: "بله، ابزار خط فرمان Claude Code از طریق ترمینال (Terminal / PowerShell / Bash) مستقیماً به مخزن پروژه شما متصل شده و تست‌ها را اجرا می‌کند.",
+            },
+            {
+              q: "نحوه تحویل اکانت کلود پرو به چه صورت است؟",
+              a: "پس از ثبت سفارش، اطلاعات ورود به اکانت اختصاصی شما ظرف مدت ۱۵ الی ۶۰ دقیقه در تلگرام برای شما ارسال می‌شود.",
+            },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className="rounded-2xl border border-border/80 bg-secondary/20 overflow-hidden transition-all"
+            >
+              <button
+                onClick={() => toggleFaq(idx)}
+                className="w-full flex items-center justify-between p-4 text-right text-xs sm:text-sm font-bold text-foreground hover:bg-secondary/40 transition-colors"
+              >
+                <span>{item.q}</span>
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 text-muted-foreground shrink-0 transition-transform duration-300",
+                    openFaqIndex === idx && "rotate-180 text-primary"
                   )}
+                />
+              </button>
+              {openFaqIndex === idx && (
+                <div className="px-4 pb-4 pt-1 text-xs leading-6 text-muted-foreground border-t border-border/50">
+                  {item.a}
                 </div>
-              ))}
+              )}
             </div>
-          </div>
+          ))}
         </div>
       )}
     </div>
   );
 }
 
-// =========================================================================
-// ۳. جزئیات محصول Google Gemini Advanced (پلن‌های ۶۰ روزه و ۱۸ ماهه)
-// =========================================================================
+/* =========================================================================
+   Google Gemini Advanced - Gemini 4 Argon & Project Astra
+   ========================================================================= */
 function GeminiDetailContent({
   product,
+  is18Month,
   activeTab,
   openFaqIndex,
   toggleFaq,
-  is18Month,
 }: {
   product: Product;
+  is18Month: boolean;
   activeTab: TabKey;
   openFaqIndex: number | null;
-  toggleFaq: (idx: number) => void;
-  is18Month: boolean;
+  toggleFaq: (i: number) => void;
 }) {
   return (
-    <div className="space-y-8">
-      {/* تب ۱: ویژگی‌ها و مشخصات فنی رسمی */}
+    <div className="space-y-6">
+      {/* 1. Features */}
       {activeTab === "features" && (
         <div className="space-y-6">
-          <div className="space-y-3">
+          <div className="space-y-2">
             <h3 className="text-lg font-black text-foreground flex items-center gap-2">
               <Cpu className="h-5 w-5 text-primary" />
-              مدل‌ها و موتورهای فعال Google Gemini Advanced
+              موتورهای نسل ۲۰۲۶ گوگل: Gemini 4 Argon و لایه ادراکی Project Astra
             </h3>
             <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              سرویس Gemini Advanced مجهز به پرچم‌دار غول‌آسای گوگل <strong>Gemini 4 Argon</strong> (با پشتیبانی از طول خروجی بی‌سابقه تا ۱,۰۰۰,۰۰۰ توکن)، مدل استدلال عمیق <strong>Gemini 3 Deep Think</strong> برای داده‌کاوی، فیزیک، مدل‌سازی مالی و معماری سیستم، مدل‌های پرسرعت <strong>Gemini 3.8 Flash</strong> و <strong>Gemini 3.8 Flash Cyber</strong>، درک ویدیوهای زنده سازمانی (<strong>Agentic Video Understanding</strong>)، پیوند کامل با اکوسیستم Workspace و کانتکست ۲ میلیون توکنی پایدار است.
+              اشتراک رسمی Google Gemini Advanced مجهز به انقلابی‌ترین فناوری‌های شرکت گوگل است؛ شامل پرچمدار غول‌آسای <strong>Gemini 4 Argon</strong> با خروجی ۱ میلیون توکن، لایه عامل‌محور بلادرنگ <strong>Project Astra</strong> (درک جریان زنده ویدیوی دوربین با تاخیر زیر ۳۰۰ میلی‌ثانیه و حافظه فضایی)، مدل استدلال عمیق <strong>Gemini 3 Deep Think</strong>، مدل‌های کاری <strong>Gemini 3.8 Flash</strong> و پیوند عمیق با <strong>Google Workspace</strong>.
             </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-primary/50 transition-all">
+            <div className="rounded-3xl border border-primary/40 bg-primary/5 p-5 space-y-2.5 hover:border-primary transition-all">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 text-primary">
                 <Brain className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">پرچم‌دار غول‌آسای Gemini 4 Argon</h4>
+              <h4 className="text-sm font-bold text-foreground">پرچمدار غول‌آسا: Gemini 4 Argon</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                معماری انقلابی چندوجهی با پشتیبانی از طول خروجی بی‌سابقه تا ۱,۰۰۰,۰۰۰ توکن برای تولید جامع‌ترین گزارش‌های تحلیلی و مستندات نرم‌افزاری.
+                معماری بومی چندوجهی با خروجی طولانی بی‌سابقه تا ۱,۰۰۰,۰۰۰ توکن و بازیابی بی‌نقص اطلاعات از میان صدها هزار خط کد و اسناد سنگین.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-emerald-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                <Zap className="h-5 w-5" />
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-cyan-500/50 transition-all">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+                <Camera className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">مدل تحلیل استدلال عمیق Gemini 3 Deep Think</h4>
+              <h4 className="text-sm font-bold text-foreground">لایه چندوجهی زنده Project Astra</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                بهینه‌سازی‌شده برای مسائل داده‌کاوی، محاسبات فیزیک، مدل‌سازی مالی پیشرفته و معماری سیستم‌های پیچیده با دقت استدلالی خارق‌العاده.
+                پیمایش بلادرنگ فریم‌به‌فریم دوربین گوشی یا وب‌کم، مکالمه صوتی انسان‌گونه با تاخیر زیر ۳۰۰ میلی‌ثانیه و حافظه فضایی از اشیای محیط پیرامون.
               </p>
             </div>
 
             <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-purple-500/50 transition-all">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
-                <Compass className="h-5 w-5" />
+                <Activity className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">درک ویدیویی زنده سازمانی (Agentic Video)</h4>
+              <h4 className="text-sm font-bold text-foreground">مدل استدلال عمیق Gemini 3 Deep Think</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                پیمایش فریم‌به‌فریم ویدیوهای طولانی، استخراج همزمان صوت و تصویر و پاسخ دقیق به جزئیات بصری بدون نیاز به تبدیل به متن.
+                تحلیل‌های چندلایه ریاضیاتی، داده‌کاوی، فیزیک و مدل‌سازی مالی با تمرکز بر زنجیره استدلال دقیق و بدون خطا.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-blue-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400">
-                <Layers className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">کانتکست پایدار ۲ میلیون توکنی با بالاترین Recall</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                پردازش اسناد سازمانی غول‌پیکر، کتاب‌های قطور و دیتابیس‌های چند ده‌هزار سطری با بالاترین نرخ بازیابی اطلاعات در میان تمام مدل‌ها.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-amber-400/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-400/10 border border-amber-400/20 text-amber-300">
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-amber-500/50 transition-all">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
                 <FolderGit2 className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">پیوند کامل با اکوسیستم Google Workspace</h4>
+              <h4 className="text-sm font-bold text-foreground">پنجره متنی ۲ میلیون توکنی پایدار</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                اتصال و تحلیل خودکار میان Google Drive، Gmail، Docs و Keep بدون نیاز به دانلود و آپلود مجدد فایل‌ها، همراه با سندباکس پایتون و Imagen 3.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-rose-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400">
-                <Flame className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">مدل‌های سریع کاری Gemini 3.8 Flash & Cyber</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                پاسخ‌دهی برق‌آسا برای وظایف متنی و عملیاتی روزمره، در کنار مزیت ویژه پلن ۱۸ ماهه وایچ با بیش از ۹۰٪ تخفیف اقتصادی بدون دغدغه تمدید ماهانه.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* تب ۲: موارد استفاده تخصصی */}
-      {activeTab === "usecases" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Briefcase className="h-5 w-5 text-emerald-400" />
-              موارد استفاده تخصصی Gemini Advanced
-            </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              قابلیت‌های چندوجهی جمینای ادونسد سناریوهای بی‌نظیری را برای متخصصان و تیم‌های داده‌محور فراهم کرده است:
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <BarChart3 className="h-4 w-4 text-primary" />
-                <span>تحلیلگران مالی، تریدرها و داده‌کاوان</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                بهره‌گیری از Gemini 3 Deep Think برای تحلیل مدل‌های رگرسیون، پیش‌بینی ریسک مالی، تحلیل دیتابیس‌های چند ده‌هزار سطری و اجرای محاسبات پایتون در فضای ابری ایزوله.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <Laptop className="h-4 w-4 text-emerald-400" />
-                <span>تولیدکنندگان ویدیو و محتوای رسانه‌ای</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                پیمایش ویدیویی فریم‌به‌فریم (Agentic Video Understanding) برای استخراج تایم‌کدهای دقیق از جلسات طولانی و تولید تصاویر واقع‌گرایانه با Imagen 3.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <GraduationCap className="h-4 w-4 text-purple-400" />
-                <span>دانشجویان، پژوهشگران و اساتید دانشگاهی</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                بارگذاری کتب رفرنس چندهزار صفحه‌ای در کانتکست ۲ میلیون توکنی، تولید خروجی‌های ساختاریافته تا ۱ میلیون توکن در Gemini 4 Argon و پادکست‌های NotebookLM.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <FolderGit2 className="h-4 w-4 text-amber-300" />
-                <span>استارتاپ‌ها و مدیران سازمانی (پلن ۱۸ ماهه)</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                دسترسی پایدار ۱۸ ماهه با تخفیف بیش از ۹۰ درصدی بدون نگرانی از نوسانات ارز، همراه با اتصال کامل به Google Drive، جیمیل و اسناد Workspace.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* تب ۳: مزایای نسخه اختصاصی نسبت به نسخه رایگان */}
-      {activeTab === "comparison" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Layers className="h-5 w-5 text-primary" />
-              جدول مقایسه: Gemini Advanced (وایچ) در برابر نسخه رایگان گوگل
-            </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              تفاوت چشمگیر توانایی‌های پردازشی و سقف کانتکست:
-            </p>
-          </div>
-
-          <div className="overflow-x-auto rounded-3xl border border-border/80 bg-card/50 shadow-sm">
-            <table className="w-full text-right text-xs sm:text-sm">
-              <thead>
-                <tr className="border-b border-border/80 bg-secondary/50 text-foreground font-bold">
-                  <th className="p-3.5 sm:p-4">ویژگی</th>
-                  <th className="p-3.5 sm:p-4 text-emerald-400 font-black">Gemini Advanced (VAICH)</th>
-                  <th className="p-3.5 sm:p-4 text-muted-foreground font-medium">نسخه رایگان جمینای</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/60 text-muted-foreground">
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل‌های پرچم‌دار پردازشی</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">Gemini 4 Argon + استدلال عمیق Gemini 3 Deep Think</td>
-                  <td className="p-3.5 sm:p-4">مدل پایه بدون قابلیت‌های تحلیلی عمیق</td>
-                </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">پنجره متنی (Context Window)</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">۲,۰۰۰,۰۰۰ توکن با بالاترین نرخ Recall و خروجی ۱M توکن</td>
-                  <td className="p-3.5 sm:p-4">۳۲,۰۰۰ توکن با خطای پر شدن سریع حافظه</td>
-                </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">درک ویدیویی سازمانی (Agentic Video)</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">پیمایش فریم‌به‌فریم ویدیوهای طولانی و استخراج صوت و تصویر</td>
-                  <td className="p-3.5 sm:p-4">غیرفعال</td>
-                </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">اتصال به اکوسیستم Workspace</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">جستجو و تحلیل خودکار میان Drive, Gmail, Docs و Keep</td>
-                  <td className="p-3.5 sm:p-4">بسیار محدود</td>
-                </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">صرفه اقتصادی و پایداری</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">پلن ۱۸ ماهه با ۹۱٪ تخفیف بدون دغدغه تمدید ماهانه</td>
-                  <td className="p-3.5 sm:p-4">پایین‌ترین اولویت پردازشی در زمان ترافیک</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* تب ۴: نحوه تحویل، فعال‌سازی و گارانتی سلامت اکانت */}
-      {activeTab === "delivery" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-emerald-400" />
-              تحویل سریع، پایداری بدون قطعی و پوشش کامل گارانتی
-            </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              اکانت‌های Gemini Advanced در وایچ با بهینه‌ترین سرورها و تضمین کامل پایداری ارائه می‌شوند:
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۱
-              </div>
-              <h4 className="text-sm font-bold text-foreground">تحویل سریع ظرف کمتر از ۱ ساعت</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                اطلاعات ورود و راهنمای اتصال سریع پس از ثبت سفارش در تلگرام تقدیم می‌شود.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۲
-              </div>
-              <h4 className="text-sm font-bold text-foreground">سرورهای فوق‌العاده پایدار</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                بدون قطعی و بدون افت کیفیت حتی در ساعات پرترافیک کاری بین‌المللی.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۳
-              </div>
-              <h4 className="text-sm font-bold text-foreground">تضمین پایداری کامل دوره</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                پوشش گارانتی تعویض و پاسخگویی اختصاصی در تمام طول دوره ۶۰ روزه یا ۱۸ ماهه.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* تب ۵: جدول مشخصات سریع و پرسش‌های متداول (FAQ با Accordion) */}
-      {activeTab === "faq" && (
-        <div className="space-y-8">
-          {/* جدول مشخصات سریع */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Zap className="h-5 w-5 text-amber-300" />
-              جدول مشخصات سریع Gemini Advanced
-            </h3>
-            <div className="overflow-x-auto rounded-3xl border border-border/80 bg-card/50 shadow-sm">
-              <table className="w-full text-right text-xs sm:text-sm">
-                <tbody className="divide-y divide-border/60">
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground w-1/3">شرکت توسعه‌دهنده</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">Google (ایالات متحده آمریکا)</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">موتورهای فعال</td>
-                    <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">Gemini 4 Argon + استدلال عمیق Gemini 3 Deep Think + Gemini 3.8 Flash & Cyber</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">پنجره متنی و طول خروجی</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">کانتکست ۲ میلیون توکن با بالاترین نرخ Recall و پشتیبانی از خروجی تا ۱,۰۰۰,۰۰۰ توکن</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">قابلیت‌های متمایز</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">Agentic Video Understanding، پیوند با Google Workspace (Drive, Gmail, Docs, Keep)، سندباکس پایتون، Imagen 3</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">مدت دوره و ضمانت</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">
-                      {is18Month ? "۱۸ ماه کامل اقتصادی (با تخفیف بیش از ۹۰٪)" : "۶۰ روز کامل"} همراه با گارانتی سلامت ۱۰۰٪
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* پرسش‌های متداول (Accordion) */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <HelpCircle className="h-5 w-5 text-primary" />
-              پرسش‌های متداول خریداران Gemini Advanced
-            </h3>
-
-            <div className="space-y-3">
-              {[
-                {
-                  q: "خروجی ۱,۰۰۰,۰۰۰ توکنی در Gemini 4 Argon چه کاربردی دارد؟",
-                  a: "این قابلیت منحصربه‌فرد به مدل اجازه می‌دهد در یک پاسخ، کتاب‌های کامل، مستندات نرم‌افزاری چندین صفحه‌ای و کدهای جامع بدون قطع شدن یا خلاصه کردن اجباری تولید کند.",
-                },
-                {
-                  q: "منظور از Agentic Video Understanding چیست؟",
-                  a: "جمینای می‌تواند ویدیوهای سازمانی و دوره‌های آموزشی طولانی را فریم‌به‌فریم بررسی کرده و جزئیات صوتی و بصری را مستقیماً بدون نیاز به تبدیل به متن، تحلیل کند.",
-                },
-                {
-                  q: "تفاوت پلن ۶۰ روزه با پلن ۱۸ ماهه در چیست؟",
-                  a: "از نظر دسترسی فنی به مدل‌ها هر دو پلن یکسان هستند؛ اما پلن ۱۸ ماهه با تخفیف بیش از ۹۰ درصدی، بالاترین صرفه اقتصادی را برای دانشجویان، تریدرها و شرکت‌ها به همراه دارد و از جهش‌های ارزی جلوگیری می‌کند.",
-                },
-                {
-                  q: "اتصال به Google Workspace چگونه کار می‌کند؟",
-                  a: "شما می‌توانید مستقیماً از داخل جمینای، ایمیل‌های جیمیل، فایل‌های متنی Docs و داکیومنت‌های Google Drive خود را جستجو و تحلیل کنید بدون اینکه نیاز به دانلود و آپلود دستی فایل‌ها باشد.",
-                },
-              ].map((faq, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-2xl border border-border/80 bg-secondary/30 overflow-hidden transition-all"
-                >
-                  <button
-                    type="button"
-                    onClick={() => toggleFaq(idx)}
-                    className="w-full flex items-center justify-between p-4 text-right font-bold text-xs sm:text-sm text-foreground hover:text-primary transition-colors cursor-pointer select-none"
-                  >
-                    <span>{faq.q}</span>
-                    <ChevronDown
-                      className={cn(
-                        "h-4 w-4 shrink-0 transition-transform duration-200 text-muted-foreground",
-                        openFaqIndex === idx && "rotate-180 text-primary"
-                      )}
-                    />
-                  </button>
-                  {openFaqIndex === idx && (
-                    <div className="px-4 pb-4 pt-1 text-xs leading-6 text-muted-foreground border-t border-border/40">
-                      {faq.a}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// =========================================================================
-// ۴. جزئیات محصول Microsoft Copilot Pro / 365
-// =========================================================================
-function CopilotDetailContent({
-  product,
-  activeTab,
-  openFaqIndex,
-  toggleFaq,
-}: {
-  product: Product;
-  activeTab: TabKey;
-  openFaqIndex: number | null;
-  toggleFaq: (idx: number) => void;
-}) {
-  return (
-    <div className="space-y-8">
-      {/* تب ۱: ویژگی‌ها و مشخصات فنی رسمی */}
-      {activeTab === "features" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Cpu className="h-5 w-5 text-primary" />
-              مدل‌های ادغام‌شده و امکانات Microsoft Copilot Pro / 365
-            </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              سرویس رسمی Microsoft Copilot Pro با بهره‌گیری از ترکیبی از برترین مدل‌های هوش مصنوعی دنیا شامل <strong>OpenAI GPT-5.6</strong> و <strong>Claude Sonnet 5</strong> برای تسک‌های تخصصی کدنویسی و نگارش، دستیار تخصصی <strong>Cowork</strong> با اتوماسیون محلی مرورگر مایکروسافت اج (Local Browser Automation)، اجرای ایجنت‌های تخصصی در Word, Excel, PowerPoint و Outlook با <code>@agent</code>، مهارت‌های شخصی‌سازی‌شده <strong>Personal Skills</strong> و طراحی اتوماسیون در <strong>Copilot Studio</strong>، قوی‌ترین ابزار دفاتر و تیم‌های کاری است.
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-primary/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 text-primary">
-                <Brain className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">ترکیب پرچم‌داران OpenAI GPT-5.6 و Claude Sonnet 5</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                بهره‌گیری همزمان از هوش چندوجهی GPT-5.6 و قدرت کدنویسی و ریفکتورینگ Claude Sonnet 5 بر اساس ماهیت تسک مورد نظر.
+                بزرگ‌ترین حافظه فعال پردازش سند در جهان؛ پردازش همزمان بیش از ۱,۵۰۰ صفحه متن، فایل‌های صوتی طولانی یا ساعت‌ها ویدیوی خام.
               </p>
             </div>
 
@@ -1298,159 +837,128 @@ function CopilotDetailContent({
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
                 <Laptop className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">دستیار Cowork و اتوماسیون محلی مرورگر Edge</h4>
+              <h4 className="text-sm font-bold text-foreground">ادغام بومی با Google Workspace</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                اجرای خودکار فرآیندهای وب، پر کردن فرم‌ها و گردآوری داده‌ها با اتوماسیون محلی در مرورگر Microsoft Edge.
+                جستجو، تحلیل و پاسخ‌گویی مستقیم میان اسناد گوگل درایو، ایمیل‌های جیمیل و شیت‌های کاربر بدون نیاز به آپلود مجدد فایل‌ها.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-purple-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
-                <Code className="h-5 w-5" />
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-pink-500/50 transition-all">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400">
+                <Sparkles className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">فراخوانی ایجنت‌ها با agent@ در آفیس</h4>
+              <h4 className="text-sm font-bold text-foreground">پلتفرم NotebookLM و Imagen 3</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                اجرای ایجنت‌های تخصصی داخل Word, Excel, PowerPoint و Outlook تنها با تایپ کردن <code>@agent</code> در چت.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-blue-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400">
-                <FileText className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">مهارت‌های شخصی‌سازی‌شده (Personal Skills)</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                ساخت اسکیل‌های تکرارپذیر روی OneDrive و SharePoint به صورت فایل‌های استاندارد Markdown جهت بهینه‌سازی جریان کاری.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-amber-400/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-400/10 border border-amber-400/20 text-amber-300">
-                <BarChart3 className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">تحلیل پیشرفته اکسل و استخراج Change History</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                تحلیل فوق‌پیشرفته شیت‌های مالی در اکسل، فرمول‌نویسی خودکار و استخراج تغییرات تاریخی فایل‌های حسابداری.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-rose-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400">
-                <Palette className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">طراحی اسلایدها و استودیوی Copilot Studio</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                طراحی خودکار اسلایدهای پرزنتیشن بر اساس هویت بصری برند در پاورپوینت و ساخت دستیارهای کاری در Copilot Studio بدون نیاز به کدنویسی.
+                تولید پادکست‌های صوتی گفتگو‌محور (Audio Overviews) از اسناد و مقالات طولانی به همراه تصویرساز نسل جدید Imagen 3.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* تب ۲: موارد استفاده تخصصی */}
+      {/* 2. Usecases */}
       {activeTab === "usecases" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Briefcase className="h-5 w-5 text-emerald-400" />
-              موارد استفاده تخصصی Microsoft Copilot Pro
-            </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              کوپایلوت پرو بهترین ابزار برای محیط‌های کاری مدرن، دفاتر شرکتی و تحلیلگران است:
-            </p>
-          </div>
-
+        <div className="space-y-5">
+          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
+            <Briefcase className="h-5 w-5 text-purple-400" />
+            کاربردهای پیشرفته Google Gemini Advanced
+          </h3>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <BarChart3 className="h-4 w-4 text-primary" />
-                <span>تحلیلگران مالی، حسابداران و مدیران اداری</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                فرمول‌نویسی خودکار در اکسل، تحلیل روندهای مالی، بررسی سابقه تغییرات اسناد (Change History) و مدل‌سازی آماری.
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <GraduationCap className="h-4 w-4 text-primary" />
+                تحقیقات دانشگاهی و پایان‌نامه‌ها
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                بارگذاری ده‌ها کتاب مرجع و پایان‌نامه در کانتکست ۲ میلیونی و ساخت پادکست صوتی با NotebookLM برای مرور سریع فصول درسی.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <FileText className="h-4 w-4 text-emerald-400" />
-                <span>مدیران پروژه و کارکنان سازمانی</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                نگارش خودکار نامه‌ها و گزارش‌ها در Word، مدیریت ایمیل‌ها و پیگیری جلسات در Outlook و Teams با ایجنت‌های تخصصی.
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Camera className="h-4 w-4 text-cyan-400" />
+                تعامل در دنیای واقعی با Project Astra
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                بررسی قطعات سخت‌افزاری، خواندن کدهای روی وایت‌برد و پرسش درباره اشیای فیزیکی از طریق دوربین با مکالمه صوتی فوق‌العاده سریع.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <Palette className="h-4 w-4 text-purple-400" />
-                <span>تیم‌های بازاریابی، فروش و ارائه‌دهندگان</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                تبدیل یادداشت‌های خام به ارائه‌های چنداسلایدی حرفه‌ای در PowerPoint با پالت رنگی و استایل سازمانی برند شما.
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <BarChart3 className="h-4 w-4 text-emerald-400" />
+                تریدرها و تحلیلگران داده
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                مدل‌سازی مالی با موتور Deep Think، تحلیل گزارش‌های سالانه بورس و اجرای اسکریپت‌های تحلیلی پایتون در کلود گوگل.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <Laptop className="h-4 w-4 text-amber-300" />
-                <span>توسعه‌دهندگان سازمانی (Copilot Studio)</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                طراحی ربات‌ها و دستیارهای اتوماسیون سازمانی روی داده‌های محلی شرکت بدون نیاز به کدنویسی.
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Users className="h-4 w-4 text-amber-400" />
+                تیم‌های متکی به اکوسیستم گوگل
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                اتوماسیون سریع اداری با خلاصه خودکار ایمیل‌های جیمیل، استخراج اکشن‌آیتم‌ها از داکس و تهیه گزارش‌های مستمر در گوگل درایو.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* تب ۳: مزایای نسخه اختصاصی نسبت به نسخه رایگان */}
+      {/* 3. Comparison Table */}
       {activeTab === "comparison" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Layers className="h-5 w-5 text-primary" />
-              جدول مقایسه: Copilot Pro در برابر نسخه عادی کوپایلوت
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
+              <Layers className="h-5 w-5 text-cyan-400" />
+              مقایسه نسخه رایگان گوگل با Gemini Advanced وایچ
             </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              تفاوت دسترسی‌های اداری و هوش مصنوعی در پلن پرو:
+            <p className="text-xs text-muted-foreground">
+              بررسی تفاوت‌های پنجره کانتکست، مدل‌های استدلالی و Project Astra
             </p>
           </div>
 
-          <div className="overflow-x-auto rounded-3xl border border-border/80 bg-card/50 shadow-sm">
+          <div className="overflow-x-auto rounded-2xl border border-border/80 bg-secondary/20">
             <table className="w-full text-right text-xs sm:text-sm">
-              <thead>
-                <tr className="border-b border-border/80 bg-secondary/50 text-foreground font-bold">
-                  <th className="p-3.5 sm:p-4">ویژگی</th>
-                  <th className="p-3.5 sm:p-4 text-emerald-400 font-black">Copilot Pro (VAICH)</th>
-                  <th className="p-3.5 sm:p-4 text-muted-foreground font-medium">نسخه عادی وب</th>
+              <thead className="border-b border-border/80 bg-secondary/60 text-muted-foreground">
+                <tr>
+                  <th className="p-3.5 sm:p-4 font-bold text-foreground">شاخص</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-muted-foreground">نسخه رایگان (Free)</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-primary">Gemini Advanced (VAICH)</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border/60 text-muted-foreground">
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">ادغام داخل Word, Excel, PowerPoint, Outlook</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">فعال با دسترسی مستقیم و فراخوانی ایجنت‌ها با agent@</td>
-                  <td className="p-3.5 sm:p-4">غیرفعال (فقط در محیط وب کار می‌کند)</td>
+              <tbody className="divide-y divide-border/60">
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">دسترسی به Gemini 4 Argon</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground flex items-center gap-1.5"><X className="h-4 w-4 text-rose-500" /> مسدود</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400 flex items-center gap-1.5"><Check className="h-4 w-4" /> فعال با خروجی ۱ میلیون توکن</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل‌های هوش مصنوعی فعال</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">OpenAI GPT-5.6 + Claude Sonnet 5</td>
-                  <td className="p-3.5 sm:p-4">مدل پایه با سقف محدود</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">لایه چندوجهی Project Astra</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">غیرفعال</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">درک زنده دوربین و مکالمه زیر ۳۰۰ms</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">دستیار Cowork و اتوماسیون محلی Edge</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">اجرای خودکار کارهای مرورگر و فرم‌ها</td>
-                  <td className="p-3.5 sm:p-4">غیرفعال</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">اندازه پنجره متنی (Context Window)</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">۳۲ هزار توکن معمولی</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">۲ میلیون توکن پایدار (بزرگ‌ترین جهان)</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مهارت‌های Markdown در OneDrive / SharePoint</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">ساخت Personal Skills تکرارپذیر سازمانی</td>
-                  <td className="p-3.5 sm:p-4">غیرفعال</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل تحلیل استدلال عمیق Deep Think</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground flex items-center gap-1.5"><X className="h-4 w-4 text-rose-500" /> غیرفعال</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400 flex items-center gap-1.5"><Check className="h-4 w-4" /> فعال برای داده‌کاوی و ریاضیات</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">استودیوی بدون کد Copilot Studio</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">ساخت ربات‌های اختصاصی بدون کدنویسی</td>
-                  <td className="p-3.5 sm:p-4">نیازمند لایسنس مجزای انترپرایز</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">پلتفرم علمی NotebookLM</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">سهمیه بسیار محدود پادکست</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">دسترسی وسیع برای تولید Audio Overviews</td>
+                </tr>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مزیت طرح ۱۸ ماهه وایچ</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">عدم امکان خرید بلندمدت</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">تخفیف اقتصادی بیش از ۹۰٪ و مصونیت از تورم ارز</td>
                 </tr>
               </tbody>
             </table>
@@ -1458,145 +966,90 @@ function CopilotDetailContent({
         </div>
       )}
 
-      {/* تب ۴: نحوه تحویل، فعال‌سازی و گارانتی سلامت اکانت */}
+      {/* 4. Delivery */}
       {activeTab === "delivery" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-emerald-400" />
-              مراحل تحویل قانونی و ضمانت سلامت اکانت
-            </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              اشتراک مایکروسافت کوپایلوت پرو به صورت رسمی بر روی اکانت شخصی شما شارژ شده و تمام اسناد آفیس شما محفوظ می‌ماند.
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۱
-              </div>
-              <h4 className="text-sm font-bold text-foreground">فعال‌سازی روی حساب مایکروسافت</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                لینک یا فعال‌سازی مستقیم بر روی ایمیل شما با لایسنس رسمی بدون ریسک مسدودی.
+        <div className="space-y-4">
+          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-emerald-400" />
+            تحویل فوری، گارانتی و تضمین سلامت اکانت
+          </h3>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                تحویل سریع ظرف ۱۵ الی ۶۰ دقیقه
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                اطلاعات اکانت و راهنمای کامل اتصال پایدار بلافاصله پس از ثبت سفارش در تلگرام به شما تحویل داده می‌شود.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۲
-              </div>
-              <h4 className="text-sm font-bold text-foreground">همگام‌سازی فوری در آفیس ۳۶۵</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                آیکون کوپایلوت بلافاصله در نرم‌افزارهای ورد، اکسل و پاورپوینت شما فعال می‌شود.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۳
-              </div>
-              <h4 className="text-sm font-bold text-foreground">گارانتی سلامت ۳۰ روزه</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                پوشش کامل تعویض و رفع مشکل در تمام طول دوره همراه با پشتیبانی تلگرام.
+            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Award className="h-4 w-4 text-amber-400" />
+                گارانتی کامل سلامت در طول کل دوره
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                پلن ۶۰ روزه و پلن ۱۸ ماهه دارای گارانتی کامل سلامت و تعویض فوری در تمام طول دوره هستند.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* تب ۵: جدول مشخصات سریع و پرسش‌های متداول (FAQ با Accordion) */}
+      {/* 5. FAQ */}
       {activeTab === "faq" && (
-        <div className="space-y-8">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Zap className="h-5 w-5 text-amber-300" />
-              جدول مشخصات سریع Microsoft Copilot Pro
-            </h3>
-            <div className="overflow-x-auto rounded-3xl border border-border/80 bg-card/50 shadow-sm">
-              <table className="w-full text-right text-xs sm:text-sm">
-                <tbody className="divide-y divide-border/60">
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground w-1/3">شرکت توسعه‌دهنده</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">Microsoft (مایکروسافت)</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">مدل‌های پردازشی ادغام‌شده</td>
-                    <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">OpenAI GPT-5.6 + Claude Sonnet 5</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">سازگاری نرم‌افزاری</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">Word, Excel, PowerPoint, Outlook, OneNote و مرورگر Microsoft Edge</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">ابزارهای اختصاصی</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">دستیار Cowork، مهارت‌های Personal Skills، فراخوانی agent@ و استودیوی Copilot Studio</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">مدت اعتبار و پشتیبانی</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">۱ ماهه قانونی با گارانتی سلامت ۱۰۰٪ و پشتیبانی تلگرام</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <HelpCircle className="h-5 w-5 text-primary" />
-              پرسش‌های متداول خریداران Copilot Pro
-            </h3>
-
-            <div className="space-y-3">
-              {[
-                {
-                  q: "چگونه ایجنت‌ها را در ورد یا اکسل فراخوانی کنیم؟",
-                  a: "کافی است در کادر چت کوپایلوت داخل سند خود عبارت agent@ را بنویسید تا لیست ایجنت‌های تخصصی برای تحلیل داده یا نگارش باز شود.",
-                },
-                {
-                  q: "قابلیت Personal Skills چیست؟",
-                  a: "شما می‌توانید مهارت‌های تکرارپذیر خود را در قالب فایل‌های استاندارد Markdown روی وان‌درایو ذخیره کنید تا کوپایلوت همان فرآیند را روی سایر اسناد به صورت خودکار تکرار کند.",
-                },
-                {
-                  q: "آیا برای استفاده نیاز به لایسنس Microsoft 365 داریم؟",
-                  a: "برای فعال‌سازی آیکون‌های داخلی در ورد و اکسل، داشتن یک حساب فعال مایکروسافت ۳۶۵ مورد نیاز است؛ در صورت نیاز تیم پشتیبانی وایچ راهنمای کامل را ارائه می‌دهد.",
-                },
-              ].map((faq, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-2xl border border-border/80 bg-secondary/30 overflow-hidden transition-all"
-                >
-                  <button
-                    type="button"
-                    onClick={() => toggleFaq(idx)}
-                    className="w-full flex items-center justify-between p-4 text-right font-bold text-xs sm:text-sm text-foreground hover:text-primary transition-colors cursor-pointer select-none"
-                  >
-                    <span>{faq.q}</span>
-                    <ChevronDown
-                      className={cn(
-                        "h-4 w-4 shrink-0 transition-transform duration-200 text-muted-foreground",
-                        openFaqIndex === idx && "rotate-180 text-primary"
-                      )}
-                    />
-                  </button>
-                  {openFaqIndex === idx && (
-                    <div className="px-4 pb-4 pt-1 text-xs leading-6 text-muted-foreground border-t border-border/40">
-                      {faq.a}
-                    </div>
+        <div className="space-y-3">
+          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2 mb-4">
+            <HelpCircle className="h-5 w-5 text-primary" />
+            پرسش‌های متداول درباره Gemini Advanced
+          </h3>
+          {[
+            {
+              q: "چرا پلن ۱۸ ماهه جمینای تا این حد اقتصادی است؟",
+              a: "طرح ۱۸ ماهه وایچ به دلیل تخصیص کردیت‌های رسمی و پارتنرشیپ بین‌المللی با بیش از ۹۰٪ تخفیف ارائه می‌شود و شما را تا ۱.۵ سال از نوسانات ارز و تمدید ماهانه بی‌نیاز می‌کند.",
+            },
+            {
+              q: "پنجره متنی ۲ میلیون توکنی چه کاربردی دارد؟",
+              a: "این پنجره به شما اجازه می‌دهد کتاب‌های قطور، کل کدهای یک پروژه یا یک فایل ویدیویی ۱ ساعته را در چت بارگذاری کنید تا هوش مصنوعی کل آن را در یک ثانیه تحلیل و پاسخ دهد.",
+            },
+            {
+              q: "آیا برای استفاده از جمینای نیاز به ابزار تغییر آی‌پی است؟",
+              a: "بله، به دلیل تحریم‌های شرکت گوگل علیه ایران، نیاز به یک ابزار پایدار است؛ اما اکانت به هیچ وجه مسدود یا بن نمی‌شود.",
+            },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className="rounded-2xl border border-border/80 bg-secondary/20 overflow-hidden transition-all"
+            >
+              <button
+                onClick={() => toggleFaq(idx)}
+                className="w-full flex items-center justify-between p-4 text-right text-xs sm:text-sm font-bold text-foreground hover:bg-secondary/40 transition-colors"
+              >
+                <span>{item.q}</span>
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 text-muted-foreground shrink-0 transition-transform duration-300",
+                    openFaqIndex === idx && "rotate-180 text-primary"
                   )}
+                />
+              </button>
+              {openFaqIndex === idx && (
+                <div className="px-4 pb-4 pt-1 text-xs leading-6 text-muted-foreground border-t border-border/50">
+                  {item.a}
                 </div>
-              ))}
+              )}
             </div>
-          </div>
+          ))}
         </div>
       )}
     </div>
   );
 }
 
-// =========================================================================
-// ۵. جزئیات محصول پلنر مدیریت و سبک زندگی هوشمند VAICH (گوگل شیت)
-// =========================================================================
+/* =========================================================================
+   VAICH Life Planner (Google Sheets)
+   ========================================================================= */
 function PlannerDetailContent({
   product,
   activeTab,
@@ -1606,191 +1059,170 @@ function PlannerDetailContent({
   product: Product;
   activeTab: TabKey;
   openFaqIndex: number | null;
-  toggleFaq: (idx: number) => void;
+  toggleFaq: (i: number) => void;
 }) {
   return (
-    <div className="space-y-8">
-      {/* تب ۱: ویژگی‌ها و مشخصات فنی رسمی */}
+    <div className="space-y-6">
+      {/* 1. Features */}
       {activeTab === "features" && (
         <div className="space-y-6">
-          <div className="space-y-3">
+          <div className="space-y-2">
             <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Cpu className="h-5 w-5 text-primary" />
-              داشبورد هوشمند دیجیتال بر بستر گوگل شیت (Google Sheets)
+              <CalendarCheck className="h-5 w-5 text-emerald-400" />
+              داشبوردها و ویژگی‌های فنی پلنر مدیریت و سبک زندگی VAICH
             </h3>
             <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              پلنر هوشمند مدیریت فردی و عادات وایچ، نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script است؛ بدون نیاز به پرداخت ماهانه یا شارژ دوره، با سازگاری کامل روی گوشی، تبلت و لپ‌تاپ.
+              پلنر هوشمند وایچ یک نرم‌افزار مدیریت فردی کامل، سبک و پایدار مبتنی بر فرمول‌های پیشرفته Google Sheets و کدهای اتوماسیون Apps Script است که یک‌بار خریداری می‌شود و برای همیشه بدون هزینه اشتراک ماهانه در اختیار شما قرار می‌گیرد.
             </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-primary/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 text-primary">
+            <div className="rounded-3xl border border-emerald-500/40 bg-emerald-500/5 p-5 space-y-2.5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
                 <Flame className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">ردیاب عادات مینیمال (Habit Tracker)</h4>
+              <h4 className="text-sm font-bold text-foreground">ردیاب عادات (Habit Tracker)</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                ثبت زنجیره استمرار روزانه (Streak) با نمودار درصد موفقیت خودکار و پاداش بصری جهت پایبندی پایدار به عادت‌های کلیدی.
+                ثبت زنجیره پیوستگی عادات (Streak) همراه با محاسبه خودکار درصد موفقیت ماهانه و پاداش‌های بصری انگیزشی.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-emerald-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 text-primary">
                 <Clock className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">زمان‌بندی روزانه بر پایه Time Boxing</h4>
+              <h4 className="text-sm font-bold text-foreground">زمان‌بندی Time Boxing</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                ساخت بلاک‌های تمرکز کاری و تفکیک اولویت‌ها طبق ماتریس آیزنهاور برای غلبه بر خستگی تصمیم‌گیری و تعلل روزانه.
+                تفکیک بلوک‌های تمرکز عمیق کاری و اولویت‌بندی وظایف بر اساس ماتریس ۴ گانه آیزنهاور جهت خاموش کردن استرس.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-purple-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
                 <DollarSign className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">بودجه‌بندی و هوش مالی فردی</h4>
+              <h4 className="text-sm font-bold text-foreground">داشبورد هوش مالی فردی</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                ثبت دقیق تراکنش‌ها، نمودار مخارج دسته‌بندی‌شده، محاسبه نرخ پس‌انداز ماهانه و مدیریت هزینه‌های ضروری و غیرضروری.
+                ثبت تراکنش‌های درآمد و هزینه، دسته‌بندی خودکار مخارج و محاسبه هوشمند پس‌انداز ماهانه بدون نیاز به نرم‌افزار حسابداری.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-blue-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400">
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
                 <Target className="h-5 w-5" />
               </div>
               <h4 className="text-sm font-bold text-foreground">پیگیری اهداف و OKR سالانه</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                تبدیل چشم‌اندازهای بزرگ زندگی به نتایج کلیدی سنجش‌پذیر (Key Results) با نوارهای گرافیکی پویای پیشرفت.
+                شکستن اهداف کلان به نتایج کلیدی فصلی (Key Results) با نوارهای پیشرفت گرافیکی و پایش مستمر.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-amber-400/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-400/10 border border-amber-400/20 text-amber-300">
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
+                <Layers3 className="h-5 w-5" />
+              </div>
+              <h4 className="text-sm font-bold text-foreground">۲ تمپلیت سه‌بعدی و دوبعدی</h4>
+              <p className="text-xs leading-6 text-muted-foreground">
+                شامل هر دو نسخه لوکس تعاملی سه‌بعدی (3D Deluxe) و نسخه استاندارد مینیمال ۲بعدی مطابق با هر سلیقه.
+              </p>
+            </div>
+
+            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400">
                 <Smartphone className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">سازگاری کامل موبایل و آفلاین</h4>
+              <h4 className="text-sm font-bold text-foreground">همگام‌سازی ابری روی موبایل و لپ‌تاپ</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                باز شدن بدون لگ در گوشی، تبلت و لپ‌تاپ از طریق برنامه گوگل شیت با قابلیت علامت‌گذاری آفلاین و سینک خودکار.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-rose-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400">
-                <Lock className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">دسترسی دائمی و مادام‌العمر (بدون اشتراک)</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                یک‌بار خرید و دسترسی همیشگی در گوگل درایو شخصی؛ بدون نیاز به تمدید سالانه، بدون هزینه مخفی و کاملاً ایمن و خصوصی.
+                اجرای روان و سریع در اپلیکیشن رایگان Google Sheets روی اندروید، iOS، تبلت و کامپیوتر بدون کوچک‌ترین تاخیر.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* تب ۲: موارد استفاده تخصصی */}
+      {/* 2. Usecases */}
       {activeTab === "usecases" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Briefcase className="h-5 w-5 text-emerald-400" />
-              چه کسانی بیشترین بهره را از پلنر وایچ می‌برند؟
-            </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              طراحی ماژولار پلنر برای پاسخ به نیازهای طیف وسیعی از افراد پرمشغله مهندسی شده است:
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <GraduationCap className="h-4 w-4 text-primary" />
-                <span>داوطلبان کنکور و دانشجویان دانشگاهی</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                ثبت ساعات مطالعه هفتگی، ردیابی حل تست و مرور فواصل تکرار فاصله‌دار (Spaced Repetition) با نمودارهای خودکار.
+        <div className="space-y-4">
+          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
+            <Compass className="h-5 w-5 text-primary" />
+            این پلنر مناسب چه کسانی است؟
+          </h3>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-1.5">
+              <h4 className="text-sm font-bold text-foreground">فریلنسرها و شاغلین دورکار</h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                مدیریت پروژه‌ها، جلوگیری از فرسودگی شغلی با بلاک‌های تمرکز کاری و تفکیک زندگی شخصی از کار.
               </p>
             </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <Laptop className="h-4 w-4 text-emerald-400" />
-                <span>فریلنسرها، برنامه‌نویسان و دورکاران</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                مدیریت پروژه‌های همزمان با Time Boxing، پیگیری ددلاین‌ها و ثبت درآمد و فاکتورهای کاری در داشبورد مالی.
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-1.5">
+              <h4 className="text-sm font-bold text-foreground">دانشجویان و داوطلبان آزمون‌ها</h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                برنامه‌ریزی ساعات مطالعه، ثبت مداوم تست‌زنی و حفظ انگیزه با زنجیره پیشرفت روزانه.
               </p>
             </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <Flame className="h-4 w-4 text-purple-400" />
-                <span>علاقه‌مندان به روتین‌سازی و بهبود فردی</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                پایبندی به ورزش، مطالعه روزانه، مصرف آب و سحرخیزی با استفاده از قانون «هرگز دو بار متوالی جا نینداز».
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-1.5">
+              <h4 className="text-sm font-bold text-foreground">افرادی که از اپلیکیشن‌های پیچیده خسته شده‌اند</h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                تجربه مینیمال، بدون منوهای تودرتو و بدون اصطکاک ورود به کار؛ همه‌چیز در یک نگاه روبه‌روی شماست.
               </p>
             </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5">
-              <div className="flex items-center gap-2 font-bold text-foreground text-sm">
-                <DollarSign className="h-4 w-4 text-amber-300" />
-                <span>افراد متمایل به شفافیت و انضباط مالی</span>
-              </div>
-              <p className="text-xs leading-6 text-muted-foreground">
-                شناسایی نشتی‌های مالی، هدف‌گذاری پس‌انداز ماهانه و گزارش‌گیری خودکار از دخل‌وخرج شخصی بدون نیاز به نرم‌افزارهای پیچیده حسابداری.
+            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-1.5">
+              <h4 className="text-sm font-bold text-foreground">علاقه‌مندان به انضباط مالی</h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                رهایی از غافلگیری‌های مالی پایان ماه با پایش لحظه‌ای دخل و خرج و پس‌انداز هدفمند.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* تب ۳: مزایای نسخه اختصاصی نسبت به نسخه رایگان */}
+      {/* 3. Comparison Table */}
       {activeTab === "comparison" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Layers className="h-5 w-5 text-primary" />
-              جدول مقایسه: پلنر دیجیتال وایچ در برابر اپلیکیشن‌های پیچیده و دفاتر کاغذی
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
+              <Layers className="h-5 w-5 text-cyan-400" />
+              مقایسه پلنر هوشمند گوگل شیت با دفاتر کاغذی و اپلیکیشن‌ها
             </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              چرا بیش از ۹۰٪ پلنرهای کاغذی یا نرم‌افزارهای پیچیده پس از ۲ هفته رها می‌شوند؟
+            <p className="text-xs text-muted-foreground">
+              چرا گوگل شیت بهترین بستر برای مدیریت طولانی‌مدت عادات است؟
             </p>
           </div>
 
-          <div className="overflow-x-auto rounded-3xl border border-border/80 bg-card/50 shadow-sm">
+          <div className="overflow-x-auto rounded-2xl border border-border/80 bg-secondary/20">
             <table className="w-full text-right text-xs sm:text-sm">
-              <thead>
-                <tr className="border-b border-border/80 bg-secondary/50 text-foreground font-bold">
-                  <th className="p-3.5 sm:p-4">معیار مقایسه</th>
-                  <th className="p-3.5 sm:p-4 text-emerald-400 font-black">پلنر گوگل شیت VAICH</th>
-                  <th className="p-3.5 sm:p-4 text-muted-foreground font-medium">اپ‌های خارجی (Notion/Todoist)</th>
-                  <th className="p-3.5 sm:p-4 text-muted-foreground font-medium">دفاتر کاغذی سنتی</th>
+              <thead className="border-b border-border/80 bg-secondary/60 text-muted-foreground">
+                <tr>
+                  <th className="p-3.5 sm:p-4 font-bold text-foreground">معیار</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-muted-foreground">دفاتر کاغذی</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-muted-foreground">اپلیکیشن‌های خارجی</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-emerald-400">پلنر هوشمند VAICH</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border/60 text-muted-foreground">
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">هزینه و نوع پرداخت</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">یک‌بار پرداخت ۲۹۹ هزار تومان (مادام‌العمر)</td>
-                  <td className="p-3.5 sm:p-4">اشتراک ماهانه دلاری سنگین</td>
-                  <td className="p-3.5 sm:p-4">خرید مکرر در هر فصل و سال</td>
+              <tbody className="divide-y divide-border/60">
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">هزینه و شارژ</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">خرید مداوم دفتر جدید</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">اشتراک ماهانه ارزی دلاری</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">یک‌بار خرید مادام‌العمر</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">محاسبه خودکار آمار و Streak</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">نمودار پویای درصد و استمرار روزانه خودکار</td>
-                  <td className="p-3.5 sm:p-4">نیازمند فرمول‌نویسی دستی</td>
-                  <td className="p-3.5 sm:p-4">غیرممکن (محاسبه دستی با ماشین‌حساب)</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">محاسبه خودکار آمار</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground"><X className="h-4 w-4 text-rose-500" /> دستی و زمان‌بر</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground"><Check className="h-4 w-4" /> خودکار</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400"><Check className="h-4 w-4" /> خودکار با فرمول‌های پیشرفته</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">سادگی و عدم حواس‌پرتی</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">رابط کاربری تمیز بر پایه Time Boxing بدون منوهای گیج‌کننده</td>
-                  <td className="p-3.5 sm:p-4">منوهای بیش از حد تو در تو و فرسایش ذهن</td>
-                  <td className="p-3.5 sm:p-4">ساده اما بدون تحلیل آماری</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">همگام‌سازی بین دستگاه‌ها</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground"><X className="h-4 w-4 text-rose-500" /> غیرممکن</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground"><Check className="h-4 w-4" /> نیازمند اینترنت سریع</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400"><Check className="h-4 w-4" /> کلود امن سرورهای گوگل</td>
                 </tr>
-                <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">دسترسی چنددیوایسی و پشتیبان‌گیری</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">فضای ابری دائمی در گوگل درایو شخصی (گوشی و لپ‌تاپ)</td>
-                  <td className="p-3.5 sm:p-4">وابسته به سرورهای پلتفرم</td>
-                  <td className="p-3.5 sm:p-4">خطر گم شدن، خط‌خوردگی یا خیس شدن</td>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">خستگی تصمیم‌گیری</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">متوسط</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground text-rose-400">بسیار بالا به دلیل منوهای تو در تو</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">صفر (فقط تسک بعدی را انجام دهید)</td>
                 </tr>
               </tbody>
             </table>
@@ -1798,142 +1230,81 @@ function PlannerDetailContent({
         </div>
       )}
 
-      {/* تب ۴: نحوه تحویل، فعال‌سازی و گارانتی سلامت اکانت */}
+      {/* 4. Delivery */}
       {activeTab === "delivery" && (
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-emerald-400" />
-              تحویل آنی لینک کپی و راهنمای راه‌اندازی
-            </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              فایل پلنر بلافاصله پس از ثبت سفارش در اختیار شما قرار می‌گیرد:
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۱
-              </div>
-              <h4 className="text-sm font-bold text-foreground">دریافت آنی لینک اختصاصی</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                بلافاصله پس از پرداخت موفق، لینک کپی مستقیم تمپلیت گوگل شیت نمایش داده شده و به تلگرام ارسال می‌شود.
+        <div className="space-y-4">
+          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-emerald-400" />
+            نحوه دریافت و تحویل آنی فایل
+          </h3>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                تحویل ۱ ثانیه‌ای پس از پرداخت
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                لینک کپی مستقیم (Make a copy) در گوگل درایو بلافاصله پس از پرداخت به همراه راهنمای ویدیویی و صوتی برای شما نمایش داده می‌شود.
               </p>
             </div>
 
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۲
-              </div>
-              <h4 className="text-sm font-bold text-foreground">کپی یک‌کلیکی در درایو شخصی</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                با کلیک روی گزینه Make a Copy، نسخه ۱۰۰٪ اختصاصی فایل وارد فضای ابری Google Drive خودتان می‌شود.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-3 text-center">
-              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/20 text-primary font-black text-sm">
-                ۳
-              </div>
-              <h4 className="text-sm font-bold text-foreground">پشتیبانی و راهنمای گام‌به‌گام</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                شامل ویس و ویدیو راهنمای سریع راه‌اندازی روی موبایل و دسکتاپ به همراه پشتیبانی تلگرام وایچ.
+            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Award className="h-4 w-4 text-amber-400" />
+                پشتیبانی اختصاصی راه‌اندازی
+              </h4>
+              <p className="text-xs text-muted-foreground leading-6">
+                در صورت هرگونه سوال در کپی فایل یا نحوه استفاده در موبایل، تیم پشتیبانی تلگرام وایچ در کمتر از چند دقیقه شما را راهنمایی خواهد کرد.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* تب ۵: جدول مشخصات سریع و پرسش‌های متداول (FAQ با Accordion) */}
+      {/* 5. FAQ */}
       {activeTab === "faq" && (
-        <div className="space-y-8">
-          {/* جدول مشخصات سریع */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Zap className="h-5 w-5 text-amber-300" />
-              جدول مشخصات سریع پلنر وایچ
-            </h3>
-            <div className="overflow-x-auto rounded-3xl border border-border/80 bg-card/50 shadow-sm">
-              <table className="w-full text-right text-xs sm:text-sm">
-                <tbody className="divide-y divide-border/60">
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground w-1/3">پلتفرم اجرایی</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">Google Sheets (بدون نیاز به نصب اکسل یا آفیس)</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">نسخه‌های موجود در پکیج</td>
-                    <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">شامل ۲ قالب: نسخه سه‌بعدی لوکس (3D Deluxe) + نسخه ۲بعدی مینیمال استاندارد</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">ماژول‌های کلیدی</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">ردیاب عادات (Streak)، تایم باکسینگ آیزنهاور، بودجه‌بندی مالی، اهداف سالانه OKR</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">سازگاری دستگاه‌ها</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">اندروید، iOS (آیفون/آیپد)، ویندوز، مک و لینوکس</td>
-                  </tr>
-                  <tr className="hover:bg-secondary/20 transition-colors">
-                    <td className="p-3.5 sm:p-4 font-bold text-foreground">مدت اعتبار و دسترسی</td>
-                    <td className="p-3.5 sm:p-4 text-muted-foreground">لایسنس مادام‌العمر و دائمی (یک‌بار خرید بدون هزینه اشتراک)</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* پرسش‌های متداول (Accordion) */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <HelpCircle className="h-5 w-5 text-primary" />
-              پرسش‌های متداول خریداران پلنر وایچ
-            </h3>
-
-            <div className="space-y-3">
-              {[
-                {
-                  q: "آیا برای استفاده از پلنر باید به اکسل یا مهارت کار با شیت مسلط باشم؟",
-                  a: "خیر؛ تمام فرمول‌ها و محاسبات به صورت ۱۰۰٪ خودکار از پیش کدنویسی شده‌اند. شما فقط تیک عادات روزانه را می‌زنید یا اعداد مالی را وارد می‌کنید و سیستم بلافاصله نمودارها را رسم می‌کند.",
-                },
-                {
-                  q: "چگونه پلنر را روی گوشی موبایل شبیه به یک اپلیکیشن اجرا کنم؟",
-                  a: "کافی است فایل را در اپلیکیشن رایگان Google Sheets باز کرده و گزینه Add to Home Screen را بزنید تا یک آیکون اختصاصی روی صفحه گوشی شما قرار گیرد و با یک لمس باز شود.",
-                },
-                {
-                  q: "آیا اطلاعات شخصی و محرمانه من برای سازنده قابل مشاهده است؟",
-                  a: "خیر؛ با کلیک روی لینک، یک کپی مستقل به حساب شخصی گوگل درایو شما منتقل می‌شود و هیچ شخص ثالثی دسترسی به شیت یا داده‌های شما نخواهد داشت.",
-                },
-                {
-                  q: "آیا در سال‌های آینده هم می‌توانم از این فایل استفاده کنم؟",
-                  a: "بله؛ این پلنر یک بار برای همیشه خریداری می‌شود و با پاک کردن داده‌های سال قبل یا کپی مجدد از تمپلیت، می‌توانید سال‌های متوالی از آن استفاده کنید.",
-                },
-              ].map((faq, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-2xl border border-border/80 bg-secondary/30 overflow-hidden transition-all"
-                >
-                  <button
-                    type="button"
-                    onClick={() => toggleFaq(idx)}
-                    className="w-full flex items-center justify-between p-4 text-right font-bold text-xs sm:text-sm text-foreground hover:text-primary transition-colors cursor-pointer select-none"
-                  >
-                    <span>{faq.q}</span>
-                    <ChevronDown
-                      className={cn(
-                        "h-4 w-4 shrink-0 transition-transform duration-200 text-muted-foreground",
-                        openFaqIndex === idx && "rotate-180 text-primary"
-                      )}
-                    />
-                  </button>
-                  {openFaqIndex === idx && (
-                    <div className="px-4 pb-4 pt-1 text-xs leading-6 text-muted-foreground border-t border-border/40">
-                      {faq.a}
-                    </div>
+        <div className="space-y-3">
+          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2 mb-4">
+            <HelpCircle className="h-5 w-5 text-primary" />
+            پرسش‌های متداول درباره پلنر وایچ
+          </h3>
+          {[
+            {
+              q: "آیا برای استفاده نیاز به نصب اکسل یا آفیس دارم؟",
+              a: "خیر، این پلنر به‌صورت اختصاصی برای برنامه رایگان Google Sheets طراحی شده و با هر جیمیل فعالی در مرورگر، گوشی اندروید یا آیفون باز می‌شود.",
+            },
+            {
+              q: "آیا نیاز به پرداخت اشتراک ماهانه است؟",
+              a: "خیر، با یک‌بار خرید، فایل برای همیشه در گوگل درایو شخصی شما ذخیره شده و هیچ‌گونه هزینه تمدید دوره‌ای ندارد.",
+            },
+            {
+              q: "اگر فرمولی دستکاری شود چه اتفاقی می‌افتد؟",
+              a: "لینک فایل اصلی همیشه در دسترس شماست و می‌توانید هر زمان که بخواهید یک نسخه تمیز و جدید از شیت کپی کنید. همچنین کلید هوشمند پاکسازی ماه جدید نیز در فایل تعبیه شده است.",
+            },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className="rounded-2xl border border-border/80 bg-secondary/20 overflow-hidden transition-all"
+            >
+              <button
+                onClick={() => toggleFaq(idx)}
+                className="w-full flex items-center justify-between p-4 text-right text-xs sm:text-sm font-bold text-foreground hover:bg-secondary/40 transition-colors"
+              >
+                <span>{item.q}</span>
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 text-muted-foreground shrink-0 transition-transform duration-300",
+                    openFaqIndex === idx && "rotate-180 text-primary"
                   )}
+                />
+              </button>
+              {openFaqIndex === idx && (
+                <div className="px-4 pb-4 pt-1 text-xs leading-6 text-muted-foreground border-t border-border/50">
+                  {item.a}
                 </div>
-              ))}
+              )}
             </div>
-          </div>
+          ))}
         </div>
       )}
     </div>
