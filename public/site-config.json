@@ -227,7 +227,7 @@
       "name": "Gemini Pro",
       "price": 160000,
       "duration": "60 روزه",
-      "description": "اشتراک قانونی Gemini Pro به مدت ۶۰ روز با دسترسی به مدل‌های پیشرفته نسل Gemini 2.0 Pro و 2.0 Flash Thinking، دستیار پژوهشی خودکار Deep Research، کانتکست ۲ میلیون توکن و NotebookLM.",
+      "description": "اشتراک قانونی هوش مصنوعی Gemini Pro به مدت ۶۰ روز با دسترسی به مدل‌های 1.5 Pro و 2.0 Flash، کانتکست ۲ میلیون توکن و نوت‌بوک ال‌ام.",
       "featured": false,
       "badgeColor": "purple",
       "categoryId": "ai",
@@ -315,7 +315,7 @@
       "originalPrice": 4700000,
       "discountPercent": 91,
       "duration": "۱۸ ماهه",
-      "description": "اشتراک ۱۸ ماهه اقتصادی و پایدار Gemini Pro مجهز به نسل پرچم‌دار Gemini 2.0 Pro، دستیار پژوهشی Deep Research، کانتکست ۲ میلیون توکن و نوت‌بوک ال‌ام با ۹۱٪ تخفیف ویژه.",
+      "description": "اشتراک ۱۸ ماهه اقتصادی Gemini Pro با پنجره متنی ۲ میلیون توکن، مدل‌های استدلالی عمیق، NotebookLM و پشتیبانی طولانی‌مدت.",
       "isLifetime": false,
       "featured": true,
       "badge": "ویژه",
@@ -448,7 +448,7 @@
       "name": "ChatGPT Plus",
       "price": 5350000,
       "duration": "۱ ماهه",
-      "description": "اشتراک قانونی و ۱۰۰٪ اختصاصی ChatGPT Plus روی ایمیل شخصی؛ دسترسی به مدل‌های استدلال پیشرفته OpenAI o3 و o3-mini (با قابلیت تنظیم سطح تفکر Reasoning Effort)، مدل o1، پرچم‌دار GPT-4o، حالت صوتی زنده و بوم Canvas.",
+      "description": "اشتراک قانونی و ۱۰۰٪ اختصاصی ChatGPT Plus روی ایمیل شخصی شما؛ دسترسی به GPT-4o، مدل‌های o1 و o3-mini، حالت صوتی زنده و Canvas.",
       "featured": false,
       "categoryId": "ai",
       "inStock": true,
@@ -524,7 +524,7 @@
       "name": "Claude Pro",
       "price": 5450000,
       "duration": "۱ ماهه",
-      "description": "اشتراک قانونی و ۱۰۰٪ اختصاصی Claude Pro روی ایمیل شخصی؛ دسترسی به اولین مدل استدلال هیبریدی تاریخ Claude 3.7 Sonnet (با Extended Thinking Mode)، Claude 3.5 Sonnet، ابزار مهندسی Claude Code CLI و بوم زنده Artifacts.",
+      "description": "اشتراک قانونی و اختصاصی Claude Pro روی ایمیل شخصی؛ دسترسی به Claude 3.5 Sonnet و Claude 3.7 Sonnet، محیط تعاملی Artifacts و ادبیات فارسی بی‌رقیب.",
       "featured": false,
       "categoryId": "ai",
       "inStock": true,
@@ -1292,5 +1292,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-05T17:39:21.486Z"
+  "updatedAt": "2026-11-05T17:40:11.361Z"
 }
