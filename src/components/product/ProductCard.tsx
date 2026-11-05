@@ -44,7 +44,7 @@ export function ProductCard({
     blue: "bg-blue-600 text-white",
     amber: "bg-amber-400 text-slate-950 font-black",
   };
-  const badgeClass = (product.badgeColor && badgeColorMap[product.badgeColor]) || badgeColorMap.purple;
+  const badgeClass = (product.badgeColor && badgeColorMap[product.badgeColor]) || badgeColorMap["purple"];
 
   const logoUrl = getProductLogo(product.slug, product.iconUrl);
   const initial = product.slug ? product.slug.charAt(0).toUpperCase() : "AI";

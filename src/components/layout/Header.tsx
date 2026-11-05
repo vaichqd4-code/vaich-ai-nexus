@@ -44,7 +44,7 @@ export function Header() {
   const [categoriesOpen, setCategoriesOpen] = useState(false);
 
   const [mounted, setMounted] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLLIElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const handleOpenCrisp = () => {
     setOpen(false);
@@ -364,7 +364,7 @@ export function Header() {
                         }}
                         className="flex items-center gap-3 p-2 hover:bg-secondary/60 rounded-2xl transition-colors group cursor-pointer"
                       >
-                        <ServiceIcon slug={p.slug} iconUrl={p.iconUrl} className="h-10 w-10 shrink-0 rounded-xl" />
+                        <ServiceIcon slug={p.slug} {...(p.iconUrl ? { iconUrl: p.iconUrl } : {})} className="h-10 w-10 shrink-0 rounded-xl" />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5">
                             <span className="text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate">

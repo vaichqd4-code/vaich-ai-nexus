@@ -9,6 +9,15 @@ export interface AnalyticsEvent {
   title: string;
   path: string;
   timestamp: string;
+  duration?: number;
+  device?: string;
+  customerPhone?: string;
+  customerName?: string;
+  customerEmail?: string;
+  productName?: string;
+  amount?: number;
+  referrer?: string;
+  details?: Record<string, any>;
 }
 
 export function trackEvent(..._args: any[]): void {

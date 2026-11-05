@@ -210,7 +210,7 @@ function ChatGPTDetailContent({
   return (
     <div className="space-y-8">
       {/* تب ۱: ویژگی‌ها و مشخصات فنی رسمی */}
-      {(activeTab === "features" || activeTab === "features") && (
+      {activeTab === "features" && (
         <div className={activeTab !== "features" ? "hidden" : "space-y-6"}>
           <div className="space-y-3">
             <h3 className="text-lg font-black text-foreground flex items-center gap-2">
@@ -569,7 +569,7 @@ function ClaudeDetailContent({
   return (
     <div className="space-y-8">
       {/* تب ۱: ویژگی‌ها و مشخصات فنی رسمی */}
-      {(activeTab === "features" || activeTab === "features") && (
+      {activeTab === "features" && (
         <div className={activeTab !== "features" ? "hidden" : "space-y-6"}>
           <div className="space-y-3">
             <h3 className="text-lg font-black text-foreground flex items-center gap-2">
@@ -919,7 +919,7 @@ function GeminiDetailContent({
   return (
     <div className="space-y-8">
       {/* تب ۱: ویژگی‌ها و مشخصات فنی رسمی */}
-      {(activeTab === "features" || activeTab === "features") && (
+      {activeTab === "features" && (
         <div className={activeTab !== "features" ? "hidden" : "space-y-6"}>
           <div className="space-y-3">
             <h3 className="text-lg font-black text-foreground flex items-center gap-2">
@@ -1275,7 +1275,7 @@ function PlannerDetailContent({
   return (
     <div className="space-y-8">
       {/* تب ۱: ویژگی‌ها و مشخصات فنی رسمی */}
-      {(activeTab === "features" || activeTab === "features") && (
+      {activeTab === "features" && (
         <div className={activeTab !== "features" ? "hidden" : "space-y-6"}>
           <div className="space-y-3">
             <h3 className="text-lg font-black text-foreground flex items-center gap-2">

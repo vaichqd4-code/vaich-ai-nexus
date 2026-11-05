@@ -534,12 +534,15 @@ export function AdminPage() {
     const updated = products.map((p) => {
       if (p.slug === slug) {
         const nextFeatured = !p.featured;
-        return {
-          ...p,
-          featured: nextFeatured,
-          badge: nextFeatured ? (p.badge || "پیشنهاد ویژه 🔥") : undefined,
-          badgeColor: nextFeatured ? (p.badgeColor || "fire") : undefined,
-        };
+        const next = { ...p, featured: nextFeatured };
+        if (nextFeatured) {
+          next.badge = p.badge || "پیشنهاد ویژه";
+          next.badgeColor = p.badgeColor || "fire";
+        } else {
+          delete next.badge;
+          delete next.badgeColor;
+        }
+        return next;
       }
       return p;
     });
@@ -553,12 +556,13 @@ export function AdminPage() {
       if (p.slug === slug) {
         const basePrice = p.originalPrice || p.price;
         if (percent === 0) {
-          return {
+          const next = {
             ...p,
             price: basePrice,
-            originalPrice: undefined,
-            discountPercent: undefined,
           };
+          delete next.originalPrice;
+          delete next.discountPercent;
+          return next;
         }
         const discounted = Math.round((basePrice * (100 - percent)) / 100);
         return {
@@ -850,7 +854,7 @@ export function AdminPage() {
     }
     if (confirm("آیا از حذف این ردیف مطمئن هستید؟ محصولات این ردیف به ردیف اصلی منتقل می‌شوند.")) {
       const updatedRows = rows.filter((r) => r.id !== id);
-      const fallbackId = updatedRows[0].id;
+      const fallbackId = updatedRows[0]?.id || "ai";
       const updatedProducts = products.map((p) =>
         p.categoryId === id ? { ...p, categoryId: fallbackId } : p
       );
@@ -1358,7 +1362,12 @@ export function AdminPage() {
                     >
                       {/* Product Info */}
                       <div className="flex items-center gap-3.5">
-                        <ServiceIcon slug={p.slug} iconUrl={p.iconUrl} imageFit={p.imageFit} className="h-12 w-12" />
+                        <ServiceIcon
+                          slug={p.slug}
+                          {...(p.iconUrl ? { iconUrl: p.iconUrl } : {})}
+                          {...(p.imageFit ? { imageFit: p.imageFit } : {})}
+                          className="h-12 w-12"
+                        />
                         <div>
                           <div className="flex items-center gap-2">
                             <h3 className="font-bold text-foreground">{p.name}</h3>

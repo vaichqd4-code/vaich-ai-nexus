@@ -5,7 +5,7 @@ export type LayoutMode = "1-row" | "2-row" | "grid";
 export type ProductCategoryRow = {
   id: string;
   title: string;
-  subtitle?: string;
+  subtitle?: string | undefined;
 };
 
 export type ProductReview = {
@@ -14,32 +14,32 @@ export type ProductReview = {
   rating: number; // 1 to 5
   comment: string;
   createdAt: string;
-  status?: "approved" | "pending";
-  verified?: boolean; // خریدار تأیید شده
+  status?: ("approved" | "pending") | undefined;
+  verified?: boolean | undefined; // خریدار تأیید شده
 };
 
 export type Product = {
   slug: string;
   name: string;
   price: number;
-  originalPrice?: number;
-  discountPercent?: number;
-  duration?: string;
+  originalPrice?: number | undefined;
+  discountPercent?: number | undefined;
+  duration?: string | undefined;
   description: string;
   purchaseInfo: string[];
-  features?: string[];
-  featured?: boolean;
-  badge?: string;
-  badgeColor?: "fire" | "purple" | "emerald" | "blue" | "amber";
-  categoryId?: string;
-  service?: string;
-  iconUrl?: string;
-  imageFit?: "contain" | "cover";
-  inStock?: boolean; // موجود بودن (پیش‌فرض true، اگر false باشد ناموجود است)
-  isLifetime?: boolean; // نوع دسترسی: دائمی و مادام‌العمر (true) یا اشتراکی زمان‌دار (false)
-  rating?: number; // میانگین امتیاز (مثلاً 4.9)
-  reviewCount?: number; // تعداد کل نظرات
-  reviews?: ProductReview[]; // لیست نظرات ثبت‌شده
+  features?: string[] | undefined;
+  featured?: boolean | undefined;
+  badge?: string | undefined;
+  badgeColor?: ("fire" | "purple" | "emerald" | "blue" | "amber") | undefined;
+  categoryId?: string | undefined;
+  service?: string | undefined;
+  iconUrl?: string | undefined;
+  imageFit?: ("contain" | "cover") | undefined;
+  inStock?: boolean | undefined; // موجود بودن (پیش‌فرض true، اگر false باشد ناموجود است)
+  isLifetime?: boolean | undefined; // نوع دسترسی: دائمی و مادام‌العمر (true) یا اشتراکی زمان‌دار (false)
+  rating?: number | undefined; // میانگین امتیاز (مثلاً 4.9)
+  reviewCount?: number | undefined; // تعداد کل نظرات
+  reviews?: ProductReview[] | undefined; // لیست نظرات ثبت‌شده
 };
 
 export function isProductLifetime(p?: Partial<Product> | null): boolean {
@@ -1033,7 +1033,7 @@ export function encodeUtf8Base64(str: string): string {
     const bytes = new TextEncoder().encode(str);
     let binary = "";
     for (let i = 0; i < bytes.byteLength; i++) {
-      binary += String.fromCharCode(bytes[i]);
+      binary += String.fromCharCode(bytes[i]!);
     }
     return btoa(binary);
   }
@@ -1632,12 +1632,12 @@ export function useDynamicProducts() {
 
     return publishToCloud({
       products: cfg.products,
-      rows: cfg.categoryRows,
-      layout: cfg.layout,
-      adminUsers: cfg.adminUsers,
-      masterPin: cfg.masterPin,
-      promoBanner: cfg.promoBanner,
-      instagramUrl: cfg.instagramUrl,
+      ...(cfg.categoryRows ? { rows: cfg.categoryRows } : {}),
+      ...(cfg.layout ? { layout: cfg.layout } : {}),
+      ...(cfg.adminUsers ? { adminUsers: cfg.adminUsers } : {}),
+      ...(cfg.masterPin ? { masterPin: cfg.masterPin } : {}),
+      ...(cfg.promoBanner ? { promoBanner: cfg.promoBanner } : {}),
+      ...(cfg.instagramUrl ? { instagramUrl: cfg.instagramUrl } : {}),
     });
   };
 
@@ -1735,7 +1735,10 @@ export function normalizePin(str: string): string {
   if (!str) return "";
   let res = str.trim();
   for (let i = 0; i < 10; i++) {
-    res = res.replaceAll(faDigits[i], String(i)).replaceAll(arDigits[i], String(i));
+    const f = faDigits[i];
+    const a = arDigits[i];
+    if (f) res = res.replaceAll(f, String(i));
+    if (a) res = res.replaceAll(a, String(i));
   }
   return res.toLowerCase();
 }

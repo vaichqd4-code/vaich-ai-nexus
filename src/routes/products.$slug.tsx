@@ -170,7 +170,7 @@ function ProductDetail() {
     blue: "bg-blue-600 text-white shadow-blue-600/20",
     amber: "bg-amber-400 text-slate-950 font-black shadow-amber-400/20",
   };
-  const badgeClass = (product.badgeColor && badgeColorMap[product.badgeColor]) || badgeColorMap.purple;
+  const badgeClass = (product.badgeColor && badgeColorMap[product.badgeColor]) || badgeColorMap["purple"];
 
   const isOutOfStock = product.inStock === false;
   const isLifetime = isProductLifetime(product);
@@ -250,8 +250,8 @@ function ProductDetail() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <ServiceIcon
                   slug={product.slug}
-                  iconUrl={product.iconUrl}
-                  imageFit={product.imageFit}
+                  {...(product.iconUrl ? { iconUrl: product.iconUrl } : {})}
+                  {...(product.imageFit ? { imageFit: product.imageFit } : {})}
                   className="h-20 w-20 sm:h-24 sm:w-24 shrink-0 aspect-square rounded-2xl sm:rounded-3xl border border-border/90 shadow-md bg-secondary/60"
                 />
                 <div className="min-w-0 flex-1">

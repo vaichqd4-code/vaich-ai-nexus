@@ -247,7 +247,7 @@ export function OverviewPage() {
         amount: e.amount || 0,
         status: "ثبت‌شده در سایت",
         createdAt: e.timestamp,
-        notes: e.details?.notes,
+        notes: e.details?.["notes"],
       }));
 
     const combined = [...fromServer, ...fromLocal];

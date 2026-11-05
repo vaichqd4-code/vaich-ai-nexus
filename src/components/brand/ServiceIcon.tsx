@@ -36,10 +36,10 @@ export function ServiceIcon({
   imageFit = "contain",
 }: {
   slug: string;
-  iconUrl?: string;
-  className?: string;
-  imgClassName?: string;
-  imageFit?: "contain" | "cover";
+  iconUrl?: string | undefined;
+  className?: string | undefined;
+  imgClassName?: string | undefined;
+  imageFit?: ("contain" | "cover") | undefined;
 }) {
   const logo = getProductLogo(slug, iconUrl);
   const cleanSlug = slug ? slug.replace(/^vaich[-_]?/i, "") : "";
