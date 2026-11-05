@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
 
 export const PRESET_LOGOS: Record<string, string> = {
-  gemini: "/file_000000007ea4822f9eac5c00be6be9eb.png",
-  "gemini-pro": "/file_00000000377481f6b667af886cd18fb6.png",
+  gemini: "/file_000000007ea4822f9eac5c00be6be9eb.png?v=sq2",
+  "gemini-pro": "/file_00000000377481f6b667af886cd18fb6.png?v=sq2",
   chatgpt: "/chatgpt-logo.svg",
   "chatgpt-plus": "/chatgpt-logo.svg",
   "اشتراک chatgpt plus شخصی": "/chatgpt-logo.svg",
@@ -17,8 +17,8 @@ export function getProductLogo(slug: string, iconUrl?: string): string | undefin
     const raw = iconUrl.trim();
     if (raw.includes("Claude-") || raw.toLowerCase().includes("claude")) return "/Claude-.webp?v=sq1";
     if (raw.toLowerCase().includes("copilot")) return "/microsoft-copilot-logo.svg";
-    if (raw.includes("377481f6") || raw.includes("gemini-pro")) return "/file_00000000377481f6b667af886cd18fb6.png";
-    if (raw.includes("7ea4822f") || raw.includes("gemini")) return "/file_000000007ea4822f9eac5c00be6be9eb.png";
+    if (raw.includes("377481f6") || raw.includes("gemini-pro")) return "/file_00000000377481f6b667af886cd18fb6.png?v=sq2";
+    if (raw.includes("7ea4822f") || raw.includes("gemini")) return "/file_000000007ea4822f9eac5c00be6be9eb.png?v=sq2";
     return raw;
   }
   if (!slug) return undefined;
@@ -53,11 +53,15 @@ export function ServiceIcon({
   return (
     <span
       className={cn(
-        "grid h-14 w-14 shrink-0 place-items-center rounded-2xl border border-border/80 bg-linear-to-b from-secondary/70 to-secondary/40 shadow-[0_0_28px_-16px_var(--neon-blue)] transition-all overflow-hidden",
-        imageFit === "cover" ? "p-0" : "p-2",
+        "grid h-14 w-14 shrink-0 place-items-center rounded-2xl sm:rounded-3xl border border-border/80 bg-linear-to-b from-secondary/70 to-secondary/40 shadow-[0_0_28px_-16px_var(--neon-blue)] transition-all overflow-hidden",
+        imageFit === "cover" ? "p-0" : "p-1.5 sm:p-2",
         className,
       )}
-      style={{ clipPath: "inset(0 round 1rem)" }}
+      style={{
+        WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+        maskImage: "radial-gradient(white, black)",
+        transform: "translateZ(0)",
+      }}
     >
       {logo ? (
         <img
@@ -68,11 +72,15 @@ export function ServiceIcon({
           decoding="async"
           className={cn(
             imageFit === "cover"
-              ? "h-full w-full object-cover rounded-2xl"
-              : "max-h-full max-w-full rounded-2xl overflow-hidden object-contain drop-shadow-sm",
+              ? "h-full w-full object-cover rounded-2xl sm:rounded-3xl"
+              : "h-full w-full rounded-2xl sm:rounded-3xl overflow-hidden object-contain drop-shadow-sm",
             imgClassName,
           )}
-          style={{ clipPath: "inset(0 round 0.75rem)" }}
+          style={{
+            WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+            maskImage: "radial-gradient(white, black)",
+            transform: "translateZ(0)",
+          }}
           loading="lazy"
         />
       ) : (

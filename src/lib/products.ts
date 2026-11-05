@@ -382,7 +382,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
         "status": "approved"
       }
     ],
-    "iconUrl": "/file_000000007ea4822f9eac5c00be6be9eb.png"
+    "iconUrl": "/file_000000007ea4822f9eac5c00be6be9eb.png?v=sq2"
   },
   {
     "slug": "gemini-pro",
@@ -519,7 +519,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
         "status": "approved"
       }
     ],
-    "iconUrl": "/file_00000000377481f6b667af886cd18fb6.png"
+    "iconUrl": "/file_00000000377481f6b667af886cd18fb6.png?v=sq2"
   },
   {
     "slug": "اشتراک chatgpt plus شخصی",

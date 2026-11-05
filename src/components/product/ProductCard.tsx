@@ -148,13 +148,21 @@ export function ProductCard({
           ) : (
             /* Standard Product Logo Tile: App-Icon Squircle Frame with border & margin - enlarged */
             <div
-              className="relative flex items-center justify-center p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl bg-secondary/90 border border-border/90 shadow-md group-hover:border-primary/50 group-hover:shadow-primary/10 group-hover:scale-105 transition-all duration-300 w-[88%] h-[88%] max-w-[130px] aspect-square overflow-hidden"
-              style={{ clipPath: "inset(0 round 1.25rem)" }}
+              className="relative flex items-center justify-center p-1.5 sm:p-2 rounded-2xl sm:rounded-3xl bg-secondary/80 border border-border/90 shadow-md group-hover:border-primary/50 group-hover:shadow-primary/10 group-hover:scale-105 transition-all duration-300 h-[82%] sm:h-[86%] aspect-square overflow-hidden"
+              style={{
+                WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+                maskImage: "radial-gradient(white, black)",
+                transform: "translateZ(0)",
+              }}
             >
               {logoUrl ? (
                 <div
                   className="w-full h-full rounded-2xl sm:rounded-3xl overflow-hidden flex items-center justify-center"
-                  style={{ clipPath: "inset(0 round 1rem)" }}
+                  style={{
+                    WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+                    maskImage: "radial-gradient(white, black)",
+                    transform: "translateZ(0)",
+                  }}
                 >
                   <img
                     src={logoUrl}
@@ -163,7 +171,11 @@ export function ProductCard({
                     height={96}
                     decoding="async"
                     className="h-full w-full object-contain rounded-2xl sm:rounded-3xl drop-shadow-sm"
-                    style={{ clipPath: "inset(0 round 1rem)" }}
+                    style={{
+                      WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+                      maskImage: "radial-gradient(white, black)",
+                      transform: "translateZ(0)",
+                    }}
                     loading="lazy"
                   />
                 </div>

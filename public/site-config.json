@@ -309,7 +309,7 @@
           "status": "approved"
         }
       ],
-      "iconUrl": "/file_000000007ea4822f9eac5c00be6be9eb.png"
+      "iconUrl": "/file_000000007ea4822f9eac5c00be6be9eb.png?v=sq2"
     },
     {
       "slug": "gemini-pro",
@@ -446,7 +446,7 @@
           "status": "approved"
         }
       ],
-      "iconUrl": "/file_00000000377481f6b667af886cd18fb6.png"
+      "iconUrl": "/file_00000000377481f6b667af886cd18fb6.png?v=sq2"
     },
     {
       "slug": "اشتراک chatgpt plus شخصی",
@@ -1387,5 +1387,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-05T18:33:58.312Z"
+  "updatedAt": "2026-11-05T19:53:44.652Z"
 }
