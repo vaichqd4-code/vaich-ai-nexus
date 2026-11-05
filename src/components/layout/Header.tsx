@@ -23,7 +23,8 @@ import {
   Moon,
   MessageCircleQuestion,
   Compass,
-  X,
+  Phone,
+  Send,
 } from "lucide-react";
 import { useDynamicProducts, formatPrice, toPersianDigits } from "@/lib/products";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
