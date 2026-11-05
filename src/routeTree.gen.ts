@@ -12,20 +12,20 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as OverviewRouteImport } from './routes/overview'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WhyRouteImport } from './routes/why'
+import { Route as ApiAnalyticsRouteImport } from './routes/api.analytics'
 import { Route as ApiCreateOrderRouteImport } from './routes/api.create-order'
 import { Route as ApiSendReceiptRouteImport } from './routes/api.send-receipt'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as CheckoutSlugRouteImport } from './routes/checkout.$slug'
 import { Route as ProductsIndexRouteImport } from './routes/products.index'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
-import { Route as OverviewRouteImport } from './routes/overview'
-import { Route as ApiAnalyticsRouteImport } from './routes/api.analytics'
 import { Route as ApiPublicTelegramWebhookRouteImport } from './routes/api/public/telegram/webhook'
-import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
-import { Route as BlogIndexRouteImport } from './routes/blog.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,6 +40,11 @@ const AdminRoute = AdminRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OverviewRoute = OverviewRouteImport.update({
+  id: '/overview',
+  path: '/overview',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -62,6 +67,11 @@ const WhyRoute = WhyRouteImport.update({
   path: '/why',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAnalyticsRoute = ApiAnalyticsRouteImport.update({
+  id: '/api/analytics',
+  path: '/api/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiCreateOrderRoute = ApiCreateOrderRouteImport.update({
   id: '/api/create-order',
   path: '/api/create-order',
@@ -70,6 +80,16 @@ const ApiCreateOrderRoute = ApiCreateOrderRouteImport.update({
 const ApiSendReceiptRoute = ApiSendReceiptRouteImport.update({
   id: '/api/send-receipt',
   path: '/api/send-receipt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutSlugRoute = CheckoutSlugRouteImport.update({
@@ -87,90 +107,70 @@ const ProductsSlugRoute = ProductsSlugRouteImport.update({
   path: '/products/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OverviewRoute = OverviewRouteImport.update({
-  id: '/overview',
-  path: '/overview',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAnalyticsRoute = ApiAnalyticsRouteImport.update({
-  id: '/api/analytics',
-  path: '/api/analytics',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiPublicTelegramWebhookRoute =
   ApiPublicTelegramWebhookRouteImport.update({
     id: '/api/public/telegram/webhook',
     path: '/api/public/telegram/webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
-const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/blog/$slug',
-  path: '/blog/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogIndexRoute = BlogIndexRouteImport.update({
-  id: '/blog/',
-  path: '/blog/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/faq': typeof FaqRoute
+  '/overview': typeof OverviewRoute
   '/privacy': typeof PrivacyRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
+  '/api/analytics': typeof ApiAnalyticsRoute
   '/api/create-order': typeof ApiCreateOrderRoute
   '/api/send-receipt': typeof ApiSendReceiptRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
-  '/products/': typeof ProductsIndexRoute
-  '/overview': typeof OverviewRoute
-  '/api/analytics': typeof ApiAnalyticsRoute
-  '/api/public/telegram/webhook': typeof ApiPublicTelegramWebhookRoute
-  '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/products/': typeof ProductsIndexRoute
+  '/api/public/telegram/webhook': typeof ApiPublicTelegramWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/faq': typeof FaqRoute
+  '/overview': typeof OverviewRoute
   '/privacy': typeof PrivacyRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
+  '/api/analytics': typeof ApiAnalyticsRoute
   '/api/create-order': typeof ApiCreateOrderRoute
   '/api/send-receipt': typeof ApiSendReceiptRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
-  '/products': typeof ProductsIndexRoute
-  '/overview': typeof OverviewRoute
-  '/api/analytics': typeof ApiAnalyticsRoute
-  '/api/public/telegram/webhook': typeof ApiPublicTelegramWebhookRoute
-  '/blog/$slug': typeof BlogSlugRoute
   '/blog': typeof BlogIndexRoute
+  '/products': typeof ProductsIndexRoute
+  '/api/public/telegram/webhook': typeof ApiPublicTelegramWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/faq': typeof FaqRoute
+  '/overview': typeof OverviewRoute
   '/privacy': typeof PrivacyRoute
   '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/why': typeof WhyRoute
+  '/api/analytics': typeof ApiAnalyticsRoute
   '/api/create-order': typeof ApiCreateOrderRoute
   '/api/send-receipt': typeof ApiSendReceiptRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
   '/products/$slug': typeof ProductsSlugRoute
-  '/products/': typeof ProductsIndexRoute
-  '/overview': typeof OverviewRoute
-  '/api/analytics': typeof ApiAnalyticsRoute
-  '/api/public/telegram/webhook': typeof ApiPublicTelegramWebhookRoute
-  '/blog/$slug': typeof BlogSlugRoute
   '/blog/': typeof BlogIndexRoute
+  '/products/': typeof ProductsIndexRoute
+  '/api/public/telegram/webhook': typeof ApiPublicTelegramWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -178,78 +178,78 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/faq'
+    | '/overview'
     | '/privacy'
     | '/support'
     | '/terms'
     | '/why'
+    | '/api/analytics'
     | '/api/create-order'
     | '/api/send-receipt'
+    | '/blog/$slug'
     | '/checkout/$slug'
     | '/products/$slug'
-    | '/products/'
-    | '/overview'
-    | '/api/analytics'
-    | '/api/public/telegram/webhook'
-    | '/blog/$slug'
     | '/blog/'
+    | '/products/'
+    | '/api/public/telegram/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/admin'
     | '/faq'
+    | '/overview'
     | '/privacy'
     | '/support'
     | '/terms'
     | '/why'
+    | '/api/analytics'
     | '/api/create-order'
     | '/api/send-receipt'
+    | '/blog/$slug'
     | '/checkout/$slug'
     | '/products/$slug'
-    | '/products'
-    | '/overview'
-    | '/api/analytics'
-    | '/api/public/telegram/webhook'
-    | '/blog/$slug'
     | '/blog'
+    | '/products'
+    | '/api/public/telegram/webhook'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/faq'
+    | '/overview'
     | '/privacy'
     | '/support'
     | '/terms'
     | '/why'
+    | '/api/analytics'
     | '/api/create-order'
     | '/api/send-receipt'
+    | '/blog/$slug'
     | '/checkout/$slug'
     | '/products/$slug'
-    | '/products/'
-    | '/overview'
-    | '/api/analytics'
-    | '/api/public/telegram/webhook'
-    | '/blog/$slug'
     | '/blog/'
+    | '/products/'
+    | '/api/public/telegram/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   FaqRoute: typeof FaqRoute
+  OverviewRoute: typeof OverviewRoute
   PrivacyRoute: typeof PrivacyRoute
   SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
   WhyRoute: typeof WhyRoute
+  ApiAnalyticsRoute: typeof ApiAnalyticsRoute
   ApiCreateOrderRoute: typeof ApiCreateOrderRoute
   ApiSendReceiptRoute: typeof ApiSendReceiptRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   CheckoutSlugRoute: typeof CheckoutSlugRoute
   ProductsSlugRoute: typeof ProductsSlugRoute
-  ProductsIndexRoute: typeof ProductsIndexRoute
-  OverviewRoute: typeof OverviewRoute
-  ApiAnalyticsRoute: typeof ApiAnalyticsRoute
-  ApiPublicTelegramWebhookRoute: typeof ApiPublicTelegramWebhookRoute
-  BlogSlugRoute: typeof BlogSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  ProductsIndexRoute: typeof ProductsIndexRoute
+  ApiPublicTelegramWebhookRoute: typeof ApiPublicTelegramWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -273,6 +273,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/overview': {
+      id: '/overview'
+      path: '/overview'
+      fullPath: '/overview'
+      preLoaderRoute: typeof OverviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -303,6 +310,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WhyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/analytics': {
+      id: '/api/analytics'
+      path: '/api/analytics'
+      fullPath: '/api/analytics'
+      preLoaderRoute: typeof ApiAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/create-order': {
       id: '/api/create-order'
       path: '/api/create-order'
@@ -315,6 +329,20 @@ declare module '@tanstack/react-router' {
       path: '/api/send-receipt'
       fullPath: '/api/send-receipt'
       preLoaderRoute: typeof ApiSendReceiptRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout/$slug': {
@@ -338,39 +366,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/overview': {
-      id: '/overview'
-      path: '/overview'
-      fullPath: '/overview'
-      preLoaderRoute: typeof OverviewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/analytics': {
-      id: '/api/analytics'
-      path: '/api/analytics'
-      fullPath: '/api/analytics'
-      preLoaderRoute: typeof ApiAnalyticsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/public/telegram/webhook': {
       id: '/api/public/telegram/webhook'
       path: '/api/public/telegram/webhook'
       fullPath: '/api/public/telegram/webhook'
       preLoaderRoute: typeof ApiPublicTelegramWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog/$slug': {
-      id: '/blog/$slug'
-      path: '/blog/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog/': {
-      id: '/blog/'
-      path: '/blog'
-      fullPath: '/blog/'
-      preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -380,20 +380,20 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   FaqRoute: FaqRoute,
+  OverviewRoute: OverviewRoute,
   PrivacyRoute: PrivacyRoute,
   SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
   WhyRoute: WhyRoute,
+  ApiAnalyticsRoute: ApiAnalyticsRoute,
   ApiCreateOrderRoute: ApiCreateOrderRoute,
   ApiSendReceiptRoute: ApiSendReceiptRoute,
+  BlogSlugRoute: BlogSlugRoute,
   CheckoutSlugRoute: CheckoutSlugRoute,
   ProductsSlugRoute: ProductsSlugRoute,
-  ProductsIndexRoute: ProductsIndexRoute,
-  OverviewRoute: OverviewRoute,
-  ApiAnalyticsRoute: ApiAnalyticsRoute,
-  ApiPublicTelegramWebhookRoute: ApiPublicTelegramWebhookRoute,
-  BlogSlugRoute: BlogSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
+  ProductsIndexRoute: ProductsIndexRoute,
+  ApiPublicTelegramWebhookRoute: ApiPublicTelegramWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
