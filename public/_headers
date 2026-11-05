@@ -24,6 +24,9 @@
 /site-config.json
   Cache-Control: public, max-age=0, must-revalidate
 
+/blog/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+
 /*.webp
   Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
 

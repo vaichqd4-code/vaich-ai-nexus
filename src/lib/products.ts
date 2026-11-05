@@ -382,7 +382,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
         "status": "approved"
       }
     ],
-    "iconUrl": "/gemini-logo.webp?v=sq1"
+    "iconUrl": "/file_000000007ea4822f9eac5c00be6be9eb.png"
   },
   {
     "slug": "gemini-pro",
@@ -519,7 +519,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
         "status": "approved"
       }
     ],
-    "iconUrl": "/gemini-logo.webp?v=sq1"
+    "iconUrl": "/file_00000000377481f6b667af886cd18fb6.png"
   },
   {
     "slug": "اشتراک chatgpt plus شخصی",

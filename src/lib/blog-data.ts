@@ -58,7 +58,7 @@ export const BLOG_POSTS: BlogPost[] = [
     "publishIsoDate": "2026-11-05T12:00:00+03:30",
     "lastUpdatedDate": "۱۵ آبان ۱۴۰۵",
     "lastUpdatedIsoDate": "2026-11-05T12:00:00+03:30",
-    "coverImage": "/blog/claude-vs-gpt4o.webp",
+    "coverImage": "/blog/ai-models-comparison.webp",
     "targetProductType": "ai",
     "keywords": [
       "Gemini 4 Argon",
@@ -147,7 +147,7 @@ export const BLOG_POSTS: BlogPost[] = [
     "publishIsoDate": "2026-11-05T12:00:00+03:30",
     "lastUpdatedDate": "۱۵ آبان ۱۴۰۵",
     "lastUpdatedIsoDate": "2026-11-05T12:00:00+03:30",
-    "coverImage": "/blog/claude-vs-gpt4o.webp",
+    "coverImage": "/blog/copilot-vs-chatgpt.webp",
     "targetProductType": "ai",
     "keywords": [
       "مایکروسافت کوپایلوت",
@@ -222,7 +222,7 @@ export const BLOG_POSTS: BlogPost[] = [
     "publishIsoDate": "2026-11-05T12:00:00+03:30",
     "lastUpdatedDate": "۱۵ آبان ۱۴۰۵",
     "lastUpdatedIsoDate": "2026-11-05T12:00:00+03:30",
-    "coverImage": "/blog/google-sheets-planner-habits.webp",
+    "coverImage": "/blog/google-sheets-planner.webp",
     "targetProductType": "planner",
     "keywords": [
       "پلنر هوشمند گوگل شیت",
@@ -289,7 +289,7 @@ export const BLOG_POSTS: BlogPost[] = [
     "publishIsoDate": "2026-11-05T12:00:00+03:30",
     "lastUpdatedDate": "۱۵ آبان ۱۴۰۵",
     "lastUpdatedIsoDate": "2026-11-05T12:00:00+03:30",
-    "coverImage": "/blog/gemini-2m-context-window.webp",
+    "coverImage": "/blog/ai-tools-productivity.webp",
     "targetProductType": "ai",
     "keywords": [
       "پنجره زمینه جمینای",
@@ -440,7 +440,7 @@ export const BLOG_POSTS: BlogPost[] = [
     "publishIsoDate": "2024-11-03T09:30:00+03:30",
     "lastUpdatedDate": "۱۵ آبان ۱۴۰۵",
     "lastUpdatedIsoDate": "2026-11-05T12:00:00+03:30",
-    "coverImage": "/blog/study-planning-paper-vs-digital.webp",
+    "coverImage": "/blog/study-planning.webp",
     "targetProductType": "planner",
     "keywords": [
       "برنامه ریزی کنکور",
@@ -511,7 +511,7 @@ export const BLOG_POSTS: BlogPost[] = [
     "publishIsoDate": "2024-11-02T10:00:00+03:30",
     "lastUpdatedDate": "۱۵ آبان ۱۴۰۵",
     "lastUpdatedIsoDate": "2026-11-05T12:00:00+03:30",
-    "coverImage": "/blog/daily-habits-routine.webp",
+    "coverImage": "/blog/daily-habits.webp",
     "targetProductType": "planner",
     "keywords": [
       "عادت های روزانه",
@@ -583,7 +583,7 @@ export const BLOG_POSTS: BlogPost[] = [
     "publishIsoDate": "2024-11-01T11:00:00+03:30",
     "lastUpdatedDate": "۱۵ آبان ۱۴۰۵",
     "lastUpdatedIsoDate": "2026-11-05T12:00:00+03:30",
-    "coverImage": "/blog/habit-tracking-setup.webp",
+    "coverImage": "/blog/habit-tracking.webp",
     "targetProductType": "planner",
     "keywords": [
       "هبیت ترکر",

@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
 
 export const PRESET_LOGOS: Record<string, string> = {
-  gemini: "/gemini-logo.webp?v=sq1",
-  "gemini-pro": "/gemini-pro-logo.webp?v=sq1",
+  gemini: "/file_000000007ea4822f9eac5c00be6be9eb.png",
+  "gemini-pro": "/file_00000000377481f6b667af886cd18fb6.png",
   chatgpt: "/chatgpt-logo.svg",
   "chatgpt-plus": "/chatgpt-logo.svg",
   "اشتراک chatgpt plus شخصی": "/chatgpt-logo.svg",
@@ -16,16 +16,17 @@ export function getProductLogo(slug: string, iconUrl?: string): string | undefin
   if (iconUrl && iconUrl.trim().length > 0) {
     const raw = iconUrl.trim();
     if (raw.includes("Claude-") || raw.toLowerCase().includes("claude")) return "/Claude-.webp?v=sq1";
-    if (raw.includes("gemini-pro")) return "/gemini-pro-logo.webp?v=sq1";
-    if (raw.includes("gemini")) return "/gemini-logo.webp?v=sq1";
     if (raw.toLowerCase().includes("copilot")) return "/microsoft-copilot-logo.svg";
+    if (raw.includes("377481f6") || raw.includes("gemini-pro")) return "/file_00000000377481f6b667af886cd18fb6.png";
+    if (raw.includes("7ea4822f") || raw.includes("gemini")) return "/file_000000007ea4822f9eac5c00be6be9eb.png";
     return raw;
   }
   if (!slug) return undefined;
   if (PRESET_LOGOS[slug]) return PRESET_LOGOS[slug];
 
   const sLower = slug.toLowerCase();
-  if (sLower.includes("gemini")) return PRESET_LOGOS["gemini-pro"];
+  if (sLower === "gemini-pro" || sLower.includes("gemini-pro") || sLower.includes("18")) return PRESET_LOGOS["gemini-pro"];
+  if (sLower === "gemini" || sLower.includes("gemini")) return PRESET_LOGOS["gemini"];
   if (sLower.includes("chatgpt") || sLower.includes("gpt")) return PRESET_LOGOS["chatgpt"];
   if (sLower.includes("claude")) return PRESET_LOGOS["claude"];
   if (sLower.includes("copilot")) return PRESET_LOGOS["copilot"];
