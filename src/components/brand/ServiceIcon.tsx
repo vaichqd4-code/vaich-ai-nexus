@@ -1,21 +1,21 @@
 import { cn } from "@/lib/utils";
 
 export const PRESET_LOGOS: Record<string, string> = {
-  gemini: "/gemini-logo.webp",
-  "gemini-pro": "/gemini-pro-logo.webp",
+  gemini: "/gemini-logo.webp?v=sq1",
+  "gemini-pro": "/gemini-pro-logo.webp?v=sq1",
   chatgpt: "/chatgpt-logo.svg",
   "chatgpt-plus": "/chatgpt-logo.svg",
   "اشتراک chatgpt plus شخصی": "/chatgpt-logo.svg",
-  claude: "/Claude-.webp",
-  "claude-pro": "/Claude-.webp",
+  claude: "/Claude-.webp?v=sq1",
+  "claude-pro": "/Claude-.webp?v=sq1",
 };
 
 export function getProductLogo(slug: string, iconUrl?: string): string | undefined {
   if (iconUrl && iconUrl.trim().length > 0) {
     const raw = iconUrl.trim();
-    if (raw.includes("Claude-") || raw.toLowerCase().includes("claude")) return "/Claude-.webp";
-    if (raw.includes("gemini-pro")) return "/gemini-pro-logo.webp";
-    if (raw.includes("gemini")) return "/gemini-logo.webp";
+    if (raw.includes("Claude-") || raw.toLowerCase().includes("claude")) return "/Claude-.webp?v=sq1";
+    if (raw.includes("gemini-pro")) return "/gemini-pro-logo.webp?v=sq1";
+    if (raw.includes("gemini")) return "/gemini-logo.webp?v=sq1";
     return raw;
   }
   if (!slug) return undefined;
@@ -52,6 +52,7 @@ export function ServiceIcon({
         imageFit === "cover" ? "p-0" : "p-2",
         className,
       )}
+      style={{ clipPath: "inset(0 round 1rem)" }}
     >
       {logo ? (
         <img
@@ -62,10 +63,11 @@ export function ServiceIcon({
           decoding="async"
           className={cn(
             imageFit === "cover"
-              ? "h-full w-full object-cover"
+              ? "h-full w-full object-cover rounded-2xl"
               : "max-h-full max-w-full rounded-2xl overflow-hidden object-contain drop-shadow-sm",
             imgClassName,
           )}
+          style={{ clipPath: "inset(0 round 0.75rem)" }}
           loading="lazy"
         />
       ) : (

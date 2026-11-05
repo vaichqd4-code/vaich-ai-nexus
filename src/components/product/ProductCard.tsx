@@ -147,17 +147,26 @@ export function ProductCard({
             )
           ) : (
             /* Standard Product Logo Tile: App-Icon Squircle Frame with border & margin - enlarged */
-            <div className="relative flex items-center justify-center p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl bg-secondary/90 border border-border/90 shadow-md group-hover:border-primary/50 group-hover:shadow-primary/10 group-hover:scale-105 transition-all duration-300 w-[88%] h-[88%] max-w-[130px] aspect-square overflow-hidden">
+            <div
+              className="relative flex items-center justify-center p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl bg-secondary/90 border border-border/90 shadow-md group-hover:border-primary/50 group-hover:shadow-primary/10 group-hover:scale-105 transition-all duration-300 w-[88%] h-[88%] max-w-[130px] aspect-square overflow-hidden"
+              style={{ clipPath: "inset(0 round 1.25rem)" }}
+            >
               {logoUrl ? (
-                <img
-                  src={logoUrl}
-                  alt={product.name}
-                  width={96}
-                  height={96}
-                  decoding="async"
-                  className="h-full w-full object-contain rounded-2xl sm:rounded-3xl overflow-hidden drop-shadow-sm"
-                  loading="lazy"
-                />
+                <div
+                  className="w-full h-full rounded-2xl sm:rounded-3xl overflow-hidden flex items-center justify-center"
+                  style={{ clipPath: "inset(0 round 1rem)" }}
+                >
+                  <img
+                    src={logoUrl}
+                    alt={product.name}
+                    width={96}
+                    height={96}
+                    decoding="async"
+                    className="h-full w-full object-contain rounded-2xl sm:rounded-3xl drop-shadow-sm"
+                    style={{ clipPath: "inset(0 round 1rem)" }}
+                    loading="lazy"
+                  />
+                </div>
               ) : (
                 <span className="text-xl sm:text-2xl font-black text-primary">
                   {initial}

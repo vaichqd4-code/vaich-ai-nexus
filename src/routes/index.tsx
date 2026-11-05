@@ -7,6 +7,8 @@ import { useDynamicProducts, type LayoutMode, type ProductCategoryRow, type Prod
 import { BlogSection } from "@/components/sections/BlogSection";
 
 // Code splitting below-the-fold landing page sections for 90+ Lighthouse Performance
+const Features = lazy(() => import("@/components/sections/Features").then((m) => ({ default: m.Features })));
+const HowItWorks = lazy(() => import("@/components/sections/HowItWorks").then((m) => ({ default: m.HowItWorks })));
 const Trust = lazy(() => import("@/components/sections/Trust").then((m) => ({ default: m.Trust })));
 const Faq = lazy(() => import("@/components/sections/Faq").then((m) => ({ default: m.Faq })));
 const SupportCta = lazy(() => import("@/components/sections/SupportCta").then((m) => ({ default: m.SupportCta })));
@@ -436,6 +438,8 @@ function BelowFoldSections() {
 
   return (
     <Suspense fallback={<div className="h-16 py-4" />}>
+      <Features />
+      <HowItWorks />
       <Trust />
       <Faq />
       <SupportCta />

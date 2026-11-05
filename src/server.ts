@@ -62,6 +62,9 @@ export default {
       if (isPublicHtml && !normalized.headers.has("Cache-Control")) {
         const newHeaders = new Headers(normalized.headers);
         newHeaders.set("Cache-Control", "public, max-age=0, s-maxage=180, stale-while-revalidate=86400");
+        newHeaders.set("X-Content-Type-Options", "nosniff");
+        newHeaders.set("X-Frame-Options", "SAMEORIGIN");
+        newHeaders.set("Referrer-Policy", "strict-origin-when-cross-origin");
         return new Response(normalized.body, {
           status: normalized.status,
           statusText: normalized.statusText,
