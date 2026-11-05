@@ -227,6 +227,138 @@ export function BlogCoverGraphic({
         </div>
       );
 
+    case "claude-3-5-sonnet-vs-gpt-4o-developers-designers":
+      return (
+        <div
+          className={`relative overflow-hidden bg-gradient-to-br from-neutral-900 via-purple-950/40 to-neutral-950 flex flex-col justify-between p-5 border border-purple-500/25 select-none ${className}`}
+        >
+          <div
+            className="absolute inset-0 opacity-[0.07]"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, #a855f7 1px, transparent 1px), linear-gradient(to bottom, #a855f7 1px, transparent 1px)",
+              backgroundSize: "20px 20px",
+            }}
+          />
+          <div className="absolute -top-12 -right-12 w-36 h-36 bg-purple-500/25 rounded-full blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl" />
+
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-wider uppercase text-purple-400/90 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">
+              CLAUDE 3.5 VS GPT-4O
+            </span>
+            <span className="text-[9px] font-mono text-cyan-300/80">DEV &amp; DESIGN</span>
+          </div>
+
+          <div className="relative z-10 my-auto flex items-center justify-center py-2">
+            <svg viewBox="0 0 160 100" className="w-36 h-24" fill="none">
+              <rect x="25" y="22" width="50" height="56" rx="6" fill="#1e1b4b" fillOpacity="0.6" stroke="#a855f7" strokeWidth="1.5" />
+              <path d="M35 34l8 8-8 8" stroke="#c084fc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <line x1="47" y1="50" x2="63" y2="50" stroke="#e9d5ff" strokeWidth="2" strokeLinecap="round" />
+              
+              <rect x="85" y="22" width="50" height="56" rx="6" fill="#082f49" fillOpacity="0.6" stroke="#06b6d4" strokeWidth="1.5" />
+              <circle cx="110" cy="42" r="12" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3 3" />
+              <path d="M102 58h16M106 64h8" stroke="#7dd3fc" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </div>
+
+          <div className="relative z-10 flex items-center justify-between text-[11px] text-neutral-400 border-t border-purple-500/20 pt-2 font-mono">
+            <span>ARTIFACTS vs CANVAS</span>
+            <span className="text-purple-400 font-bold">2026 BENCHMARK</span>
+          </div>
+        </div>
+      );
+
+    case "how-google-sheets-planner-transforms-habits-goals":
+      return (
+        <div
+          className={`relative overflow-hidden bg-gradient-to-br from-neutral-900 via-emerald-950/40 to-neutral-950 flex flex-col justify-between p-5 border border-emerald-500/25 select-none ${className}`}
+        >
+          <div
+            className="absolute inset-0 opacity-[0.07]"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, #10b981 1px, transparent 1px), linear-gradient(to bottom, #10b981 1px, transparent 1px)",
+              backgroundSize: "20px 20px",
+            }}
+          />
+          <div className="absolute -top-12 -right-12 w-36 h-36 bg-emerald-500/25 rounded-full blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-cyan-500/15 rounded-full blur-2xl" />
+
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-wider uppercase text-emerald-400/90 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+              SMART GOALS &amp; TIME BOXING
+            </span>
+            <span className="text-[9px] font-mono text-emerald-300/80">VAICH SYSTEM</span>
+          </div>
+
+          <div className="relative z-10 my-auto flex items-center justify-center py-2">
+            <svg viewBox="0 0 160 100" className="w-36 h-24" fill="none">
+              <rect x="30" y="20" width="100" height="60" rx="8" fill="#064e3b" fillOpacity="0.4" stroke="#10b981" strokeWidth="1.5" />
+              <line x1="30" y1="36" x2="130" y2="36" stroke="#10b981" strokeWidth="1" strokeOpacity="0.5" />
+              <line x1="62" y1="36" x2="62" y2="80" stroke="#10b981" strokeWidth="1" strokeOpacity="0.5" />
+              <line x1="96" y1="36" x2="96" y2="80" stroke="#10b981" strokeWidth="1" strokeOpacity="0.5" />
+              
+              <rect x="40" y="44" width="14" height="10" rx="2" fill="#34d399" fillOpacity="0.8" />
+              <rect x="72" y="44" width="14" height="10" rx="2" fill="#34d399" fillOpacity="0.8" />
+              <rect x="106" y="44" width="14" height="10" rx="2" fill="#10b981" fillOpacity="0.4" />
+              
+              <rect x="40" y="60" width="14" height="10" rx="2" fill="#34d399" fillOpacity="0.8" />
+              <rect x="72" y="60" width="14" height="10" rx="2" fill="#34d399" fillOpacity="0.8" />
+              <rect x="106" y="60" width="14" height="10" rx="2" fill="#34d399" fillOpacity="0.8" />
+            </svg>
+          </div>
+
+          <div className="relative z-10 flex items-center justify-between text-[11px] text-neutral-400 border-t border-emerald-500/20 pt-2 font-mono">
+            <span>HABIT LOOP AUTOMATION</span>
+            <span className="text-emerald-400 font-bold">100% FOCUS</span>
+          </div>
+        </div>
+      );
+
+    case "gemini-2-million-context-window-big-data-analysis":
+      return (
+        <div
+          className={`relative overflow-hidden bg-gradient-to-br from-neutral-900 via-blue-950/40 to-neutral-950 flex flex-col justify-between p-5 border border-cyan-500/25 select-none ${className}`}
+        >
+          <div
+            className="absolute inset-0 opacity-[0.07]"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, #06b6d4 1px, transparent 1px), linear-gradient(to bottom, #06b6d4 1px, transparent 1px)",
+              backgroundSize: "20px 20px",
+            }}
+          />
+          <div className="absolute -top-12 -right-12 w-36 h-36 bg-cyan-500/25 rounded-full blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl" />
+
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-wider uppercase text-cyan-400/90 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
+              2M CONTEXT WINDOW
+            </span>
+            <span className="text-[9px] font-mono text-cyan-300/80">BIG DATA AI</span>
+          </div>
+
+          <div className="relative z-10 my-auto flex items-center justify-center py-2">
+            <svg viewBox="0 0 160 100" className="w-36 h-24" fill="none">
+              <circle cx="80" cy="50" r="35" stroke="#06b6d4" strokeWidth="2" strokeDasharray="5 3" />
+              <circle cx="80" cy="50" r="22" stroke="#3b82f6" strokeWidth="2" />
+              <circle cx="80" cy="50" r="8" fill="#a855f7" />
+              
+              <line x1="80" y1="15" x2="80" y2="28" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+              <line x1="80" y1="72" x2="80" y2="85" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+              <line x1="45" y1="50" x2="58" y2="50" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+              <line x1="102" y1="50" x2="115" y2="50" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </div>
+
+          <div className="relative z-10 flex items-center justify-between text-[11px] text-neutral-400 border-t border-cyan-500/20 pt-2 font-mono">
+            <span>GEMINI 1.5 PRO MULTIMODAL</span>
+            <span className="text-cyan-400 font-bold">2,000,000 TOKENS</span>
+          </div>
+        </div>
+      );
+
     case "ai-tools-productivity-study-guide":
     default:
       return (
