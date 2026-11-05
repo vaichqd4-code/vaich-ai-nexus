@@ -389,7 +389,7 @@ export function Header() {
                           <p className="text-[11px] text-muted-foreground truncate">{p.description}</p>
                         </div>
                         <div className="text-left shrink-0">
-                          <span className="text-xs font-black text-primary block">{formatPrice(p.price)}</span>
+                          <span className="text-xs font-black text-primary block">{formatPrice(p?.price || 0)}</span>
                           {p.duration && <span className="text-[10px] text-muted-foreground block">{p.duration}</span>}
                         </div>
                       </Link>
@@ -573,8 +573,8 @@ export function Header() {
 
                 {accordionState.planners && (
                   <div className="px-2.5 pb-2.5 pt-1 border-t border-border/40 space-y-1">
-                    {products
-                      .filter((p) => isProductLifetime(p))
+                    {(products || [])
+                      .filter((p) => p && isProductLifetime(p))
                       .map((p) => (
                         <Link
                           key={p.slug}
@@ -592,7 +592,7 @@ export function Header() {
                             </span>
                           </div>
                           <span className="text-[11px] font-black text-emerald-400 shrink-0">
-                            {formatPrice(p.price)}
+                            {formatPrice(p?.price || 0)}
                           </span>
                         </Link>
                       ))}
@@ -651,8 +651,8 @@ export function Header() {
 
                 {accordionState.ai && (
                   <div className="px-2.5 pb-2.5 pt-1 border-t border-border/40 space-y-1">
-                    {products
-                      .filter((p) => !isProductLifetime(p))
+                    {(products || [])
+                      .filter((p) => p && !isProductLifetime(p))
                       .map((p) => (
                         <Link
                           key={p.slug}
@@ -719,7 +719,7 @@ export function Header() {
 
                 {accordionState.blog && (
                   <div className="px-2.5 pb-2.5 pt-1 border-t border-border/40 space-y-1">
-                    {BLOG_POSTS.slice(0, 4).map((post) => (
+                    {(BLOG_POSTS || []).slice(0, 4).map((post) => (
                       <Link
                         key={post.slug}
                         to="/blog/$slug"

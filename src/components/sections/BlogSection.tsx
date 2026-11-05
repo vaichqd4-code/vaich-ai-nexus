@@ -1,12 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { useRef } from "react";
 import { Section } from "@/components/layout/Section";
-import { useBlogPosts } from "@/lib/blog-data";
+import { useBlogPosts, BLOG_POSTS } from "@/lib/blog-data";
 import { BlogCoverGraphic } from "@/components/blog/BlogCoverGraphic";
 import { Clock, ArrowLeft, ChevronRight, ChevronLeft, BookOpen } from "lucide-react";
 
 export function BlogSection() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const posts = useBlogPosts();
+  const postList = posts && posts.length > 0 ? posts : BLOG_POSTS;
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollContainerRef.current) return;
@@ -62,7 +64,7 @@ export function BlogSection() {
           WebkitOverflowScrolling: "touch",
         }}
       >
-        {posts.map((post) => (
+        {postList.map((post) => (
           <article
             key={post.slug}
             style={{ scrollSnapAlign: "start" }}
