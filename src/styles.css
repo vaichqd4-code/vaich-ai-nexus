@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
 
 /* ==========================================================================
    SELF-HOSTED VAZIRMATN VARIABLE FONT (ZERO-FLASH / ULTRA-FAST EDGE DELIVERY)
@@ -345,6 +346,58 @@
   background-color: var(--background) !important;
   color: #f8fafc !important;
   color: var(--foreground) !important;
+}
+
+/* ==========================================================================
+   HIGH-CONTRAST HUMAN-CENTRIC BLOG TYPOGRAPHY (PERFECT READABILITY IN LIGHT & DARK)
+   ========================================================================== */
+.blog-article-body {
+  color: var(--color-foreground);
+}
+
+[data-theme="light"] .blog-article-body,
+:root:not(.dark) .blog-article-body {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .blog-article-body p,
+:root:not(.dark) .blog-article-body p {
+  color: #1e293b !important;
+  font-weight: 450;
+  line-height: 2.1;
+}
+
+[data-theme="light"] .blog-article-body h2,
+:root:not(.dark) .blog-article-body h2 {
+  color: #0f172a !important;
+  font-weight: 800;
+}
+
+[data-theme="light"] .blog-article-body li,
+:root:not(.dark) .blog-article-body li {
+  color: #1e293b !important;
+}
+
+[data-theme="dark"] .blog-article-body,
+.dark .blog-article-body {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .blog-article-body p,
+.dark .blog-article-body p {
+  color: #e2e8f0 !important;
+  line-height: 2.1;
+}
+
+[data-theme="dark"] .blog-article-body h2,
+.dark .blog-article-body h2 {
+  color: #f8fafc !important;
+  font-weight: 800;
+}
+
+[data-theme="dark"] .blog-article-body li,
+.dark .blog-article-body li {
+  color: #e2e8f0 !important;
 }
 
 /* =========================

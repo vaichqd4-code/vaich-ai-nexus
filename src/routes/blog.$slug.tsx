@@ -153,7 +153,7 @@ function BlogPostPage() {
             {post.title}
           </h1>
 
-          <p className="text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed pt-1 font-medium">
+          <p className="text-sm sm:text-base text-slate-900 dark:text-slate-100 leading-relaxed pt-1 font-medium">
             {post.excerpt}
           </p>
         </header>
@@ -177,7 +177,7 @@ function BlogPostPage() {
         </div>
 
         {/* Article Body with High Readability Contrast */}
-        <article className="space-y-10 leading-relaxed text-sm sm:text-base">
+        <article className="blog-article-body space-y-10 leading-relaxed text-sm sm:text-base">
           {post.sections.map((section, idx) => (
             <section key={idx} className="space-y-4">
               <h2 className="text-lg sm:text-xl font-bold text-foreground border-r-4 border-primary pr-3 flex items-center gap-2">
@@ -232,7 +232,7 @@ function BlogPostPage() {
               <Sparkles className="h-5 w-5 text-primary" />
               <span>{post.conclusion.heading}</span>
             </h3>
-            <p className="text-sm text-slate-800 dark:text-slate-200 leading-relaxed">
+            <p className="text-sm text-slate-900 dark:text-slate-100 leading-relaxed">
               {post.conclusion.text}
             </p>
           </div>

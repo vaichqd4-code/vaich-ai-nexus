@@ -2171,6 +2171,26 @@ export function AdminPage() {
               </div>
             )}
 
+            {/* Quick Stats Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-2xs">
+                <span className="text-xs text-muted-foreground font-medium block">کل مقالات منتشرشده</span>
+                <span className="text-xl font-black text-foreground mt-1 block">{toPersianDigits(blogPosts.length)} مقاله</span>
+              </div>
+              <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-2xs">
+                <span className="text-xs text-muted-foreground font-medium block">راهنماهای هوش مصنوعی</span>
+                <span className="text-xl font-black text-purple-400 mt-1 block">
+                  {toPersianDigits(blogPosts.filter(p => p.targetProductType === "ai").length)} مقاله تخصصی
+                </span>
+              </div>
+              <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-2xs">
+                <span className="text-xs text-muted-foreground font-medium block">پلنرهای دیجیتال و بهره‌وری</span>
+                <span className="text-xl font-black text-emerald-400 mt-1 block">
+                  {toPersianDigits(blogPosts.filter(p => p.targetProductType === "planner").length)} مقاله تخصصی
+                </span>
+              </div>
+            </div>
+
             {/* Articles Table */}
             <div className="overflow-hidden rounded-3xl border border-border/80 bg-card shadow-sm">
               <div className="overflow-x-auto">
