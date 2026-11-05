@@ -466,10 +466,80 @@ export const BLOG_POSTS: BlogPost[] = [
   }
 ];
 
+export const BLOG_STORAGE_KEY = "vaich_blog_posts";
+
+export function getStoredBlogPosts(): BlogPost[] {
+  if (typeof window === "undefined") {
+    return BLOG_POSTS;
+  }
+  try {
+    const raw = localStorage.getItem(BLOG_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch (e) {
+    console.error("Failed to parse stored blog posts", e);
+  }
+  return BLOG_POSTS;
+}
+
+export function saveStoredBlogPosts(posts: BlogPost[]): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(BLOG_STORAGE_KEY, JSON.stringify(posts));
+    window.dispatchEvent(new CustomEvent("vaich_blog_updated", { detail: posts }));
+  } catch (e) {
+    console.error("Failed to save stored blog posts", e);
+  }
+}
+
+export function useBlogPosts(): BlogPost[] {
+  const [posts, setPosts] = useState<BlogPost[]>(() => {
+    if (typeof window === "undefined") return BLOG_POSTS;
+    return getStoredBlogPosts();
+  });
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setPosts(getStoredBlogPosts());
+    };
+    window.addEventListener("vaich_blog_updated", handleUpdate);
+    window.addEventListener("storage", handleUpdate);
+    return () => {
+      window.removeEventListener("vaich_blog_updated", handleUpdate);
+      window.removeEventListener("storage", handleUpdate);
+    };
+  }, []);
+
+  return posts;
+}
+
 export function getBlogPostBySlug(slug: string): BlogPost | undefined {
-  return BLOG_POSTS.find((p) => p.slug === slug);
+  if (!slug) return undefined;
+  let decoded = "";
+  try {
+    decoded = decodeURIComponent(slug).trim().toLowerCase();
+  } catch {
+    decoded = slug.trim().toLowerCase();
+  }
+  const raw = slug.trim().toLowerCase();
+  const posts = getStoredBlogPosts();
+  return posts.find((p) => {
+    const pSlug = p.slug.trim().toLowerCase();
+    return pSlug === decoded || pSlug === raw || encodeURIComponent(p.slug) === slug;
+  });
 }
 
 export function getRelatedBlogPosts(currentSlug: string, limit: number = 3): BlogPost[] {
-  return BLOG_POSTS.filter((p) => p.slug !== currentSlug).slice(0, limit);
+  const posts = getStoredBlogPosts();
+  let decoded = "";
+  try {
+    decoded = decodeURIComponent(currentSlug).trim().toLowerCase();
+  } catch {
+    decoded = currentSlug.trim().toLowerCase();
+  }
+  return posts.filter((p) => p.slug.toLowerCase() !== decoded).slice(0, limit);
 }
