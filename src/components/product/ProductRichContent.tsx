@@ -215,12 +215,10 @@ function ChatGPTDetailContent({
           <div className="space-y-3">
             <h3 className="text-lg font-black text-foreground flex items-center gap-2">
               <Cpu className="h-5 w-5 text-primary" />
-              مشخصات فنی و هسته پردازشی ChatGPT Plus (OpenAI)
+              مشخصات فنی، هسته پردازشی و مدل‌های رسمی ChatGPT Plus (OpenAI)
             </h3>
             <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              اشتراک قانونی ChatGPT Plus مجهز به آخرین معماری‌های هوش مصنوعی شرکت OpenAI است؛ از جمله مدل چندرسانه‌ای
-              پرچم‌دار <strong>GPT-4o</strong> و مدل‌های استدلال عمیق <strong>o1</strong> و <strong>o1-mini</strong> که
-              با شبیه‌سازی زنجیره تفکر انسانی، پیچیده‌ترین مسائل علمی، المپیادی و معماری سیستم‌های نرم‌افزاری را پردازش می‌کنند.
+              اشتراک قانونی ChatGPT Plus مجهز به آخرین معماری‌های استدلالی و چندرسانه‌ای شرکت OpenAI در سال ۲۰۲۵ و ۲۰۲۶ است؛ از جمله پیشرفته‌ترین مدل استدلال عمیق <strong>OpenAI o3</strong> و مدل فوق‌سریع برنامه‌نویسی <strong>o3-mini</strong> (با قابلیت تنظیم سطح تفکر Reasoning Effort: Medium و High)، مدل استدلال چندحالته <strong>o1</strong>، و پرچم‌دار چندرسانه‌ای <strong>GPT-4o</strong> همراه با دستیار پژوهشی جستجوی زنده وب، بوم تعاملی Canvas و حالت صوتی پیشرفته Advanced Voice Mode.
             </p>
           </div>
 
@@ -229,9 +227,9 @@ function ChatGPTDetailContent({
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 text-primary">
                 <Brain className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">مدل‌های استدلال عمیق o1 و o1-mini</h4>
+              <h4 className="text-sm font-bold text-foreground">مدل‌های پیشگام استدلال o3 و o3-mini</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                تفکر گام‌به‌گام برای حل مسائل پیچیده ریاضی، المپیادی، ساختارهای سنگین کدنویسی و تحلیل منطقی الگوریتم‌ها قبل از ارائه خروجی نهایی.
+                قدرتمندترین مدل‌های استدلالی دنیا با پردازش زنجیره تفکر پنهان؛ مدل o3 برای سنگین‌ترین مسائل علمی و مدل o3-mini با امکان تنظیم سطح تفکر (Reasoning Effort) برای بالاترین بازدهی در کدنویسی رقابتی و ریاضیات.
               </p>
             </div>
 
@@ -369,9 +367,9 @@ function ChatGPTDetailContent({
               </thead>
               <tbody className="divide-y divide-border/60 text-muted-foreground">
                 <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل‌های استدلال عمیق (o1 و o1-mini)</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">فعال با اولویت دسترسی استاندارد</td>
-                  <td className="p-3.5 sm:p-4">غیرفعال یا شدیداً محدود به چند پیام</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل‌های استدلال عمیق (OpenAI o3، o3-mini و o1)</td>
+                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">دسترسی کامل با اولویت پردازش و انتخاب سطح تفکر (Reasoning Effort)</td>
+                  <td className="p-3.5 sm:p-4">غیرفعال یا محدود به دسترسی بسیار پایه</td>
                 </tr>
                 <tr className="hover:bg-secondary/20 transition-colors">
                   <td className="p-3.5 sm:p-4 font-semibold text-foreground">سقف ارسال پیام با مدل GPT-4o</td>
@@ -475,7 +473,7 @@ function ChatGPTDetailContent({
                   </tr>
                   <tr className="hover:bg-secondary/20 transition-colors">
                     <td className="p-3.5 sm:p-4 font-bold text-foreground">مدل‌های فعال</td>
-                    <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">GPT-4o + استدلال عمیق o1 و o1-mini</td>
+                    <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">OpenAI o3 + o3-mini (تنظیم Effort) + o1 + GPT-4o</td>
                   </tr>
                   <tr className="hover:bg-secondary/20 transition-colors">
                     <td className="p-3.5 sm:p-4 font-bold text-foreground">نوع مالکیت و اکانت</td>
@@ -574,12 +572,10 @@ function ClaudeDetailContent({
           <div className="space-y-3">
             <h3 className="text-lg font-black text-foreground flex items-center gap-2">
               <Cpu className="h-5 w-5 text-primary" />
-              مشخصات پردازشی و معماری Claude Pro (Anthropic)
+              مشخصات پردازشی، استدلال هیبریدی و معماری Claude Pro (Anthropic)
             </h3>
             <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              سرویس Claude Pro متعلق به شرکت آمریکایی Anthropic، انتخاب شماره یک مهندسان ارشد نرم‌افزار، توسعه‌دهندگان
-              فرانت‌اند و نویسندگان فاخر فارسی است. این سرویس مجهز به مدل پرچم‌دار <strong>Claude 3.5 Sonnet</strong> (برترین
-              مدل تاریخ در بنچمارک SWE-bench) و مدل پرسرعت <strong>Claude 3.5 Haiku</strong> است.
+              سرویس Claude Pro متعلق به شرکت آمریکایی Anthropic، قله مهندسی هوش مصنوعی در سال ۲۰۲۵ و ۲۰۲۶ است. این سرویس مجهز به اولین مدل استدلال هیبریدی تاریخ <strong>Claude 3.7 Sonnet</strong> است که هم‌زمان به کاربر اجازه می‌دهد بین پاسخگویی آنی استاندارد و حالت تفکر عمیق زنجیره‌ای (<strong>Extended Thinking Mode</strong> تا سقف ۱۲۸,۰۰۰ توکن) سوئیچ کند. همچنین دسترسی به <strong>Claude 3.5 Sonnet</strong>، ابزار مهندسی ترمینال <strong>Claude Code CLI</strong>، و قابلیت عامل‌محور <strong>Computer Use</strong> برای کاربران فراهم است.
             </p>
           </div>
 
@@ -588,9 +584,9 @@ function ClaudeDetailContent({
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 text-primary">
                 <Code className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">صدرنشین بنچمارک مهندسی کد (SWE-bench)</h4>
+              <h4 className="text-sm font-bold text-foreground">استدلال هیبریدی و حالت تفکر پیوسته (Extended Thinking)</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                بالاترین دقت جهان در درک سورس‌کدهای بزرگ، حل باگ‌های گیت‌هاب، بازنویسی توابع و نگارش معماری نرم‌افزاری ماژولار.
+                قابلیت منحصر‌به‌فرد Claude 3.7 Sonnet برای تفکر عمیق قبل از پاسخگویی؛ نمایش شفاف گام‌های تفکر (Visible Chain-of-Thought) با بودجه توکن پردازشی بالا برای حل سخت‌ترین چالش‌های الگوریتمی و معماری نرم‌افزار.
               </p>
             </div>
 
@@ -729,8 +725,8 @@ function ClaudeDetailContent({
               <tbody className="divide-y divide-border/60 text-muted-foreground">
                 <tr className="hover:bg-secondary/20 transition-colors">
                   <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل‌های هوش مصنوعی فعال</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">دسترسی دائمی به Claude 3.5 Sonnet و Haiku</td>
-                  <td className="p-3.5 sm:p-4">سهمیه بسیار کوتاه و سوییچ مکرر به مدل‌های پایه</td>
+                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">دسترسی به Claude 3.7 Sonnet (با Extended Thinking)، Claude 3.5 Sonnet و Claude Code CLI</td>
+                  <td className="p-3.5 sm:p-4">محدود به نسخه پایه بدون حالت تفکر عمیق (Extended Thinking)</td>
                 </tr>
                 <tr className="hover:bg-secondary/20 transition-colors">
                   <td className="p-3.5 sm:p-4 font-semibold text-foreground">سقف ارسال پیام در هر بازه زمانی</td>
@@ -823,7 +819,7 @@ function ClaudeDetailContent({
                   </tr>
                   <tr className="hover:bg-secondary/20 transition-colors">
                     <td className="p-3.5 sm:p-4 font-bold text-foreground">مدل‌های پردازشی</td>
-                    <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">Claude 3.5 Sonnet + Claude 3.5 Haiku</td>
+                    <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">Claude 3.7 Sonnet (استدلال هیبریدی) + Claude 3.5 Sonnet + Claude Code CLI</td>
                   </tr>
                   <tr className="hover:bg-secondary/20 transition-colors">
                     <td className="p-3.5 sm:p-4 font-bold text-foreground">پنجره متنی (Context Window)</td>
@@ -924,12 +920,10 @@ function GeminiDetailContent({
           <div className="space-y-3">
             <h3 className="text-lg font-black text-foreground flex items-center gap-2">
               <Cpu className="h-5 w-5 text-primary" />
-              مشخصات فنی و توان پردازشی Google Gemini Pro
+              مشخصات فنی، نسل Gemini 2.0 و دستیار پژوهشی Deep Research
             </h3>
             <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              سرویس Gemini Pro مجهز به موتور قدرتمند <strong>Gemini 1.5 Pro</strong> با رکورد جهانی پنجره زمینه تا ۲ میلیون
-              توکن است. این سیستم چندوجهی بومی (Native Multimodal) می‌تواند ساعت‌ها ویدیوی باکیفیت، فایل‌های صوتی طولانی،
-              کتاب‌های رفرنس و کدهای پیچیده را به صورت همزمان تحلیل کند.
+              سرویس پیشرفته Google Gemini مجهز به آخرین معماری پرچم‌دار گوگل در سال ۲۰۲۵ و ۲۰۲۶ شامل <strong>Gemini 2.0 Pro</strong> و <strong>Gemini 2.0 Flash Thinking</strong> است. این سرویس مجهز به دستیار خودکار <strong>Deep Research</strong> است که می‌تواند به‌صورت خودکار ده‌ها منبع وب را جستجو، مطالعه و گزارش‌های تحلیلی چندصفحه‌ای با ارجاع دقیق به منابع تدوین کند؛ همراه با پنجره متنی عظیم ۲ میلیون توکنی (۲M Context Window) و پلتفرم پژوهشی صوتی NotebookLM.
             </p>
           </div>
 
@@ -938,9 +932,9 @@ function GeminiDetailContent({
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 text-primary">
                 <Brain className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">کانتکست عظیم ۲ میلیون توکنی</h4>
+              <h4 className="text-sm font-bold text-foreground">دستیار پژوهشی خودکار Deep Research</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                رکورددار پردازش اطلاعات در جهان: توانایی تحلیل ۱ ساعت ویدیوی خام، ساعت‌ها فایل صوتی، کتب ۱۰۰۰ صفحه‌ای و پایگاه‌های داده کدی در یک مکالمه.
+                قابلیت عامل‌محور انحصاری Gemini Advanced برای اجرای تحقیقات چندمرحله‌ای عمیق؛ کاوش در صدها صفحه وب، گردآوری اطلاعات متناقض و تولید گزارش‌های پژوهشی جامع با رفرنس‌های معتبر دانشگاهی و سازمانی.
               </p>
             </div>
 
@@ -1082,9 +1076,9 @@ function GeminiDetailContent({
               </thead>
               <tbody className="divide-y divide-border/60 text-muted-foreground">
                 <tr className="hover:bg-secondary/20 transition-colors">
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل پردازشی هسته</td>
-                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">Gemini 1.5 Pro با استدلال عمیق</td>
-                  <td className="p-3.5 sm:p-4">مدل سبک پایه (Flash)</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل‌های پردازشی و ابزارهای عامل‌محور</td>
+                  <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">Gemini 2.0 Pro + Gemini 2.0 Flash Thinking + دستیار Deep Research</td>
+                  <td className="p-3.5 sm:p-4">مدل سبک پایه بدون قابلیت تحقیق عمیق (Deep Research)</td>
                 </tr>
                 <tr className="hover:bg-secondary/20 transition-colors">
                   <td className="p-3.5 sm:p-4 font-semibold text-foreground">سقف پنجره بافت (Context Window)</td>
@@ -1179,7 +1173,7 @@ function GeminiDetailContent({
                   </tr>
                   <tr className="hover:bg-secondary/20 transition-colors">
                     <td className="p-3.5 sm:p-4 font-bold text-foreground">مدل پردازشی هسته</td>
-                    <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">Gemini 1.5 Pro با کانتکست ۲ میلیون توکن</td>
+                    <td className="p-3.5 sm:p-4 text-emerald-400 font-bold">Gemini 2.0 Pro و 2.0 Flash Thinking + دستیار Deep Research (کانتکست ۲M)</td>
                   </tr>
                   <tr className="hover:bg-secondary/20 transition-colors">
                     <td className="p-3.5 sm:p-4 font-bold text-foreground">پشتیبانی چندرسانه‌ای</td>
