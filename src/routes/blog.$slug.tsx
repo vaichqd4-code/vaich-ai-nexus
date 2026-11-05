@@ -1,18 +1,16 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { getBlogPostBySlug, getRelatedBlogPosts } from "@/lib/blog-data";
+import { BlogCoverGraphic } from "@/components/blog/BlogCoverGraphic";
 import {
   Calendar,
   Clock,
-  User,
   ArrowRight,
-  ArrowLeft,
   CheckCircle2,
   Lightbulb,
   Sparkles,
   Share2,
   BookOpen,
   ShoppingBag,
-  ExternalLink,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -66,7 +64,7 @@ export const Route = createFileRoute("/blog/$slug")({
         { title: `${post.title} | مجله وایچ` },
         { name: "description", content: post.excerpt },
         { name: "keywords", content: post.keywords.join(", ") },
-        { name: "author", content: post.author.name },
+        { name: "author", content: "یونس حیاتی" },
         { property: "og:title", content: post.title },
         { property: "og:description", content: post.excerpt },
         { property: "og:type", content: "article" },
@@ -127,65 +125,46 @@ function BlogPostPage() {
 
         {/* Article Header */}
         <header className="mb-8 space-y-4">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="rounded-full bg-primary/10 border border-primary/25 px-3 py-1 text-xs font-semibold text-primary">
-              {post.category}
-            </span>
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Calendar className="h-3.5 w-3.5" />
-              <span>{post.date}</span>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <span className="rounded-full bg-primary/10 border border-primary/25 px-3 py-0.5 text-xs font-bold text-primary">
+                {post.category}
+              </span>
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Calendar className="h-3.5 w-3.5" />
+                <span>{post.date}</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Clock className="h-3.5 w-3.5" />
+                <span>زمان مطالعه: {post.readTime}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Clock className="h-3.5 w-3.5" />
-              <span>زمان مطالعه: {post.readTime}</span>
-            </div>
+
+            <button
+              onClick={handleShare}
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-secondary/60 hover:bg-secondary px-3 py-1.5 rounded-full transition-colors cursor-pointer"
+            >
+              <Share2 className="h-3.5 w-3.5" />
+              <span>{copied ? "لینک کپی شد" : "اشتراک‌گذاری"}</span>
+            </button>
           </div>
 
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight text-foreground tracking-tight">
             {post.title}
           </h1>
 
-          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed pt-1">
+          <p className="text-sm sm:text-base text-neutral-700 dark:text-slate-200 leading-relaxed pt-1">
             {post.excerpt}
           </p>
-
-          {/* Author info pill & Share */}
-          <div className="pt-3 pb-1 border-t border-b border-border/60 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 shrink-0 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
-                <User className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="text-sm font-bold text-foreground">
-                  {post.author.name}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {post.author.role}
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={handleShare}
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-secondary/60 hover:bg-secondary px-3 py-1.5 rounded-full transition-colors"
-            >
-              <Share2 className="h-3.5 w-3.5" />
-              <span>{copied ? "لینک کپی شد" : "اشتراک‌گذاری"}</span>
-            </button>
-          </div>
         </header>
 
-        {/* Cover Image */}
-        <div className="mb-10 overflow-hidden rounded-3xl border border-border/80 bg-neutral-900 shadow-xl">
-          <img
-            src={post.coverImage}
-            alt={post.title}
-            className="w-full aspect-[16/9] object-cover"
-          />
+        {/* Cover Artwork — Guaranteed 100% Crisp Metallic Visual (No Broken Images) */}
+        <div className="mb-10 overflow-hidden rounded-3xl border border-border/80 bg-neutral-950 shadow-xl aspect-[16/9] w-full">
+          <BlogCoverGraphic slug={post.slug} category={post.category} className="w-full h-full" />
         </div>
 
-        {/* Article Body */}
-        <div className="space-y-10 text-foreground/90 leading-relaxed text-sm sm:text-base">
+        {/* Article Body with High Readability Contrast */}
+        <article className="space-y-10 leading-relaxed text-sm sm:text-base">
           {post.sections.map((section, idx) => (
             <section key={idx} className="space-y-4">
               <h2 className="text-lg sm:text-xl font-bold text-foreground border-r-4 border-primary pr-3 flex items-center gap-2">
@@ -193,18 +172,21 @@ function BlogPostPage() {
               </h2>
 
               {section.paragraphs.map((p, pIdx) => (
-                <p key={pIdx} className="leading-8 text-neutral-700 dark:text-neutral-300">
+                <p
+                  key={pIdx}
+                  className="leading-8 text-neutral-800 dark:text-slate-100 font-normal"
+                >
                   {p}
                 </p>
               ))}
 
               {section.callout && (
-                <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4 sm:p-5 my-4">
+                <div className="rounded-2xl border border-primary/30 bg-primary/10 dark:bg-primary/15 p-4 sm:p-5 my-4">
                   <div className="flex items-center gap-2 font-bold text-primary text-sm sm:text-base mb-1.5">
                     <Lightbulb className="h-5 w-5 text-primary shrink-0" />
                     <span>{section.callout.title}</span>
                   </div>
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-xs sm:text-sm text-neutral-800 dark:text-slate-100 leading-relaxed font-medium">
                     {section.callout.text}
                   </p>
                 </div>
@@ -213,7 +195,10 @@ function BlogPostPage() {
               {section.bulletPoints && section.bulletPoints.length > 0 && (
                 <ul className="space-y-2.5 pt-2">
                   {section.bulletPoints.map((bp, bpIdx) => (
-                    <li key={bpIdx} className="flex items-start gap-2.5 text-xs sm:text-sm">
+                    <li
+                      key={bpIdx}
+                      className="flex items-start gap-2.5 text-xs sm:text-sm text-neutral-800 dark:text-slate-100"
+                    >
                       <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-1" />
                       <span>{bp}</span>
                     </li>
@@ -229,48 +214,28 @@ function BlogPostPage() {
           ))}
 
           {/* Conclusion */}
-          <div className="rounded-3xl border border-border/80 bg-card/60 p-6 sm:p-8 backdrop-blur-md space-y-3">
+          <div className="rounded-3xl border border-border/80 bg-card/70 p-6 sm:p-8 backdrop-blur-md space-y-3">
             <h3 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-primary" />
               <span>{post.conclusion.heading}</span>
             </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
+            <p className="text-sm text-neutral-800 dark:text-slate-200 leading-relaxed">
               {post.conclusion.text}
             </p>
           </div>
-        </div>
+
+          {/* Minimal, Discreet Author Signature as Requested */}
+          <div className="mt-8 pt-4 border-t border-border/50 text-[12px] text-muted-foreground text-center sm:text-right">
+            نویسنده: یونس حیاتی
+          </div>
+        </article>
 
         {/* Bottom CTA Banner */}
         <div className="my-10">
           <ProductRecommendationBanner targetType={post.targetProductType} isFullWidth />
         </div>
 
-        {/* Author Bio Box */}
-        <div className="my-12 rounded-3xl border border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 p-6 sm:p-8 shadow-lg">
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-right">
-            <div className="h-20 w-20 shrink-0 rounded-2xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center text-primary shadow-inner">
-              <User className="h-10 w-10" />
-            </div>
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full border border-primary/20">
-                  درباره نویسنده
-                </span>
-                <h3 className="text-lg font-extrabold text-foreground">
-                  {post.author.name}
-                </h3>
-              </div>
-              <p className="text-xs font-medium text-muted-foreground">
-                {post.author.role}
-              </p>
-              <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed pt-1">
-                {post.author.bio}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Related Articles */}
+        {/* Related Articles Carousel / Grid */}
         {relatedPosts.length > 0 && (
           <div className="my-12 pt-8 border-t border-border/60">
             <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
@@ -286,13 +251,8 @@ function BlogPostPage() {
                   params={{ slug: rPost.slug }}
                   className="group block rounded-2xl border border-border/80 bg-card/60 p-4 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
                 >
-                  <div className="aspect-video w-full overflow-hidden rounded-xl bg-neutral-900 mb-3">
-                    <img
-                      src={rPost.coverImage}
-                      alt={rPost.title}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
+                  <div className="aspect-[16/10] w-full overflow-hidden rounded-xl bg-neutral-950 mb-3">
+                    <BlogCoverGraphic slug={rPost.slug} category={rPost.category} className="w-full h-full" />
                   </div>
                   <span className="text-[11px] font-semibold text-primary">
                     {rPost.category}
@@ -350,7 +310,7 @@ function ProductRecommendationBanner({
                 پلنر جامع و هوشمند گوگل‌شیت وایچ
               </span>
             </div>
-            <p className="text-xs text-muted-foreground max-w-xl leading-relaxed">
+            <p className="text-xs text-neutral-700 dark:text-slate-300 max-w-xl leading-relaxed">
               سیستم ردیابی روزانه، نمودارهای خودکار پیشرفت، فرمول‌های محاسبه عملکرد و دسترسی مادام‌العمر در موبایل و لپ‌تاپ.
             </p>
           </div>
@@ -383,7 +343,7 @@ function ProductRecommendationBanner({
               خرید قانونی اشتراک‌های هوش مصنوعی (ChatGPT, Claude, Gemini)
             </span>
           </div>
-          <p className="text-xs text-muted-foreground max-w-xl leading-relaxed">
+          <p className="text-xs text-neutral-700 dark:text-slate-300 max-w-xl leading-relaxed">
             تحویل آنی، فعال‌سازی مستقیم روی ایمیل شما، ضمانت ۱۰۰٪ و پشتیبانی ۲۴ ساعته متخصصان وایچ.
           </p>
         </div>

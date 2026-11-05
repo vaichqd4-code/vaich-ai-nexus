@@ -42,6 +42,26 @@ export function Header() {
   const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+  const handleOpenCrisp = () => {
+    setOpen(false);
+    if (typeof window !== "undefined") {
+      if ((window as any).loadCrispNow) {
+        (window as any).loadCrispNow();
+      }
+      if ((window as any).$crisp) {
+        (window as any).$crisp.push(["do", "chat:open"]);
+      } else {
+        setTimeout(() => {
+          if ((window as any).$crisp) {
+            (window as any).$crisp.push(["do", "chat:open"]);
+          } else {
+            router.navigate({ to: "/support" });
+          }
+        }, 300);
+      }
+    }
+  };
+
 
   const filteredProducts = searchQuery.trim()
     ? products.filter((p) => {
@@ -505,161 +525,176 @@ export function Header() {
               </button>
             </div>
 
-            {/* Navigation Links — Full Height Scrollable List */}
-            <nav className="flex-1 overflow-y-auto py-3 space-y-5">
-              {/* بخش ۱: خدمات و محصولات ما (داینامیک) */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between px-2 text-xs font-bold text-foreground">
-                  <span className="flex items-center gap-1.5 text-primary">
-                    <ShoppingBag className="h-4 w-4" />
-                    <span>خدمات و محصولات وایچ</span>
+            {/* Navigation Links — Minimal, Linear, BodoCP-Style */}
+            <nav className="flex-1 overflow-y-auto py-2 divide-y divide-border/40">
+              {/* پلنرهای هوشمند دیجیتال */}
+              <a
+                href="/#planners"
+                onClick={(e) => {
+                  setOpen(false);
+                  if (typeof window !== "undefined" && window.location.pathname === "/") {
+                    e.preventDefault();
+                    const el =
+                      document.getElementById("planners") ||
+                      document.getElementById("row-mvampt3r") ||
+                      document.querySelector('[id*="planner"]');
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                    else router.navigate({ to: "/products/$slug", params: { slug: "life-planner-google-sheets" } });
+                  } else {
+                    router.navigate({ to: "/products/$slug", params: { slug: "life-planner-google-sheets" } });
+                  }
+                }}
+                className="group flex items-center justify-between py-3.5 px-2 text-sm font-bold text-foreground transition-all hover:text-primary active:scale-[0.99] cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                    <FileSpreadsheet className="h-4 w-4" />
                   </span>
-                  <span className="text-[10px] text-muted-foreground font-medium">
-                    {toPersianDigits(products.length)} محصول فعال
+                  <div>
+                    <span className="block text-xs font-bold leading-tight group-hover:text-primary transition-colors">
+                      پلنرهای هوشمند دیجیتال
+                    </span>
+                    <span className="block text-[10px] text-muted-foreground font-normal mt-0.5">
+                      پلنر جامع گوگل‌شیت و ردیاب عادات
+                    </span>
+                  </div>
+                </div>
+                <ChevronLeft className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-[-2px] transition-all shrink-0" />
+              </a>
+
+              {/* اشتراک‌های ابزارهای هوش مصنوعی */}
+              <Link
+                to="/products"
+                onClick={() => setOpen(false)}
+                className="group flex items-center justify-between py-3.5 px-2 text-sm font-bold text-foreground transition-all hover:text-primary active:scale-[0.99] cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-primary">
+                    <Sparkles className="h-4 w-4" />
                   </span>
+                  <div>
+                    <span className="block text-xs font-bold leading-tight group-hover:text-primary transition-colors">
+                      اشتراک‌های ابزارهای هوش مصنوعی
+                    </span>
+                    <span className="block text-[10px] text-muted-foreground font-normal mt-0.5">
+                      ChatGPT • Claude Pro • Gemini Pro
+                    </span>
+                  </div>
                 </div>
+                <ChevronLeft className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-[-2px] transition-all shrink-0" />
+              </Link>
 
-                <div className="flex flex-col gap-1 rounded-2xl border border-border/70 bg-secondary/25 p-1.5">
-                  {products.map((p) => {
-                    const isPlanner = p.slug.includes("planner");
-                    return (
-                      <Link
-                        key={p.slug}
-                        to="/products/$slug"
-                        params={{ slug: p.slug }}
-                        onClick={() => setOpen(false)}
-                        className="group flex items-center justify-between gap-2.5 rounded-xl p-2 text-xs font-medium text-foreground transition-all hover:bg-secondary/80 active:scale-[0.99]"
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-card border border-border/70 text-primary">
-                            {isPlanner ? (
-                              <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-400" />
-                            ) : p.slug.includes("gemini") ? (
-                              <Sparkles className="h-3.5 w-3.5 text-purple-400" />
-                            ) : p.slug.includes("claude") ? (
-                              <Cpu className="h-3.5 w-3.5 text-amber-400" />
-                            ) : (
-                              <Bot className="h-3.5 w-3.5 text-neon-blue" />
-                            )}
-                          </div>
-                          <div className="min-w-0">
-                            <span className="block truncate font-bold text-[12px] group-hover:text-primary transition-colors">
-                              {isPlanner ? `خرید ${p.name}` : `خرید اشتراک ${p.name}`}
-                            </span>
-                            <span className="block text-[10px] text-muted-foreground truncate">
-                              {p.duration || (isPlanner ? "دسترسی همیشگی" : "تحویل آنی")}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="shrink-0 text-left">
-                          <span className="text-[11px] font-black text-primary block">
-                            {formatPrice(p.price)}
-                          </span>
-                        </div>
-                      </Link>
-                    );
-                  })}
-
-                  <Link
-                    to="/products"
-                    onClick={() => setOpen(false)}
-                    className="mt-1 flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-border/80 py-2 text-[11px] font-bold text-muted-foreground hover:border-primary/40 hover:text-foreground transition-all"
-                  >
-                    <span>مشاهده کاتالوگ تمام محصولات</span>
-                    <ChevronLeft className="h-3.5 w-3.5" />
-                  </Link>
+              {/* مجله و آموزش‌ها */}
+              <a
+                href="/#blog"
+                onClick={(e) => {
+                  setOpen(false);
+                  if (typeof window !== "undefined" && window.location.pathname === "/") {
+                    e.preventDefault();
+                    const el = document.getElementById("blog");
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                    else router.navigate({ to: "/blog" });
+                  } else {
+                    router.navigate({ to: "/blog" });
+                  }
+                }}
+                className="group flex items-center justify-between py-3.5 px-2 text-sm font-bold text-foreground transition-all hover:text-primary active:scale-[0.99] cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
+                    <BookOpen className="h-4 w-4" />
+                  </span>
+                  <div>
+                    <span className="block text-xs font-bold leading-tight group-hover:text-primary transition-colors">
+                      مجله و آموزش‌ها
+                    </span>
+                    <span className="block text-[10px] text-muted-foreground font-normal mt-0.5">
+                      راهنماهای کاربردی و مقالات تخصصی
+                    </span>
+                  </div>
                 </div>
-              </div>
+                <ChevronLeft className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-[-2px] transition-all shrink-0" />
+              </a>
 
-              {/* بخش ۲: دسترسی سریع، وبلاگ و پشتیبانی */}
-              <div className="space-y-2">
-                <div className="px-2 text-xs font-bold text-foreground flex items-center gap-1.5 text-primary">
-                  <Compass className="h-4 w-4" />
-                  <span>دسترسی سریع و آموزش</span>
+              {/* ارتباط با پشتیبانی */}
+              <button
+                type="button"
+                onClick={handleOpenCrisp}
+                className="w-full group flex items-center justify-between py-3.5 px-2 text-sm font-bold text-foreground transition-all hover:text-primary active:scale-[0.99] cursor-pointer text-right"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-neon-blue/10 border border-neon-blue/20 text-neon-blue">
+                    <Headphones className="h-4 w-4 animate-pulse" />
+                  </span>
+                  <div>
+                    <span className="block text-xs font-bold leading-tight group-hover:text-primary transition-colors">
+                      ارتباط با پشتیبانی
+                    </span>
+                    <span className="block text-[10px] text-muted-foreground font-normal mt-0.5">
+                      پاسخگویی آنلاین ۲۴ ساعته و تحویل فوری
+                    </span>
+                  </div>
                 </div>
-
-                <ul className="flex flex-col gap-1 rounded-2xl border border-border/70 bg-secondary/25 p-1.5">
-                  <li>
-                    <a
-                      href="/#blog"
-                      onClick={(e) => {
-                        setOpen(false);
-                        const el = document.getElementById("blog");
-                        if (el) {
-                          e.preventDefault();
-                          el.scrollIntoView({ behavior: "smooth" });
-                        }
-                      }}
-                      className="flex items-center justify-between rounded-xl px-3 py-2.5 text-xs font-bold text-foreground transition-all hover:bg-secondary/70 hover:text-primary"
-                    >
-                      <span className="flex items-center gap-2">
-                        <BookOpen className="h-4 w-4 text-primary shrink-0" />
-                        <span>مجله و آموزش‌ها (وبلاگ)</span>
-                      </span>
-                      <ChevronLeft className="h-4 w-4 text-muted-foreground/60 shrink-0" />
-                    </a>
-                  </li>
-
-                  <li>
-                    <Link
-                      to="/why"
-                      onClick={() => setOpen(false)}
-                      className="flex items-center justify-between rounded-xl px-3 py-2.5 text-xs font-bold text-foreground transition-all hover:bg-secondary/70 hover:text-primary"
-                    >
-                      <span className="flex items-center gap-2">
-                        <HelpCircle className="h-4 w-4 text-primary shrink-0" />
-                        <span>راهنمای خرید و چرا VAICH</span>
-                      </span>
-                      <ChevronLeft className="h-4 w-4 text-muted-foreground/60 shrink-0" />
-                    </Link>
-                  </li>
-
-                  <li>
-                    <Link
-                      to="/faq"
-                      onClick={() => setOpen(false)}
-                      className="flex items-center justify-between rounded-xl px-3 py-2.5 text-xs font-bold text-foreground transition-all hover:bg-secondary/70 hover:text-primary"
-                    >
-                      <span className="flex items-center gap-2">
-                        <MessageCircleQuestion className="h-4 w-4 text-primary shrink-0" />
-                        <span>سوالات متداول خریداران</span>
-                      </span>
-                      <ChevronLeft className="h-4 w-4 text-muted-foreground/60 shrink-0" />
-                    </Link>
-                  </li>
-
-                  {/* دکمه مجزا و مشخص برای پشتیبانی آنلاین */}
-                  <li className="pt-1">
-                    <Link
-                      to="/support"
-                      onClick={() => setOpen(false)}
-                      className="flex items-center justify-between rounded-xl border border-primary/40 bg-linear-to-r from-primary/15 via-accent/15 to-primary/10 px-3 py-2.5 text-xs font-extrabold text-foreground shadow-xs transition-all hover:border-primary hover:bg-primary/20"
-                    >
-                      <span className="flex items-center gap-2 text-primary">
-                        <Headphones className="h-4 w-4 shrink-0 animate-pulse" />
-                        <span>پشتیبانی آنلاین و مشاوره ۲۴ ساعته</span>
-                      </span>
-                      <span className="rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 text-[9px] font-bold">
-                        پاسخ فوری
-                      </span>
-                    </Link>
-                  </li>
-                </ul>
-              </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[9px] font-bold text-emerald-400">
+                    آنلاین
+                  </span>
+                  <ChevronLeft className="h-4 w-4 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-[-2px] transition-all" />
+                </div>
+              </button>
             </nav>
 
-            {/* Drawer Footer */}
-            <div className="pt-4 border-t border-border/80 flex flex-col gap-3">
-              {/* Theme Switcher inside Drawer */}
-              <div className="flex items-center justify-between rounded-xl border border-border/80 bg-secondary/40 px-3.5 py-2.5">
-                <span className="text-xs font-semibold text-foreground">حالت نمایش:</span>
+            {/* Drawer Footer — Discreet Metallic Support Box */}
+            <div className="pt-3 border-t border-border/70 flex flex-col gap-3">
+              <div className="rounded-2xl border border-border/70 bg-secondary/35 p-3 space-y-2 select-none">
+                <div className="flex items-center justify-between text-[11px] font-bold text-muted-foreground px-0.5">
+                  <span>پشتیبانی اختصاصی وایچ</span>
+                  <span className="flex items-center gap-1 text-[10px] text-emerald-400 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    پاسخگویی فعال
+                  </span>
+                </div>
+
+                <div className="flex flex-col gap-1.5 pt-1 border-t border-border/40">
+                  <a
+                    href="tel:09193872172"
+                    className="flex items-center justify-between rounded-xl px-2 py-1.5 text-xs text-foreground hover:bg-secondary/70 transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                      <span className="font-bold">۰۹۱۹۳۸۷۲۱۷۲</span>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground">تماس مستقیم</span>
+                  </a>
+
+                  <a
+                    href="https://t.me/vaich_ir"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between rounded-xl px-2 py-1.5 text-xs text-foreground hover:bg-secondary/70 transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Send className="h-3.5 w-3.5 text-neon-blue shrink-0" />
+                      <span className="font-bold font-mono">@vaich_ir</span>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground">تلگرام پشتیبانی</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Theme Toggle & Catalog Link */}
+              <div className="flex items-center justify-between pt-0.5 px-0.5">
+                <span className="text-xs text-muted-foreground">حالت نمایش:</span>
                 <button
                   type="button"
                   onClick={toggleTheme}
-                  className="flex items-center gap-1.5 rounded-lg bg-card px-3 py-1.5 text-xs font-bold text-foreground shadow-xs border border-border/70 active:scale-95 transition-all"
+                  className="flex items-center gap-1.5 rounded-xl border border-border/70 bg-card px-3 py-1.5 text-xs font-bold text-foreground shadow-xs active:scale-95 transition-all cursor-pointer"
                 >
-                  {theme === "dark" ? (<span className="flex items-center gap-1.5"><Moon className="h-3.5 w-3.5" />حالت تاریک</span>) : (<span className="flex items-center gap-1.5"><Sun className="h-3.5 w-3.5" />حالت روشن</span>)}
+                  {theme === "dark" ? (
+                    <span className="flex items-center gap-1.5"><Moon className="h-3.5 w-3.5" />حالت تاریک</span>
+                  ) : (
+                    <span className="flex items-center gap-1.5"><Sun className="h-3.5 w-3.5" />حالت روشن</span>
+                  )}
                 </button>
               </div>
 
@@ -669,7 +704,7 @@ export function Header() {
                 size="md"
                 className="w-full text-center py-2.5 font-bold"
               >
-                مشاهده و خرید محصولات
+                مشاهده همه محصولات
               </NeonLink>
             </div>
           </aside>
