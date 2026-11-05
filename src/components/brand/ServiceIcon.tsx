@@ -8,6 +8,8 @@ export const PRESET_LOGOS: Record<string, string> = {
   "اشتراک chatgpt plus شخصی": "/chatgpt-logo.svg",
   claude: "/Claude-.webp?v=sq1",
   "claude-pro": "/Claude-.webp?v=sq1",
+  copilot: "/microsoft-copilot-logo.svg",
+  "microsoft-copilot-pro": "/microsoft-copilot-logo.svg",
 };
 
 export function getProductLogo(slug: string, iconUrl?: string): string | undefined {
@@ -16,6 +18,7 @@ export function getProductLogo(slug: string, iconUrl?: string): string | undefin
     if (raw.includes("Claude-") || raw.toLowerCase().includes("claude")) return "/Claude-.webp?v=sq1";
     if (raw.includes("gemini-pro")) return "/gemini-pro-logo.webp?v=sq1";
     if (raw.includes("gemini")) return "/gemini-logo.webp?v=sq1";
+    if (raw.toLowerCase().includes("copilot")) return "/microsoft-copilot-logo.svg";
     return raw;
   }
   if (!slug) return undefined;
@@ -25,6 +28,7 @@ export function getProductLogo(slug: string, iconUrl?: string): string | undefin
   if (sLower.includes("gemini")) return PRESET_LOGOS["gemini-pro"];
   if (sLower.includes("chatgpt") || sLower.includes("gpt")) return PRESET_LOGOS["chatgpt"];
   if (sLower.includes("claude")) return PRESET_LOGOS["claude"];
+  if (sLower.includes("copilot")) return PRESET_LOGOS["copilot"];
   return undefined;
 }
 

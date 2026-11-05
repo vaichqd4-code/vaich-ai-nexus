@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="100%" height="100%">
+  <defs>
+    <linearGradient id="copilot-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0078D4"/>
+      <stop offset="50%" stop-color="#2B88D8"/>
+      <stop offset="100%" stop-color="#00BCF2"/>
+    </linearGradient>
+    <linearGradient id="copilot-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFB900"/>
+      <stop offset="35%" stop-color="#F25022"/>
+      <stop offset="70%" stop-color="#D83B01"/>
+      <stop offset="100%" stop-color="#E81123"/>
+    </linearGradient>
+    <linearGradient id="copilot-grad-3" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00BCF2"/>
+      <stop offset="40%" stop-color="#0078D4"/>
+      <stop offset="80%" stop-color="#8661C5"/>
+      <stop offset="100%" stop-color="#6B69D6"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <!-- Left loop -->
+    <path d="M12 28.5 C8 24.5 8 18 12.5 13.5 C17 9 23.5 9 27.5 13 L33 18.5 C36 21.5 36 26.5 33 29.5 L24 38.5 C19.5 43 12.5 43 8 38.5 C3.5 34 3.5 27 8 22.5 L14 16.5" 
+          stroke="url(#copilot-grad-1)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Right ribbon -->
+    <path d="M36 19.5 C40 23.5 40 30 35.5 34.5 C31 39 24.5 39 20.5 35 L15 29.5 C12 26.5 12 21.5 15 18.5 L24 9.5 C28.5 5 35.5 5 40 9.5 C44.5 14 44.5 21 40 25.5 L34 31.5" 
+          stroke="url(#copilot-grad-2)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Center overlap blend -->
+    <path d="M19 14.5 L29 24.5 C32 27.5 32 32.5 29 35.5 L26 38.5" 
+          stroke="url(#copilot-grad-3)" stroke-width="5" stroke-linecap="round" opacity="0.85"/>
+  </g>
+</svg>
