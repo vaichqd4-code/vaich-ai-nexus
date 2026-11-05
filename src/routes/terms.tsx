@@ -21,7 +21,7 @@ export const Route = createFileRoute("/terms")({
     ],
   }),
   component: () => (
-    <Section className="aurora" title="📜 قوانین و مقررات خرید VAICH">
+    <Section className="aurora" title="قوانین و مقررات خرید VAICH">
       <div className="glass-panel space-y-6 rounded-4xl p-6 text-sm leading-8 text-muted-foreground sm:p-10">
         <p className="text-xs opacity-70">
           آخرین به‌روزرسانی: ۱۴۰۵/۰۶/۲۹

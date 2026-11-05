@@ -4,7 +4,26 @@ import { createPortal } from "react-dom";
 import { Logo } from "@/components/brand/Logo";
 import { NeonLink } from "@/components/ui/NeonButton";
 import { cn } from "@/lib/utils";
-import { Search, X, ChevronDown, Layers, Sparkles } from "lucide-react";
+import {
+  Search,
+  X,
+  ChevronDown,
+  Layers,
+  Sparkles,
+  ShoppingBag,
+  BookOpen,
+  HelpCircle,
+  Headphones,
+  FileSpreadsheet,
+  Cpu,
+  Bot,
+  Zap,
+  ChevronLeft,
+  Sun,
+  Moon,
+  MessageCircleQuestion,
+  Compass,
+} from "lucide-react";
 import { useDynamicProducts, formatPrice, toPersianDigits } from "@/lib/products";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 
@@ -208,6 +227,22 @@ export function Header() {
                   </div>
                 </div>
               )}
+            </li>
+
+            <li>
+              <a
+                href="/#blog"
+                onClick={(e) => {
+                  const el = document.getElementById("blog");
+                  if (el) {
+                    e.preventDefault();
+                    el.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                className="rounded-full px-3.5 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground font-medium"
+              >
+                مجله و وبلاگ
+              </a>
             </li>
 
             <li>
@@ -471,97 +506,147 @@ export function Header() {
             </div>
 
             {/* Navigation Links — Full Height Scrollable List */}
-            <nav className="flex-1 overflow-y-auto py-4">
-              <ul className="flex flex-col gap-1.5">
-                <li>
-                  <Link
-                    to="/"
-                    onClick={() => {
-                      setOpen(false);
-                      if (typeof window !== "undefined") {
-                        window.scrollTo({ top: 0, behavior: "instant" });
-                      }
-                    }}
-                    activeOptions={{ exact: true }}
-                    className="flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-all hover:bg-secondary/70 hover:text-foreground data-[status=active]:bg-primary/10 data-[status=active]:text-primary data-[status=active]:font-extrabold border border-transparent data-[status=active]:border-primary/20"
-                  >
-                    <span>خانه</span>
-                    <svg viewBox="0 0 24 24" className="h-4 w-4 opacity-50" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </Link>
-                </li>
+            <nav className="flex-1 overflow-y-auto py-3 space-y-5">
+              {/* بخش ۱: خدمات و محصولات ما (داینامیک) */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between px-2 text-xs font-bold text-foreground">
+                  <span className="flex items-center gap-1.5 text-primary">
+                    <ShoppingBag className="h-4 w-4" />
+                    <span>خدمات و محصولات وایچ</span>
+                  </span>
+                  <span className="text-[10px] text-muted-foreground font-medium">
+                    {toPersianDigits(products.length)} محصول فعال
+                  </span>
+                </div>
 
-                {/* دسته بندی ها و سایر محصولات در منوی موبایل */}
-                <li className="rounded-2xl border border-border/70 bg-secondary/30 p-2 my-1">
-                  <div className="flex items-center justify-between px-2 py-1 text-xs font-bold text-foreground">
-                    <span className="flex items-center gap-1.5">
-                      <Layers className="h-3.5 w-3.5 text-primary" />
-                      <span>سایر محصولات و دسته‌ها:</span>
-                    </span>
-                    <span className="text-[10px] text-muted-foreground font-normal">{rows.length} دسته</span>
-                  </div>
-                  <div className="mt-1 flex flex-col gap-1">
-                    {rows.map((row) => (
-                      <a
-                        key={row.id}
-                        href={`/#${row.id}`}
-                        onClick={(e) => {
-                          setOpen(false);
-                          const el = document.getElementById(row.id);
-                          if (el) {
-                            e.preventDefault();
-                            el.scrollIntoView({ behavior: "smooth" });
-                          }
-                        }}
-                        className="flex items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold text-muted-foreground hover:bg-secondary/80 hover:text-foreground transition-all"
+                <div className="flex flex-col gap-1 rounded-2xl border border-border/70 bg-secondary/25 p-1.5">
+                  {products.map((p) => {
+                    const isPlanner = p.slug.includes("planner");
+                    return (
+                      <Link
+                        key={p.slug}
+                        to="/products/$slug"
+                        params={{ slug: p.slug }}
+                        onClick={() => setOpen(false)}
+                        className="group flex items-center justify-between gap-2.5 rounded-xl p-2 text-xs font-medium text-foreground transition-all hover:bg-secondary/80 active:scale-[0.99]"
                       >
-                        <span className="truncate">{row.title}</span>
-                        <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
-                      </a>
-                    ))}
-                  </div>
-                </li>
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-card border border-border/70 text-primary">
+                            {isPlanner ? (
+                              <FileSpreadsheet className="h-3.5 w-3.5 text-emerald-400" />
+                            ) : p.slug.includes("gemini") ? (
+                              <Sparkles className="h-3.5 w-3.5 text-purple-400" />
+                            ) : p.slug.includes("claude") ? (
+                              <Cpu className="h-3.5 w-3.5 text-amber-400" />
+                            ) : (
+                              <Bot className="h-3.5 w-3.5 text-neon-blue" />
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <span className="block truncate font-bold text-[12px] group-hover:text-primary transition-colors">
+                              {isPlanner ? `خرید ${p.name}` : `خرید اشتراک ${p.name}`}
+                            </span>
+                            <span className="block text-[10px] text-muted-foreground truncate">
+                              {p.duration || (isPlanner ? "دسترسی همیشگی" : "تحویل آنی")}
+                            </span>
+                          </div>
+                        </div>
 
-                <li>
-                  <Link
-                    to="/why"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-all hover:bg-secondary/70 hover:text-foreground data-[status=active]:bg-primary/10 data-[status=active]:text-primary data-[status=active]:font-extrabold border border-transparent data-[status=active]:border-primary/20"
-                  >
-                    <span>چرا VAICH</span>
-                    <svg viewBox="0 0 24 24" className="h-4 w-4 opacity-50" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </Link>
-                </li>
+                        <div className="shrink-0 text-left">
+                          <span className="text-[11px] font-black text-primary block">
+                            {formatPrice(p.price)}
+                          </span>
+                        </div>
+                      </Link>
+                    );
+                  })}
 
-                <li>
                   <Link
-                    to="/faq"
+                    to="/products"
                     onClick={() => setOpen(false)}
-                    className="flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-all hover:bg-secondary/70 hover:text-foreground data-[status=active]:bg-primary/10 data-[status=active]:text-primary data-[status=active]:font-extrabold border border-transparent data-[status=active]:border-primary/20"
+                    className="mt-1 flex items-center justify-center gap-1.5 rounded-xl border border-dashed border-border/80 py-2 text-[11px] font-bold text-muted-foreground hover:border-primary/40 hover:text-foreground transition-all"
                   >
-                    <span>سوالات متداول</span>
-                    <svg viewBox="0 0 24 24" className="h-4 w-4 opacity-50" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    <span>مشاهده کاتالوگ تمام محصولات</span>
+                    <ChevronLeft className="h-3.5 w-3.5" />
                   </Link>
-                </li>
+                </div>
+              </div>
 
-                <li>
-                  <Link
-                    to="/support"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-all hover:bg-secondary/70 hover:text-foreground data-[status=active]:bg-primary/10 data-[status=active]:text-primary data-[status=active]:font-extrabold border border-transparent data-[status=active]:border-primary/20"
-                  >
-                    <span>پشتیبانی</span>
-                    <svg viewBox="0 0 24 24" className="h-4 w-4 opacity-50" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </Link>
-                </li>
-              </ul>
+              {/* بخش ۲: دسترسی سریع، وبلاگ و پشتیبانی */}
+              <div className="space-y-2">
+                <div className="px-2 text-xs font-bold text-foreground flex items-center gap-1.5 text-primary">
+                  <Compass className="h-4 w-4" />
+                  <span>دسترسی سریع و آموزش</span>
+                </div>
+
+                <ul className="flex flex-col gap-1 rounded-2xl border border-border/70 bg-secondary/25 p-1.5">
+                  <li>
+                    <a
+                      href="/#blog"
+                      onClick={(e) => {
+                        setOpen(false);
+                        const el = document.getElementById("blog");
+                        if (el) {
+                          e.preventDefault();
+                          el.scrollIntoView({ behavior: "smooth" });
+                        }
+                      }}
+                      className="flex items-center justify-between rounded-xl px-3 py-2.5 text-xs font-bold text-foreground transition-all hover:bg-secondary/70 hover:text-primary"
+                    >
+                      <span className="flex items-center gap-2">
+                        <BookOpen className="h-4 w-4 text-primary shrink-0" />
+                        <span>مجله و آموزش‌ها (وبلاگ)</span>
+                      </span>
+                      <ChevronLeft className="h-4 w-4 text-muted-foreground/60 shrink-0" />
+                    </a>
+                  </li>
+
+                  <li>
+                    <Link
+                      to="/why"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-between rounded-xl px-3 py-2.5 text-xs font-bold text-foreground transition-all hover:bg-secondary/70 hover:text-primary"
+                    >
+                      <span className="flex items-center gap-2">
+                        <HelpCircle className="h-4 w-4 text-primary shrink-0" />
+                        <span>راهنمای خرید و چرا VAICH</span>
+                      </span>
+                      <ChevronLeft className="h-4 w-4 text-muted-foreground/60 shrink-0" />
+                    </Link>
+                  </li>
+
+                  <li>
+                    <Link
+                      to="/faq"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-between rounded-xl px-3 py-2.5 text-xs font-bold text-foreground transition-all hover:bg-secondary/70 hover:text-primary"
+                    >
+                      <span className="flex items-center gap-2">
+                        <MessageCircleQuestion className="h-4 w-4 text-primary shrink-0" />
+                        <span>سوالات متداول خریداران</span>
+                      </span>
+                      <ChevronLeft className="h-4 w-4 text-muted-foreground/60 shrink-0" />
+                    </Link>
+                  </li>
+
+                  {/* دکمه مجزا و مشخص برای پشتیبانی آنلاین */}
+                  <li className="pt-1">
+                    <Link
+                      to="/support"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-between rounded-xl border border-primary/40 bg-linear-to-r from-primary/15 via-accent/15 to-primary/10 px-3 py-2.5 text-xs font-extrabold text-foreground shadow-xs transition-all hover:border-primary hover:bg-primary/20"
+                    >
+                      <span className="flex items-center gap-2 text-primary">
+                        <Headphones className="h-4 w-4 shrink-0 animate-pulse" />
+                        <span>پشتیبانی آنلاین و مشاوره ۲۴ ساعته</span>
+                      </span>
+                      <span className="rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 text-[9px] font-bold">
+                        پاسخ فوری
+                      </span>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
             </nav>
 
             {/* Drawer Footer */}
@@ -574,7 +659,7 @@ export function Header() {
                   onClick={toggleTheme}
                   className="flex items-center gap-1.5 rounded-lg bg-card px-3 py-1.5 text-xs font-bold text-foreground shadow-xs border border-border/70 active:scale-95 transition-all"
                 >
-                  {theme === "dark" ? "حالت تاریک 🌙" : "حالت روشن ☀️"}
+                  {theme === "dark" ? (<span className="flex items-center gap-1.5"><Moon className="h-3.5 w-3.5" />حالت تاریک</span>) : (<span className="flex items-center gap-1.5"><Sun className="h-3.5 w-3.5" />حالت روشن</span>)}
                 </button>
               </div>
 

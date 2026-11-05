@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, type MouseEvent } from "react";
 import { Link } from "@tanstack/react-router";
+import { Star } from "lucide-react";
 import { getProductLogo } from "@/components/brand/ServiceIcon";
 import { NeonLink } from "@/components/ui/NeonButton";
 import { formatPrice, toPersianDigits, isProductLifetime, type Product } from "@/lib/products";
@@ -33,7 +34,8 @@ export function ProductCard({
   };
 
   const hasBadge = Boolean(product.badge) || Boolean(product.featured);
-  const badgeLabel = product.badge || (product.featured ? "پیشنهاد ویژه 🔥" : "");
+  const rawBadge = product.badge || (product.featured ? "پیشنهاد ویژه" : "");
+  const badgeLabel = rawBadge.replace("🔥", "").trim();
 
   const badgeColorMap: Record<string, string> = {
     fire: "bg-linear-to-r from-rose-500 to-amber-500 text-white",
@@ -97,9 +99,7 @@ export function ProductCard({
         transition: tilt.active ? "transform 0.1s ease-out" : "transform 0.4s ease-out, box-shadow 0.3s ease",
       }}
       className={cn(
-        "group relative flex w-[185px] xs:w-[210px] sm:w-[285px] shrink-0 snap-start flex-col gap-2.5 sm:gap-3 overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-2.5 sm:p-3.5 shadow-xs hover:border-primary/50 hover:shadow-2xl transition-all select-none touch-manipulation",
-        isOutOfStock && "opacity-90 grayscale-[0.85] contrast-95",
-        className,
+        "group relative flex w-[185px] xs:w-[210px] sm:w-[285px] shrink-0 snap-start flex-col gap-2.5 sm:gap-3 overflow-hidden rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-2.5 sm:p-3.5 shadow-xs hover:border-primary/50 hover:shadow-2xl transition-all select-none touch-manipulation",        className,
       )}
     >
       {/* 3D Glass Light reflection layer */}
@@ -166,13 +166,13 @@ export function ProductCard({
             </div>
           )}
 
-          {/* Out of stock circular badge (BodoCP-style) */}
+          {/* Out of stock capsule badge */}
           {isOutOfStock && (
-            <div className="absolute inset-0 z-20 flex items-center justify-center bg-background/50 backdrop-blur-[2px] rounded-xl sm:rounded-2xl">
-              <div className="flex flex-col items-center justify-center h-13 w-13 sm:h-16 sm:w-16 rounded-full bg-rose-600/95 text-white shadow-xl border-2 border-white/20 select-none">
-                <span className="text-[10px] sm:text-xs font-black tracking-tight">ناموجود</span>
-              </div>
-            </div>
+            <span
+              className="absolute right-2 top-2 z-10 rounded-full bg-neutral-200/95 dark:bg-neutral-200 text-neutral-900 border border-neutral-300/80 px-2.5 py-0.5 text-[9px] sm:text-[11px] font-black tracking-tight shadow-md select-none"
+            >
+              ناموجود
+            </span>
           )}
 
           {/* Floating Special / Featured Badge */}
@@ -203,7 +203,7 @@ export function ProductCard({
           {/* Star Rating & Review count */}
           {product.rating ? (
             <div className="mt-0.5 flex items-center gap-1 text-[10px] sm:text-xs">
-              <span className="text-amber-400 font-bold">★ {toPersianDigits(product.rating.toFixed(1))}</span>
+              <span className="text-amber-400 font-bold inline-flex items-center gap-1"><Star className="h-3 w-3 fill-amber-400 text-amber-400" /><span>{toPersianDigits(product.rating.toFixed(1))}</span></span>
               {totalReviewsCount > 0 ? (
                 <span className="text-muted-foreground text-[9px] sm:text-[10px]">
                   ({toPersianDigits(totalReviewsCount)} نظر)
@@ -254,12 +254,25 @@ export function ProductCard({
       {/* Action Buttons: 2-column Side-by-Side */}
       {isOutOfStock ? (
         <div className="grid grid-cols-2 gap-1.5">
-          <span className="text-center text-[10px] sm:text-xs py-1.5 px-1 rounded-xl bg-secondary/50 text-muted-foreground/60 border border-border/50 cursor-not-allowed select-none">
+          <NeonLink
+            to="/products/$slug"
+            params={{ slug: product.slug }}
+            preload="intent"
+            variant="outline"
+            size="sm"
+            aria-label={`مشاهده جزئیات ${product.name}`}
+            className="text-center text-[10px] sm:text-xs py-1.5 px-1 rounded-xl touch-manipulation cursor-pointer"
+          >
             جزئیات
-          </span>
-          <span className="text-center text-[10px] sm:text-xs font-bold py-1.5 px-1 rounded-xl bg-rose-500/15 text-rose-400 border border-rose-500/30 cursor-not-allowed select-none">
+          </NeonLink>
+          <button
+            type="button"
+            disabled
+            aria-disabled="true"
+            className="w-full text-center text-[10px] sm:text-xs font-bold py-1.5 px-1 rounded-xl bg-neutral-200/90 dark:bg-neutral-300 text-neutral-900 border border-neutral-300 shadow-xs cursor-not-allowed select-none pointer-events-none"
+          >
             ناموجود
-          </span>
+          </button>
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-1.5">

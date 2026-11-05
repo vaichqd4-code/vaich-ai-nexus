@@ -10,6 +10,7 @@ const Features = lazy(() => import("@/components/sections/Features").then((m) =>
 const HowItWorks = lazy(() => import("@/components/sections/HowItWorks").then((m) => ({ default: m.HowItWorks })));
 const Trust = lazy(() => import("@/components/sections/Trust").then((m) => ({ default: m.Trust })));
 const Faq = lazy(() => import("@/components/sections/Faq").then((m) => ({ default: m.Faq })));
+const BlogSection = lazy(() => import("@/components/sections/BlogSection").then((m) => ({ default: m.BlogSection })));
 const SupportCta = lazy(() => import("@/components/sections/SupportCta").then((m) => ({ default: m.SupportCta })));
 
 export const Route = createFileRoute("/")({
@@ -411,6 +412,14 @@ function BelowFoldSections() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (window.location.hash === "#blog" || window.location.hash.includes("blog")) {
+      setShow(true);
+      setTimeout(() => {
+        const el = document.getElementById("blog");
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+      return;
+    }
     if ("requestIdleCallback" in window) {
       const id = (window as any).requestIdleCallback(() => setShow(true), { timeout: 3500 });
       return () => (window as any).cancelIdleCallback?.(id);
@@ -430,6 +439,7 @@ function BelowFoldSections() {
       <HowItWorks />
       <Trust />
       <Faq />
+      <BlogSection />
       <SupportCta />
     </Suspense>
   );

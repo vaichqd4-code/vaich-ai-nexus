@@ -165,7 +165,7 @@ export const Route = createFileRoute("/privacy")({
         </section>
 
         <div className="border-t border-border/50 pt-5 text-center font-medium text-foreground">
-          VAICH — هوش مصنوعی، تکنولوژی و خدمات دیجیتال 🚀
+          VAICH — مرجع تخصصی خدمات دیجیتال و ابزارهای هوش مصنوعی
         </div>
       </div>
     </Section>

@@ -1,3 +1,4 @@
+import { ShoppingBag, BookOpen, ShieldCheck, Headphones, ExternalLink } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/brand/Logo";
 import {
@@ -8,30 +9,35 @@ import {
 } from "@/components/brand/ContactLinks";
 import { toPersianDigits, useDynamicProducts } from "@/lib/products";
 
-const columns = [
+const navigationColumns = [
   {
-    title: "ناوبری",
+    title: "محصولات و اشتراک‌ها",
     links: [
-      { to: "/", label: "صفحه اصلی" },
-      { to: "/products", label: "محصولات و خدمات" },
-      { to: "/why", label: "چرا VAICH" },
+      { to: "/products/vaich-life-planner", label: "خرید پلنر دیجیتال هوشمند" },
+      { to: "/products/gemini-pro", label: "خرید اشتراک Gemini Pro ۱۸ ماهه" },
+      { to: "/products/gemini", label: "خرید اشتراک Gemini Pro ۶۰ روزه" },
+      { to: "/products/اشتراک chatgpt plus شخصی", label: "خرید اکانت قانونی ChatGPT Plus" },
+      { to: "/products/claude", label: "خرید اکانت قانونی Claude Pro" },
     ],
   },
   {
-    title: "راهنما",
+    title: "دسترسی سریع و آموزش",
     links: [
-      { to: "/faq", label: "سوالات متداول" },
-      { to: "/support", label: "پشتیبانی" },
+      { to: "/#blog", label: "مجله و مقالات آموزشی" },
+      { to: "/why", label: "راهنمای خرید و چرا VAICH" },
+      { to: "/faq", label: "سوالات متداول مشتریان" },
+      { to: "/support", label: "پشتیبانی آنلاین و مشاوره" },
     ],
   },
   {
-    title: "قوانین",
+    title: "اطلاعات و قوانین",
     links: [
-      { to: "/terms", label: "قوانین و مقررات" },
-      { to: "/privacy", label: "حریم خصوصی" },
+      { to: "/terms", label: "قوانین و ضمانت بازگشت وجه" },
+      { to: "/privacy", label: "حریم خصوصی کاربران" },
+      { to: "/support", label: "ارتباط مستقیم با کارشناسان" },
     ],
   },
-] as const;
+];
 
 export function Footer() {
   const { instagramUrl } = useDynamicProducts();
@@ -93,7 +99,7 @@ export function Footer() {
           </ul>
         </div>
 
-        {columns.map((col) => (
+        {navigationColumns.map((col) => (
           <nav key={col.title} aria-label={col.title}>
             <h2 className="mb-4 text-sm font-bold text-foreground">{col.title}</h2>
             <ul className="space-y-3">

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { Search } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { ProductCard } from "@/components/product/ProductCard";
 import { HowItWorks } from "@/components/sections/HowItWorks";
@@ -37,7 +38,7 @@ function ProductsPage() {
 
   const categories = [
     { id: "all", label: "همه محصولات" },
-    { id: "planner", label: "پلنرهای دیجیتال 📊" },
+    { id: "planner", label: "پلنرهای دیجیتال" },
     { id: "chatgpt", label: "ChatGPT Plus" },
     { id: "gemini", label: "Gemini Pro" },
     { id: "claude", label: "Claude Pro" },
@@ -101,9 +102,9 @@ function ProductsPage() {
 
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg text-muted-foreground"
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
             >
-              🔍
+              <Search className="w-5 h-5" />
             </span>
           </div>
 

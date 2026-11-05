@@ -1,4 +1,5 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { Bell, AlertTriangle, Bot } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { Section } from "@/components/layout/Section";
@@ -178,7 +179,7 @@ function Checkout() {
         hasTriggeredPaymentNotice.current = true;
         vibrate([150, 80, 150]);
         showTopNotice(
-          "⚠️ توجه بسیار مهم پیش از پرداخت:",
+          "توجه بسیار مهم پیش از پرداخت:",
           "حتماً تصویر رسید و فیش واریزی خود را تا پایان تحویل سفارش نزد خود نگه دارید.",
           7000
         );
@@ -233,7 +234,7 @@ function Checkout() {
       setCopied(true);
       vibrate(100);
       showTopNotice(
-        "💳 شماره کارت کپی شد",
+        "شماره کارت کپی شد ✓",
         "مبلغ دقیق را واریز فرمایید و حتماً از تصویر رسید پرداختی اسکرین‌شات یا عکس بگیرید.",
         6000
       );
@@ -249,7 +250,7 @@ function Checkout() {
       setMsgCopied(true);
       vibrate(100);
       showTopNotice(
-        "📋 متن فاکتور کپی شد!",
+        "متن فاکتور کپی شد ✓",
         "پس از باز شدن ربات، دکمه Start را بزنید و سپس این متن را در چت Paste و ارسال کنید.",
         8000,
         true
@@ -277,7 +278,7 @@ function Checkout() {
           dir="rtl"
         >
           <div className="flex items-start gap-3 min-w-0">
-            <span className="text-2xl mt-0.5">📢</span>
+            <Bell className="w-6 h-6 shrink-0 mt-0.5 text-white" />
             <div>
               <p className="text-sm font-black text-white">{topNotification.title}</p>
               <p className="mt-1 text-xs md:text-sm font-medium leading-6 text-red-50">
@@ -302,7 +303,7 @@ function Checkout() {
       >
         {product.inStock === false && (
           <div className="mb-6 rounded-2xl border border-rose-500/40 bg-rose-500/15 p-4 text-center">
-            <p className="text-sm font-bold text-rose-400">⚠️ این محصول در حال حاضر ناموجود است</p>
+            <p className="text-sm font-bold text-rose-400 flex items-center justify-center gap-1.5"><AlertTriangle className="w-4 h-4" /><span>این محصول در حال حاضر ناموجود است</span></p>
             <p className="mt-1 text-xs text-muted-foreground">ظرفیت این سرویس تکمیل شده است و امکان ثبت سفارش یا واریز وجود ندارد. جهت اطلاعات بیشتر با پشتیبانی در ارتباط باشید.</p>
           </div>
         )}
@@ -473,7 +474,7 @@ function Checkout() {
 
                       // ۲. نمایش نوار قرمز رنگ بزرگ در بالای صفحه با انیمیشن ملایم
                       showTopNotice(
-                        "📋 متن فاکتور کپی شد!",
+                        "متن فاکتور کپی شد ✓",
                         "در ربات تلگرام ابتدا دکمه Start را بزنید، سپس متن فاکتور را Paste کرده و بفرستید. در پایان عکس فیش را ارسال کنید.",
                         10000,
                         true
@@ -518,7 +519,7 @@ function Checkout() {
                     "w-full border-transparent bg-purple-600 text-white hover:bg-purple-700 hover:text-white font-black",
                   )} ${isReady && !isSubmitting ? "" : "opacity-50"}`}
                 >
-                  {isSubmitting ? "در حال آماده‌سازی و انتقال..." : "🤖 ارسال رسید در ربات"}
+                  {isSubmitting ? "در حال آماده‌سازی و انتقال..." : <span className="inline-flex items-center justify-center gap-2"><Bot className="w-5 h-5" /><span>ارسال رسید در ربات</span></span>}
                 </button>
               </div>
 

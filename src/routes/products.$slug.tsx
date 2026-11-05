@@ -1,3 +1,4 @@
+import { ProductRichContent } from "@/components/product/ProductRichContent";
 import { createFileRoute, notFound, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
@@ -5,7 +6,7 @@ import { Section } from "@/components/layout/Section";
 import { NeonLink } from "@/components/ui/NeonButton";
 import { formatPrice, toPersianDigits, getProduct, isProductLifetime, getStoredProducts, saveStoredProducts, type Product, type ProductReview } from "@/lib/products";
 import { cn } from "@/lib/utils";
-import { Star, MessageSquarePlus, CheckCircle2 } from "lucide-react";
+import { Star, MessageSquarePlus, CheckCircle2, AlertTriangle, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/products/$slug")({
   loader: async ({ params }) => {
@@ -264,15 +265,13 @@ function ProductDetail() {
                       </span>
                     )}
                     {isOutOfStock && (
-                      <span className="rounded-full bg-rose-500/20 px-2.5 py-0.5 text-xs font-bold text-rose-400 border border-rose-500/30">
-                        ناموجود
-                      </span>
+                      <span className="rounded-full bg-neutral-200 text-neutral-900 border border-neutral-300 px-3 py-0.5 text-xs font-black shadow-xs select-none">ناموجود</span>
                     )}
                   </div>
 
                   {isLifetime && (
                     <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400">
-                      <span>✨</span>
+                      <Sparkles className="h-4 w-4 shrink-0 text-emerald-400" />
                       <span>خرید دائمی و مادام‌العمر • بدون نیاز به تمدید یا هزینه اشتراک ماهانه</span>
                     </div>
                   )}
@@ -280,7 +279,7 @@ function ProductDetail() {
                   {/* Rating summary line */}
                   <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
                     <div className="flex items-center gap-1 text-amber-400 font-bold">
-                      <span>★</span>
+                      <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                       <span className="text-foreground">{toPersianDigits(avgRating.toFixed(1))}</span>
                     </div>
                     <span>•</span>
@@ -314,7 +313,7 @@ function ProductDetail() {
               {isOutOfStock && (
                 <div className="mb-4 rounded-2xl border border-rose-500/30 bg-rose-500/10 p-3 text-center">
                   <span className="text-xs sm:text-sm font-bold text-rose-500 flex items-center justify-center gap-1.5">
-                    <span>⚠️</span> این محصول در حال حاضر ناموجود است
+                    <AlertTriangle className="h-4 w-4 shrink-0 text-rose-500" /> این محصول در حال حاضر ناموجود است
                   </span>
                   <p className="mt-1 text-[11px] sm:text-xs text-muted-foreground">
                     برای اطلاع از شارژ مجدد یا سفارش خصوصی می‌توانید با پشتیبانی در ارتباط باشید.
@@ -430,6 +429,9 @@ function ProductDetail() {
             </aside>
           </div>
 
+          {/* Deep SEO & Educational Feature Cards & Comparison Table */}
+          <ProductRichContent product={product} isPlanner={isPlanner} isLifetime={isLifetime} />
+
           {/* Customer Reviews & Google Rating Section */}
           <section className="mt-12 border-t border-border/80 pt-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -494,9 +496,17 @@ function ProductDetail() {
                           </div>
 
                           {/* Stars */}
-                          <div className="flex text-amber-400 text-xs shrink-0">
-                            {"★".repeat(rev.rating)}
-                            {"☆".repeat(5 - rev.rating)}
+                          <div className="flex items-center gap-0.5 text-amber-400 shrink-0">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-3 w-3 ${
+                                  i < rev.rating
+                                    ? "fill-amber-400 text-amber-400"
+                                    : "fill-muted/20 text-muted/40"
+                                }`}
+                              />
+                            ))}
                           </div>
                         </div>
 

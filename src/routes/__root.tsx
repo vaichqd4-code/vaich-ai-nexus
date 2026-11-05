@@ -95,6 +95,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:image", content: "https://vaich.ir/vaich-logo.png" },
     ],
     links: [
+      { rel: "dns-prefetch", href: "https://client.crisp.chat" },
+      { rel: "dns-prefetch", href: "https://image.crisp.chat" },
       {
         rel: "preload",
         as: "font",
@@ -181,7 +183,7 @@ function RootShell({ children }: { children: ReactNode }) {
         {/* Crisp live chat on-demand loader — loads on /support immediately, or on user interaction/idle */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){window.$crisp=[];window.CRISP_WEBSITE_ID="7751150b-b8d0-4953-8745-021b7d8a730c";var loaded=false;function initCrisp(){if(loaded)return;loaded=true;['click','keydown'].forEach(function(e){window.removeEventListener(e,initCrisp);});var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=true;d.head.appendChild(s);}window.loadCrispNow=initCrisp;if(window.location.pathname==='/support'){initCrisp();}else{['click','keydown'].forEach(function(e){window.addEventListener(e,initCrisp,{once:true,passive:true});});setTimeout(initCrisp,10000);}})();`,
+            __html: `(function(){window.$crisp=[];window.CRISP_WEBSITE_ID="7751150b-b8d0-4953-8745-021b7d8a730c";var loaded=false;function initCrisp(){if(loaded)return;loaded=true;['click','keydown'].forEach(function(e){try{window.removeEventListener(e,initCrisp);}catch(_){}});var d=document;var s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=true;s.crossOrigin="anonymous";s.onerror=function(){console.warn("Live chat connection unavailable");};d.head.appendChild(s);}window.loadCrispNow=initCrisp;if(window.location.pathname==='/support'){initCrisp();}else{['click','keydown'].forEach(function(e){try{window.addEventListener(e,initCrisp,{once:true,passive:true});}catch(_){}});setTimeout(initCrisp,10000);}})();`,
           }}
         />
       </head>
