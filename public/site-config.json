@@ -305,7 +305,7 @@
           "status": "approved"
         }
       ],
-      "iconUrl": "/gemini-logo.svg"
+      "iconUrl": "/gemini-logo.webp"
     },
     {
       "slug": "gemini-pro",
@@ -440,7 +440,7 @@
           "status": "approved"
         }
       ],
-      "iconUrl": "/gemini-logo.svg"
+      "iconUrl": "/gemini-pro-logo.webp"
     },
     {
       "slug": "اشتراک chatgpt plus شخصی",
@@ -582,7 +582,7 @@
           "status": "approved"
         }
       ],
-      "iconUrl": "/claude-logo.svg"
+      "iconUrl": "/Claude-.webp"
     }
   ],
   "categoryRows": [
@@ -615,7 +615,7 @@
     "altText": "خرید پلنر برنامه‌ریزی هوشمند و ردیاب عادات روزانه VAICH"
   },
   "instagramUrl": "https://www.instagram.com/vaich.ir?psln=MXJkZ2xtaWg1cHo5dQ==",
-  "updatedAt": "2026-11-05T14:09:01.196Z",
+  "updatedAt": "2026-11-05T14:23:26.780Z",
   "blogPosts": [
     {
       "slug": "defeat-procrastination-google-sheets-planner",

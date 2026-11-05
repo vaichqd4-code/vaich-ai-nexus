@@ -1,20 +1,21 @@
 import { cn } from "@/lib/utils";
 
 export const PRESET_LOGOS: Record<string, string> = {
-  gemini: "/gemini-logo.svg",
-  "gemini-pro": "/gemini-logo.svg",
+  gemini: "/gemini-logo.webp",
+  "gemini-pro": "/gemini-pro-logo.webp",
   chatgpt: "/chatgpt-logo.svg",
   "chatgpt-plus": "/chatgpt-logo.svg",
   "اشتراک chatgpt plus شخصی": "/chatgpt-logo.svg",
-  claude: "/claude-logo.svg",
-  "claude-pro": "/claude-logo.svg",
+  claude: "/Claude-.webp",
+  "claude-pro": "/Claude-.webp",
 };
 
 export function getProductLogo(slug: string, iconUrl?: string): string | undefined {
   if (iconUrl && iconUrl.trim().length > 0) {
     const raw = iconUrl.trim();
-    if (raw.includes("Claude-") || raw.toLowerCase().includes("claude")) return "/claude-logo.svg";
-    if (raw.includes("gemini")) return "/gemini-logo.svg";
+    if (raw.includes("Claude-") || raw.toLowerCase().includes("claude")) return "/Claude-.webp";
+    if (raw.includes("gemini-pro")) return "/gemini-pro-logo.webp";
+    if (raw.includes("gemini")) return "/gemini-logo.webp";
     return raw;
   }
   if (!slug) return undefined;
