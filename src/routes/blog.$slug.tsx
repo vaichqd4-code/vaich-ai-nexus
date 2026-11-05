@@ -37,7 +37,7 @@ export const Route = createFileRoute("/blog/$slug")({
       description: post.excerpt,
       image: post.coverImage,
       datePublished: post.publishIsoDate,
-      dateModified: post.publishIsoDate,
+      dateModified: (post as any).lastUpdatedIsoDate || post.publishIsoDate,
       author: {
         "@type": "Person",
         name: "یونس حیاتی",
@@ -133,6 +133,9 @@ function BlogPostPage() {
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Calendar className="h-3.5 w-3.5" />
                 <span>{post.date}</span>
+                {(post as any).lastUpdatedDate && (
+                  <span className="text-primary font-medium">(به‌روزرسانی: {(post as any).lastUpdatedDate})</span>
+                )}
               </div>
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Clock className="h-3.5 w-3.5" />

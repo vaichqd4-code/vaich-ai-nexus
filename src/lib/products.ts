@@ -74,584 +74,590 @@ export const DEFAULT_CATEGORY_ROWS: ProductCategoryRow[] = [
 
 export const DEFAULT_PRODUCTS: Product[] = [
   {
-    slug: "vaich-life-planner",
-    name: "پلنر برنامه ریزی(استاندارد)",
-    price: 299000,
-    duration: "دائمی (بدون اشتراک)",
-    description: "کامل‌ترین سیستم هوشمند مدیریت زندگی و ردیاب عادات روزانه در گوگل شیت؛ خرید دائمی و مادام‌العمر بدون نیاز به تمدید یا هزینه اشتراک.",
-    featured: true,
-    badge: "پیشنهادی",
-    badgeColor: "fire",
-    categoryId: "row-mvampt3r",
-    inStock: true,
-    rating: 4.9,
-    reviewCount: 21,
-    features: [
-      "شامل ۲ تمپلیت اختصاصی: نسخه تعاملی سه‌بعدی (3D Deluxe) و نسخه استاندارد",
-      "ردیاب عادات روزانه، روتین‌های فردی و نمودارهای تحلیلی داینامیک پیشرفت",
-      "سیستم هوشمند پاکسازی و شروع ماه جدید تنها با یک کلیک خودکار",
-      "همگام‌سازی ابری و دسترسی نامحدود روی تمام گوشی‌ها، تبلت‌ها و لپ‌تاپ در گوگل شیت",
-      "همراه با راهنمای جامع صوتی و متنی فارسی برای راه‌اندازی سریع در ۳ دقیقه",
-      "دسترسی مادام‌العمر به فایل و آپدیت‌های آینده بدون پرداخت هزینه اشتراک ماهانه"
+    "slug": "vaich-life-planner",
+    "name": "پلنر برنامه ریزی(استاندارد)",
+    "price": 299000,
+    "duration": "دائمی (بدون اشتراک)",
+    "description": "کامل‌ترین سیستم هوشمند مدیریت زندگی و ردیاب عادات روزانه در گوگل شیت؛ خرید دائمی و مادام‌العمر بدون نیاز به تمدید یا هزینه اشتراک.",
+    "featured": true,
+    "badge": "پیشنهادی",
+    "badgeColor": "fire",
+    "categoryId": "row-mvampt3r",
+    "inStock": true,
+    "rating": 4.9,
+    "reviewCount": 21,
+    "features": [
+      "شامل ۲ تمپلیت اختصاصی: نسخه تعاملی سه‌بعدی (3D Deluxe) و نسخه استاندارد مینیمال ۲بعدی",
+      "سیستم خودکار ردیاب عادات (Habit Tracker) با محاسبه درصد پیشرفت و پیوستگی زنجیره",
+      "ماتریس اولویت‌بندی آیزنهاور و جدول هدف‌گذاری SMART برای دسته‌بندی هوشمند کارها",
+      "دکمه هوشمند پاکسازی و شروع ماه جدید تنها با یک کلیک بدون آسیب به فرمول‌ها",
+      "همگام‌سازی ابری و دسترسی نامحدود روی گوشی (اندروید/آیفون)، تبلت و لپ‌تاپ در اپلیکیشن گوگل شیت",
+      "همراه با راهنمای جامع صوتی و تصویری فارسی برای راه‌اندازی و کپی در کمتر از ۳ دقیقه",
+      "مالکیت مادام‌العمر روی اکانت شخصی گوگل درایو و دریافت رایگان آپدیت‌های آینده بدون اشتراک ماهانه"
     ],
-    purchaseInfo: [
+    "purchaseInfo": [
       "تحویل آنی بلافاصله پس از پرداخت به صورت لینک اختصاصی کپی (Make a copy) در گوگل درایو.",
-      "این محصول اشتراک ماهانه نیست؛ یک‌بار خرید و دسترسی همیشگی بدون تاریخ انقضا است.",
-      "برای باز کردن و ذخیره شیت، تنها به یک حساب جیمیل (Google Account) فعال نیاز دارید.",
-      "پشتیبانی اختصاصی برای راهنمایی راه‌اندازی و اجرای اسکریپت‌ها."
+      "این محصول فایل مادام‌العمر است؛ یک‌بار خرید و دسترسی همیشگی بدون تاریخ انقضا و بدون هزینه اشتراک.",
+      "برای استفاده و ذخیره شیت، تنها به یک حساب جیمیل (Google Account) فعال نیاز دارید (بدون نیاز به نرم‌افزار آفیس یا اکسل).",
+      "پشتیبانی اختصاصی در تلگرام برای راهنمایی راه‌اندازی، کپی فایل و نحوه استفاده روزانه."
     ],
-    iconUrl: "/planner-cover.webp",
-    imageFit: "cover",
-    reviews: [
-          {
-                "id": "rev-lp-1",
-                "author": "کاربر ناشناس",
-                "rating": 5,
-                "comment": "عالللییی",
-                "createdAt": "2026-10-28T19:30:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-2",
-                "author": "Ali.R",
-                "rating": 5,
-                "comment": "سلام دمتون گرم واقعا کاربردیه، تم سه‌بعدیش رو لپ‌تاپ خیلی قشنگه روتین کارام قشنگ منظم شده😍",
-                "createdAt": "2026-10-18T14:20:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-3",
-                "author": ".",
-                "rating": 5,
-                "comment": "خیلی خوبه",
-                "createdAt": "2026-10-27T16:15:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-4",
-                "author": "مهدی",
-                "rating": 5,
-                "comment": "لینک فایل بلافاصله بعد پرداخت اومد بالا، وویس راهنماشم گوش دادم تو ۲ دقیقه شیت رو کپی کردم مرسییی",
-                "createdAt": "2026-10-21T18:45:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-5",
-                "author": "کاربر وایچ",
-                "rating": 5,
-                "comment": "عالی",
-                "createdAt": "2026-10-28T11:05:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-6",
-                "author": "Sara_m",
-                "rating": 5,
-                "comment": "بهترین ویژگیش اینه اشتراک ماهانه نداره و فایل مال خودمه❤️ ردیاب عادت‌هاش عالیه",
-                "createdAt": "2026-10-24T11:10:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-7",
-                "author": "امیرحسین",
-                "rating": 5,
-                "comment": "من برای برنامه ریزی کنکور و درسام خریدم، انگیزه میده خدایی. نموداراش خودکار درصد پیشرفت میده خیلی به دردم خورد",
-                "createdAt": "2026-10-25T09:20:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-8",
-                "author": "ناشناس",
-                "rating": 4,
-                "comment": "خوب بود مرسی",
-                "createdAt": "2026-10-26T08:30:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-9",
-                "author": "محمدرضا",
-                "rating": 5,
-                "comment": "فوق العاده بود، اولش فکر نمیکردم با گوگل شیت بشه همچین چیزی ساخت، دست طراحش درد نکنه",
-                "createdAt": "2026-10-22T13:40:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-10",
-                "author": "کاربر مهمان",
-                "rating": 5,
-                "comment": "دمتون گرم سریع به دستم رسید",
-                "createdAt": "2026-10-27T21:10:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-11",
-                "author": "م.",
-                "rating": 5,
-                "comment": "عالیه رو گوشی هم روون باز میشه و فرمولاش اتوماتیک کار میکنه👍",
-                "createdAt": "2026-10-27T10:15:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-12",
-                "author": "نیلوفر",
-                "rating": 5,
-                "comment": "خیلی خفنههه مخصوصا تم دوبعدی مینیمالش😍",
-                "createdAt": "2026-10-23T15:50:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-13",
-                "author": "رضا",
-                "rating": 5,
-                "comment": "اوکی بود ممنون",
-                "createdAt": "2026-10-26T17:25:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-14",
-                "author": "الهام ر.",
-                "rating": 5,
-                "comment": "اولش نمیدونستم چجوری کپی کنم تو درایو، به تلگرام پیام دادم سریع وویس دادن و برام توضیح دادن، پشتیبانی عالی بود",
-                "createdAt": "2026-10-24T18:35:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-15",
-                "author": "Hamed",
-                "rating": 4,
-                "comment": "کار راه بنداز و مرتب",
-                "createdAt": "2026-10-25T20:45:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-16",
-                "author": "کاربر ناشناس",
-                "rating": 5,
-                "comment": "عالللللی",
-                "createdAt": "2026-10-28T07:15:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-17",
-                "author": "پویا",
-                "rating": 5,
-                "comment": "توی شیت های ایرانی تا حالا همچین نظمی ندیده بودم، رنگ بندیش اصلا چشم رو خسته نمیکنه",
-                "createdAt": "2026-10-22T16:00:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-18",
-                "author": "زهرا",
-                "rating": 5,
-                "comment": "عالی ممنون از سایت خوبتون",
-                "createdAt": "2026-10-26T12:40:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-19",
-                "author": "shayan",
-                "rating": 4,
-                "comment": "خوبه راضیم",
-                "createdAt": "2026-10-27T14:55:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-20",
-                "author": "A.R",
-                "rating": 5,
-                "comment": "همه چیش تکمیله مرسی از زحماتتون",
-                "createdAt": "2026-10-28T16:20:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-lp-21",
-                "author": "کاربر ناشناس",
-                "rating": 5,
-                "comment": "ارزش خرید بالایی داره نسبت به قیمتش",
-                "createdAt": "2026-10-29T02:10:00.000Z",
-                "verified": true,
-                "status": "approved"
-          }
-    ],
+    "iconUrl": "/planner-cover.webp",
+    "imageFit": "cover",
+    "reviews": [
+      {
+        "id": "rev-lp-1",
+        "author": "کاربر ناشناس",
+        "rating": 5,
+        "comment": "عالللییی",
+        "createdAt": "2026-10-28T19:30:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-2",
+        "author": "Ali.R",
+        "rating": 5,
+        "comment": "سلام دمتون گرم واقعا کاربردیه، تم سه‌بعدیش رو لپ‌تاپ خیلی قشنگه روتین کارام قشنگ منظم شده😍",
+        "createdAt": "2026-10-18T14:20:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-3",
+        "author": ".",
+        "rating": 5,
+        "comment": "خیلی خوبه",
+        "createdAt": "2026-10-27T16:15:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-4",
+        "author": "مهدی",
+        "rating": 5,
+        "comment": "لینک فایل بلافاصله بعد پرداخت اومد بالا، وویس راهنماشم گوش دادم تو ۲ دقیقه شیت رو کپی کردم مرسییی",
+        "createdAt": "2026-10-21T18:45:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-5",
+        "author": "کاربر وایچ",
+        "rating": 5,
+        "comment": "عالی",
+        "createdAt": "2026-10-28T11:05:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-6",
+        "author": "Sara_m",
+        "rating": 5,
+        "comment": "بهترین ویژگیش اینه اشتراک ماهانه نداره و فایل مال خودمه❤️ ردیاب عادت‌هاش عالیه",
+        "createdAt": "2026-10-24T11:10:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-7",
+        "author": "امیرحسین",
+        "rating": 5,
+        "comment": "من برای برنامه ریزی کنکور و درسام خریدم، انگیزه میده خدایی. نموداراش خودکار درصد پیشرفت میده خیلی به دردم خورد",
+        "createdAt": "2026-10-25T09:20:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-8",
+        "author": "ناشناس",
+        "rating": 4,
+        "comment": "خوب بود مرسی",
+        "createdAt": "2026-10-26T08:30:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-9",
+        "author": "محمدرضا",
+        "rating": 5,
+        "comment": "فوق العاده بود، اولش فکر نمیکردم با گوگل شیت بشه همچین چیزی ساخت، دست طراحش درد نکنه",
+        "createdAt": "2026-10-22T13:40:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-10",
+        "author": "کاربر مهمان",
+        "rating": 5,
+        "comment": "دمتون گرم سریع به دستم رسید",
+        "createdAt": "2026-10-27T21:10:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-11",
+        "author": "م.",
+        "rating": 5,
+        "comment": "عالیه رو گوشی هم روون باز میشه و فرمولاش اتوماتیک کار میکنه👍",
+        "createdAt": "2026-10-27T10:15:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-12",
+        "author": "نیلوفر",
+        "rating": 5,
+        "comment": "خیلی خفنههه مخصوصا تم دوبعدی مینیمالش😍",
+        "createdAt": "2026-10-23T15:50:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-13",
+        "author": "رضا",
+        "rating": 5,
+        "comment": "اوکی بود ممنون",
+        "createdAt": "2026-10-26T17:25:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-14",
+        "author": "الهام ر.",
+        "rating": 5,
+        "comment": "اولش نمیدونستم چجوری کپی کنم تو درایو، به تلگرام پیام دادم سریع وویس دادن و برام توضیح دادن، پشتیبانی عالی بود",
+        "createdAt": "2026-10-24T18:35:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-15",
+        "author": "Hamed",
+        "rating": 4,
+        "comment": "کار راه بنداز و مرتب",
+        "createdAt": "2026-10-25T20:45:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-16",
+        "author": "کاربر ناشناس",
+        "rating": 5,
+        "comment": "عالللللی",
+        "createdAt": "2026-10-28T07:15:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-17",
+        "author": "پویا",
+        "rating": 5,
+        "comment": "توی شیت های ایرانی تا حالا همچین نظمی ندیده بودم، رنگ بندیش اصلا چشم رو خسته نمیکنه",
+        "createdAt": "2026-10-22T16:00:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-18",
+        "author": "زهرا",
+        "rating": 5,
+        "comment": "عالی ممنون از سایت خوبتون",
+        "createdAt": "2026-10-26T12:40:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-19",
+        "author": "shayan",
+        "rating": 4,
+        "comment": "خوبه راضیم",
+        "createdAt": "2026-10-27T14:55:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-20",
+        "author": "A.R",
+        "rating": 5,
+        "comment": "همه چیش تکمیله مرسی از زحماتتون",
+        "createdAt": "2026-10-28T16:20:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-lp-21",
+        "author": "کاربر ناشناس",
+        "rating": 5,
+        "comment": "ارزش خرید بالایی داره نسبت به قیمتش",
+        "createdAt": "2026-10-29T02:10:00.000Z",
+        "verified": true,
+        "status": "approved"
+      }
+    ]
   },
   {
-    slug: "gemini",
-    name: "Gemini pro",
-    price: 160000,
-    originalPrice: 380000,
-    discountPercent: 60,
-    duration: "60 روزه",
-    description: "اشتراک سرویس هوش مصنوعی Gemini، 60 روزه.",
-    featured: false,
-    badgeColor: "purple",
-    categoryId: "ai",
-    inStock: true,
-    rating: 4.8,
-    reviewCount: 6,
-    purchaseInfo: [
-      "اشتراک Gemini به مدت 60 روز ارائه می‌شود.",
-      "اشتراک به صورت اشتراکی با بهترین کیفیت و پایداری فعال می‌شود.",
-      "دارای پشتیبانی ۲۴ ساعته در صورت بروز هرگونه مشکل.",
-      "اطلاعات اشتراک پس از تأیید سفارش برای شما ارسال می‌شود.",
+    "slug": "gemini",
+    "name": "Gemini Pro",
+    "price": 160000,
+    "duration": "60 روزه",
+    "description": "اشتراک قانونی هوش مصنوعی Gemini Pro به مدت ۶۰ روز با دسترسی به مدل‌های 1.5 Pro و 2.0 Flash، کانتکست ۲ میلیون توکن و نوت‌بوک ال‌ام.",
+    "featured": false,
+    "badgeColor": "purple",
+    "categoryId": "ai",
+    "features": [
+      "دسترسی سریع و پایدار به پیشرفته‌ترین مدل‌های هوش مصنوعی گوگل (Gemini 1.5 Pro و Gemini 2.0 Flash)",
+      "پنجره متنی عظیم ۲ میلیون توکنی برای پردازش و خلاصه همزمان کتاب‌های قطور، پایان‌نامه‌ها و کدهای طولانی",
+      "پردازش چندحالته بومی (Native Multimodal) با درک فوق‌العاده همزمان متن، صوت، تصویر و ویدیو",
+      "دسترسی نامحدود به پلتفرم پژوهشی NotebookLM و تولید پادکست‌های صوتی تعاملی (Audio Overviews)",
+      "ادغام مستقیم و یکپارچه با ابزارهای Google Workspace (جیمیل، درایو، داکس و شیتس)",
+      "تخصیص کردیت‌های رسمی گوگل برای ابزارهای تولید محتوا و ابزارهای خلاقانه سازگار با اکانت",
+      "اکانت اشتراکی پایدار با تضمین سلامت و گارانتی تعویض کامل در تمام طول دوره ۶۰ روزه با پشتیبانی تلگرام"
     ],
-    features: [
-      "دسترسی نامحدود به پیشرفته‌ترین مدل‌های Gemini 2.0 Flash و Gemini 1.5 Pro با سرعت فوق‌العاده",
-      "پنجره متنی عظیم ۲ میلیون توکنی برای پردازش همزمان کتاب‌ها، مقالات و ویدیوهای سنگین",
-      "کردیت‌های ماهانه و روزانه Google Vids و ابزار Flow برای ساخت و تدوین ویدیو با هوش مصنوعی",
-      "دسترسی کامل به پلتفرم پژوهشی NotebookLM و تولید پادکست‌های صوتی تعاملی",
-      "اتصال مستقیم و یکپارچه با ابزارهای Google Workspace (جیمیل، درایو، داکس و شیتس)",
-      "پردازش چندحالته (Multimodal): درک یکپارچه متن، صدا، تصویر و ویدیو",
-      "تضمین پایداری و سلامت کامل اکانت با پشتیبانی ۲۴ ساعته در تمام طول دوره ۶۰ روزه",
+    "purchaseInfo": [
+      "اشتراک Gemini به مدت ۶۰ روز کامل ارائه می‌شود.",
+      "اکانت به صورت اشتراکی بسیار پایدار با دسترسی سریع و اختصاصی به محیط چت فعال می‌شود.",
+      "اطلاعات ورود و راهنمای اتصال سریع ظرف مدت ۱۵ الی ۶۰ دقیقه پس از ثبت سفارش در تلگرام تحویل داده می‌شود.",
+      "پوشش ۱۰۰٪ گارانتی سلامت اکانت و پشتیبانی ۲۴ ساعته در تمام طول دوره ۶۰ روزه."
     ],
-    reviews: [
-          {
-                "id": "rev-gem-1",
-                "author": "Erfan",
-                "rating": 5,
-                "comment": "سریع وصل شد پشتیبانی تلگرامتون واقعا عالی و باحوصله بود❤️",
-                "createdAt": "2026-10-19T16:30:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gem-2",
-                "author": "کاربر ناشناس",
-                "rating": 5,
-                "comment": "عالی بود",
-                "createdAt": "2026-10-28T18:15:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gem-3",
-                "author": "سینا رضایی",
-                "rating": 5,
-                "comment": "کردیت‌های ویدیو و فلو به درستی کار میکنه، قیمتش هم نسبت به بقیه پیجا خیلی مناسبتر بود",
-                "createdAt": "2026-10-23T12:00:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gem-4",
-                "author": "م.",
-                "rating": 4,
-                "comment": "اوکی بود",
-                "createdAt": "2026-10-27T17:40:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gem-5",
-                "author": "A.K",
-                "rating": 4,
-                "comment": "حدود یه ربع طول کشید تا تحویل بدن ولی اکانت سالمه و قطعی نداشته تا الان🙏",
-                "createdAt": "2026-10-26T09:15:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gem-6",
-                "author": "کاربر وایچ",
-                "rating": 5,
-                "comment": "ممنون فعال شد",
-                "createdAt": "2026-10-28T22:00:00.000Z",
-                "verified": true,
-                "status": "approved"
-          }
+    "imageFit": "contain",
+    "inStock": true,
+    "rating": 4.8,
+    "reviewCount": 6,
+    "reviews": [
+      {
+        "id": "rev-gem-1",
+        "author": "Erfan",
+        "rating": 5,
+        "comment": "سریع وصل شد پشتیبانی تلگرامتون واقعا عالی و باحوصله بود❤️",
+        "createdAt": "2026-10-19T16:30:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gem-2",
+        "author": "کاربر ناشناس",
+        "rating": 5,
+        "comment": "عالی بود",
+        "createdAt": "2026-10-28T18:15:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gem-3",
+        "author": "سینا رضایی",
+        "rating": 5,
+        "comment": "کردیت‌های ویدیو و فلو به درستی کار میکنه، قیمتش هم نسبت به بقیه پیجا خیلی مناسبتر بود",
+        "createdAt": "2026-10-23T12:00:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gem-4",
+        "author": "م.",
+        "rating": 4,
+        "comment": "اوکی بود",
+        "createdAt": "2026-10-27T17:40:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gem-5",
+        "author": "A.K",
+        "rating": 4,
+        "comment": "حدود یه ربع طول کشید تا تحویل بدن ولی اکانت سالمه و قطعی نداشته تا الان🙏",
+        "createdAt": "2026-10-26T09:15:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gem-6",
+        "author": "کاربر وایچ",
+        "rating": 5,
+        "comment": "ممنون فعال شد",
+        "createdAt": "2026-10-28T22:00:00.000Z",
+        "verified": true,
+        "status": "approved"
+      }
     ],
+    "iconUrl": "/gemini-logo.webp?v=sq1"
   },
   {
-    slug: "gemini-pro",
-    name: "Gemini pro",
-    price: 399000,
-    originalPrice: 4700000,
-    discountPercent: 91,
-    duration: "۱۸ ماهه",
-    description: "اشتراک Gemini pro ۱۸ ماهه.",
-    featured: true,
-    badge: "ویژه",
-    badgeColor: "purple",
-    categoryId: "ai",
-    inStock: true,
-    rating: 4.9,
-    reviewCount: 11,
-    purchaseInfo: [
-      "اشتراک Gemini pro به مدت ۱۸ ماه ارائه می‌شود.",
-      "اشتراک به صورت اشتراکی با بهترین کیفیت و پایداری فعال می‌شود.",
-      "دارای پشتیبانی ۲۴ ساعته در صورت بروز هرگونه مشکل.",
-      "اطلاعات اشتراک پس از تأیید سفارش برای شما ارسال می‌شود.",
+    "slug": "gemini-pro",
+    "name": "Gemini Pro",
+    "price": 399000,
+    "originalPrice": 4700000,
+    "discountPercent": 91,
+    "duration": "۱۸ ماهه",
+    "description": "اشتراک ۱۸ ماهه اقتصادی Gemini Pro با پنجره متنی ۲ میلیون توکن، مدل‌های استدلالی عمیق، NotebookLM و پشتیبانی طولانی‌مدت.",
+    "isLifetime": false,
+    "featured": true,
+    "badge": "ویژه",
+    "badgeColor": "purple",
+    "categoryId": "ai",
+    "features": [
+      "طولانی‌ترین اعتبار، بالاترین صرفه اقتصادی و تضمین پایداری کامل در تمام طول دوره ۱۸ ماهه",
+      "دسترسی به کانتکست عظیم ۲ میلیون توکنی بدون محدودیت برای تحلیل سنگین‌ترین پروژه‌های دانشگاهی و سازمانی",
+      "مدل‌های تحلیلی و استدلالی عمیق (Deep Think) و قابلیت‌های کدنویسی پیشرفته گوگل",
+      "دسترسی به کردیت‌های رسمی اختصاص‌یافته برای ابزارهای خلاقانه و تولید ویدیوی گوگل سازگار با طرح",
+      "استفاده کامل از پلتفرم علمی-تحقیقاتی NotebookLM برای ساخت پادکست‌های صوتی و خلاصه‌سازی مقالات",
+      "تحلیل همزمان و بی‌وقفه متن، تصویر، صدا، اسناد PDF و فایل‌های ویدیویی بدون افت کیفیت",
+      "پشتیبانی اختصاصی و گارانتی تعویض فوری در صورت بروز هرگونه قطعی یا مشکل در طول ۱۸ ماه"
     ],
-    features: [
-      "طولانی‌ترین اعتبار، بالاترین صرفه اقتصادی و تضمین پایداری در تمام ۱۸ ماه",
-      "۱۸,۰۰۰ کردیت ماهانه + ۵۰ کردیت روزانه برای ساخت و ادیت ویدیو در پلتفرم هوش مصنوعی Flow",
-      "پنجره متنی ۲ میلیون توکنی بدون محدودیت برای تحلیل سنگین‌ترین پروژه‌ها، کتاب‌ها و کدها",
-      "دسترسی کامل به قابلیت‌های کدنویسی Spark و استدلال تحلیلی عمیق (Deep Think)",
-      "پلتفرم پژوهشی NotebookLM نامحدود با قابلیت تولید خودکار پادکست‌های صوتی",
-      "تحلیل همزمان و پیوسته متن، فایل، صدا و ویدیو بدون نیاز به تبدیل فرمت",
-      "پشتیبانی دائمی و فعال‌سازی پایدار بدون قطعی در طول کل دوره",
+    "purchaseInfo": [
+      "اشتراک Gemini Pro به مدت ۱۸ ماه کامل ارائه می‌شود (بالاترین ارزش خرید نسبت به قیمت در بازار).",
+      "اکانت به صورت اشتراکی با سرورهای بهینه و بدون قطعی فعال‌سازی می‌گردد.",
+      "اطلاعات ورود پس از ثبت سفارش ظرف کمتر از ۶۰ دقیقه تحویل داده می‌شود.",
+      "پشتیبانی و گارانتی کامل سلامت اکانت در تمام ۱۸ ماه توسط تیم وایچ تضمین شده است."
     ],
-    reviews: [
-          {
-                "id": "rev-gp-1",
-                "author": "mohammad",
-                "rating": 5,
-                "comment": "۱۸ ماه با این قیمت خدایی مفته، نوت بوک ال ام و پرامپت نویسی باهاش فوق العاده است دمتون گرم🔥",
-                "createdAt": "2026-10-20T17:40:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gp-2",
-                "author": "کاربر ناشناس",
-                "rating": 5,
-                "comment": "عالییی",
-                "createdAt": "2026-10-28T14:10:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gp-3",
-                "author": "نیلوفر",
-                "rating": 5,
-                "comment": "اولش شک داشتم چون کارت به کارت بود ولی خیلی سریع اطلاعات رو فرستادن، ممنون از سایت خوبتون❤️",
-                "createdAt": "2026-10-25T13:25:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gp-4",
-                "author": ".",
-                "rating": 5,
-                "comment": "دمتون گرم",
-                "createdAt": "2026-10-27T08:50:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gp-5",
-                "author": "Hosein",
-                "rating": 5,
-                "comment": "سرعت عالیه و دسترسی بدون قطعی کار میکنه👍",
-                "createdAt": "2026-10-27T19:50:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gp-6",
-                "author": "سجاد م.",
-                "rating": 5,
-                "comment": "برای تولید محتوا با فلو و جمینای گرفتم، کردیت هاش کامل شارژ شده بود ممنون",
-                "createdAt": "2026-10-26T15:15:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gp-7",
-                "author": "ناشناس",
-                "rating": 5,
-                "comment": "خوب بود مرسی",
-                "createdAt": "2026-10-28T09:30:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gp-8",
-                "author": "کاربر وایچ",
-                "rating": 5,
-                "comment": "عالی",
-                "createdAt": "2026-10-28T20:00:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gp-9",
-                "author": "فرهاد",
-                "rating": 5,
-                "comment": "خیلی به صرفه‌ست، من برای کارای کدنویسی و ترجمه مقاله گرفتم قشنگ کارمو راه انداخت",
-                "createdAt": "2026-10-24T10:45:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gp-10",
-                "author": "A.K",
-                "rating": 4,
-                "comment": "اکانت باکیفیت و بدون مشکل",
-                "createdAt": "2026-10-27T12:00:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gp-11",
-                "author": "کاربر ناشناس",
-                "rating": 5,
-                "comment": "پشتیبانی پاسخگو و اکانت فعال، سپاس",
-                "createdAt": "2026-10-29T01:30:00.000Z",
-                "verified": true,
-                "status": "approved"
-          }
+    "imageFit": "contain",
+    "inStock": false,
+    "rating": 4.9,
+    "reviewCount": 11,
+    "reviews": [
+      {
+        "id": "rev-gp-1",
+        "author": "mohammad",
+        "rating": 5,
+        "comment": "۱۸ ماه با این قیمت خدایی مفته، نوت بوک ال ام و پرامپت نویسی باهاش فوق العاده است دمتون گرم🔥",
+        "createdAt": "2026-10-20T17:40:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gp-2",
+        "author": "کاربر ناشناس",
+        "rating": 5,
+        "comment": "عالییی",
+        "createdAt": "2026-10-28T14:10:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gp-3",
+        "author": "نیلوفر",
+        "rating": 5,
+        "comment": "اولش شک داشتم چون کارت به کارت بود ولی خیلی سریع اطلاعات رو فرستادن، ممنون از سایت خوبتون❤️",
+        "createdAt": "2026-10-25T13:25:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gp-4",
+        "author": ".",
+        "rating": 5,
+        "comment": "دمتون گرم",
+        "createdAt": "2026-10-27T08:50:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gp-5",
+        "author": "Hosein",
+        "rating": 5,
+        "comment": "سرعت عالیه و دسترسی بدون قطعی کار میکنه👍",
+        "createdAt": "2026-10-27T19:50:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gp-6",
+        "author": "سجاد م.",
+        "rating": 5,
+        "comment": "برای تولید محتوا با فلو و جمینای گرفتم، کردیت هاش کامل شارژ شده بود ممنون",
+        "createdAt": "2026-10-26T15:15:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gp-7",
+        "author": "ناشناس",
+        "rating": 5,
+        "comment": "خوب بود مرسی",
+        "createdAt": "2026-10-28T09:30:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gp-8",
+        "author": "کاربر وایچ",
+        "rating": 5,
+        "comment": "عالی",
+        "createdAt": "2026-10-28T20:00:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gp-9",
+        "author": "فرهاد",
+        "rating": 5,
+        "comment": "خیلی به صرفه‌ست، من برای کارای کدنویسی و ترجمه مقاله گرفتم قشنگ کارمو راه انداخت",
+        "createdAt": "2026-10-24T10:45:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gp-10",
+        "author": "A.K",
+        "rating": 4,
+        "comment": "اکانت باکیفیت و بدون مشکل",
+        "createdAt": "2026-10-27T12:00:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gp-11",
+        "author": "کاربر ناشناس",
+        "rating": 5,
+        "comment": "پشتیبانی پاسخگو و اکانت فعال، سپاس",
+        "createdAt": "2026-10-29T01:30:00.000Z",
+        "verified": true,
+        "status": "approved"
+      }
     ],
+    "iconUrl": "/gemini-pro-logo.webp?v=sq1"
   },
   {
-    slug: "اشتراک chatgpt plus شخصی",
-    name: "ChatGPT plus",
-    price: 5350000,
-    duration: "۱ ماهه",
-    description: "اشتراک سرویس هوش مصنوعی ChatGPT.",
-    featured: false,
-    categoryId: "ai",
-    inStock: true,
-    rating: 4.6,
-    reviewCount: 5,
-    purchaseInfo: [
-      "اشتراک ChatGPT plus به مدت ۱ ماه (۳۰ روز) ارائه می‌شود.",
-      "اشتراک به صورت کاملاً اختصاصی و قانونی روی اکانت شما فعال می‌شود.",
-      "دارای پشتیبانی ۲۴ ساعته در صورت بروز هرگونه مشکل.",
-      "اطلاعات اشتراک پس از تأیید سفارش برای شما ارسال می‌شود.",
+    "slug": "اشتراک chatgpt plus شخصی",
+    "name": "ChatGPT Plus",
+    "price": 5350000,
+    "duration": "۱ ماهه",
+    "description": "اشتراک قانونی و ۱۰۰٪ اختصاصی ChatGPT Plus روی ایمیل شخصی شما؛ دسترسی به GPT-4o، مدل‌های o1 و o3-mini، حالت صوتی زنده و Canvas.",
+    "featured": false,
+    "categoryId": "ai",
+    "inStock": true,
+    "rating": 4.6,
+    "reviewCount": 5,
+    "purchaseInfo": [
+      "اشتراک ChatGPT Plus به مدت ۳۰ روز کامل ارائه می‌شود.",
+      "فعال‌سازی کاملاً قانونی بر روی اکانت و جیمیل شخصی خودتان انجام می‌شود و نیازی به ارسال رمز عبور نیست.",
+      "تمام تاریخچه گفتگوها، پروژه‌ها و GPTهای سفارشی به صورت خصوصی و محفوظ برای خودتان باقی می‌ماند.",
+      "دارای گارانتی سلامت ۱۰۰٪ و پشتیبانی سریع در تلگرام در صورت بروز هرگونه سوال یا نیاز به راهنمایی."
     ],
-    features: [
-      "دسترسی کامل و نامحدود به پیشرفته‌ترین مدل‌های هوش مصنوعی (GPT-4o و مدل‌های استدلالی o1 و o3-mini)",
-      "حالت گفتگوی صوتی پیشرفته و زنده (Advanced Voice Mode) با لحن طبیعی و بدون مکث",
-      "محیط تعاملی Canvas برای ویرایش متن، نویسندگی تخصصی و برنامه‌نویسی پیشرفته",
-      "قابلیت تحلیل عمیق داده‌ها، اجرای کد پایتون و ساخت نمودارهای تخصصی (Data Analysis)",
-      "جستجوی زنده، عمیق و هوشمند وب (Web Search) بدون محدودیت زمانی",
-      "تولید و ویرایش نسل جدید تصویر با بالاترین کیفیت ممکن",
-      "دسترسی به صدها هزار ابزار و ربات سفارشی (Custom GPTs)",
-      "فعال‌سازی ۱۰۰٪ اختصاصی و قانونی روی ایمیل شخصی شما با گارانتی کامل ۳۰ روزه",
+    "features": [
+      "فعال‌سازی ۱۰۰٪ قانونی و کاملاً اختصاصی روی اکانت و ایمیل شخصی شما (بدون به اشتراک‌گذاری با افراد دیگر)",
+      "دسترسی به پرچم‌داران OpenAI: مدل چندرسانه‌ای GPT-4o و مدل‌های استدلالی عمیق ریاضی و کدنویسی o1 و o3-mini",
+      "حالت صوتی زنده پیشرفته (Advanced Voice Mode) با درک لحن، احساسات و مکالمه بدون تأخیر",
+      "محیط تعاملی Canvas برای ویرایش هوشمند مقالات، نگارش کد و اصلاح پاراگراف‌به‌پاراگراف متون",
+      "تحلیل پیشرفته داده‌ها (Advanced Data Analysis) با اجرای مستقیم کدهای پایتون و ساخت انواع چارت‌های آماری",
+      "جستجوی زنده و به‌روز در کل وب (SearchGPT) همراه با درج لینک و استناد مستقیم به منابع معتبر اینترنتی",
+      "تولید و ویرایش تصویر با کیفیت بسیار بالا از طریق موتور DALL-E 3 و دسترسی به فروشگاه Custom GPTs",
+      "بالاترین سقف مجاز پیام طبق استانداردهای رسمی OpenAI با اولویت دسترسی در زمان‌های ترافیک سنگین"
     ],
-    reviews: [
-          {
-                "id": "rev-gpt-1",
-                "author": "farhad",
-                "rating": 5,
-                "comment": "رو ایمیل خودم فعال شد بدون اینکه پسورد بخوان، صدا و کانواس هم کار میکنه مرسی",
-                "createdAt": "2026-10-21T20:10:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gpt-2",
-                "author": "کاربر ناشناس",
-                "rating": 5,
-                "comment": "عالی",
-                "createdAt": "2026-10-28T16:45:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gpt-3",
-                "author": "زهرا م.",
-                "rating": 4,
-                "comment": "خوبه فقط ای کاش درگاه مستقیم ریالی بود ولی کارت به کارت و تلگرام هم سریع اوکی شد👍",
-                "createdAt": "2026-10-24T15:30:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gpt-4",
-                "author": "کاربر",
-                "rating": 5,
-                "comment": "تایید شد و سلامت اکانت تا الان کاملا اوکی بوده❤️",
-                "createdAt": "2026-10-27T11:20:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-gpt-5",
-                "author": "ناشناس",
-                "rating": 4,
-                "comment": "خوب بود ممنون، صدا و مدل های جدید او۱ فعاله",
-                "createdAt": "2026-10-28T13:00:00.000Z",
-                "verified": true,
-                "status": "approved"
-          }
+    "reviews": [
+      {
+        "id": "rev-gpt-1",
+        "author": "farhad",
+        "rating": 5,
+        "comment": "رو ایمیل خودم فعال شد بدون اینکه پسورد بخوان، صدا و کانواس هم کار میکنه مرسی",
+        "createdAt": "2026-10-21T20:10:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gpt-2",
+        "author": "کاربر ناشناس",
+        "rating": 5,
+        "comment": "عالی",
+        "createdAt": "2026-10-28T16:45:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gpt-3",
+        "author": "زهرا م.",
+        "rating": 4,
+        "comment": "خوبه فقط ای کاش درگاه مستقیم ریالی بود ولی کارت به کارت و تلگرام هم سریع اوکی شد👍",
+        "createdAt": "2026-10-24T15:30:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gpt-4",
+        "author": "کاربر",
+        "rating": 5,
+        "comment": "تایید شد و سلامت اکانت تا الان کاملا اوکی بوده❤️",
+        "createdAt": "2026-10-27T11:20:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gpt-5",
+        "author": "ناشناس",
+        "rating": 4,
+        "comment": "خوب بود ممنون، صدا و مدل های جدید او۱ فعاله",
+        "createdAt": "2026-10-28T13:00:00.000Z",
+        "verified": true,
+        "status": "approved"
+      }
     ],
+    "iconUrl": "/chatgpt-logo.svg"
   },
   {
-    slug: "claude",
-    name: "Claude Pro",
-    price: 5450000,
-    duration: "۱ ماهه",
-    description: "اشتراک سرویس هوش مصنوعی Claude Pro.",
-    featured: false,
-    categoryId: "ai",
-    inStock: true,
-    rating: 4.5,
-    reviewCount: 4,
-    purchaseInfo: [
-      "اشتراک Claude Pro به مدت ۱ ماه (۳۰ روز) ارائه می‌شود.",
-      "اشتراک به صورت کاملاً اختصاصی و قانونی روی اکانت شما فعال می‌شود.",
-      "دارای پشتیبانی ۲۴ ساعته در صورت بروز هرگونه مشکل.",
-      "اطلاعات اشتراک پس از تأیید سفارش برای شما ارسال می‌شود.",
+    "slug": "claude",
+    "name": "Claude Pro",
+    "price": 5450000,
+    "duration": "۱ ماهه",
+    "description": "اشتراک قانونی و اختصاصی Claude Pro روی ایمیل شخصی؛ دسترسی به Claude 3.5 Sonnet و Claude 3.7 Sonnet، محیط تعاملی Artifacts و ادبیات فارسی بی‌رقیب.",
+    "featured": false,
+    "categoryId": "ai",
+    "inStock": true,
+    "rating": 4.5,
+    "reviewCount": 4,
+    "purchaseInfo": [
+      "اشتراک Claude Pro به مدت ۳۰ روز کامل ارائه می‌شود.",
+      "فعال‌سازی اختصاصی روی ایمیل شخصی انجام می‌شود؛ بدون اشتراک با دیگران و با حفظ کامل امنیت داده‌ها.",
+      "توجه: شرکت آنتروپیک در کلود بخش تولید تصویر ندارد؛ اما در تولید کدهای گرافیکی SVG و UI بی‌رقیب است.",
+      "شامل گارانتی سلامت کامل در تمام ۳۰ روز و پشتیبانی فوری تلگرام در طول استفاده."
     ],
-    features: [
-      "دسترسی بدون محدودیت به قدرتمندترین مدل‌های هوش مصنوعی جهان: Claude 3.5 Sonnet و Claude 3.7 Sonnet",
-      "حداقل ۵ برابر ظرفیت مصرف بیشتر نسبت به نسخه رایگان در هر نشست کاری",
-      "ابزار فوق‌العاده تخصصی برنامه‌نویسی Claude Code و محیط توسعه کد",
-      "امکان ساخت پروژه‌ها (Projects) و پایگاه‌های دانش اختصاصی با بارگذاری اسناد",
-      "تحلیل عمیق و سریع اسناد، تصاویر، کدهای سنگین و استدلال متنی پیشرفته",
-      "اولویت دسترسی در زمان‌های شلوغی و ترافیک بالای سرورهای Anthropic",
-      "فعال‌سازی قانونی و اختصاصی با پشتیبانی کامل در تمام طول دوره ۳۰ روزه",
+    "features": [
+      "فعال‌سازی ۱۰۰٪ قانونی و کاملاً اختصاصی روی ایمیل شخصی شما (حفظ کامل حریم خصوصی و پروژه‌ها)",
+      "دسترسی به برترین مدل‌های برنامه‌نویسی دنیا: Claude 3.5 Sonnet و نسخه هیبریدی Claude 3.7 Sonnet",
+      "فاخرترین و طبیعی‌ترین ادبیات نگارش زبان فارسی میان تمام هوش‌های مصنوعی بدون لحن ماشینی و ترجمه‌ای",
+      "رتبه اول بنچمارک‌های مهندسی نرم‌افزار (SWE-bench) با درک فوق‌العاده ساختار پروژه‌ها و ریفکتور کد",
+      "محیط تعاملی و جذاب Artifacts برای مشاهده و رندر آنی کدهای فرانت‌اند (React, HTML, Tailwind) و نمودارها",
+      "امکان ساخت پایگاه‌های دانش اختصاصی (Projects) با بارگذاری داکیومنت‌ها و پنجره متنی ۲۰۰,۰۰۰ توکنی",
+      "حداقل ۵ برابر سقف پیام و پردازش اسناد سنگین‌تر نسبت به نسخه رایگان کلود با اولویت ترافیکی سرور"
     ],
-    reviews: [
-          {
-                "id": "rev-cld-1",
-                "author": "Navid_dev",
-                "rating": 5,
-                "comment": "کلود کد و پروجکت هاش بدون مشکل کار میکنه، برای برنامه نویسی واقعا لازم بود دستتون درد نکنه🙏",
-                "createdAt": "2026-10-22T19:00:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-cld-2",
-                "author": "کاربر ناشناس",
-                "rating": 5,
-                "comment": "عالییی",
-                "createdAt": "2026-10-28T17:20:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-cld-3",
-                "author": "م. حسینی",
-                "rating": 4,
-                "comment": "سرعت پاسخگویی ساپورت خوب بود، اکانت هم قانونی فعال شد",
-                "createdAt": "2026-10-26T21:10:00.000Z",
-                "verified": true,
-                "status": "approved"
-          },
-          {
-                "id": "rev-cld-4",
-                "author": "کاربر وایچ",
-                "rating": 4,
-                "comment": "خوبه مرسی",
-                "createdAt": "2026-10-28T19:00:00.000Z",
-                "verified": true,
-                "status": "approved"
-          }
+    "reviews": [
+      {
+        "id": "rev-cld-1",
+        "author": "Navid_dev",
+        "rating": 5,
+        "comment": "کلود کد و پروجکت هاش بدون مشکل کار میکنه، برای برنامه نویسی واقعا لازم بود دستتون درد نکنه🙏",
+        "createdAt": "2026-10-22T19:00:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-cld-2",
+        "author": "کاربر ناشناس",
+        "rating": 5,
+        "comment": "عالییی",
+        "createdAt": "2026-10-28T17:20:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-cld-3",
+        "author": "م. حسینی",
+        "rating": 4,
+        "comment": "سرعت پاسخگویی ساپورت خوب بود، اکانت هم قانونی فعال شد",
+        "createdAt": "2026-10-26T21:10:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-cld-4",
+        "author": "کاربر وایچ",
+        "rating": 4,
+        "comment": "خوبه مرسی",
+        "createdAt": "2026-10-28T19:00:00.000Z",
+        "verified": true,
+        "status": "approved"
+      }
     ],
-  },
+    "iconUrl": "/Claude-.webp?v=sq1"
+  }
 ];
 
 export const products = DEFAULT_PRODUCTS;
