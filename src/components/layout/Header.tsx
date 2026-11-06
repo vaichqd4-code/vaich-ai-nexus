@@ -408,26 +408,19 @@ export function Header() {
             )}
           </div>
 
-          {/* دکمه اختصاصی پشتیبانی آنلاین ۲۴ ساعته با هوش مصنوعی */}
+          {/* دکمه آیکونی و فشرده پشتیبانی آنلاین ۲۴ ساعته */}
           <button
             type="button"
             onClick={handleOpenCrisp}
-            title="پشتیبانی آنلاین و چت ۲۴ ساعته هوشمند"
-            aria-label="پشتیبانی آنلاین و چت ۲۴ ساعته"
-            className="group relative flex items-center gap-1.5 sm:gap-2 rounded-xl border border-primary/40 bg-secondary/50 hover:bg-secondary px-2 sm:px-3 h-10 sm:h-11 transition-all duration-200 hover:border-primary hover:shadow-[0_0_22px_-6px_var(--neon-purple)] active:scale-95 cursor-pointer shrink-0"
+            title="پشتیبانی آنلاین ۲۴ ساعته هوشمند"
+            aria-label="پشتیبانی آنلاین ۲۴ ساعته"
+            className="group relative grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary active:scale-95 cursor-pointer"
           >
-            {/* پالس زنده وضعیت آنلاین */}
-            <span className="relative flex h-2 w-2 shrink-0">
+            <Headphones className="h-4 w-4 sm:h-5 sm:w-5 text-primary group-hover:text-neon-cyan transition-transform group-hover:scale-110" />
+            {/* پالس زنده وضعیت آنلاین در گوشه بالا */}
+            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-
-            <Headphones className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-primary group-hover:text-neon-cyan transition-colors shrink-0" />
-            <span className="text-xs font-bold text-foreground hidden sm:inline-block">
-              پشتیبانی
-            </span>
-            <span className="hidden xl:inline-flex items-center rounded-md bg-primary/20 px-1.5 py-0.5 text-[9px] font-black text-primary border border-primary/30">
-              ۲۴/۷
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 border border-background"></span>
             </span>
           </button>
 
