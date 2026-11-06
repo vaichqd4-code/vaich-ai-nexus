@@ -408,6 +408,29 @@ export function Header() {
             )}
           </div>
 
+          {/* دکمه اختصاصی پشتیبانی آنلاین ۲۴ ساعته با هوش مصنوعی */}
+          <button
+            type="button"
+            onClick={handleOpenCrisp}
+            title="پشتیبانی آنلاین و چت ۲۴ ساعته هوشمند"
+            aria-label="پشتیبانی آنلاین و چت ۲۴ ساعته"
+            className="group relative flex items-center gap-1.5 sm:gap-2 rounded-xl border border-primary/40 bg-secondary/50 hover:bg-secondary px-2 sm:px-3 h-10 sm:h-11 transition-all duration-200 hover:border-primary hover:shadow-[0_0_22px_-6px_var(--neon-purple)] active:scale-95 cursor-pointer shrink-0"
+          >
+            {/* پالس زنده وضعیت آنلاین */}
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+
+            <Headphones className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-primary group-hover:text-neon-cyan transition-colors shrink-0" />
+            <span className="text-xs font-bold text-foreground hidden sm:inline-block">
+              پشتیبانی
+            </span>
+            <span className="hidden xl:inline-flex items-center rounded-md bg-primary/20 px-1.5 py-0.5 text-[9px] font-black text-primary border border-primary/30">
+              ۲۴/۷
+            </span>
+          </button>
+
           {/* Theme Toggle */}
           <button
             type="button"

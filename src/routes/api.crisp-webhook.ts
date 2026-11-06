@@ -167,6 +167,25 @@ async function sendCrispMessage({
   return false;
 }
 
+// کش سروری برای جلوگیری از پاسخ تکراری به پیام‌های هم‌زمان (Deduplication)
+const recentProcessed = new Map<string, number>();
+
+function isAlreadyHandled(sessionId: string, text: string): boolean {
+  const key = `${sessionId}:${text.trim().toLowerCase()}`;
+  const now = Date.now();
+  const prev = recentProcessed.get(key);
+  if (prev && now - prev < 45000) {
+    return true;
+  }
+  recentProcessed.set(key, now);
+  if (recentProcessed.size > 500) {
+    for (const [k, t] of recentProcessed.entries()) {
+      if (now - t > 60000) recentProcessed.delete(k);
+    }
+  }
+  return false;
+}
+
 export const Route = createFileRoute("/api/crisp-webhook")({
   server: {
     handlers: {
@@ -204,6 +223,7 @@ export const Route = createFileRoute("/api/crisp-webhook")({
             website_id?: string;
             data?: {
               session_id?: string;
+              website_id?: string;
               type?: string;
               from?: string;
               content?: string;
@@ -211,36 +231,49 @@ export const Route = createFileRoute("/api/crisp-webhook")({
           };
 
           const event = body?.event;
-          const websiteId = body?.website_id;
-          const data = body?.data;
+          const data = body?.data || (body as any);
+          const websiteId =
+            body?.website_id ||
+            data?.website_id ||
+            "7751150b-b8d0-4953-8745-021b7d8a730c";
 
           // ۱. فیلتر امنیتی و حیاتی ضد لوپ بی‌نهایت:
           // اگر پیام توسط اپراتور یا ربات ارسال شده باشد، فوراً آن را نادیده می‌گیریم
-          if (data?.from !== "user") {
+          if (data?.from === "operator" || data?.from === "bot") {
             return Response.json({
               ok: true,
               ignored: true,
-              reason: "Sender is not user (loop prevention)",
+              reason: "Sender is operator or bot (loop prevention)",
             });
           }
 
           // ۲. فیلتر نوع پیام: تنها پیام‌های متنی پردازش می‌شوند
-          if (data?.type !== "text" || !data?.content || typeof data.content !== "string") {
+          const rawContent = data?.content ?? data?.text ?? "";
+          if (typeof rawContent !== "string" || !rawContent.trim()) {
             return Response.json({
               ok: true,
               ignored: true,
-              reason: "Not a text message",
+              reason: "Not a valid text message",
             });
           }
 
-          const userText = data.content.trim();
-          const sessionId = data.session_id;
+          const userText = rawContent.trim();
+          const sessionId = data?.session_id;
 
-          if (!userText || !sessionId || !websiteId) {
+          if (!sessionId) {
             return Response.json({
               ok: true,
               ignored: true,
-              reason: "Missing website_id, session_id or empty content",
+              reason: "Missing session_id",
+            });
+          }
+
+          // ۳. فیلتر عدم ارسال پاسخ تکراری (Deduplication)
+          if (isAlreadyHandled(sessionId, userText)) {
+            return Response.json({
+              ok: true,
+              ignored: true,
+              reason: "Message already handled recently",
             });
           }
 

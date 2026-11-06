@@ -414,3 +414,18 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ========================================================
+   CRISP CUSTOMIZATION: HIDE DEFAULT BOTTOM LAUNCHER
+   The chat will only be launched via our modern top header button
+   ======================================================== */
+.crisp-client .crisp-16m5x,
+.crisp-client [data-maximized="false"],
+#crisp-chatbox span[data-maximized="false"],
+.crisp-client [data-is-maximized="false"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}
+
