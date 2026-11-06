@@ -101,8 +101,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:image", content: "https://vaich.ir/vaich-logo.png" },
     ],
     links: [
-      { rel: "dns-prefetch", href: "https://client.crisp.chat" },
-      { rel: "dns-prefetch", href: "https://image.crisp.chat" },
       {
         rel: "preload",
         as: "font",
@@ -186,82 +184,38 @@ function RootShell({ children }: { children: ReactNode }) {
             }),
           }}
         />
-        {/* مخفی‌سازی قطعی دکمه شناور کریسپ در پایین صفحه برای جایگزینی با دکمه زیبای بالا */}
+        {/* مسدودسازی قطعی و کامل هرگونه ویجت خارجی کریسپ در هر دو حالت با فیلترشکن و بدون فیلترشکن */}
         <style
           dangerouslySetInnerHTML={{
             __html: `
-              .crisp-client .crisp-16m5x,
-              .crisp-client [data-maximized="false"],
-              #crisp-chatbox span[data-maximized="false"],
-              .crisp-client [data-is-maximized="false"] {
+              .crisp-client,
+              #crisp-chatbox,
+              [data-crisp-element],
+              .crisp-16m5x,
+              [data-is-maximized],
+              [data-maximized] {
                 display: none !important;
                 visibility: hidden !important;
                 pointer-events: none !important;
                 opacity: 0 !important;
+                width: 0 !important;
+                height: 0 !important;
+                position: fixed !important;
+                top: -9999px !important;
+                left: -9999px !important;
+                z-index: -9999 !important;
               }
             `,
           }}
         />
-        {/* لودر هوشمند کریسپ به همراه اتصال خودکار به هوش مصنوعی */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){
-              window.$crisp=[];
-              window.CRISP_WEBSITE_ID="7751150b-b8d0-4953-8745-021b7d8a730c";
-              window.$crisp.push(["safe", true]);
-              window.$crisp.push(["set", "chat:hide:launcher", true]);
-
-              // ارسال فوری هر پیام ارسال‌شده به هوش مصنوعی حتی بدون نیاز به وب‌هوک
-              window.$crisp.push(["on", "message:sent", function(message) {
-                try {
-                  var text = typeof message === "string" ? message : (message && (message.content || message.text || ""));
-                  if (!text || typeof text !== "string") return;
-                  var trimmed = text.trim();
-                  if (!trimmed) return;
-                  var sid = (window.$crisp && window.$crisp.get) ? window.$crisp.get("session:identifier") : null;
-                  if (!sid) return;
-
-                  fetch("/api/crisp-webhook", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      event: "message:send",
-                      website_id: "7751150b-b8d0-4953-8745-021b7d8a730c",
-                      data: {
-                        session_id: sid,
-                        website_id: "7751150b-b8d0-4953-8745-021b7d8a730c",
-                        type: "text",
-                        from: "user",
-                        origin: "chat",
-                        content: trimmed
-                      }
-                    })
-                  }).catch(function(e) { console.warn("AI sync error:", e); });
-                } catch(err) {
-                  console.warn("Crisp hook error:", err);
-                }
-              }]);
-
-              var loaded=false;
-              function initCrisp(){
-                if(loaded)return;
-                loaded=true;
-                ['click','keydown'].forEach(function(e){try{window.removeEventListener(e,initCrisp);}catch(_){}});
-                var d=document;
-                var s=d.createElement("script");
-                s.src="https://client.crisp.chat/l.js";
-                s.async=true;
-                s.crossOrigin="anonymous";
-                s.onerror=function(){console.warn("Live chat connection unavailable");};
-                d.head.appendChild(s);
-              }
-              window.loadCrispNow=initCrisp;
-              if(window.location.pathname==='/support'){
-                initCrisp();
-              } else {
-                ['click','keydown'].forEach(function(e){try{window.addEventListener(e,initCrisp,{once:true,passive:true});}catch(_){}});
-                setTimeout(initCrisp, 4000);
-              }
+              try {
+                window.$crisp = [];
+                window.$crisp.push = function(){};
+                window.CRISP_WEBSITE_ID = undefined;
+              } catch(e) {}
             })();`,
           }}
         />

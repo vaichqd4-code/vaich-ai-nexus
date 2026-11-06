@@ -39,28 +39,15 @@ function SupportPage() {
     const formattedMsg = `نام: ${name.trim() || "—"}\nتماس: ${contact.trim() || "—"}\n\nپیام:\n${message.trim()}`;
 
     if (typeof window !== "undefined") {
-      // باز کردن چت هوشمند اختصاصی سایت (بدون نیاز به فیلترشکن)
+      // باز کردن گفت‌وگوی هوشمند آنلاین سایت و ارسال پیام
       if ((window as any).openVaichChat) {
-        (window as any).openVaichChat();
+        (window as any).openVaichChat(formattedMsg);
       } else {
-        window.dispatchEvent(new CustomEvent("vaich:open-chat"));
-      }
-
-      // در صورت بارگذاری کریسپ، پیام به آن نیز ارسال می‌شود
-      if ((window as any).$crisp) {
-        try {
-          const crisp = (window as any).$crisp;
-          if (name.trim()) crisp.push(["set", "user:nickname", [name.trim()]]);
-          if (contact.trim()) {
-            const isEmail = /\S+@\S+\.\S+/.test(contact.trim());
-            if (isEmail) crisp.push(["set", "user:email", [contact.trim()]]);
-            else crisp.push(["set", "session:data", [[["contact", contact.trim()]]]]);
-          }
-          crisp.push(["do", "message:send", ["text", formattedMsg]]);
-          crisp.push(["do", "chat:open"]);
-        } catch {
-          // ignore
-        }
+        window.dispatchEvent(
+          new CustomEvent("vaich:open-chat", {
+            detail: { text: formattedMsg },
+          })
+        );
       }
 
       setName("");
@@ -76,7 +63,7 @@ function SupportPage() {
         title="پشتیبانی"
         subtitle="سوالی دارید؟ تیم پشتیبانی VAICH آماده کمک به شماست."
       >
-        {/* بنر تعاملی گفت‌وگوی آنلاین بدون فیلترشکن */}
+        {/* بنر تعاملی گفت‌وگوی آنلاین اختصاصی */}
         <div className="mx-auto mb-8 max-w-2xl text-center">
           <div className="rounded-3xl border border-primary/40 bg-gradient-to-b from-primary/10 via-secondary/30 to-background p-6 sm:p-8 shadow-xl backdrop-blur-xl">
             <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-primary/20 text-primary border border-primary/40">

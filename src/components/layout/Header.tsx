@@ -46,7 +46,7 @@ export function Header() {
   const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
-  const handleOpenCrisp = () => {
+  const handleOpenChat = () => {
     setOpen(false);
     if (typeof window !== "undefined") {
       if ((window as any).openVaichChat) {
@@ -402,7 +402,7 @@ export function Header() {
           {/* دکمه آیکونی و فشرده پشتیبانی آنلاین ۲۴ ساعته */}
           <button
             type="button"
-            onClick={handleOpenCrisp}
+            onClick={handleOpenChat}
             title="پشتیبانی آنلاین ۲۴ ساعته"
             aria-label="پشتیبانی آنلاین ۲۴ ساعته"
             className="group grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary hover:text-foreground active:scale-95 cursor-pointer"
@@ -627,7 +627,7 @@ export function Header() {
               <div className="flex items-center justify-between text-xs">
                 <button
                   type="button"
-                  onClick={handleOpenCrisp}
+                  onClick={handleOpenChat}
                   className="text-foreground/80 hover:text-primary transition-colors font-medium cursor-pointer"
                 >
                   گفت‌وگوی آنلاین ۲۴ ساعته
