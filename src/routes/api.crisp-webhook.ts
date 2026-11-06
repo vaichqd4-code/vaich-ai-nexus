@@ -417,20 +417,65 @@ export const Route = createFileRoute("/api/crisp-webhook")({
             url.searchParams.get("gemini_key") ||
             DEFAULT_GEMINI_API_KEY;
 
-          const body = (await request.json()) as {
-            event?: string;
-            website_id?: string;
-            data?: {
-              session_id?: string;
-              website_id?: string;
-              type?: string;
-              from?: string;
-              content?: string;
-              text?: string;
-            };
-          };
+          const body = (await request.json()) as any;
 
-          const data = body?.data || (body as any);
+          // ۰. پشتیبانی از درخواست مستقیم چت از داخل سایت (بدون نیاز به کریسپ و ۱۰۰٪ بدون فیلترشکن در ایران)
+          if (body?.message || body?.direct) {
+            const userText = (body?.message || body?.text || "").trim();
+            if (!userText) {
+              return Response.json(
+                { ok: false, error: "Empty message" },
+                { status: 400 },
+              );
+            }
+
+            const clientHistory = Array.isArray(body?.history) ? body.history : [];
+            const visitorName =
+              typeof body?.visitorName === "string" && body.visitorName.trim()
+                ? body.visitorName.trim()
+                : undefined;
+
+            const isOngoingConversation = clientHistory.some(
+              (h: any) => h.role === "model" || h.role === "assistant",
+            );
+            const trimmedUserText = userText.trim();
+            const isPureGreeting =
+              /^(سلام|درود|سلام علیکم|سلام و درود|سلام وقت بخیر|وقت بخیر|سلام خسته نباشید|درود بر شما|سلام روزتون بخیر|سلام من|هستید|الو|hi|hello|hey)[\s!.]*$/i.test(
+                trimmedUserText,
+              );
+
+            const formattedHistory: Array<{ role: "user" | "model"; text: string }> = [];
+            for (const item of clientHistory) {
+              if (item && item.text && typeof item.text === "string") {
+                const role = item.role === "user" ? "user" : "model";
+                formattedHistory.push({ role, text: item.text.trim() });
+              }
+            }
+
+            const contents = buildGeminiContents(formattedHistory, userText);
+            const systemPrompt = buildSystemPrompt({
+              visitorName,
+              isOngoingConversation,
+              isPureGreeting,
+            });
+
+            const aiResponse = await generateAiReply({
+              contents,
+              systemPrompt,
+              apiKey: geminiApiKey,
+            });
+
+            return Response.json({
+              ok: true,
+              reply:
+                aiResponse ||
+                "پوزش می‌طلبم، در ارتباط با موتور هوش مصنوعی اختلالی رخ داد. لطفاً چند لحظه دیگر پیام دهید یا در تلگرام به آیدی @youneshayati پیام دهید.",
+              visitorName: visitorName || null,
+              model: "gemini-flash",
+            });
+          }
+
+          const data = body?.data || body;
           const websiteId =
             body?.website_id ||
             data?.website_id ||

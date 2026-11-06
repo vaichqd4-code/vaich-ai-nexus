@@ -49,20 +49,11 @@ export function Header() {
   const handleOpenCrisp = () => {
     setOpen(false);
     if (typeof window !== "undefined") {
-      if ((window as any).loadCrispNow) {
-        (window as any).loadCrispNow();
+      if ((window as any).openVaichChat) {
+        (window as any).openVaichChat();
+        return;
       }
-      if ((window as any).$crisp) {
-        (window as any).$crisp.push(["do", "chat:open"]);
-      } else {
-        setTimeout(() => {
-          if ((window as any).$crisp) {
-            (window as any).$crisp.push(["do", "chat:open"]);
-          } else {
-            router.navigate({ to: "/support" });
-          }
-        }, 300);
-      }
+      window.dispatchEvent(new CustomEvent("vaich:open-chat"));
     }
   };
 

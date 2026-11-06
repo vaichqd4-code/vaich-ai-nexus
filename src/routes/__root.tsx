@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { AiChatDrawer } from "@/components/chat/AiChatDrawer";
 
 function NotFoundComponent() {
   return (
@@ -284,6 +285,7 @@ function RootComponent() {
           <Outlet />
         </main>
         <Footer />
+        <AiChatDrawer />
       </div>
     </QueryClientProvider>
   );
