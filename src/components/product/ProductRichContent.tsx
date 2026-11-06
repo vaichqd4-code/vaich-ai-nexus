@@ -1235,13 +1235,13 @@ function PlannerDetailContent({
         <div className="space-y-4">
           <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-emerald-400" />
-            نحوه دریافت و تحویل آنی فایل
+            نحوه دریافت و تحویل فایل
           </h3>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                تحویل ۱ ثانیه‌ای پس از پرداخت
+                تحویل و دسترسی مستقیم پس از پرداخت
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
                 لینک کپی مستقیم (Make a copy) در گوگل درایو بلافاصله پس از پرداخت به همراه راهنمای ویدیویی و صوتی برای شما نمایش داده می‌شود.
@@ -1254,7 +1254,7 @@ function PlannerDetailContent({
                 پشتیبانی اختصاصی راه‌اندازی
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                در صورت هرگونه سوال در کپی فایل یا نحوه استفاده در موبایل، تیم پشتیبانی تلگرام وایچ در کمتر از چند دقیقه شما را راهنمایی خواهد کرد.
+                در صورت هرگونه سوال در کپی فایل یا نحوه استفاده در موبایل، تیم پشتیبانی تلگرام وایچ در اولین فرصت و در سریع‌ترین زمان ممکن شما را راهنمایی خواهد کرد.
               </p>
             </div>
           </div>

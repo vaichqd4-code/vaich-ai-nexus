@@ -383,7 +383,7 @@ function ProductDetail() {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-500 font-bold">✓</span>
-                      <span>{isPlanner ? "پشتیبانی اختصاصی و راهنمای کامل راه‌اندازی فارسی در ۳ دقیقه" : "پشتیبانی اختصاصی و تضمین مادام‌العمر فایل‌ها"}</span>
+                      <span>{isPlanner ? "پشتیبانی اختصاصی و راهنمای جامع راه‌اندازی گام‌به‌گام فارسی" : "پشتیبانی اختصاصی و تضمین مادام‌العمر فایل‌ها"}</span>
                     </div>
                   </>
                 ) : (
@@ -394,7 +394,7 @@ function ProductDetail() {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-500 font-bold">✓</span>
-                      <span>تحویل سریع اطلاعات اشتراک پس از تأیید فاکتور</span>
+                      <span>تحویل و فعال‌سازی در اولین فرصت پس از تأیید رسید</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-500 font-bold">✓</span>
