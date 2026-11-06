@@ -412,16 +412,11 @@ export function Header() {
           <button
             type="button"
             onClick={handleOpenCrisp}
-            title="پشتیبانی آنلاین ۲۴ ساعته هوشمند"
+            title="پشتیبانی آنلاین ۲۴ ساعته"
             aria-label="پشتیبانی آنلاین ۲۴ ساعته"
-            className="group relative grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary active:scale-95 cursor-pointer"
+            className="group grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary hover:text-foreground active:scale-95 cursor-pointer"
           >
-            <Headphones className="h-4 w-4 sm:h-5 sm:w-5 text-primary group-hover:text-neon-cyan transition-transform group-hover:scale-110" />
-            {/* پالس زنده وضعیت آنلاین در گوشه بالا */}
-            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 border border-background"></span>
-            </span>
+            <Headphones className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-200 group-hover:scale-105" />
           </button>
 
           {/* Theme Toggle */}
