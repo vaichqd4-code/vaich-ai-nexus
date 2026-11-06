@@ -39,9 +39,21 @@ const navigationColumns = [
   },
 ];
 
+function getDynamicShamsiYear(): string {
+  try {
+    return new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+      year: "numeric",
+    }).format(new Date());
+  } catch {
+    const gYear = new Date().getFullYear();
+    return toPersianDigits(gYear - 621);
+  }
+}
+
 export function Footer() {
   const { instagramUrl } = useDynamicProducts();
   const activeInstagram = instagramUrl || CONTACT_INSTAGRAM_URL;
+  const currentShamsiYear = getDynamicShamsiYear();
 
   const socials = [
     {
@@ -119,7 +131,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-border/70 px-4 py-6 text-center text-xs text-muted-foreground sm:px-6">
-        © {toPersianDigits(1404)} VAICH — تمامی حقوق محفوظ است.
+        © {currentShamsiYear} VAICH — تمامی حقوق مادی و معنوی محفوظ است.
       </div>
     </footer>
   );
