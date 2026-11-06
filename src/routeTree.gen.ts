@@ -19,6 +19,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WhyRouteImport } from './routes/why'
 import { Route as ApiAnalyticsRouteImport } from './routes/api.analytics'
 import { Route as ApiCreateOrderRouteImport } from './routes/api.create-order'
+import { Route as ApiCrispWebhookRouteImport } from './routes/api.crisp-webhook'
 import { Route as ApiSendReceiptRouteImport } from './routes/api.send-receipt'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -77,6 +78,11 @@ const ApiCreateOrderRoute = ApiCreateOrderRouteImport.update({
   path: '/api/create-order',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCrispWebhookRoute = ApiCrispWebhookRouteImport.update({
+  id: '/api/crisp-webhook',
+  path: '/api/crisp-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSendReceiptRoute = ApiSendReceiptRouteImport.update({
   id: '/api/send-receipt',
   path: '/api/send-receipt',
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/why': typeof WhyRoute
   '/api/analytics': typeof ApiAnalyticsRoute
   '/api/create-order': typeof ApiCreateOrderRoute
+  '/api/crisp-webhook': typeof ApiCrispWebhookRoute
   '/api/send-receipt': typeof ApiSendReceiptRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
@@ -144,6 +151,7 @@ export interface FileRoutesByTo {
   '/why': typeof WhyRoute
   '/api/analytics': typeof ApiAnalyticsRoute
   '/api/create-order': typeof ApiCreateOrderRoute
+  '/api/crisp-webhook': typeof ApiCrispWebhookRoute
   '/api/send-receipt': typeof ApiSendReceiptRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
@@ -164,6 +172,7 @@ export interface FileRoutesById {
   '/why': typeof WhyRoute
   '/api/analytics': typeof ApiAnalyticsRoute
   '/api/create-order': typeof ApiCreateOrderRoute
+  '/api/crisp-webhook': typeof ApiCrispWebhookRoute
   '/api/send-receipt': typeof ApiSendReceiptRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
     | '/why'
     | '/api/analytics'
     | '/api/create-order'
+    | '/api/crisp-webhook'
     | '/api/send-receipt'
     | '/blog/$slug'
     | '/checkout/$slug'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/why'
     | '/api/analytics'
     | '/api/create-order'
+    | '/api/crisp-webhook'
     | '/api/send-receipt'
     | '/blog/$slug'
     | '/checkout/$slug'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/why'
     | '/api/analytics'
     | '/api/create-order'
+    | '/api/crisp-webhook'
     | '/api/send-receipt'
     | '/blog/$slug'
     | '/checkout/$slug'
@@ -243,6 +255,7 @@ export interface RootRouteChildren {
   WhyRoute: typeof WhyRoute
   ApiAnalyticsRoute: typeof ApiAnalyticsRoute
   ApiCreateOrderRoute: typeof ApiCreateOrderRoute
+  ApiCrispWebhookRoute: typeof ApiCrispWebhookRoute
   ApiSendReceiptRoute: typeof ApiSendReceiptRoute
   BlogSlugRoute: typeof BlogSlugRoute
   CheckoutSlugRoute: typeof CheckoutSlugRoute
@@ -324,6 +337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCreateOrderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/crisp-webhook': {
+      id: '/api/crisp-webhook'
+      path: '/api/crisp-webhook'
+      fullPath: '/api/crisp-webhook'
+      preLoaderRoute: typeof ApiCrispWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/send-receipt': {
       id: '/api/send-receipt'
       path: '/api/send-receipt'
@@ -387,6 +407,7 @@ const rootRouteChildren: RootRouteChildren = {
   WhyRoute: WhyRoute,
   ApiAnalyticsRoute: ApiAnalyticsRoute,
   ApiCreateOrderRoute: ApiCreateOrderRoute,
+  ApiCrispWebhookRoute: ApiCrispWebhookRoute,
   ApiSendReceiptRoute: ApiSendReceiptRoute,
   BlogSlugRoute: BlogSlugRoute,
   CheckoutSlugRoute: CheckoutSlugRoute,

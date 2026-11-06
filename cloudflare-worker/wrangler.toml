@@ -1,0 +1,9 @@
+name = "vaich-crisp-gemini-bot"
+main = "crisp-gemini-bot.js"
+compatibility_date = "2026-10-31"
+
+# در صورت استفاده از wrangler deploy می‌توانید متغیرها را اینجا یا در داشبورد کلودفلر وارد کنید:
+[vars]
+# GEMINI_API_KEY = ""
+# CRISP_IDENTIFIER = ""
+# CRISP_KEY = ""
