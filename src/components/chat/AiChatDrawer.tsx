@@ -52,6 +52,16 @@ export function AiChatDrawer() {
   });
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return localStorage.getItem("vaich_crisp_session_id") || null;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const handleSendMessageRef = useRef<(textToSend?: string) => Promise<void>>();
 
@@ -135,11 +145,21 @@ export function AiChatDrawer() {
           direct: true,
           message: trimmed,
           history: historyPayload,
+          sessionId: sessionId || undefined,
         }),
       });
 
       if (res.ok) {
         const data = await res.json();
+        if (data?.sessionId && data.sessionId !== sessionId) {
+          setSessionId(data.sessionId);
+          try {
+            localStorage.setItem("vaich_crisp_session_id", data.sessionId);
+          } catch {
+            // ignore
+          }
+        }
+
         const replyText =
           data?.reply ||
           "پوزش می‌طلبم، پاسخی دریافت نشد. لطفاً در تلگرام به @youneshayati پیام دهید.";
@@ -173,6 +193,44 @@ export function AiChatDrawer() {
 
   handleSendMessageRef.current = handleSendMessage;
 
+  // همگام‌سازی و دریافت زنده پاسخ‌های دستی ادمین (یونس حیاتی) از اپلیکیشن موبایل کریسپ
+  useEffect(() => {
+    if (!isOpen || isMinimized || !sessionId || loading) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/crisp-webhook?session_id=${encodeURIComponent(sessionId)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data?.messages) && data.messages.length > 0) {
+            setMessages((prev) => {
+              const existingTexts = new Set(prev.map((m) => m.text.trim()));
+              const newOperatorMsgs = data.messages.filter(
+                (m: any) => m.role === "model" && !existingTexts.has(m.text.trim()),
+              );
+              if (newOperatorMsgs.length > 0) {
+                return [
+                  ...prev,
+                  ...newOperatorMsgs.map((m: any) => ({
+                    id: "crisp-op-" + (m.id || Date.now()),
+                    role: "model" as const,
+                    text: m.text,
+                    timestamp: m.timestamp || Date.now(),
+                  })),
+                ];
+              }
+              return prev;
+            });
+          }
+        }
+      } catch {
+        // ignore background poll errors
+      }
+    }, 6000);
+
+    return () => clearInterval(interval);
+  }, [isOpen, isMinimized, sessionId, loading]);
+
   const handleClose = () => {
     setIsClosing(true);
     setTimeout(() => {
@@ -184,8 +242,10 @@ export function AiChatDrawer() {
   const handleClearHistory = () => {
     const reset = [INITIAL_WELCOME];
     setMessages(reset);
+    setSessionId(null);
     try {
       localStorage.setItem("vaich_ai_chat_v2", JSON.stringify(reset));
+      localStorage.removeItem("vaich_crisp_session_id");
     } catch {
       // ignore
     }

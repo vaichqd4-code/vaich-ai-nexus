@@ -327,18 +327,20 @@ async function generateAiReply({
 }
 
 /**
- * ارسال پاسخ نهایی به گفتگوی کاربر در Crisp
+ * ارسال پیام به گفتگوی کاربر در Crisp (از طرف کاربر یا اپراتور)
  */
 async function sendCrispMessage({
   websiteId,
   sessionId,
   content,
+  from = "operator",
   identifier,
   key,
 }: {
   websiteId: string;
   sessionId: string;
   content: string;
+  from?: "operator" | "user";
   identifier: string;
   key: string;
 }): Promise<boolean> {
@@ -356,7 +358,7 @@ async function sendCrispMessage({
         },
         body: JSON.stringify({
           type: "text",
-          from: "operator",
+          from,
           origin: "chat",
           content,
         }),
@@ -374,6 +376,65 @@ async function sendCrispMessage({
   }
 
   return false;
+}
+
+/**
+ * ایجاد یک گفت‌وگوی جدید در کریسپ برای کاربر سایت جهت نمایش زنده در اپلیکیشن موبایل کریسپ
+ */
+async function createCrispSession({
+  websiteId,
+  identifier,
+  key,
+  visitorName,
+}: {
+  websiteId: string;
+  identifier: string;
+  key: string;
+  visitorName?: string;
+}): Promise<string | null> {
+  const url = `https://api.crisp.chat/v1/website/${websiteId}/conversation`;
+  const basicAuth = Buffer.from(`${identifier}:${key}`).toString("base64");
+
+  for (const tier of ["website", "plugin"]) {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Crisp-Tier": tier,
+          Authorization: `Basic ${basicAuth}`,
+        },
+        body: JSON.stringify({}),
+      });
+
+      if (response.ok) {
+        const json = (await response.json()) as any;
+        const sessionId = json?.data?.session_id;
+        if (sessionId) {
+          // ثبت نام و منبع پیام در متادیتای کریسپ
+          const metaUrl = `https://api.crisp.chat/v1/website/${websiteId}/conversation/${sessionId}/meta`;
+          fetch(metaUrl, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Crisp-Tier": tier,
+              Authorization: `Basic ${basicAuth}`,
+            },
+            body: JSON.stringify({
+              nickname: visitorName || "کاربر وبسایت وایچ",
+              data: { source: "چت اختصاصی وبسایت VAICH" },
+            }),
+          }).catch(() => {});
+
+          return sessionId;
+        }
+      }
+    } catch (err) {
+      console.warn(`[Crisp Create Session] Error:`, err);
+    }
+  }
+
+  return null;
 }
 
 // کش سروری برای جلوگیری از پاسخ‌های تکراری به یک پیام
@@ -398,7 +459,53 @@ function isAlreadyHandled(sessionId: string, text: string): boolean {
 export const Route = createFileRoute("/api/crisp-webhook")({
   server: {
     handlers: {
-      GET: async () => {
+      GET: async ({ request }) => {
+        try {
+          const url = new URL(request.url);
+          const sessionId = url.searchParams.get("session_id");
+
+          if (sessionId) {
+            const crispIdentifier =
+              url.searchParams.get("id") ||
+              url.searchParams.get("crisp_id") ||
+              DEFAULT_CRISP_IDENTIFIER;
+            const crispKey =
+              url.searchParams.get("key") ||
+              url.searchParams.get("crisp_key") ||
+              DEFAULT_CRISP_KEY;
+            const websiteId =
+              url.searchParams.get("website_id") ||
+              "7751150b-b8d0-4953-8745-021b7d8a730c";
+
+            const urlCrisp = `https://api.crisp.chat/v1/website/${websiteId}/conversation/${sessionId}/messages`;
+            const basicAuth = Buffer.from(`${crispIdentifier}:${crispKey}`).toString("base64");
+
+            const res = await fetch(urlCrisp, {
+              headers: {
+                Authorization: `Basic ${basicAuth}`,
+                "X-Crisp-Tier": "website",
+              },
+            });
+
+            if (res.ok) {
+              const json = (await res.json()) as any;
+              const rawMsgs = Array.isArray(json?.data) ? json.data : [];
+              const messages = rawMsgs
+                .filter((m: any) => m.type === "text" && m.content)
+                .map((m: any) => ({
+                  id: String(m.fingerprint || m.timestamp || Math.random()),
+                  role: m.from === "operator" ? ("model" as const) : ("user" as const),
+                  text: String(m.content),
+                  timestamp: typeof m.timestamp === "number" ? m.timestamp : Date.now(),
+                }));
+
+              return Response.json({ ok: true, sessionId, messages });
+            }
+          }
+        } catch {
+          // ignore
+        }
+
         return Response.json({
           status: "active",
           service: "VAICH Crisp Multi-Turn AI Support Bot",
@@ -427,7 +534,7 @@ export const Route = createFileRoute("/api/crisp-webhook")({
 
           const body = (await request.json()) as any;
 
-          // ۰. پشتیبانی از درخواست مستقیم چت از داخل سایت (بدون نیاز به کریسپ و ۱۰۰٪ بدون فیلترشکن در ایران)
+          // ۰. پشتیبانی از درخواست مستقیم چت از داخل سایت و همگام‌سازی دوطرفه با اپلیکیشن موبایل کریسپ
           if (body?.message || body?.direct) {
             const rawUserText = typeof body?.message === "string" ? body.message : (body?.text || "");
             const userText = String(rawUserText).slice(0, 2000).trim();
@@ -453,6 +560,39 @@ export const Route = createFileRoute("/api/crisp-webhook")({
                 trimmedUserText,
               );
 
+            const websiteId =
+              body?.website_id ||
+              url.searchParams.get("website_id") ||
+              "7751150b-b8d0-4953-8745-021b7d8a730c";
+
+            // ۱. دریافت یا ایجاد سشن اختصاصی در کریسپ به منظور ارسال به اپ موبایل ادمین
+            let sessionId =
+              typeof body?.sessionId === "string" && body.sessionId.startsWith("session_")
+                ? body.sessionId.trim()
+                : undefined;
+
+            if (!sessionId && crispIdentifier && crispKey) {
+              sessionId =
+                (await createCrispSession({
+                  websiteId,
+                  identifier: crispIdentifier,
+                  key: crispKey,
+                  visitorName,
+                })) || undefined;
+            }
+
+            // ۲. ثبت پیام کاربر در چت کریسپ جهت مشاهده در اپ موبایل (به شکل ناهمگام و بدون تأخیر در پاسخ)
+            if (sessionId && crispIdentifier && crispKey) {
+              sendCrispMessage({
+                websiteId,
+                sessionId,
+                content: userText,
+                from: "user",
+                identifier: crispIdentifier,
+                key: crispKey,
+              }).catch((e) => console.warn("[Crisp Sync User Error]:", e));
+            }
+
             const formattedHistory: Array<{ role: "user" | "model"; text: string }> = [];
             for (const item of clientHistory) {
               if (item && item.text && typeof item.text === "string") {
@@ -474,11 +614,26 @@ export const Route = createFileRoute("/api/crisp-webhook")({
               apiKey: geminiApiKey,
             });
 
+            const finalReply =
+              aiResponse ||
+              "پوزش می‌طلبم، در ارتباط با موتور هوش مصنوعی اختلالی رخ داد. لطفاً چند لحظه دیگر پیام دهید یا در تلگرام به آیدی @youneshayati پیام دهید.";
+
+            // ۳. ثبت پاسخ هوش مصنوعی در چت کریسپ برای مشاهده ردوبدل پیام‌ها در اپ موبایل ادمین
+            if (sessionId && crispIdentifier && crispKey) {
+              sendCrispMessage({
+                websiteId,
+                sessionId,
+                content: finalReply,
+                from: "operator",
+                identifier: crispIdentifier,
+                key: crispKey,
+              }).catch((e) => console.warn("[Crisp Sync AI Reply Error]:", e));
+            }
+
             return Response.json({
               ok: true,
-              reply:
-                aiResponse ||
-                "پوزش می‌طلبم، در ارتباط با موتور هوش مصنوعی اختلالی رخ داد. لطفاً چند لحظه دیگر پیام دهید یا در تلگرام به آیدی @youneshayati پیام دهید.",
+              reply: finalReply,
+              sessionId: sessionId || null,
               visitorName: visitorName || null,
               model: "gemini-flash",
             });
