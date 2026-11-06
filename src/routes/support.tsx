@@ -83,10 +83,10 @@ function SupportPage() {
               <Sparkles className="h-6 w-6 animate-pulse" />
             </div>
             <h3 className="text-lg sm:text-xl font-bold text-foreground">
-              گفت‌وگوی آنلاین ۲۴ ساعته با هوش مصنوعی (بدون نیاز به فیلترشکن)
+              گفت‌وگوی آنلاین ۲۴ ساعته با هوش مصنوعی VAICH
             </h3>
             <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-lg mx-auto">
-              برای دریافت راهنمایی آنی، مقایسه محصولات، استعلام قیمت‌ها یا پیگیری سفارش، همین حالا گفت‌وگوی هوشمند سایت را باز کنید.
+              برای دریافت مشاوره آنی، مقایسه محصولات، استعلام قیمت‌ها یا پیگیری سفارش، گفت‌وگوی هوشمند را باز کنید.
             </p>
             <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
               <button

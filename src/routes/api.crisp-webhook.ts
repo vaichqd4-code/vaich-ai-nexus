@@ -24,13 +24,12 @@ const DEFAULT_CRISP_KEY =
   process.env.CRISP_PLUGIN_KEY ||
   decodeSecret("OTI4Y2Q2NDVlN2M5MDMzYWZlOTRlYTQ3YTJkMDU4NDk1NWUyZTIzMzc3NjkyNzZjNjgwYTExNTg3MTNjODAxYQ==");
 
-// لیست مدل‌های پرسرعت هوش مصنوعی گوگل با مکانیزم Fallback خودکار
+// لیست مدل‌های پرسرعت هوش مصنوعی گوگل به ترتیب سرعت پردازش فوق‌سریع
 const GEMINI_MODELS = [
+  "gemini-3.5-flash-lite",
+  "gemini-flash-lite-latest",
   "gemini-3.5-flash",
   "gemini-3.8-flash",
-  "gemini-flash-latest",
-  "gemini-3.1-flash-lite",
-  "gemini-2.5-flash-lite",
 ];
 
 /**
@@ -288,8 +287,8 @@ async function generateAiReply({
           },
           contents,
           generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 2500, // سقف توکن بالا برای جلوگیری قطعی از نصفه ماندن پیام‌ها
+            temperature: 0.6,
+            maxOutputTokens: 1200, // سقف توکن بهینه برای پردازش فوق‌سریع بدون قطعی
           },
         }),
       });

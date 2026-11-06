@@ -5,8 +5,6 @@ import {
   Send,
   RotateCcw,
   Sparkles,
-  Phone,
-  MessageCircle,
   ChevronDown,
   ArrowDownLeft,
 } from "lucide-react";
@@ -21,15 +19,15 @@ export type ChatMessage = {
 const INITIAL_WELCOME: ChatMessage = {
   id: "welcome-1",
   role: "model",
-  text: "سلام و درود! به پشتیبانی هوشمند فروشگاه اینترنتی VAICH خوش آمدید. 😊\nمن دستیار ۲۴ ساعته سایت هستم و این گفت‌وگو به صورت مستقیم و بدون نیاز به هیچ‌گونه فیلترشکن کار می‌کند.\nچطور می‌تونم کمکتون کنم؟",
+  text: "سلام! وقتتون بخیر. 🌟 چطور می‌تونم کمکتون کنم؟\nهر سوالی درباره اشتراک‌ها، مقایسه ابزارها یا نحوه ثبت سفارش دارید بفرمایید.",
   timestamp: Date.now(),
 };
 
 const QUICK_PROMPTS = [
-  "چت جی پی تی بخرم یا کلود؟",
-  "فرق پلن‌های جمینای چیه؟",
-  "پلنر دیجیتال چطور کار می‌کنه؟",
-  "روال پرداخت و ارسال فیش واریزی",
+  "چت جی پی تی یا کلود؟",
+  "تفاوت پلن‌های جمینای",
+  "پلنر دیجیتال چیست؟",
+  "روال ثبت سفارش و رسید",
 ];
 
 export function AiChatDrawer() {
@@ -38,7 +36,7 @@ export function AiChatDrawer() {
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
     if (typeof window !== "undefined") {
       try {
-        const saved = localStorage.getItem("vaich_ai_chat_v1");
+        const saved = localStorage.getItem("vaich_ai_chat_v2");
         if (saved) {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed) && parsed.length > 0) {
@@ -55,7 +53,7 @@ export function AiChatDrawer() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // هماهنگی با رویدادهای سراسری سایت جهت باز شدن از هر نقطه (هدر، فوتر، صفحات)
+  // هماهنگی با رویداد سراسری باز شدن چت از هدر یا صفحات
   useEffect(() => {
     if (typeof window !== "undefined") {
       (window as any).openVaichChat = () => {
@@ -75,18 +73,18 @@ export function AiChatDrawer() {
     }
   }, []);
 
-  // ذخیره در LocalStorage
+  // ذخیره سابقه در حافظه لوکال
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
-        localStorage.setItem("vaich_ai_chat_v1", JSON.stringify(messages));
+        localStorage.setItem("vaich_ai_chat_v2", JSON.stringify(messages));
       } catch {
         // ignore
       }
     }
   }, [messages]);
 
-  // اسکرول خودکار به آخرین پیام
+  // اسکرول نرم و سریع به پیام جدید
   useEffect(() => {
     if (isOpen && !isMinimized) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -111,7 +109,7 @@ export function AiChatDrawer() {
     setLoading(true);
 
     try {
-      const historyPayload = newHistory.slice(-10).map((m) => ({
+      const historyPayload = newHistory.slice(-8).map((m) => ({
         role: m.role,
         text: m.text,
       }));
@@ -130,7 +128,7 @@ export function AiChatDrawer() {
         const data = await res.json();
         const replyText =
           data?.reply ||
-          "پوزش می‌طلبم، پاسخی دریافت نشد. لطفاً به آیدی تلگرام @youneshayati پیام دهید.";
+          "پوزش می‌طلبم، پاسخی دریافت نشد. لطفاً در تلگرام به @youneshayati پیام دهید.";
 
         setMessages((prev) => [
           ...prev,
@@ -142,7 +140,7 @@ export function AiChatDrawer() {
           },
         ]);
       } else {
-        throw new Error("API responded with error");
+        throw new Error("API error");
       }
     } catch {
       setMessages((prev) => [
@@ -150,7 +148,7 @@ export function AiChatDrawer() {
         {
           id: "m-err-" + Date.now(),
           role: "model",
-          text: "متاسفانه اختلالی در ارتباط پیش آمد. برای راهنمایی فوری می‌توانید مستقیماً در تلگرام به آیدی مدیریت پیام دهید:\n👉 @youneshayati (https://t.me/youneshayati)\nیا با شماره 09193872172 (ساعت ۱۴ الی ۲۲) تماس بگیرید.",
+          text: "متاسفانه اختلالی در ارتباط پیش آمد. برای راهنمایی فوری می‌توانید در تلگرام با ما در ارتباط باشید:\n👉 @youneshayati (https://t.me/youneshayati)",
           timestamp: Date.now(),
         },
       ]);
@@ -160,14 +158,12 @@ export function AiChatDrawer() {
   };
 
   const handleClearHistory = () => {
-    if (window.confirm("آیا مایلید تاریخچه این گفت‌وگو پاک شود؟")) {
-      const reset = [INITIAL_WELCOME];
-      setMessages(reset);
-      try {
-        localStorage.setItem("vaich_ai_chat_v1", JSON.stringify(reset));
-      } catch {
-        // ignore
-      }
+    const reset = [INITIAL_WELCOME];
+    setMessages(reset);
+    try {
+      localStorage.setItem("vaich_ai_chat_v2", JSON.stringify(reset));
+    } catch {
+      // ignore
     }
   };
 
@@ -175,11 +171,11 @@ export function AiChatDrawer() {
     return null;
   }
 
-  // قالب‌بندی ساده متن و لینک‌های پیام هوش مصنوعی
+  // قالب‌بندی مینیمال و تمیز متن پاسخ‌ها
   const renderMessageContent = (text: string) => {
     const lines = text.split("\n");
     return lines.map((line, idx) => {
-      if (line.includes("https://t.me/") || line.includes("@youneshayati")) {
+      if (line.includes("https://") || line.includes("http://") || line.includes("@youneshayati")) {
         return (
           <p key={idx} className="my-1 leading-relaxed">
             {line.split(" ").map((w, wIdx) => {
@@ -190,7 +186,7 @@ export function AiChatDrawer() {
                     href={w}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-primary hover:underline font-mono inline-block mx-1"
+                    className="text-primary hover:underline font-mono inline-block mx-0.5"
                   >
                     {w}
                   </a>
@@ -203,7 +199,7 @@ export function AiChatDrawer() {
                     href={`https://t.me/${w.replace("@", "")}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-primary hover:underline font-bold inline-block mx-1"
+                    className="text-primary hover:underline font-bold inline-block mx-0.5"
                     dir="ltr"
                   >
                     {w}
@@ -216,7 +212,7 @@ export function AiChatDrawer() {
         );
       }
 
-      if (line.startsWith("• ") || line.startsWith("- ")) {
+      if (line.startsWith("• ") || line.startsWith("- ") || line.startsWith("* ")) {
         return (
           <li key={idx} className="mr-3 list-disc my-0.5 leading-relaxed">
             {line.substring(2)}
@@ -239,41 +235,41 @@ export function AiChatDrawer() {
   return (
     <div
       dir="rtl"
-      className="fixed bottom-3 left-3 sm:bottom-5 sm:left-5 z-[99999] flex flex-col select-none font-sans"
+      className="fixed bottom-3 left-3 sm:bottom-6 sm:left-6 z-[99999] flex flex-col font-sans select-none"
     >
       {isMinimized ? (
         <button
           type="button"
           onClick={() => setIsMinimized(false)}
-          className="flex items-center gap-2.5 rounded-full border border-primary/50 bg-card/95 px-4 py-2.5 text-xs font-bold text-foreground shadow-2xl backdrop-blur-xl hover:border-primary transition-all hover:scale-105 cursor-pointer"
+          className="flex items-center gap-2.5 rounded-full border border-border/80 bg-background/95 dark:bg-card/95 px-4 py-2.5 text-xs font-semibold text-foreground shadow-2xl backdrop-blur-xl hover:border-primary/50 transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
         >
-          <div className="relative flex h-2 w-2">
+          <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </div>
-          <span>پشتیبانی هوشمند VAICH</span>
-          <Headphones className="h-4 w-4 text-primary mr-1" />
+          </span>
+          <span>پشتیبانی آنلاین VAICH</span>
+          <Headphones className="h-3.5 w-3.5 text-primary mr-0.5" />
         </button>
       ) : (
-        <div className="w-[calc(100vw-24px)] xs:w-[370px] sm:w-[410px] h-[550px] max-h-[82vh] rounded-3xl border border-border/80 bg-card/95 backdrop-blur-2xl shadow-2xl flex flex-col overflow-hidden text-foreground">
-          {/* هدر چت‌بات */}
-          <div className="flex items-center justify-between border-b border-border/50 bg-secondary/30 px-4 py-3">
+        <div className="w-[calc(100vw-24px)] xs:w-[370px] sm:w-[400px] h-[520px] max-h-[82vh] rounded-3xl border border-border/80 bg-background/95 dark:bg-card/95 backdrop-blur-2xl shadow-2xl flex flex-col overflow-hidden text-foreground animate-in fade-in zoom-in-95 duration-200 ease-out">
+          {/* هدر مینیمال و استاندارد */}
+          <div className="flex items-center justify-between border-b border-border/40 bg-secondary/20 dark:bg-secondary/30 px-4 py-3">
             <div className="flex items-center gap-2.5">
-              <div className="relative grid h-9 w-9 place-items-center rounded-xl border border-primary/40 bg-primary/10 text-primary">
-                <Sparkles className="h-4 w-4 animate-pulse" />
+              <div className="relative grid h-8 w-8 place-items-center rounded-xl bg-primary/10 text-primary border border-primary/20">
+                <Sparkles className="h-4 w-4 text-primary animate-pulse" />
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs sm:text-sm font-bold text-foreground">
-                    پشتیبانی هوشمند VAICH
+                    پشتیبانی آنلاین VAICH
                   </span>
-                  <span className="rounded-md bg-emerald-500/10 border border-emerald-500/30 px-1.5 py-0.2 text-[9px] font-bold text-emerald-400">
-                    بدون فیلترشکن
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                   </span>
                 </div>
-                <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 inline-block"></span>
-                  آنلاین ۲۴ ساعته | دستیار هوش مصنوعی
+                <span className="text-[10px] text-muted-foreground mt-0.5">
+                  پاسخگویی آنی هوشمند
                 </span>
               </div>
             </div>
@@ -282,8 +278,8 @@ export function AiChatDrawer() {
               <button
                 type="button"
                 onClick={handleClearHistory}
-                title="پاک کردن پیام‌ها"
-                className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors cursor-pointer"
+                title="شروع مجدد گفت‌وگو"
+                className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-all duration-150 cursor-pointer"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
               </button>
@@ -291,7 +287,7 @@ export function AiChatDrawer() {
                 type="button"
                 onClick={() => setIsMinimized(true)}
                 title="کوچک کردن"
-                className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors cursor-pointer"
+                className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-all duration-150 cursor-pointer"
               >
                 <ChevronDown className="h-4 w-4" />
               </button>
@@ -299,52 +295,27 @@ export function AiChatDrawer() {
                 type="button"
                 onClick={() => setIsOpen(false)}
                 title="بستن"
-                className="grid h-8 w-8 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors cursor-pointer"
+                className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-all duration-150 cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
           </div>
 
-          {/* نوار دسترسی مستقیم به مدیریت */}
-          <div className="flex items-center justify-between px-3 py-1.5 bg-secondary/15 border-b border-border/30 text-[11px] text-muted-foreground">
-            <span className="truncate">مدیریت: یونس حیاتی</span>
-            <div className="flex items-center gap-2">
-              <a
-                href="https://t.me/youneshayati"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-1 text-primary hover:underline font-medium"
-              >
-                <MessageCircle className="h-3 w-3" />
-                <span>تلگرام</span>
-              </a>
-              <span className="opacity-40">|</span>
-              <a
-                href="tel:09193872172"
-                className="flex items-center gap-1 hover:text-foreground transition-colors"
-                title="تماس تلفنی ۱۴ الی ۲۲"
-              >
-                <Phone className="h-3 w-3" />
-                <span>09193872172</span>
-              </a>
-            </div>
-          </div>
-
-          {/* محتوای پیام‌ها */}
-          <div className="flex-1 overflow-y-auto p-3.5 space-y-3.5 text-xs sm:text-[13px]">
+          {/* محتوای پیام‌ها با هماهنگی کامل حالت روز و شب */}
+          <div className="flex-1 overflow-y-auto p-3.5 space-y-3 text-xs sm:text-[13px] scroll-smooth">
             {messages.map((m) => (
               <div
                 key={m.id}
                 className={`flex flex-col ${
-                  m.role === "user" ? "items-start" : "items-end"
+                  m.role === "user" ? "items-end" : "items-start"
                 }`}
               >
                 <div
-                  className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 transition-all shadow-xs ${
+                  className={`max-w-[86%] rounded-2xl px-3.5 py-2.5 transition-all shadow-xs leading-relaxed ${
                     m.role === "user"
                       ? "rounded-br-xs bg-primary text-primary-foreground font-medium self-end"
-                      : "rounded-bl-xs border border-border/70 bg-secondary/50 text-foreground/90 self-start"
+                      : "rounded-bl-xs bg-secondary/60 dark:bg-secondary/40 text-foreground border border-border/40 self-start"
                   }`}
                 >
                   {renderMessageContent(m.text)}
@@ -359,13 +330,13 @@ export function AiChatDrawer() {
             ))}
 
             {loading && (
-              <div className="flex items-center gap-2 self-start rounded-2xl border border-border/70 bg-secondary/40 px-3.5 py-2.5 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 self-start rounded-2xl rounded-bl-xs border border-border/40 bg-secondary/50 px-3.5 py-2 text-xs text-muted-foreground">
                 <Sparkles className="h-3.5 w-3.5 text-primary animate-spin" />
-                <span>دستیار در حال پاسخگویی...</span>
+                <span>دستیار در حال نوشتن پاسخ...</span>
                 <span className="flex gap-1 mr-1">
                   <span className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce"></span>
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce [animation-delay:0.2s]"></span>
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce [animation-delay:0.4s]"></span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce [animation-delay:0.15s]"></span>
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce [animation-delay:0.3s]"></span>
                 </span>
               </div>
             )}
@@ -373,15 +344,15 @@ export function AiChatDrawer() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* دکمه‌های سوالات متداول سریع */}
-          <div className="px-3 py-1.5 border-t border-border/30 bg-background/50 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          {/* دکمه‌های گزینش سریع مینیمال */}
+          <div className="px-3 py-1.5 border-t border-border/30 bg-background/50 dark:bg-card/50 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
             {QUICK_PROMPTS.map((prompt, pIdx) => (
               <button
                 key={pIdx}
                 type="button"
                 disabled={loading}
                 onClick={() => handleSendMessage(prompt)}
-                className="whitespace-nowrap rounded-lg border border-border/60 bg-secondary/30 px-2 py-1 text-[10px] text-muted-foreground hover:border-primary/50 hover:bg-secondary hover:text-foreground transition-all cursor-pointer disabled:opacity-50"
+                className="whitespace-nowrap rounded-full border border-border/60 bg-secondary/40 hover:bg-primary/10 hover:border-primary/40 hover:text-primary px-3 py-1 text-[11px] text-muted-foreground transition-all duration-150 cursor-pointer disabled:opacity-50 active:scale-95"
               >
                 <ArrowDownLeft className="h-2.5 w-2.5 inline ml-1 opacity-70" />
                 {prompt}
@@ -389,13 +360,13 @@ export function AiChatDrawer() {
             ))}
           </div>
 
-          {/* فرم ارسال پیام */}
+          {/* فرم ارسال پیام تمیز و هماهنگ */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleSendMessage();
             }}
-            className="flex items-center gap-2 p-2.5 border-t border-border/50 bg-secondary/20"
+            className="flex items-center gap-2 p-2.5 border-t border-border/40 bg-secondary/20 dark:bg-secondary/30"
           >
             <input
               type="text"
@@ -403,13 +374,13 @@ export function AiChatDrawer() {
               onChange={(e) => setInput(e.target.value)}
               placeholder="پیام یا سوال خود را بنویسید..."
               disabled={loading}
-              className="flex-1 rounded-xl border border-border/60 bg-background/80 px-3 py-2 text-xs text-foreground outline-none placeholder:text-muted-foreground focus:border-primary transition-all disabled:opacity-50"
+              className="flex-1 rounded-xl border border-border/60 bg-background text-foreground px-3.5 py-2 text-xs outline-none placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
               title="ارسال پیام"
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground transition-all hover:opacity-90 active:scale-95 disabled:opacity-40 cursor-pointer"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground transition-all duration-150 hover:opacity-90 active:scale-95 disabled:opacity-30 disabled:pointer-events-none cursor-pointer shadow-xs"
             >
               <Send className="h-4 w-4 rotate-180" />
             </button>
