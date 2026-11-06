@@ -132,36 +132,39 @@ async function sendCrispMessage({
   identifier: string;
   key: string;
 }): Promise<boolean> {
-  try {
-    const url = `https://api.crisp.chat/v1/website/${websiteId}/conversation/${sessionId}/message`;
-    const basicAuth = Buffer.from(`${identifier}:${key}`).toString("base64");
+  const url = `https://api.crisp.chat/v1/website/${websiteId}/conversation/${sessionId}/message`;
+  const basicAuth = Buffer.from(`${identifier}:${key}`).toString("base64");
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Crisp-Tier": "plugin",
-        Authorization: `Basic ${basicAuth}`,
-      },
-      body: JSON.stringify({
-        type: "text",
-        from: "operator",
-        origin: "chat",
-        content,
-      }),
-    });
+  // پشتیبانی هم‌زمان از Website Tier (توکن‌های مستقیم سایت) و Plugin Tier
+  for (const tier of ["website", "plugin"]) {
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Crisp-Tier": tier,
+          Authorization: `Basic ${basicAuth}`,
+        },
+        body: JSON.stringify({
+          type: "text",
+          from: "operator",
+          origin: "chat",
+          content,
+        }),
+      });
 
-    if (!response.ok) {
+      if (response.ok) {
+        return true;
+      }
+
       const errBody = await response.text();
-      console.error(`[Crisp API] Send message failed [${response.status}]: ${errBody}`);
-      return false;
+      console.warn(`[Crisp API] Tier ${tier} failed [${response.status}]: ${errBody.slice(0, 100)}`);
+    } catch (err) {
+      console.warn(`[Crisp API] Tier ${tier} network error:`, err);
     }
-
-    return true;
-  } catch (err) {
-    console.error("[Crisp API] Error sending message:", err);
-    return false;
   }
+
+  return false;
 }
 
 export const Route = createFileRoute("/api/crisp-webhook")({

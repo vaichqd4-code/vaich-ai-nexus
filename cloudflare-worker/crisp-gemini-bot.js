@@ -167,27 +167,38 @@ export default {
         });
       }
 
-      // ارسال پاسخ به Crisp
+      // ارسال پاسخ به Crisp با پشتیبانی از هر دو Tier (website و plugin)
       const basicAuth = btoa(`${crispIdentifier}:${crispKey}`);
-      const crispRes = await fetch(`https://api.crisp.chat/v1/website/${websiteId}/conversation/${sessionId}/message`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Crisp-Tier": "plugin",
-          "Authorization": `Basic ${basicAuth}`
-        },
-        body: JSON.stringify({
-          type: "text",
-          from: "operator",
-          origin: "chat",
-          content: aiText
-        })
-      });
+      let sent = false;
+      let crispStatus = 0;
+
+      for (const tier of ["website", "plugin"]) {
+        const crispRes = await fetch(`https://api.crisp.chat/v1/website/${websiteId}/conversation/${sessionId}/message`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Crisp-Tier": tier,
+            "Authorization": `Basic ${basicAuth}`
+          },
+          body: JSON.stringify({
+            type: "text",
+            from: "operator",
+            origin: "chat",
+            content: aiText
+          })
+        });
+
+        crispStatus = crispRes.status;
+        if (crispRes.ok) {
+          sent = true;
+          break;
+        }
+      }
 
       return new Response(JSON.stringify({
         ok: true,
-        sent: crispRes.ok,
-        status: crispRes.status
+        sent,
+        status: crispStatus
       }), {
         headers: { "Content-Type": "application/json" }
       });
