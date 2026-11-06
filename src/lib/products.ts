@@ -906,6 +906,54 @@ export function saveStoredInstagramUrl(url: string): void {
   }
 }
 
+export interface InArticleBannerConfig {
+  enabled: boolean;
+  title: string;
+  description: string;
+  buttonText: string;
+  linkUrl: string;
+  imageUrl: string;
+  badge?: string;
+}
+
+export const DEFAULT_IN_ARTICLE_BANNER: InArticleBannerConfig = {
+  enabled: true,
+  badge: "پیشنهاد اختصاصی وبلاگ",
+  title: "پلنر دیجیتال هوشمند و ردیاب عادات VAICH Life Planner",
+  description: "افزایش بهره‌وری فردی، مدیریت مالی دقیق و برنامه‌ریزی ماهانه با فرمول‌های پیشرفته گوگل‌شیتس بدون اشتراک ماهانه.",
+  buttonText: "مشاهده و دریافت پلنر با تخفیف ویژه",
+  linkUrl: "/products/vaich-life-planner",
+  imageUrl: "/planner-cover.webp",
+};
+
+export function getStoredInArticleBanner(): InArticleBannerConfig {
+  if (typeof window === "undefined") return DEFAULT_IN_ARTICLE_BANNER;
+  try {
+    const raw = localStorage.getItem("vaich_in_article_banner");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === "object") {
+        return { ...DEFAULT_IN_ARTICLE_BANNER, ...parsed };
+      }
+    }
+  } catch (err) {
+    console.error("Error reading in-article banner:", err);
+  }
+  return DEFAULT_IN_ARTICLE_BANNER;
+}
+
+export function saveStoredInArticleBanner(banner: InArticleBannerConfig): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem("vaich_in_article_banner", JSON.stringify(banner));
+    window.dispatchEvent(
+      new CustomEvent("vaich_in_article_banner_updated", { detail: banner })
+    );
+  } catch (err) {
+    console.error("Error saving in-article banner:", err);
+  }
+}
+
 export type SiteConfig = {
   products: Product[];
   categoryRows: ProductCategoryRow[];
@@ -913,6 +961,7 @@ export type SiteConfig = {
   masterPin?: string;
   adminUsers?: AdminUser[];
   promoBanner?: PromoBannerConfig;
+  inArticleBanner?: InArticleBannerConfig;
   instagramUrl?: string;
   blogPosts?: any[];
   updatedAt: string;
@@ -1437,6 +1486,15 @@ export function useDynamicProducts() {
     }
     return DEFAULT_INSTAGRAM_URL;
   });
+  const [inArticleBanner, setInArticleBannerState] = useState<InArticleBannerConfig>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = getStoredInArticleBanner();
+        if (stored) return stored;
+      } catch {}
+    }
+    return DEFAULT_IN_ARTICLE_BANNER;
+  });
   const [isCloudSyncing, setIsCloudSyncing] = useState(false);
   const [lastCloudSync, setLastCloudSync] = useState<string | null>(null);
 
@@ -1456,6 +1514,8 @@ export function useDynamicProducts() {
       if (storedPin) setMasterPinState(storedPin);
       const storedBanner = getStoredPromoBanner();
       if (storedBanner) setPromoBannerState(storedBanner);
+      const storedArticleBanner = getStoredInArticleBanner();
+      if (storedArticleBanner) setInArticleBannerState(storedArticleBanner);
       const storedIg = getStoredInstagramUrl();
       if (storedIg) setInstagramUrlState(storedIg);
       setLastCloudSync(localStorage.getItem("vaich_config_updated_at"));
@@ -1473,6 +1533,7 @@ export function useDynamicProducts() {
         if (cfg?.adminUsers) setAdminUsersState(cfg.adminUsers);
         if (cfg?.masterPin) setMasterPinState(cfg.masterPin);
         if (cfg?.promoBanner) setPromoBannerState(cfg.promoBanner);
+        if (cfg?.inArticleBanner) setInArticleBannerState(cfg.inArticleBanner);
         if (cfg?.instagramUrl) setInstagramUrlState(cfg.instagramUrl);
       });
     };
@@ -1500,6 +1561,8 @@ export function useDynamicProducts() {
     window.addEventListener("vaich_admin_pin_updated", handleMasterPin);
     window.addEventListener("vaich_promo_banner_updated", handlePromoBanner);
     window.addEventListener("vaich_instagram_url_updated", handleInstagramUrl);
+    const handleInArticleBanner = () => setInArticleBannerState(getStoredInArticleBanner());
+    window.addEventListener("vaich_in_article_banner_updated", handleInArticleBanner);
 
     const handleFocus = () => {
       syncSiteConfigWithCloud().then((cfg) => {
@@ -1507,6 +1570,7 @@ export function useDynamicProducts() {
         if (cfg?.adminUsers) setAdminUsersState(cfg.adminUsers);
         if (cfg?.masterPin) setMasterPinState(cfg.masterPin);
         if (cfg?.promoBanner) setPromoBannerState(cfg.promoBanner);
+        if (cfg?.inArticleBanner) setInArticleBannerState(cfg.inArticleBanner);
         if (cfg?.instagramUrl) setInstagramUrlState(cfg.instagramUrl);
       });
     };
@@ -1521,6 +1585,7 @@ export function useDynamicProducts() {
       window.removeEventListener("vaich_admin_pin_updated", handleMasterPin);
       window.removeEventListener("vaich_promo_banner_updated", handlePromoBanner);
       window.removeEventListener("vaich_instagram_url_updated", handleInstagramUrl);
+      window.removeEventListener("vaich_in_article_banner_updated", handleInArticleBanner);
       window.removeEventListener("focus", handleFocus);
       document.removeEventListener("visibilitychange", handleFocus);
     };
@@ -1556,6 +1621,11 @@ export function useDynamicProducts() {
     saveStoredPromoBanner(newBanner);
   };
 
+  const updateInArticleBanner = (newBanner: InArticleBannerConfig) => {
+    setInArticleBannerState(newBanner);
+    saveStoredInArticleBanner(newBanner);
+  };
+
   const updateInstagramUrl = (newUrl: string) => {
     setInstagramUrlState(newUrl);
     saveStoredInstagramUrl(newUrl);
@@ -1568,6 +1638,7 @@ export function useDynamicProducts() {
     masterPin?: string;
     adminUsers?: AdminUser[];
     promoBanner?: PromoBannerConfig;
+    inArticleBanner?: InArticleBannerConfig;
     instagramUrl?: string;
     blogPosts?: any[];
   }): Promise<{ success: boolean; error?: string }> => {
@@ -1582,6 +1653,7 @@ export function useDynamicProducts() {
           masterPin: typeof window !== "undefined" ? getStoredMasterPin() : masterPin,
           adminUsers: typeof window !== "undefined" ? getStoredAdminUsers() : adminUsers,
           promoBanner: typeof window !== "undefined" ? getStoredPromoBanner() : promoBanner,
+          inArticleBanner: typeof window !== "undefined" ? getStoredInArticleBanner() : inArticleBanner,
           instagramUrl: typeof window !== "undefined" ? getStoredInstagramUrl() : instagramUrl,
           updatedAt: new Date().toISOString(),
         };
@@ -1593,6 +1665,7 @@ export function useDynamicProducts() {
         const currentMasterPin = override?.masterPin ?? (typeof window !== "undefined" ? getStoredMasterPin() : masterPin);
         const currentAdminUsers = override?.adminUsers ?? (typeof window !== "undefined" ? getStoredAdminUsers() : adminUsers);
         const currentPromoBanner = override?.promoBanner ?? (typeof window !== "undefined" ? getStoredPromoBanner() : promoBanner);
+        const currentInArticleBanner = override?.inArticleBanner ?? (typeof window !== "undefined" ? getStoredInArticleBanner() : inArticleBanner);
         const currentInstagramUrl = override?.instagramUrl ?? (typeof window !== "undefined" ? getStoredInstagramUrl() : instagramUrl);
         const currentBlogPosts = override?.blogPosts ?? (typeof window !== "undefined" ? JSON.parse(localStorage.getItem("vaich_blog_posts") || "null") : null);
 
@@ -1603,6 +1676,7 @@ export function useDynamicProducts() {
           masterPin: currentMasterPin,
           adminUsers: currentAdminUsers,
           promoBanner: currentPromoBanner,
+          inArticleBanner: currentInArticleBanner,
           instagramUrl: currentInstagramUrl,
           blogPosts: currentBlogPosts || undefined,
           updatedAt: new Date().toISOString(),
@@ -1614,6 +1688,7 @@ export function useDynamicProducts() {
         saveStoredMasterPin(currentMasterPin);
         saveStoredAdminUsers(currentAdminUsers);
         saveStoredPromoBanner(currentPromoBanner);
+        saveStoredInArticleBanner(currentInArticleBanner);
         saveStoredInstagramUrl(currentInstagramUrl);
 
         const result = await commitConfigToCloud(fullConfig);
@@ -1638,6 +1713,7 @@ export function useDynamicProducts() {
     if (cfg.adminUsers) setAdminUsersState(cfg.adminUsers);
     if (cfg.masterPin) setMasterPinState(cfg.masterPin);
     if (cfg.promoBanner) setPromoBannerState(cfg.promoBanner);
+    if (cfg.inArticleBanner) setInArticleBannerState(cfg.inArticleBanner);
     if (cfg.instagramUrl) setInstagramUrlState(cfg.instagramUrl);
 
     return publishToCloud({
@@ -1647,6 +1723,7 @@ export function useDynamicProducts() {
       ...(cfg.adminUsers ? { adminUsers: cfg.adminUsers } : {}),
       ...(cfg.masterPin ? { masterPin: cfg.masterPin } : {}),
       ...(cfg.promoBanner ? { promoBanner: cfg.promoBanner } : {}),
+      ...(cfg.inArticleBanner ? { inArticleBanner: cfg.inArticleBanner } : {}),
       ...(cfg.instagramUrl ? { instagramUrl: cfg.instagramUrl } : {}),
     });
   };
@@ -1658,6 +1735,7 @@ export function useDynamicProducts() {
     adminUsers,
     masterPin,
     promoBanner,
+    inArticleBanner,
     instagramUrl,
     setLayout: changeLayout,
     setProducts: updateProducts,
@@ -1665,6 +1743,7 @@ export function useDynamicProducts() {
     setAdminUsers: updateAdminUsers,
     setMasterPin: updateMasterPin,
     setPromoBanner: updatePromoBanner,
+    setInArticleBanner: updateInArticleBanner,
     setInstagramUrl: updateInstagramUrl,
     resetToDefault: resetProductsToDefault,
     publishToCloud,

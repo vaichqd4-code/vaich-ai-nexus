@@ -378,6 +378,54 @@
   color: #1e293b !important;
 }
 
+/* ========================================================
+   BLOG ARTICLE TYPOGRAPHY & COMFORTABLE READABILITY
+   Wikipedia / Medium inspired Persian typography standards
+   ======================================================== */
+.blog-article-body {
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+  color: #1e293b;
+  font-size: 1.0625rem;
+  line-height: 2.25;
+  letter-spacing: -0.01em;
+}
+
+.blog-article-body p {
+  margin-bottom: 1.75rem;
+  line-height: 2.25;
+  color: #334155;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.blog-article-body h2 {
+  color: #0f172a;
+  font-weight: 850;
+  font-size: 1.35rem;
+  line-height: 1.6;
+  margin-top: 3rem;
+  margin-bottom: 1.25rem;
+  padding-right: 0.85rem;
+  border-right: 4px solid var(--primary);
+}
+
+.blog-article-body h3 {
+  color: #1e293b;
+  font-weight: 750;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.blog-article-body li {
+  color: #334155;
+  line-height: 2.1;
+  margin-bottom: 0.75rem;
+}
+
 [data-theme="dark"] .blog-article-body,
 .dark .blog-article-body {
   color: #f1f5f9 !important;
@@ -385,19 +433,25 @@
 
 [data-theme="dark"] .blog-article-body p,
 .dark .blog-article-body p {
-  color: #e2e8f0 !important;
-  line-height: 2.1;
+  color: #cbd5e1 !important;
+  line-height: 2.25 !important;
 }
 
 [data-theme="dark"] .blog-article-body h2,
 .dark .blog-article-body h2 {
   color: #f8fafc !important;
-  font-weight: 800;
+  font-weight: 850 !important;
+}
+
+[data-theme="dark"] .blog-article-body h3,
+.dark .blog-article-body h3 {
+  color: #e2e8f0 !important;
+  font-weight: 750 !important;
 }
 
 [data-theme="dark"] .blog-article-body li,
 .dark .blog-article-body li {
-  color: #e2e8f0 !important;
+  color: #cbd5e1 !important;
 }
 
 /* =========================

@@ -9,12 +9,14 @@ import {
   MASTER_ADMIN_EMAIL,
   DEFAULT_CATEGORY_ROWS,
   DEFAULT_PROMO_BANNER,
+  DEFAULT_IN_ARTICLE_BANNER,
   DEFAULT_INSTAGRAM_URL,
   type Product,
   type ProductCategoryRow,
   type LayoutMode,
   type AdminUser,
   type PromoBannerConfig,
+  type InArticleBannerConfig,
   fetchRemoteHistory,
   fetchSnapshotConfig,
   getLocalSnapshots,
@@ -109,6 +111,7 @@ export function AdminPage() {
     adminUsers,
     masterPin,
     promoBanner,
+    inArticleBanner,
     instagramUrl,
     setLayout,
     setProducts,
@@ -116,6 +119,7 @@ export function AdminPage() {
     setAdminUsers,
     setMasterPin,
     setPromoBanner,
+    setInArticleBanner,
     setInstagramUrl,
     resetToDefault,
     publishToCloud,
@@ -156,6 +160,14 @@ export function AdminPage() {
   const [bannerUploadError, setBannerUploadError] = useState("");
   const [bannerSaveMsg, setBannerSaveMsg] = useState("");
 
+  // In-Article Promo Banner State
+  const [inArticleConfig, setInArticleConfig] = useState<InArticleBannerConfig>(
+    inArticleBanner || DEFAULT_IN_ARTICLE_BANNER
+  );
+  const [isCompressingInArticle, setIsCompressingInArticle] = useState(false);
+  const [inArticleUploadError, setInArticleUploadError] = useState("");
+  const [inArticleSaveMsg, setInArticleSaveMsg] = useState("");
+
   // Instagram Settings State
   const [instagramInput, setInstagramInput] = useState(instagramUrl || DEFAULT_INSTAGRAM_URL);
   const [instagramSaveMsg, setInstagramSaveMsg] = useState("");
@@ -163,6 +175,10 @@ export function AdminPage() {
   useEffect(() => {
     if (promoBanner) setBannerConfig(promoBanner);
   }, [promoBanner]);
+
+  useEffect(() => {
+    if (inArticleBanner) setInArticleConfig(inArticleBanner);
+  }, [inArticleBanner]);
 
   useEffect(() => {
     if (instagramUrl) setInstagramInput(instagramUrl);
@@ -366,6 +382,53 @@ export function AdminPage() {
       setTimeout(() => setBannerSaveMsg(""), 4000);
     } else {
       setBannerSaveMsg(`خطا: ${res.error || "نامشخص"}`);
+    }
+  };
+
+  const handleInArticleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setInArticleUploadError("لطفاً یک فایل تصویری (PNG, JPG, WebP) انتخاب کنید.");
+      return;
+    }
+
+    try {
+      setIsCompressingInArticle(true);
+      setInArticleUploadError("");
+      const compressedDataUrl = await compressAndResizeImage(file, 800, 500, 0.80);
+      setInArticleConfig((prev) => ({ ...prev, imageUrl: compressedDataUrl }));
+    } catch (err: any) {
+      setInArticleUploadError(err.message || "خطا در پردازش تصویر بنر");
+    } finally {
+      setIsCompressingInArticle(false);
+    }
+  };
+
+  const handleSaveInArticleBanner = async () => {
+    setInArticleBanner(inArticleConfig);
+    setInArticleSaveMsg("در حال ذخیره و انتشار بنر مقالات...");
+    const res = await publishToCloud({ inArticleBanner: inArticleConfig });
+    if (res.success) {
+      setInArticleSaveMsg("بنر تبلیغاتی مقالات با موفقیت منتشر شد! ✓");
+      setTimeout(() => setInArticleSaveMsg(""), 4000);
+    } else {
+      setInArticleSaveMsg(`خطا در ذخیره ابری: ${res.error || "نامشخص"}`);
+    }
+  };
+
+  const handleResetInArticleBanner = async () => {
+    const defaultBanner: InArticleBannerConfig = DEFAULT_IN_ARTICLE_BANNER;
+    setInArticleConfig(defaultBanner);
+    setInArticleBanner(defaultBanner);
+    setInArticleSaveMsg("در حال بازنشانی به بنر مقالات پیش‌فرض...");
+    const res = await publishToCloud({ inArticleBanner: defaultBanner });
+    if (res.success) {
+      setInArticleSaveMsg("بنر مقالات پیش‌فرض بازگردانی و منتشر شد! ✓");
+      setTimeout(() => setInArticleSaveMsg(""), 4000);
+    } else {
+      setInArticleSaveMsg(`خطا: ${res.error || "نامشخص"}`);
     }
   };
 
@@ -1963,6 +2026,278 @@ export function AdminPage() {
                         <>
                           <Check className="h-4 w-4" />
                           <span>ذخیره و انتشار نهایی بنر در سایت</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ---------------- SECTION 2: IN-ARTICLE PROMO BANNER ---------------- */}
+            <div className="rounded-3xl border border-border/80 bg-card p-6 shadow-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                    <BookOpen className="h-5 w-5 text-emerald-500" />
+                    <span>تبلیغات درون مقاله‌ها (بنر نواری و پیشنهاد ویژه وبلاگ)</span>
+                  </h2>
+                  <p className="mt-1 text-xs text-muted-foreground leading-5">
+                    این بنر به شکل یک کادر شکیل و استاندارد در میانه مقالات وبلاگ نمایش داده می‌شود و کاربران علاقه‌مند را به سمت خرید یا صفحات فرود هدایت می‌کند.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={handleResetInArticleBanner}
+                    className="inline-flex items-center gap-1.5 rounded-2xl border border-border bg-secondary/50 px-4 py-2.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-all cursor-pointer"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5" />
+                    <span>بازنشانی به پیش‌فرض</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSaveInArticleBanner}
+                    className="inline-flex items-center gap-1.5 rounded-2xl bg-linear-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-xs font-extrabold text-white shadow-md transition-transform hover:scale-105 cursor-pointer"
+                  >
+                    <Check className="h-4 w-4" />
+                    <span>ذخیره و انتشار بنر مقالات</span>
+                  </button>
+                </div>
+              </div>
+
+              {inArticleSaveMsg && (
+                <div className="mt-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                  {inArticleSaveMsg}
+                </div>
+              )}
+
+              {/* Status Switch */}
+              <div className="mt-6 flex items-center justify-between p-4 rounded-2xl border border-border bg-secondary/20">
+                <div className="flex items-center gap-3">
+                  <div className={`w-3 h-3 rounded-full ${inArticleConfig.enabled ? "bg-emerald-500 animate-pulse" : "bg-muted-foreground"}`} />
+                  <div>
+                    <span className="text-xs font-bold text-foreground block">
+                      وضعیت نمایش بنر در مقالات وبلاگ
+                    </span>
+                    <span className="text-[11px] text-muted-foreground">
+                      {inArticleConfig.enabled
+                        ? "فعال — در تمام مقالات وبلاگ بین پاراگراف‌ها نمایش داده می‌شود."
+                        : "غیرفعال — بنر در مقالات مخفی است."}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setInArticleConfig((prev) => ({ ...prev, enabled: !prev.enabled }))
+                  }
+                  className={`relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                    inArticleConfig.enabled ? "bg-emerald-500" : "bg-muted"
+                  }`}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                      inArticleConfig.enabled ? "translate-x-0" : "-translate-x-6"
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {/* In-Article Banner Live Preview and Controls */}
+              <div className="mt-6 grid gap-6 lg:grid-cols-12">
+                {/* Live Preview */}
+                <div className="lg:col-span-7 flex flex-col justify-center">
+                  <span className="text-xs font-bold text-foreground mb-2 flex items-center gap-1.5">
+                    <Eye className="h-4 w-4 text-primary" />
+                    <span>پیش‌نمایش زنده در متن مقاله:</span>
+                  </span>
+
+                  {/* The Preview Card */}
+                  <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-linear-to-br from-emerald-500/5 via-primary/5 to-teal-500/10 p-5 sm:p-6 backdrop-blur-md shadow-lg transition-all hover:border-emerald-500/50">
+                    <div className="flex flex-col sm:flex-row items-center gap-5">
+                      {inArticleConfig.imageUrl && (
+                        <div className="relative w-full sm:w-44 h-32 shrink-0 overflow-hidden rounded-2xl border border-border/70 bg-secondary/30 shadow-md">
+                          <img
+                            src={inArticleConfig.imageUrl}
+                            alt={inArticleConfig.title}
+                            className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1 space-y-2.5 text-center sm:text-right">
+                        {inArticleConfig.badge && (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                            <Sparkles className="h-3 w-3" />
+                            {inArticleConfig.badge}
+                          </span>
+                        )}
+                        <h4 className="text-sm sm:text-base font-extrabold text-foreground leading-snug">
+                          {inArticleConfig.title || "عنوان تبلیغات درون متنی"}
+                        </h4>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          {inArticleConfig.description || "توضیحات معرفی و ترغیب کاربر برای خرید محصول یا اشتراک"}
+                        </p>
+                        <div className="pt-1">
+                          <span className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-linear-to-r from-emerald-500 to-teal-600 px-4 py-2 text-xs font-extrabold text-white shadow-md">
+                            <span>{inArticleConfig.buttonText || "مشاهده و خرید"}</span>
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Form Controls */}
+                <div className="lg:col-span-5 space-y-4">
+                  {/* Upload Image */}
+                  <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-3">
+                    <span className="text-xs font-bold text-foreground block">
+                      تصویر بنر مقاله (اختیاری):
+                    </span>
+                    <label className="cursor-pointer flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-emerald-500/50 bg-emerald-500/5 p-4 text-center hover:bg-emerald-500/10 transition-all">
+                      <Upload className="h-5 w-5 text-emerald-500" />
+                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                        {isCompressingInArticle
+                          ? "در حال بهینه‌سازی تصویر..."
+                          : "آپلود تصویر جدید"}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground">
+                        فرمت‌های PNG، JPG، WebP
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        disabled={isCompressingInArticle}
+                        onChange={handleInArticleFileUpload}
+                        className="hidden"
+                      />
+                    </label>
+
+                    {inArticleUploadError && (
+                      <p className="text-[11px] text-rose-500 font-medium">
+                        {inArticleUploadError}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Direct Image URL */}
+                  <div>
+                    <label className="block text-xs font-medium text-foreground mb-1">
+                      آدرس اینترنتی تصویر مستقیم (URL):
+                    </label>
+                    <input
+                      type="text"
+                      dir="ltr"
+                      value={inArticleConfig.imageUrl || ""}
+                      onChange={(e) =>
+                        setInArticleConfig((prev) => ({ ...prev, imageUrl: e.target.value }))
+                      }
+                      placeholder="/blog/ai-models-comparison.webp یا https://..."
+                      className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2 text-xs outline-none focus:border-emerald-500"
+                    />
+                  </div>
+
+                  {/* Title */}
+                  <div>
+                    <label className="block text-xs font-medium text-foreground mb-1">
+                      عنوان بنر تبلیغاتی:
+                    </label>
+                    <input
+                      type="text"
+                      value={inArticleConfig.title || ""}
+                      onChange={(e) =>
+                        setInArticleConfig((prev) => ({ ...prev, title: e.target.value }))
+                      }
+                      placeholder="مثلاً: خرید مستقیم اکانت‌های هوش مصنوعی با تحویل آنی"
+                      className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2 text-xs outline-none focus:border-emerald-500"
+                    />
+                  </div>
+
+                  {/* Description */}
+                  <div>
+                    <label className="block text-xs font-medium text-foreground mb-1">
+                      متن توضیحات تبلیغ:
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={inArticleConfig.description || ""}
+                      onChange={(e) =>
+                        setInArticleConfig((prev) => ({ ...prev, description: e.target.value }))
+                      }
+                      placeholder="توضیح کوتاه و ترغیب‌کننده..."
+                      className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2 text-xs outline-none focus:border-emerald-500"
+                    />
+                  </div>
+
+                  {/* Badge & Button Text */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-foreground mb-1">
+                        نشان برچسب (Badge):
+                      </label>
+                      <input
+                        type="text"
+                        value={inArticleConfig.badge || ""}
+                        onChange={(e) =>
+                          setInArticleConfig((prev) => ({ ...prev, badge: e.target.value }))
+                        }
+                        placeholder="مثلاً: پیشنهاد ویژه وایچ"
+                        className="w-full rounded-2xl border border-border bg-background/60 px-3 py-2 text-xs outline-none focus:border-emerald-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-foreground mb-1">
+                        متن دکمه:
+                      </label>
+                      <input
+                        type="text"
+                        value={inArticleConfig.buttonText || ""}
+                        onChange={(e) =>
+                          setInArticleConfig((prev) => ({ ...prev, buttonText: e.target.value }))
+                        }
+                        placeholder="مثلاً: مشاهده و خرید"
+                        className="w-full rounded-2xl border border-border bg-background/60 px-3 py-2 text-xs outline-none focus:border-emerald-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Destination Link */}
+                  <div>
+                    <label className="block text-xs font-medium text-foreground mb-1">
+                      لینک دکمه کلیک (مقصد):
+                    </label>
+                    <input
+                      type="text"
+                      dir="ltr"
+                      value={inArticleConfig.linkUrl || ""}
+                      onChange={(e) =>
+                        setInArticleConfig((prev) => ({ ...prev, linkUrl: e.target.value }))
+                      }
+                      placeholder="مثلاً: /#pricing یا /product/chatgpt-plus"
+                      className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2 text-xs outline-none focus:border-emerald-500"
+                    />
+                  </div>
+
+                  {/* Mobile save button */}
+                  <div className="pt-2">
+                    <button
+                      type="button"
+                      disabled={isCloudSyncing}
+                      onClick={handleSaveInArticleBanner}
+                      className="w-full flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-emerald-500 to-teal-600 py-3 text-xs font-black text-white shadow-lg transition-transform hover:scale-102 cursor-pointer disabled:opacity-50"
+                    >
+                      {isCloudSyncing ? (
+                        <>
+                          <RefreshCw className="h-4 w-4 animate-spin" />
+                          <span>در حال ذخیره و انتشار...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Check className="h-4 w-4" />
+                          <span>ذخیره و انتشار بنر مقالات</span>
                         </>
                       )}
                     </button>

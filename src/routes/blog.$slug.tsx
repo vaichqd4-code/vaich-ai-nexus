@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { getBlogPostBySlug, getRelatedBlogPosts } from "@/lib/blog-data";
 import { BlogCoverGraphic } from "@/components/blog/BlogCoverGraphic";
+import { useDynamicProducts, type InArticleBannerConfig } from "@/lib/products";
 import {
   Calendar,
   Clock,
@@ -11,6 +12,7 @@ import {
   Share2,
   BookOpen,
   ShoppingBag,
+  ExternalLink,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -60,6 +62,31 @@ export const Route = createFileRoute("/blog/$slug")({
       },
     };
 
+    const breadcrumbLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "صفحه اصلی",
+          item: "https://vaich.ir",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "مجله و مقالات",
+          item: "https://vaich.ir/#blog",
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: post.title,
+          item: `https://vaich.ir/blog/${post.slug}`,
+        },
+      ],
+    };
+
     return {
       meta: [
         { title: `${post.title} | مجله وایچ` },
@@ -84,6 +111,10 @@ export const Route = createFileRoute("/blog/$slug")({
           type: "application/ld+json",
           children: JSON.stringify(jsonLd),
         },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(breadcrumbLd),
+        },
       ],
     };
   },
@@ -94,6 +125,7 @@ function BlogPostPage() {
   const { post } = Route.useLoaderData();
   const relatedPosts = getRelatedBlogPosts(post.slug, 3);
   const [copied, setCopied] = useState(false);
+  const { inArticleBanner } = useDynamicProducts();
 
   const handleShare = () => {
     if (typeof window !== "undefined" && navigator.clipboard) {
@@ -255,9 +287,13 @@ function BlogPostPage() {
                 </div>
               )}
 
-              {/* Mid-article Product CTA on Section 2 */}
+              {/* Mid-article In-Article Promo Banner (Admin Managed) or Fallback */}
               {idx === 1 && (
-                <ProductRecommendationBanner targetType={post.targetProductType} />
+                inArticleBanner && inArticleBanner.enabled ? (
+                  <InArticlePromoWidget config={inArticleBanner} />
+                ) : (
+                  <ProductRecommendationBanner targetType={post.targetProductType} />
+                )
               )}
             </section>
           ))}
@@ -417,6 +453,73 @@ function ProductRecommendationBanner({
           <span>مشاهده پلن‌ها و خرید</span>
         </Link>
       </div>
+    </div>
+  );
+}
+
+function InArticlePromoWidget({ config }: { config: InArticleBannerConfig }) {
+  const isExternal =
+    config.linkUrl?.startsWith("http://") || config.linkUrl?.startsWith("https://");
+
+  const ContentWrapper = ({ children }: { children: React.ReactNode }) => {
+    if (!config.linkUrl) return <>{children}</>;
+    if (isExternal) {
+      return (
+        <a
+          href={config.linkUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block group no-underline"
+        >
+          {children}
+        </a>
+      );
+    }
+    return (
+      <a href={config.linkUrl} className="block group no-underline">
+        {children}
+      </a>
+    );
+  };
+
+  return (
+    <div className="my-8 not-prose">
+      <ContentWrapper>
+        <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-background to-teal-500/10 p-5 sm:p-6 backdrop-blur-xl shadow-lg transition-all duration-300 hover:border-emerald-500/50 hover:shadow-emerald-500/10 hover:shadow-xl">
+          <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-6">
+            {config.imageUrl && (
+              <div className="relative w-full sm:w-48 h-36 shrink-0 overflow-hidden rounded-2xl border border-border/60 bg-secondary/40 shadow-md">
+                <img
+                  src={config.imageUrl}
+                  alt={config.title}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+            )}
+            <div className="flex-1 space-y-2.5 text-center sm:text-right">
+              {config.badge && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  {config.badge}
+                </span>
+              )}
+              <h3 className="text-base sm:text-lg font-black text-foreground leading-snug group-hover:text-emerald-500 transition-colors">
+                {config.title}
+              </h3>
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                {config.description}
+              </p>
+              <div className="pt-1">
+                <span className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-xs sm:text-sm font-extrabold text-white shadow-md shadow-emerald-500/20 transition-transform group-hover:scale-105">
+                  <span>{config.buttonText || "مشاهده و خرید"}</span>
+                  <ExternalLink className="h-4 w-4" />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ContentWrapper>
     </div>
   );
 }

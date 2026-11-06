@@ -265,35 +265,35 @@ export function AiChatDrawer() {
         <button
           type="button"
           onClick={() => setIsMinimized(false)}
-          className="animate-vaich-pill flex items-center gap-2.5 rounded-full border border-border/80 bg-background/95 dark:bg-card/95 px-4 py-2.5 text-xs font-semibold text-foreground shadow-2xl backdrop-blur-2xl hover:border-primary/50 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer group"
+          className="animate-vaich-pill flex items-center gap-2.5 rounded-full border border-white/20 dark:border-white/10 bg-background/90 dark:bg-[#0b0f19]/90 px-4 py-2.5 text-xs font-semibold text-foreground shadow-2xl backdrop-blur-3xl hover:border-primary/50 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer group ring-1 ring-black/5 dark:ring-white/5"
         >
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
           </span>
           <span className="font-medium">پشتیبانی آنلاین VAICH</span>
-          <div className="grid h-5 w-5 place-items-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-200">
+          <div className="grid h-5 w-5 place-items-center rounded-full bg-primary/15 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-200">
             <Headphones className="h-3 w-3" />
           </div>
         </button>
       ) : (
         <div
-          className={`w-[calc(100vw-24px)] xs:w-[380px] sm:w-[410px] h-[530px] max-h-[85vh] rounded-3xl border border-border/80 bg-background/95 dark:bg-card/95 backdrop-blur-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden text-foreground ${
+          className={`w-[calc(100vw-24px)] xs:w-[380px] sm:w-[415px] h-[540px] max-h-[86vh] rounded-3xl border border-white/20 dark:border-white/10 bg-background/85 dark:bg-[#0b0f19]/90 backdrop-blur-3xl shadow-[0_25px_70px_rgba(0,0,0,0.25)] dark:shadow-[0_25px_80px_rgba(0,0,0,0.8)] ring-1 ring-black/5 dark:ring-white/5 flex flex-col overflow-hidden text-foreground ${
             isClosing
               ? "animate-vaich-chat-out pointer-events-none"
               : "animate-vaich-chat-in"
           }`}
         >
-          {/* هدر مینیمال، مدرن و هماهنگ با تم */}
-          <div className="flex items-center justify-between border-b border-border/50 bg-secondary/30 px-4 py-3">
+          {/* هدر مینیمال، لوکس، شیشه‌ای و هماهنگ با تم */}
+          <div className="flex items-center justify-between border-b border-border/40 dark:border-white/10 bg-secondary/35 dark:bg-white/[0.03] backdrop-blur-md px-4 py-3.5">
             <div className="flex items-center gap-2.5">
-              <div className="relative grid h-8 w-8 place-items-center rounded-xl bg-primary/10 text-primary border border-primary/20 shadow-xs">
+              <div className="relative grid h-8 w-8 place-items-center rounded-xl bg-primary/15 text-primary border border-primary/25 shadow-xs">
                 <Sparkles className="h-4 w-4 text-primary animate-pulse" />
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs sm:text-sm font-bold text-foreground">
-                    پشتیبانی آنلاین VAICH
+                    پشتیبانی هوشمند VAICH
                   </span>
                   <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -301,7 +301,7 @@ export function AiChatDrawer() {
                   </span>
                 </div>
                 <span className="text-[10px] text-muted-foreground mt-0.5">
-                  پاسخگویی آنی هوشمند ۲۴ ساعته
+                  پاسخگویی آنی ۲۴ ساعته
                 </span>
               </div>
             </div>
@@ -311,7 +311,7 @@ export function AiChatDrawer() {
                 type="button"
                 onClick={handleClearHistory}
                 title="شروع مجدد گفت‌وگو"
-                className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-all duration-150 cursor-pointer"
+                className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:bg-secondary/70 hover:text-foreground transition-all duration-150 cursor-pointer"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
               </button>
@@ -319,7 +319,7 @@ export function AiChatDrawer() {
                 type="button"
                 onClick={() => setIsMinimized(true)}
                 title="کوچک کردن"
-                className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-all duration-150 cursor-pointer"
+                className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:bg-secondary/70 hover:text-foreground transition-all duration-150 cursor-pointer"
               >
                 <ChevronDown className="h-4 w-4" />
               </button>
@@ -327,7 +327,7 @@ export function AiChatDrawer() {
                 type="button"
                 onClick={handleClose}
                 title="بستن"
-                className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-all duration-150 cursor-pointer"
+                className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:bg-secondary/70 hover:text-foreground transition-all duration-150 cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -335,7 +335,7 @@ export function AiChatDrawer() {
           </div>
 
           {/* محتوای پیام‌ها با انیمیشن فنری و هماهنگی تم تاریک و روشن */}
-          <div className="flex-1 overflow-y-auto p-3.5 space-y-3 text-xs sm:text-[13px] scroll-smooth">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs sm:text-[13px] scroll-smooth">
             {messages.map((m) => (
               <div
                 key={m.id}
@@ -344,10 +344,10 @@ export function AiChatDrawer() {
                 }`}
               >
                 <div
-                  className={`max-w-[86%] rounded-2xl px-3.5 py-2.5 transition-all shadow-xs leading-relaxed ${
+                  className={`max-w-[86%] rounded-2xl px-4 py-2.5 transition-all leading-relaxed ${
                     m.role === "user"
-                      ? "rounded-br-xs bg-primary text-primary-foreground font-medium self-end shadow-sm"
-                      : "rounded-bl-xs bg-secondary/70 dark:bg-secondary/40 text-foreground border border-border/50 self-start"
+                      ? "rounded-br-xs bg-primary text-primary-foreground font-medium self-end shadow-sm shadow-primary/20"
+                      : "rounded-bl-xs bg-secondary/70 dark:bg-white/[0.06] text-foreground border border-border/50 dark:border-white/10 backdrop-blur-md self-start shadow-2xs"
                   }`}
                 >
                   {renderMessageContent(m.text)}
@@ -362,7 +362,7 @@ export function AiChatDrawer() {
             ))}
 
             {loading && (
-              <div className="animate-vaich-msg flex items-center gap-2 self-start rounded-2xl rounded-bl-xs border border-border/50 bg-secondary/60 dark:bg-secondary/40 px-3.5 py-2 text-xs text-muted-foreground shadow-xs">
+              <div className="animate-vaich-msg flex items-center gap-2 self-start rounded-2xl rounded-bl-xs border border-border/50 dark:border-white/10 bg-secondary/60 dark:bg-white/[0.05] backdrop-blur-md px-4 py-2 text-xs text-muted-foreground shadow-2xs">
                 <Sparkles className="h-3.5 w-3.5 text-primary animate-spin" />
                 <span className="font-medium">دستیار در حال تنظیم پاسخ...</span>
                 <span className="flex gap-1 mr-1">
@@ -376,15 +376,15 @@ export function AiChatDrawer() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* پیشنهادات سریع برای پاسخ آنی */}
-          <div className="px-3 py-2 border-t border-border/30 bg-background/50 dark:bg-card/50 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          {/* پیشنهادات سریع برای پاسخ آنی با فیلتر شیشه‌ای */}
+          <div className="px-3 py-2 border-t border-border/30 dark:border-white/5 bg-background/50 dark:bg-white/[0.02] backdrop-blur-md flex items-center gap-1.5 overflow-x-auto no-scrollbar">
             {QUICK_PROMPTS.map((prompt, pIdx) => (
               <button
                 key={pIdx}
                 type="button"
                 disabled={loading}
                 onClick={() => handleSendMessage(prompt)}
-                className="whitespace-nowrap rounded-full border border-border/70 bg-secondary/40 hover:bg-primary/10 hover:border-primary/50 hover:text-primary px-3 py-1.5 text-[11px] font-medium text-muted-foreground transition-all duration-200 cursor-pointer disabled:opacity-50 hover:-translate-y-0.5 active:scale-95 shrink-0 shadow-xs"
+                className="whitespace-nowrap rounded-full border border-border/70 dark:border-white/10 bg-secondary/40 dark:bg-white/[0.04] hover:bg-primary/10 hover:border-primary/50 hover:text-primary px-3 py-1.5 text-[11px] font-medium text-muted-foreground transition-all duration-200 cursor-pointer disabled:opacity-50 hover:-translate-y-0.5 active:scale-95 shrink-0 shadow-2xs backdrop-blur-xs"
               >
                 <ArrowDownLeft className="h-2.5 w-2.5 inline ml-1 opacity-70 text-primary" />
                 {prompt}
@@ -392,13 +392,13 @@ export function AiChatDrawer() {
             ))}
           </div>
 
-          {/* فرم ارسال پیام تمیز، سریع و مینیمال */}
+          {/* فرم ارسال پیام تمیز، سریع، شیشه‌ای و مینیمال */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleSendMessage();
             }}
-            className="flex items-center gap-2 p-2.5 border-t border-border/40 bg-secondary/20 dark:bg-secondary/30"
+            className="flex items-center gap-2 p-3 border-t border-border/40 dark:border-white/10 bg-secondary/20 dark:bg-black/20 backdrop-blur-md"
           >
             <input
               type="text"
@@ -406,13 +406,13 @@ export function AiChatDrawer() {
               onChange={(e) => setInput(e.target.value)}
               placeholder="پیام یا سوال خود را بنویسید..."
               disabled={loading}
-              className="flex-1 rounded-2xl border border-border/70 bg-background text-foreground px-3.5 py-2.5 text-xs outline-none placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 disabled:opacity-50"
+              className="flex-1 rounded-2xl border border-border/70 dark:border-white/10 bg-background/80 dark:bg-black/40 backdrop-blur-md text-foreground px-4 py-2.5 text-xs outline-none placeholder:text-muted-foreground/70 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 disabled:opacity-50"
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
               title="ارسال پیام"
-              className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary text-primary-foreground transition-all duration-200 hover:opacity-95 hover:scale-105 active:scale-95 disabled:opacity-30 disabled:pointer-events-none cursor-pointer shadow-md"
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-primary text-primary-foreground transition-all duration-200 hover:opacity-95 hover:scale-105 active:scale-95 disabled:opacity-30 disabled:pointer-events-none cursor-pointer shadow-md shadow-primary/25"
             >
               <Send className="h-4 w-4 rotate-180" />
             </button>
