@@ -729,7 +729,7 @@ function ClaudeDetailContent({
             },
             {
               q: "نحوه تحویل اکانت کلود پرو به چه صورت است؟",
-              a: "پس از ثبت سفارش، اطلاعات ورود به اکانت اختصاصی شما ظرف مدت ۱۵ الی ۶۰ دقیقه در تلگرام برای شما ارسال می‌شود.",
+              a: "پس از ثبت سفارش و ارسال رسید در ربات تلگرام، اطلاعات ورود به اکانت اختصاصی شما در اولین فرصت و در سریع‌ترین زمان ممکن در تلگرام برای شما ارسال می‌شود.",
             },
           ].map((item, idx) => (
             <div
@@ -977,10 +977,10 @@ function GeminiDetailContent({
             <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                تحویل سریع ظرف ۱۵ الی ۶۰ دقیقه
+                تحویل فوری در اولین فرصت
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                اطلاعات اکانت و راهنمای کامل اتصال پایدار بلافاصله پس از ثبت سفارش در تلگرام به شما تحویل داده می‌شود.
+                اطلاعات اکانت و راهنمای کامل اتصال پایدار پس از ارسال رسید در ربات، در سریع‌ترین زمان ممکن در تلگرام به شما تحویل داده می‌شود.
               </p>
             </div>
 
