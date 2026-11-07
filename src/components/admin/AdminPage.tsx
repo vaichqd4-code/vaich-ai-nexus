@@ -206,6 +206,7 @@ export function AdminPage() {
   });
   const [isEditingBlog, setIsEditingBlog] = useState(false);
   const [editingBlogPost, setEditingBlogPost] = useState<Partial<BlogPost> | null>(null);
+  const [originalBlogSlug, setOriginalBlogSlug] = useState<string | null>(null);
   const [blogSaveMsg, setBlogSaveMsg] = useState("");
   const [blogDeleteSlug, setBlogDeleteSlug] = useState<string | null>(null);
 
@@ -218,6 +219,7 @@ export function AdminPage() {
   }, []);
 
   const handleOpenAddBlog = () => {
+    setOriginalBlogSlug(null);
     setEditingBlogPost({
       slug: "",
       title: "",
@@ -250,6 +252,7 @@ export function AdminPage() {
   };
 
   const handleOpenEditBlog = (post: BlogPost) => {
+    setOriginalBlogSlug(post.slug);
     setEditingBlogPost(JSON.parse(JSON.stringify(post)));
     setIsEditingBlog(true);
   };
@@ -261,10 +264,13 @@ export function AdminPage() {
     }
 
     const cleanSlug = editingBlogPost.slug.trim().toLowerCase().replace(/\s+/g, "-");
+    const fallbackExcerpt =
+      editingBlogPost.sections?.[0]?.paragraphs?.[0]?.slice(0, 150) || "راهنمای جامع و یادداشت تخصصی در وایچ";
+
     const updatedPost: BlogPost = {
       slug: cleanSlug,
       title: editingBlogPost.title.trim(),
-      excerpt: editingBlogPost.excerpt?.trim() || "",
+      excerpt: editingBlogPost.excerpt?.trim() || fallbackExcerpt,
       category: editingBlogPost.category?.trim() || "عمومی",
       readTime: editingBlogPost.readTime?.trim() || "۵ دقیقه",
       date: editingBlogPost.date || "امروز",
@@ -291,10 +297,15 @@ export function AdminPage() {
     };
 
     let nextPosts: BlogPost[];
-    const exists = blogPosts.some((p) => p.slug === cleanSlug);
-    if (exists) {
-      nextPosts = blogPosts.map((p) => (p.slug === cleanSlug ? updatedPost : p));
+    if (originalBlogSlug) {
+      // بروزرسانی درجا بدون ثبت مقاله تکراری یا برهم‌خوردن آرایه
+      nextPosts = blogPosts.map((p) => (p.slug === originalBlogSlug ? updatedPost : p));
     } else {
+      const exists = blogPosts.some((p) => p.slug === cleanSlug);
+      if (exists) {
+        alert("مقاله‌ای با این نامک (Slug) از قبل وجود دارد. لطفاً نامک دیگری انتخاب کنید.");
+        return;
+      }
       nextPosts = [updatedPost, ...blogPosts];
     }
 
@@ -302,6 +313,7 @@ export function AdminPage() {
     saveStoredBlogPosts(nextPosts);
     setIsEditingBlog(false);
     setEditingBlogPost(null);
+    setOriginalBlogSlug(null);
 
     setBlogSaveMsg("در حال ذخیره و همگام‌سازی ابری...");
     const res = await publishToCloud({ blogPosts: nextPosts });
@@ -332,6 +344,7 @@ export function AdminPage() {
   // Product Add / Edit Modal State
   const [isEditing, setIsEditing] = useState(false);
   const [editProduct, setEditProduct] = useState<Partial<Product> | null>(null);
+  const [originalProductSlug, setOriginalProductSlug] = useState<string | null>(null);
   const [featuresText, setFeaturesText] = useState("");
   const [purchaseInfoText, setPurchaseInfoText] = useState("");
   const [isCompressingImage, setIsCompressingImage] = useState(false);
@@ -743,6 +756,7 @@ export function AdminPage() {
 
   // Open Edit Form for Product
   const handleOpenEditProduct = (product: Product) => {
+    setOriginalProductSlug(product.slug);
     setEditProduct({
       ...product,
       imageFit: product.imageFit || "contain",
@@ -758,6 +772,7 @@ export function AdminPage() {
 
   // Open Add Form for Product
   const handleOpenAddProduct = () => {
+    setOriginalProductSlug(null);
     setImageUploadError("");
     setIsCompressingImage(false);
     setEditProduct({
@@ -797,13 +812,13 @@ export function AdminPage() {
   // Save Product (Add or Edit)
   const handleSaveProduct = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editProduct || !editProduct.name || !editProduct.price) {
-      alert("لطفاً نام و قیمت محصول را وارد کنید.");
+    if (!editProduct || !editProduct.name || editProduct.price === undefined || editProduct.price === null || isNaN(Number(editProduct.price))) {
+      alert("لطفاً نام و قیمت معتبر محصول را وارد کنید.");
       return;
     }
 
     const rawSlug = editProduct.slug?.trim() || editProduct.name.toLowerCase().replace(/\s+/g, "-");
-    const cleanSlug = rawSlug.replace(/[^a-zA-Z0-9-_\u0600-\u06FF]/g, "");
+    const cleanSlug = rawSlug.replace(/[^a-zA-Z0-9-_\u0600-\u06FF]/g, "") || (originalProductSlug || `product-${Date.now().toString(36)}`);
 
     const parsedFeatures = featuresText
       .split("\n")
@@ -815,10 +830,11 @@ export function AdminPage() {
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const existingProd = products.find((p) => p.slug === cleanSlug);
+    const existingProd = products.find((p) => p.slug === (originalProductSlug || cleanSlug));
     const isLifetime = Boolean(editProduct.isLifetime ?? isProductLifetime(editProduct));
 
     const fullProduct: Product = {
+      ...(existingProd || {}),
       slug: cleanSlug,
       name: editProduct.name.trim(),
       price: Number(editProduct.price),
@@ -841,12 +857,18 @@ export function AdminPage() {
       reviews: editProduct.reviews || existingProd?.reviews || [],
     };
 
-    const exists = products.some((p) => p.slug === fullProduct.slug);
     let updated: Product[];
 
-    if (exists) {
-      updated = products.map((p) => (p.slug === fullProduct.slug ? fullProduct : p));
+    if (originalProductSlug) {
+      // ویرایش درجا بر اساس اسلاگ اولیه محصول (جلوگیری از ساخت محصول تکراری یا برهم‌خوردن قیمت)
+      updated = products.map((p) => (p.slug === originalProductSlug ? fullProduct : p));
     } else {
+      // ثبت محصول جدید
+      const exists = products.some((p) => p.slug === fullProduct.slug);
+      if (exists) {
+        alert("محصولی با این نامک (Slug) از قبل وجود دارد. لطفاً اسلاگ دیگری انتخاب کنید.");
+        return;
+      }
       updated = [fullProduct, ...products];
     }
 
@@ -854,6 +876,7 @@ export function AdminPage() {
     handlePublishCloud({ products: updated });
     setIsEditing(false);
     setEditProduct(null);
+    setOriginalProductSlug(null);
   };
 
   // Delete Product
@@ -2759,15 +2782,20 @@ export function AdminPage() {
             <form onSubmit={handleSaveProduct} className="mt-4 space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs font-medium text-foreground mb-1">
-                    نام محصول: *
-                  </label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-medium text-foreground">
+                      نام محصول: *
+                    </label>
+                    <span className="text-[10px] font-mono text-muted-foreground">
+                      {toPersianDigits(editProduct.name?.length || 0)} / ۶۰ کاراکتر
+                    </span>
+                  </div>
                   <input
                     type="text"
                     required
                     value={editProduct.name || ""}
                     onChange={(e) => setEditProduct({ ...editProduct, name: e.target.value })}
-                    placeholder="مثلاً: ChatGPT Plus شخصی"
+                    placeholder="مثلاً: ChatGPT Plus"
                     className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary"
                   />
                 </div>
@@ -3190,16 +3218,38 @@ export function AdminPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-foreground mb-1">
-                  توضیح کوتاه محصول:
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-medium text-foreground">
+                    توضیح کوتاه محصول (برای متای گوگل و کارت‌ها):
+                  </label>
+                  <span className={`text-[10px] font-mono ${(editProduct.description?.length || 0) > 160 ? "text-amber-500 font-bold" : "text-muted-foreground"}`}>
+                    {toPersianDigits(editProduct.description?.length || 0)} / ۱۶۰ کاراکتر (بهینه ۱۲۰ تا ۱۶۰)
+                  </span>
+                </div>
                 <input
                   type="text"
                   value={editProduct.description || ""}
                   onChange={(e) => setEditProduct({ ...editProduct, description: e.target.value })}
-                  placeholder="توضیح کوتاه ۱ یا ۲ جمله‌ای"
+                  placeholder="توضیح کوتاه ۱ یا ۲ جمله‌ای (۱۲۰ الی ۱۶۰ کاراکتر)"
                   className="w-full rounded-2xl border border-border bg-background/60 px-4 py-2.5 text-sm outline-none focus:border-primary"
                 />
+              </div>
+
+              {/* پیش‌نمایش زنده در گوگل */}
+              <div className="rounded-2xl border border-border/80 bg-background/50 p-3.5 space-y-2 select-none">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                  <span>پیش‌نمایش اسنیپت محصول در گوگل (Google SERP Snippet)</span>
+                </div>
+                <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono" dir="ltr">
+                  https://vaich.ir/products/{editProduct.slug || "sample-product"}
+                </div>
+                <div className="text-xs sm:text-sm font-bold text-blue-600 dark:text-blue-400 line-clamp-1">
+                  خرید اشتراک {editProduct.name || "محصول"} ({editProduct.duration || "قانونی"}) | VAICH
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2">
+                  {editProduct.description || "خرید آنلاین و دسترسی مطمئن به این محصول در فروشگاه وایچ..."}
+                </p>
               </div>
 
               <div>
@@ -3756,9 +3806,14 @@ export function AdminPage() {
 
             <div className="space-y-4 max-h-[70vh] overflow-y-auto px-1">
               <div>
-                <label className="block text-xs font-bold text-foreground mb-1.5">
-                  عنوان مقاله *
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold text-foreground">
+                    عنوان مقاله *
+                  </label>
+                  <span className={`text-[11px] font-mono ${(editingBlogPost.title?.length || 0) > 60 ? "text-amber-500 font-bold" : "text-muted-foreground"}`}>
+                    {toPersianDigits(editingBlogPost.title?.length || 0)} / ۶۰ کاراکتر
+                  </span>
+                </div>
                 <input
                   type="text"
                   value={editingBlogPost.title || ""}
@@ -3857,16 +3912,38 @@ export function AdminPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-foreground mb-1.5">
-                  خلاصه کوتاه مقاله (Excerpt برای کارت‌ها و متای سئو)
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold text-foreground">
+                    خلاصه کوتاه مقاله (Excerpt برای کارت‌ها و متای سئو)
+                  </label>
+                  <span className={`text-[11px] font-mono ${(editingBlogPost.excerpt?.length || 0) > 160 ? "text-amber-500 font-bold" : "text-muted-foreground"}`}>
+                    {toPersianDigits(editingBlogPost.excerpt?.length || 0)} / ۱۶۰ کاراکتر (ایده‌آل: ۱۲۰ تا ۱۶۰)
+                  </span>
+                </div>
                 <textarea
                   rows={3}
                   value={editingBlogPost.excerpt || ""}
                   onChange={(e) => setEditingBlogPost({ ...editingBlogPost, excerpt: e.target.value })}
                   className="w-full rounded-2xl border border-border/80 bg-background px-4 py-2.5 text-xs sm:text-sm text-foreground focus:border-primary focus:outline-none leading-relaxed"
-                  placeholder="توضیح کوتاه ۱ الی ۲ خطی برای پیش‌نمایش در صفحه اصلی و متاتگ‌های گوگل..."
+                  placeholder="توضیح کوتاه ۱ الی ۲ خطی برای پیش‌نمایش در صفحه اصلی و متاتگ‌های گوگل (در صورت خالی بودن خودکار از متن استخراج می‌شود)..."
                 />
+              </div>
+
+              {/* پیش‌نمایش زنده در گوگل و شبکه‌های اجتماعی */}
+              <div className="rounded-2xl border border-border/80 bg-background/50 p-3.5 space-y-2 select-none">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                  <span>پیش‌نمایش اسنیپت در موتور جستجوی گوگل (Google SERP Snippet)</span>
+                </div>
+                <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono" dir="ltr">
+                  https://vaich.ir/blog/{editingBlogPost.slug || "sample-slug"}
+                </div>
+                <div className="text-xs sm:text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline line-clamp-1">
+                  {editingBlogPost.title || "عنوان مقاله در جستجوی گوگل"} | مجله وایچ
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2">
+                  {editingBlogPost.excerpt || "توضیحات و متای سئو در این قسمت در نتایج گوگل به کاربران نمایش داده خواهد شد..."}
+                </p>
               </div>
             </div>
 
