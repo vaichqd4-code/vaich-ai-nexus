@@ -290,20 +290,12 @@ function BlogArchivePage() {
                       {post.category}
                     </span>
                   </div>
-
-                  <div
-                    className="absolute bottom-3 right-3 z-20 flex items-center gap-1.5 text-[11px] text-foreground font-semibold bg-background/90 dark:bg-background/80 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-border/60 shadow-xs pointer-events-none"
-                    aria-hidden="true"
-                  >
-                    <Clock className="h-3.5 w-3.5 text-neutral-400" />
-                    <span>{post.readTime}</span>
-                  </div>
                 </div>
 
                 {/* Card Body */}
-                <div className="flex flex-1 flex-col p-5 justify-between gap-4">
+                <div className="flex flex-1 flex-col p-4 sm:p-5 justify-between gap-3">
                   <div className="space-y-2">
-                    <h2 className="text-sm sm:text-base font-bold leading-snug text-foreground">
+                    <h2 className="text-sm sm:text-[15px] font-bold leading-snug text-foreground">
                       <Link
                         to="/blog/$slug"
                         params={{ slug: post.slug }}
@@ -312,14 +304,19 @@ function BlogArchivePage() {
                         {post.title}
                       </Link>
                     </h2>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed font-normal">
-                      {post.excerpt.length > 150 ? `${post.excerpt.slice(0, 147)}...` : post.excerpt}
+                    <p className="text-xs text-muted-foreground/90 line-clamp-2 leading-relaxed font-normal">
+                      {post.excerpt}
                     </p>
                   </div>
 
-                  {/* Decorative Action Link */}
-                  <div className="pt-3 border-t border-border/50 flex items-center justify-end" aria-hidden="true">
-                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary group-hover:translate-x-[-3px] transition-transform">
+                  {/* Card Meta & Action Footer */}
+                  <div className="pt-3 border-t border-border/50 flex items-center justify-between text-xs" aria-hidden="true">
+                    <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                      <Clock className="h-3.5 w-3.5 text-primary/70" />
+                      <span>{post.readTime}</span>
+                    </div>
+
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-primary group-hover:translate-x-[-3px] transition-transform">
                       <span>مطالعه مقاله</span>
                       <ArrowLeft className="h-3.5 w-3.5" />
                     </span>
