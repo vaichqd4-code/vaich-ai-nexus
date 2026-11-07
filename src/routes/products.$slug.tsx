@@ -91,6 +91,10 @@ export const Route = createFileRoute("/products/$slug")({
       ],
     };
 
+    const ogImg = product.iconUrl
+      ? (product.iconUrl.startsWith("http") ? product.iconUrl : `https://vaich.ir${product.iconUrl.split("?")[0]}`)
+      : "https://vaich.ir/vaich-logo.png";
+
     return {
       meta: [
         { title },
@@ -99,11 +103,11 @@ export const Route = createFileRoute("/products/$slug")({
         { property: "og:description", content: description },
         { property: "og:url", content: canonicalUrl },
         { property: "og:type", content: "product" },
-        { property: "og:image", content: "https://vaich.ir/vaich-logo.png" },
+        { property: "og:image", content: ogImg },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
-        { name: "twitter:image", content: "https://vaich.ir/vaich-logo.png" },
+        { name: "twitter:image", content: ogImg },
       ],
       links: [
         { rel: "canonical", href: canonicalUrl },
@@ -245,17 +249,22 @@ function ProductDetail() {
   const countReviews = (product.reviewCount || 0) + (reviews.length - (product.reviews?.length || 0));
 
   // Google Search Console JSON-LD Structured Data with AggregateRating and Reviews
+  const productImg = product.iconUrl
+    ? (product.iconUrl.startsWith("http") ? product.iconUrl : `https://vaich.ir${product.iconUrl.split("?")[0]}`)
+    : "https://vaich.ir/vaich-logo.png";
+
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: isLifetime ? product.name : `اشتراک ${product.name}`,
     description: product.description,
-    image: "https://vaich.ir/vaich-logo.png",
+    image: productImg,
     offers: {
       "@type": "Offer",
-      url: `https://vaich.ir/products/${encodeURIComponent(product.slug)}`,
+      url: `https://vaich.ir/products/${product.slug}`,
       priceCurrency: "IRR",
       price: product.price,
+      priceValidUntil: "2027-12-31",
       availability: isOutOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
       seller: {
         "@type": "Organization",

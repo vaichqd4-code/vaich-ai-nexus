@@ -2,12 +2,12 @@
   "products": [
     {
       "slug": "vaich-life-planner",
-      "name": "پلنر برنامه ریزی(استاندارد)",
+      "name": "پلنر برنامه‌ریزی هوشمند (Google Sheets)",
       "price": 299000,
       "duration": "دائمی (بدون اشتراک)",
       "description": "نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script (بدون نیاز به پرداخت ماهانه یا شارژ دوره)؛ مجهز به Habit Tracker، ماتریس آیزنهاور، سیستم Time Boxing و هوش مالی فردی.",
       "featured": true,
-      "badge": "پیشنهادی",
+      "badge": "پیشنهادی ویژه",
       "badgeColor": "fire",
       "categoryId": "row-mvampt3r",
       "inStock": true,
@@ -222,7 +222,10 @@
           "verified": true,
           "status": "approved"
         }
-      ]
+      ],
+      "originalPrice": 499000,
+      "discountPercent": 40,
+      "isLifetime": true
     },
     {
       "slug": "gemini",
@@ -604,8 +607,8 @@
     },
     {
       "id": "row-mvampt3r",
-      "title": "پلنر ها",
-      "subtitle": "پلنر های مدیریت و سبک زندگی (Google sheets)"
+      "title": "پلنرهای دیجیتال و هوشمند",
+      "subtitle": "نرم‌افزارهای مدیریت فردی و سبک زندگی در Google Sheets (دسترسی همیشگی بدون اشتراک)"
     }
   ],
   "layout": "1-row",
@@ -644,7 +647,7 @@
       "publishIsoDate": "2026-11-05T12:00:00+03:30",
       "lastUpdatedDate": "۱۵ آبان ۱۴۰۵",
       "lastUpdatedIsoDate": "2026-11-05T12:00:00+03:30",
-      "coverImage": "/blog/ai-models-comparison.jpg",
+      "coverImage": "/blog/ai-models-comparison.webp",
       "targetProductType": "ai",
       "keywords": [
         "GPT-6 Astra",

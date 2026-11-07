@@ -67,23 +67,26 @@ export const DEFAULT_CATEGORY_ROWS: ProductCategoryRow[] = [
   },
   {
     id: "row-mvampt3r",
-    title: "پلنر ها",
-    subtitle: "پلنر های مدیریت و سبک زندگی (Google sheets)",
+    title: "پلنرهای دیجیتال و هوشمند",
+    subtitle: "نرم‌افزارهای مدیریت فردی و سبک زندگی در Google Sheets (دسترسی همیشگی بدون اشتراک)",
   },
 ];
 
 export const DEFAULT_PRODUCTS: Product[] = [
 {
     "slug": "vaich-life-planner",
-    "name": "پلنر برنامه ریزی(استاندارد)",
+    "name": "پلنر برنامه‌ریزی هوشمند (Google Sheets)",
     "price": 299000,
+    "originalPrice": 499000,
+    "discountPercent": 40,
     "duration": "دائمی (بدون اشتراک)",
     "description": "نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script (بدون نیاز به پرداخت ماهانه یا شارژ دوره)؛ مجهز به Habit Tracker، ماتریس آیزنهاور، سیستم Time Boxing و هوش مالی فردی.",
     "featured": true,
-    "badge": "پیشنهادی",
+    "badge": "پیشنهادی ویژه",
     "badgeColor": "fire",
     "categoryId": "row-mvampt3r",
     "inStock": true,
+    "isLifetime": true,
     "rating": 4.9,
     "reviewCount": 21,
     "features": [

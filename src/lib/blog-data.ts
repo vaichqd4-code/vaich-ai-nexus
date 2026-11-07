@@ -68,7 +68,7 @@ export const BLOG_POSTS: BlogPost[] = [
     publishIsoDate: "2026-11-05T12:00:00+03:30",
     lastUpdatedDate: "۱۵ آبان ۱۴۰۵",
     lastUpdatedIsoDate: "2026-11-05T12:00:00+03:30",
-    coverImage: "/blog/ai-models-comparison.jpg",
+    coverImage: "/blog/ai-models-comparison.webp",
     targetProductType: "ai",
     keywords: [
       "GPT-6 Astra",
