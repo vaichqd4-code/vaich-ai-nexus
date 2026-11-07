@@ -16,7 +16,7 @@ const navigationColumns = [
       { to: "/products/vaich-life-planner", label: "خرید پلنر دیجیتال هوشمند" },
       { to: "/products/gemini-pro", label: "خرید اشتراک Gemini Pro ۱۸ ماهه" },
       { to: "/products/gemini", label: "خرید اشتراک Gemini Pro ۶۰ روزه" },
-      { to: "/products/اشتراک chatgpt plus شخصی", label: "خرید اکانت قانونی ChatGPT Plus" },
+      { to: "/products/chatgpt-plus", label: "خرید اکانت قانونی ChatGPT Plus" },
       { to: "/products/claude", label: "خرید اکانت قانونی Claude Pro" },
     ],
   },

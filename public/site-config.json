@@ -226,9 +226,9 @@
     },
     {
       "slug": "gemini",
-      "name": "Gemini Pro",
+      "name": "Gemini Pro - ۶۰ روزه",
       "price": 160000,
-      "duration": "60 روزه",
+      "duration": "۶۰ روزه",
       "description": "اشتراک رسمی ۶۰ روزه Google Gemini Advanced؛ دسترسی به پرچمدار غول‌آسای Google Gemini 4 Argon با خروجی ۱,۰۰۰,۰۰۰ توکن، لایه عامل‌محور انقلابی Project Astra (درک زنده ویدیوی دوربین با تاخیر زیر ۳۰۰ میلی‌ثانیه و حافظه فضایی)، مدل استدلال عمیق Gemini 3 Deep Think و پیوند کامل با Google Workspace.",
       "featured": false,
       "badgeColor": "purple",
@@ -313,7 +313,7 @@
     },
     {
       "slug": "gemini-pro",
-      "name": "Gemini Pro",
+      "name": "Gemini Pro - ۱۸ ماهه",
       "price": 399000,
       "originalPrice": 4700000,
       "discountPercent": 91,
@@ -449,7 +449,7 @@
       "iconUrl": "/file_00000000377481f6b667af886cd18fb6.png?v=sq2"
     },
     {
-      "slug": "اشتراک chatgpt plus شخصی",
+      "slug": "chatgpt-plus",
       "name": "ChatGPT Plus",
       "price": 5350000,
       "duration": "۱ ماهه",
@@ -628,14 +628,15 @@
   "instagramUrl": "https://www.instagram.com/vaich.ir?psln=MXJkZ2xtaWg1cHo5dQ==",
   "blogPosts": [
     {
-      "slug": "claude-3-5-sonnet-vs-gpt-4o-developers-designers",
+      "slug": "flagship-ai-models-comparison",
       "aliases": [
+        "claude-3-5-sonnet-vs-gpt-4o-developers-designers",
         "gemini-4-argon-vs-claude-sonnet-5-5-vs-gpt-6-terra",
         "ai-giants-2026-comparison",
         "ai-models-comparison",
         "gpt-6-astra-vs-claude-sonnet-gemini"
       ],
-      "title": "راهنمای جامع و کالبدشکافی هوش مصنوعی‌های ۲۰۲۶: رقابت مرگبار GPT-6 Astra، Claude Sonnet 5.5 و Gemini 4 Argon با Project Astra",
+      "title": "راهنمای جامع هوش مصنوعی‌های ۲۰۲۶: مقایسه GPT-6، Claude Sonnet 5.5 و Gemini 4 Argon",
       "excerpt": "بررسی عمیق و آزمایشگاهی سه ابرقدرت هوش مصنوعی ۲۰۲۶؛ کالبدشکافی GPT-6 Astra با ایجنت‌های مستقل، تفکر تطبیقی Claude Sonnet 5.5 و بینایی آنی Project Astra با پنجره ۲ میلیون توکنی.",
       "category": "هوش مصنوعی",
       "readTime": "۱۸ دقیقه",
@@ -849,13 +850,14 @@
       }
     },
     {
-      "slug": "microsoft-copilot-vs-chatgpt-plus",
+      "slug": "ai-free-vs-plus-comparison",
       "aliases": [
+        "microsoft-copilot-vs-chatgpt-plus",
         "free-vs-paid-ai-comparison",
         "chatgpt-plus-vs-claude-pro-roi",
         "why-free-ai-is-not-enough"
       ],
-      "title": "چرا نسخه‌های رایگان هوش مصنوعی دیگر کافی نیستند؟ مقایسه آزمایشگاهی پلن‌های Free در برابر ChatGPT Plus و Claude Pro",
+      "title": "چرا نسخه‌های رایگان هوش مصنوعی کافی نیستند؟ مقایسه پلن‌های رایگان با ChatGPT Plus و Claude Pro",
       "excerpt": "بررسی تفاوت‌های حیاتی میان هوش مصنوعی رایگان و اشتراک‌های قانونی پلاس و پرو؛ از افت شدید کیفیت در ساعات اوج مصرف تا حذف قابلیت‌های نجات‌بخش کانوَس و پروژه‌های کاری.",
       "category": "هوش مصنوعی",
       "readTime": "۱۲ دقیقه",

@@ -299,9 +299,9 @@ export const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     "slug": "gemini",
-    "name": "Gemini Pro",
+    "name": "Gemini Pro - ۶۰ روزه",
     "price": 160000,
-    "duration": "60 روزه",
+    "duration": "۶۰ روزه",
     "description": "اشتراک رسمی ۶۰ روزه Google Gemini Advanced؛ دسترسی به پرچمدار غول‌آسای Google Gemini 4 Argon با خروجی ۱,۰۰۰,۰۰۰ توکن، لایه عامل‌محور انقلابی Project Astra (درک زنده ویدیوی دوربین با تاخیر زیر ۳۰۰ میلی‌ثانیه و حافظه فضایی)، مدل استدلال عمیق Gemini 3 Deep Think و پیوند کامل با Google Workspace.",
     "featured": false,
     "badgeColor": "purple",
@@ -386,7 +386,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     "slug": "gemini-pro",
-    "name": "Gemini Pro",
+    "name": "Gemini Pro - ۱۸ ماهه",
     "price": 399000,
     "originalPrice": 4700000,
     "discountPercent": 91,
@@ -522,7 +522,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "iconUrl": "/file_00000000377481f6b667af886cd18fb6.png?v=sq2"
   },
   {
-    "slug": "اشتراک chatgpt plus شخصی",
+    "slug": "chatgpt-plus",
     "name": "ChatGPT Plus",
     "price": 5350000,
     "duration": "۱ ماهه",

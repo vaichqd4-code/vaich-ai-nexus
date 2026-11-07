@@ -227,6 +227,7 @@ export function BlogCoverGraphic({
         </div>
       );
 
+    case "flagship-ai-models-comparison":
     case "claude-3-5-sonnet-vs-gpt-4o-developers-designers":
       return (
         <div
@@ -245,9 +246,9 @@ export function BlogCoverGraphic({
 
           <div className="relative z-10 flex items-center justify-between">
             <span className="text-[10px] font-mono tracking-wider uppercase text-purple-400/90 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/20">
-              CLAUDE 3.5 VS GPT-4O
+              GPT-6 • SONNET • GEMINI
             </span>
-            <span className="text-[9px] font-mono text-cyan-300/80">DEV &amp; DESIGN</span>
+            <span className="text-[9px] font-mono text-cyan-300/80">FLAGSHIP 2026</span>
           </div>
 
           <div className="relative z-10 my-auto flex items-center justify-center py-2">
@@ -265,6 +266,48 @@ export function BlogCoverGraphic({
           <div className="relative z-10 flex items-center justify-between text-[11px] text-neutral-400 border-t border-purple-500/20 pt-2 font-mono">
             <span>ARTIFACTS vs CANVAS</span>
             <span className="text-purple-400 font-bold">2026 BENCHMARK</span>
+          </div>
+        </div>
+      );
+
+    case "ai-free-vs-plus-comparison":
+    case "microsoft-copilot-vs-chatgpt-plus":
+      return (
+        <div
+          className={`relative overflow-hidden bg-gradient-to-br from-neutral-900 via-rose-950/30 to-neutral-950 flex flex-col justify-between p-5 border border-rose-500/20 select-none ${className}`}
+        >
+          <div
+            className="absolute inset-0 opacity-[0.06]"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, #f43f5e 1px, transparent 1px), linear-gradient(to bottom, #f43f5e 1px, transparent 1px)",
+              backgroundSize: "20px 20px",
+            }}
+          />
+          <div className="absolute -top-12 -right-12 w-36 h-36 bg-rose-500/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-amber-500/15 rounded-full blur-2xl" />
+
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-wider uppercase text-rose-400/90 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20">
+              FREE VS PLUS &amp; PRO
+            </span>
+            <span className="text-[9px] font-mono text-amber-300/80">LAB BENCHMARK</span>
+          </div>
+
+          <div className="relative z-10 my-auto flex items-center justify-center py-2">
+            <svg viewBox="0 0 160 100" className="w-36 h-24" fill="none">
+              <rect x="25" y="28" width="48" height="48" rx="8" fill="#1f1315" stroke="#f43f5e" strokeWidth="1.5" strokeDasharray="3 3" />
+              <text x="49" y="56" fill="#f43f5e" fontSize="12" fontWeight="bold" textAnchor="middle">FREE</text>
+              <path d="M80 52l12 0" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" />
+              <path d="M87 47l5 5-5 5" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <rect x="97" y="24" width="52" height="56" rx="8" fill="#2e1065" stroke="#a855f7" strokeWidth="2" />
+              <text x="123" y="56" fill="#c084fc" fontSize="12" fontWeight="bold" textAnchor="middle">PLUS</text>
+            </svg>
+          </div>
+
+          <div className="relative z-10 flex items-center justify-between text-[11px] text-neutral-400 border-t border-rose-500/20 pt-2 font-mono">
+            <span>RATE LIMITS &amp; ERRORS</span>
+            <span className="text-rose-400 font-bold">10X ROI</span>
           </div>
         </div>
       );
@@ -353,7 +396,7 @@ export function BlogCoverGraphic({
           </div>
 
           <div className="relative z-10 flex items-center justify-between text-[11px] text-neutral-400 border-t border-cyan-500/20 pt-2 font-mono">
-            <span>GEMINI 1.5 PRO MULTIMODAL</span>
+            <span>GEMINI 4 ARGON MULTIMODAL</span>
             <span className="text-cyan-400 font-bold">2,000,000 TOKENS</span>
           </div>
         </div>

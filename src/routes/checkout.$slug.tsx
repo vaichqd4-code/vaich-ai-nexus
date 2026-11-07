@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { Bell, AlertTriangle, Bot } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
@@ -19,6 +19,22 @@ import {
 
 export const Route = createFileRoute("/checkout/$slug")({
   loader: async ({ params }) => {
+    const raw = (params.slug || "").toLowerCase();
+    let decoded = "";
+    try {
+      decoded = decodeURIComponent(params.slug || "").trim().toLowerCase();
+    } catch {
+      decoded = raw;
+    }
+    if (
+      decoded === "اشتراک chatgpt plus شخصی" ||
+      decoded === "اشتراک-chatgpt-plus-شخصی" ||
+      raw.includes("chatgpt plus شخصی") ||
+      raw.includes("chatgptplus")
+    ) {
+      throw redirect({ to: "/checkout/chatgpt-plus", statusCode: 301 });
+    }
+
     let product: any = undefined;
 
     if (typeof window !== "undefined") {
@@ -41,6 +57,10 @@ export const Route = createFileRoute("/checkout/$slug")({
       throw notFound();
     }
 
+    if (product.slug !== params.slug) {
+      throw redirect({ to: `/checkout/${product.slug}`, statusCode: 301 });
+    }
+
     return { product };
   },
 
@@ -49,7 +69,7 @@ export const Route = createFileRoute("/checkout/$slug")({
       return {
         meta: [
           { title: "پرداخت کارت به کارت | VAICH" },
-          { name: "robots", content: "noindex" },
+          { name: "robots", content: "noindex, nofollow" },
         ],
       };
     }
@@ -59,6 +79,10 @@ export const Route = createFileRoute("/checkout/$slug")({
       meta: [
         {
           title: `پرداخت ${loaderData.product.name} | VAICH`,
+        },
+        {
+          name: "robots",
+          content: "noindex, nofollow",
         },
         {
           name: "description",

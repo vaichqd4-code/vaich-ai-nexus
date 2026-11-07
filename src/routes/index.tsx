@@ -20,23 +20,24 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "مرجع تخصصی خدمات دیجیتال و خرید مستقیم اشتراک‌های هوش مصنوعی با تحویل فوری؛ خرید قانونی اکانت ChatGPT Plus، اشتراک Gemini Pro، Claude Pro و پلنرهای تخصصی با تضمین ۱۰۰٪ در VAICH.",
-      },
-      {
-        name: "keywords",
-        content:
-          "خرید اکانت chatgpt plus, خرید اشتراک چت جی پی تی, خرید اکانت gemini pro, خرید اشتراک جمینای, خرید اکانت claude pro, خرید اشتراک هوش مصنوعی, پلنر برنامه ریزی, خدمات دیجیتال, vaich",
+          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی؛ خرید اشتراک ChatGPT Plus، Claude Pro، Gemini Advanced و پلنر هوشمند گوگل‌شیت با تحویل فوری و ضمانت در وایچ.",
       },
       { property: "og:title", content: "VAICH | مرجع خدمات دیجیتال و خرید اشتراک‌های هوش مصنوعی" },
       {
         property: "og:description",
         content:
-          "خرید مستقیم، تحویل فوری و ضمانت پایداری اشتراک‌های هوش مصنوعی (ChatGPT Plus, Gemini Pro, Claude Pro) و ابزارهای دیجیتال در VAICH.",
+          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی؛ خرید اشتراک ChatGPT Plus، Claude Pro، Gemini Advanced و پلنر هوشمند گوگل‌شیت با تحویل فوری و ضمانت در وایچ.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://vaich.ir" },
       { property: "og:image", content: "https://vaich.ir/vaich-logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "خرید اشتراک هوش مصنوعی | اکانت چت جی پی تی، جمینای، کلود | VAICH" },
+      {
+        name: "twitter:description",
+        content:
+          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی؛ خرید اشتراک ChatGPT Plus، Claude Pro، Gemini Advanced و پلنر هوشمند گوگل‌شیت با تحویل فوری و ضمانت در وایچ.",
+      },
       { name: "twitter:image", content: "https://vaich.ir/vaich-logo.png" },
     ],
     links: [

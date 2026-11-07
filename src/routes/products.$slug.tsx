@@ -11,6 +11,20 @@ import { Star, MessageSquarePlus, CheckCircle2, AlertTriangle, Sparkles } from "
 export const Route = createFileRoute("/products/$slug")({
   loader: async ({ params }) => {
     const raw = (params.slug || "").toLowerCase();
+    let decoded = "";
+    try {
+      decoded = decodeURIComponent(params.slug || "").trim().toLowerCase();
+    } catch {
+      decoded = raw;
+    }
+    if (
+      decoded === "اشتراک chatgpt plus شخصی" ||
+      decoded === "اشتراک-chatgpt-plus-شخصی" ||
+      raw.includes("chatgpt plus شخصی") ||
+      raw.includes("chatgptplus")
+    ) {
+      throw redirect({ to: "/products/chatgpt-plus", statusCode: 301 });
+    }
     if (raw === "planners" || raw === "planner" || raw.includes("پلنر")) {
       throw redirect({ to: "/" });
     }
@@ -27,6 +41,12 @@ export const Route = createFileRoute("/products/$slug")({
       }
     }
     if (!product) throw notFound();
+
+    // 301 redirect if requested slug does not match canonical slug
+    if (product.slug !== params.slug) {
+      throw redirect({ to: `/products/${product.slug}`, statusCode: 301 });
+    }
+
     return { product };
   },
   head: ({ loaderData }) => {
@@ -41,29 +61,58 @@ export const Route = createFileRoute("/products/$slug")({
       : `خرید اشتراک ${product.name} (${product.duration || "قانونی"}) | VAICH`;
     const description = isLifetime
       ? (isPlanner
-          ? `خرید آنلاین ${product.name} در گوگل شیت با ردیاب عادات ماهانه، نمودارهای تحلیلی داینامیک، نسخه‌های دوبعدی و سه‌بعدی و تحویل آنی. بدون نیاز به اشتراک ماهانه.`
-          : `خرید آنلاین و دسترسی دائمی ${product.name} با تحویل فوری و ضمانت اصالت. بدون نیاز به پرداخت مجدد یا هزینه اشتراک ماهانه. ${product.description}`)
-      : `خرید آنلاین اشتراک قانونی ${product.name} با تحویل فوری، پشتیبانی ۲۴ ساعته و ضمانت سلامت اکانت. ${product.description} قیمت: ${formatPrice(product.price)}`;
-    const keywords = isLifetime
-      ? (isPlanner
-          ? "خرید پلنر برنامه ریزی, پلنر گوگل شیت, پلنر دیجیتال, ردیاب عادات روزانه, پلنر هوشمند, مدیریت زمان, پلنر 1403, پلنر 1404"
-          : `خرید ${product.name}, دسترسی دائمی ${product.name}, خرید مستقیم ${product.name}, فایل دیجیتال`)
-      : `خرید اشتراک ${product.name}, خرید اکانت ${product.name}, اکانت قانونی ${product.name}, هوش مصنوعی`;
-    const canonicalUrl = `https://vaich.ir/products/${encodeURIComponent(product.slug)}`;
+          ? `خرید آنلاین ${product.name} در گوگل شیت با ردیاب عادات ماهانه، نمودارهای تحلیلی، نسخه‌های دوبعدی و سه‌بعدی و تحویل آنی بدون نیاز به اشتراک ماهانه.`
+          : `خرید آنلاین و دسترسی دائمی ${product.name} با تحویل فوری، گارانتی اصالت فایل‌ها و بدون نیاز به تمدید ماهانه در وایچ.`)
+      : `خرید آنلاین و قانونی اشتراک ${product.name} با تحویل سریع، پشتیبانی اختصاصی و گارانتی سلامت اکانت در سراسر ایران از فروشگاه وایچ.`;
+    const canonicalUrl = `https://vaich.ir/products/${product.slug}`;
+
+    const breadcrumbLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "صفحه اصلی",
+          item: "https://vaich.ir",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "محصولات و خدمات",
+          item: "https://vaich.ir",
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: product.name,
+          item: canonicalUrl,
+        },
+      ],
+    };
 
     return {
       meta: [
         { title },
         { name: "description", content: description },
-        { name: "keywords", content: keywords },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: canonicalUrl },
         { property: "og:type", content: "product" },
+        { property: "og:image", content: "https://vaich.ir/vaich-logo.png" },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+        { name: "twitter:image", content: "https://vaich.ir/vaich-logo.png" },
       ],
       links: [
         { rel: "canonical", href: canonicalUrl },
+      ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(breadcrumbLd),
+        },
       ],
     };
   },

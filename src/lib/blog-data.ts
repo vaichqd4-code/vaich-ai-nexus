@@ -52,14 +52,15 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
-    slug: "claude-3-5-sonnet-vs-gpt-4o-developers-designers",
+    slug: "flagship-ai-models-comparison",
     aliases: [
+      "claude-3-5-sonnet-vs-gpt-4o-developers-designers",
       "gemini-4-argon-vs-claude-sonnet-5-5-vs-gpt-6-terra",
       "ai-giants-2026-comparison",
       "ai-models-comparison",
       "gpt-6-astra-vs-claude-sonnet-gemini"
     ],
-    title: "راهنمای جامع و کالبدشکافی هوش مصنوعی‌های ۲۰۲۶: رقابت مرگبار GPT-6 Astra، Claude Sonnet 5.5 و Gemini 4 Argon با Project Astra",
+    title: "راهنمای جامع هوش مصنوعی‌های ۲۰۲۶: مقایسه GPT-6، Claude Sonnet 5.5 و Gemini 4 Argon",
     excerpt: "بررسی عمیق و آزمایشگاهی سه ابرقدرت هوش مصنوعی ۲۰۲۶؛ کالبدشکافی GPT-6 Astra با ایجنت‌های مستقل، تفکر تطبیقی Claude Sonnet 5.5 و بینایی آنی Project Astra با پنجره ۲ میلیون توکنی.",
     category: "هوش مصنوعی",
     readTime: "۱۸ دقیقه",
@@ -203,13 +204,14 @@ export const BLOG_POSTS: BlogPost[] = [
     }
   },
   {
-    slug: "microsoft-copilot-vs-chatgpt-plus",
+    slug: "ai-free-vs-plus-comparison",
     aliases: [
+      "microsoft-copilot-vs-chatgpt-plus",
       "free-vs-paid-ai-comparison",
       "chatgpt-plus-vs-claude-pro-roi",
       "why-free-ai-is-not-enough"
     ],
-    title: "چرا نسخه‌های رایگان هوش مصنوعی دیگر کافی نیستند؟ مقایسه آزمایشگاهی پلن‌های Free در برابر ChatGPT Plus و Claude Pro",
+    title: "چرا نسخه‌های رایگان هوش مصنوعی کافی نیستند؟ مقایسه پلن‌های رایگان با ChatGPT Plus و Claude Pro",
     excerpt: "بررسی تفاوت‌های حیاتی میان هوش مصنوعی رایگان و اشتراک‌های قانونی پلاس و پرو؛ از افت شدید کیفیت در ساعات اوج مصرف تا حذف قابلیت‌های نجات‌بخش کانوَس و پروژه‌های کاری.",
     category: "هوش مصنوعی",
     readTime: "۱۲ دقیقه",
