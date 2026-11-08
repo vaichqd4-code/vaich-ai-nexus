@@ -312,9 +312,10 @@
     {
       "slug": "gemini",
       "name": "Gemini Pro",
-      "price": 160000,
+      "price": 230000,
       "duration": "60 روزه",
       "description": "اشتراک رسمی ۶۰ روزه Google Gemini Advanced؛ دسترسی به پرچمدار غول‌آسای Google Gemini 4 Argon با خروجی ۱,۰۰۰,۰۰۰ توکن، لایه عامل‌محور انقلابی Project Astra (درک زنده ویدیوی دوربین با تاخیر زیر ۳۰۰ میلی‌ثانیه و حافظه فضایی)، مدل استدلال عمیق Gemini 3 Deep Think و پیوند کامل با Google Workspace.",
+      "isLifetime": false,
       "featured": false,
       "badgeColor": "purple",
       "categoryId": "ai",
@@ -334,6 +335,7 @@
         "اطلاعات ورود و راهنمای فعال‌سازی، پس از واریز و ارسال رسید در ربات، در اولین فرصت و در سریع‌ترین زمان ممکن در تلگرام تحویل داده می‌شود.",
         "پوشش ۱۰۰٪ گارانتی سلامت اکانت و پشتیبانی ۲۴ ساعته در تمام طول دوره ۶۰ روزه."
       ],
+      "iconUrl": "/file_000000007ea4822f9eac5c00be6be9eb.png?v=sq2",
       "imageFit": "contain",
       "inStock": true,
       "rating": 4.8,
@@ -393,8 +395,7 @@
           "verified": true,
           "status": "approved"
         }
-      ],
-      "iconUrl": "/file_000000007ea4822f9eac5c00be6be9eb.png?v=sq2"
+      ]
     },
     {
       "slug": "gemini-pro",
@@ -1405,5 +1406,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-08T17:20:05.984Z"
+  "updatedAt": "2026-11-08T17:20:31.839Z"
 }
