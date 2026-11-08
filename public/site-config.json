@@ -400,7 +400,7 @@
     {
       "slug": "gemini-pro",
       "name": "Gemini Pro",
-      "price": 399000,
+      "price": 590000,
       "originalPrice": 4700000,
       "discountPercent": 91,
       "duration": "۱۸ ماهه",
@@ -427,6 +427,7 @@
         "اطلاعات ورود پس از تایید رسید، در اولین فرصت و در سریع‌ترین زمان ممکن تحویل داده می‌شود.",
         "پشتیبانی و گارانتی کامل سلامت اکانت در تمام ۱۸ ماه توسط تیم وایچ تضمین شده است."
       ],
+      "iconUrl": "/file_00000000377481f6b667af886cd18fb6.png?v=sq2",
       "imageFit": "contain",
       "inStock": false,
       "rating": 4.9,
@@ -531,8 +532,7 @@
           "verified": true,
           "status": "approved"
         }
-      ],
-      "iconUrl": "/file_00000000377481f6b667af886cd18fb6.png?v=sq2"
+      ]
     },
     {
       "slug": "claude",
@@ -1406,5 +1406,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-08T17:20:31.839Z"
+  "updatedAt": "2026-11-08T17:20:58.392Z"
 }
