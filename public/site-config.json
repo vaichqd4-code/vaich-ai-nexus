@@ -86,15 +86,15 @@
       "slug": "vaich-life-planner",
       "name": "پلنر برنامه ریزی(استاندارد)",
       "price": 299000,
+      "originalPrice": 700000,
+      "discountPercent": 57,
       "duration": "دائمی (بدون اشتراک)",
       "description": "نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script (بدون نیاز به پرداخت ماهانه یا شارژ دوره)؛ مجهز به Habit Tracker، ماتریس آیزنهاور، سیستم Time Boxing و هوش مالی فردی.",
+      "isLifetime": true,
       "featured": true,
       "badge": "پیشنهادی",
       "badgeColor": "fire",
       "categoryId": "row-mvampt3r",
-      "inStock": true,
-      "rating": 4.9,
-      "reviewCount": 21,
       "features": [
         "نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script (بدون نیاز به پرداخت ماهانه یا شارژ دوره)",
         "ردیاب عادات مینیمال (Habit Tracker): ثبت زنجیره استمرار روزانه (Streak) با نمودار درصد موفقیت خودکار و پاداش بصری",
@@ -114,6 +114,9 @@
       ],
       "iconUrl": "/planner-cover.webp",
       "imageFit": "cover",
+      "inStock": true,
+      "rating": 4.9,
+      "reviewCount": 21,
       "reviews": [
         {
           "id": "rev-lp-1",
@@ -1402,5 +1405,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-07T11:32:19.984Z"
+  "updatedAt": "2026-11-08T17:20:05.984Z"
 }
