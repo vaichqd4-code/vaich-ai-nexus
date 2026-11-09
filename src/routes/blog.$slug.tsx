@@ -36,7 +36,10 @@ export const Route = createFileRoute("/blog/$slug")({
     const post = loaderData?.post;
     if (!post) {
       return {
-        meta: [{ title: "مقاله پیدا نشد | وایچ" }],
+        meta: [
+          { title: "مقاله پیدا نشد | وایچ" },
+          { name: "robots", content: "noindex, nofollow" },
+        ],
       };
     }
 

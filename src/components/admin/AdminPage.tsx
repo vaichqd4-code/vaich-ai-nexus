@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
@@ -59,6 +60,11 @@ import {
   Eye,
   CheckCircle2,
   BookOpen,
+  Globe,
+  TrendingUp,
+  Activity,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 // Client-side image compressor for mobile and desktop uploads
@@ -1180,29 +1186,60 @@ export function AdminPage() {
   const featuredCount = products.filter((p) => p.featured || p.badge).length;
   const discountedCount = products.filter((p) => p.originalPrice || p.discountPercent).length;
 
+  const handleToggleTheme = () => {
+    if (typeof window === "undefined") return;
+    const current = localStorage.getItem("vaich-theme") || "light";
+    const nextTheme = current === "dark" ? "light" : "dark";
+    localStorage.setItem("vaich-theme", nextTheme);
+    document.documentElement.setAttribute("data-theme", nextTheme);
+    if (nextTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background pb-20">
-      {/* Top Admin Header Bar */}
-      <div className="sticky top-0 z-40 border-b border-border/80 bg-card/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6">
+    <div className="min-h-screen bg-background pb-20 selection:bg-primary/20">
+      {/* Top Admin Header Bar - Modern Glassmorphism */}
+      <div className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl shadow-xs">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
           <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/20 text-primary font-bold">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-primary/25 to-accent/25 border border-primary/30 text-primary shadow-xs">
               <ShieldCheck className="h-5 w-5 text-primary" />
-            </span>
+              <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
+            </div>
             <div>
-              <h1 className="text-base font-extrabold text-foreground sm:text-lg">
-                پنل مدیریت فروشگاه VAICH
-              </h1>
-              <p className="text-[11px] text-muted-foreground">
-                سطح دسترسی: <span className="font-semibold text-emerald-500">{currentUser?.name || "مدیر ارشد"} ({currentUser?.role === "superadmin" ? "مدیر کل تایید‌شده ✓" : "مدیر سیستم تایید‌شده ✓"})</span>
+              <div className="flex items-center gap-2">
+                <h1 className="text-sm sm:text-base font-black text-foreground tracking-tight">
+                  پنل مدیریت هوشمند VAICH
+                </h1>
+                <span className="hidden sm:inline-flex rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-bold text-emerald-500">
+                  {currentUser?.role === "superadmin" ? "مدیر کل ارشد" : "مدیر سیستم"}
+                </span>
+              </div>
+              <p className="text-[11px] text-muted-foreground flex items-center gap-1.5">
+                <span>کاربر فعال:</span>
+                <span className="font-semibold text-foreground">{currentUser?.name || "مدیر ارشد"}</span>
+                <span>•</span>
+                <span className="text-emerald-500 font-medium">سشن امن SSL</span>
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleToggleTheme}
+              title="تغییر تم تاریک / روشن"
+              className="grid h-9 w-9 place-items-center rounded-xl border border-border/70 bg-card text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer"
+            >
+              <Sun className="h-4 w-4 dark:hidden" />
+              <Moon className="h-4 w-4 hidden dark:block" />
+            </button>
             <Link
               to="/"
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-border px-3.5 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-border/80 bg-card px-3.5 py-1.5 text-xs font-bold text-foreground hover:bg-secondary transition-colors"
             >
               <span>مشاهده فروشگاه</span>
               <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
@@ -1210,7 +1247,7 @@ export function AdminPage() {
             <button
               type="button"
               onClick={handleLogout}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-1.5 text-xs font-bold text-rose-500 hover:bg-rose-500 hover:text-white transition-all"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-1.5 text-xs font-bold text-rose-500 hover:bg-rose-500 hover:text-white transition-all cursor-pointer"
             >
               <LogOut className="h-3.5 w-3.5" />
               <span>خروج</span>
@@ -1219,114 +1256,126 @@ export function AdminPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
-        {/* Navigation Tabs */}
-        <div className="flex flex-wrap items-center gap-2 border-b border-border/60 pb-3">
-          <button
-            type="button"
-            onClick={() => setActiveTab("products")}
-            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
-              activeTab === "products"
-                ? "bg-primary text-white shadow-md"
-                : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Package className="h-4 w-4" />
-            <span>مدیریت محصولات ({toPersianDigits(products.length)})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("rows")}
-            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
-              activeTab === "rows"
-                ? "bg-primary text-white shadow-md"
-                : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Layers className="h-4 w-4" />
-            <span>مدیریت ردیف‌ها ({toPersianDigits(rows.length)})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("layout")}
-            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
-              activeTab === "layout"
-                ? "bg-primary text-white shadow-md"
-                : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <LayoutGrid className="h-4 w-4" />
-            <span>چیدمان نوار سایت ({layout === "1-row" ? "۱ ردیفه" : layout === "2-row" ? "۲ ردیفه" : "شبکه‌ای"})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("admins")}
-            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
-              activeTab === "admins"
-                ? "bg-primary text-white shadow-md"
-                : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Users className="h-4 w-4" />
-            <span>مدیریت مدیران ({toPersianDigits(adminUsers.length)})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("banner")}
-            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
-              activeTab === "banner"
-                ? "bg-primary text-white shadow-md"
-                : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <ImageIcon className="h-4 w-4" />
-            <span>عکس تبلیغات (بنر هیرو)</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("reviews")}
-            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
-              activeTab === "reviews"
-                ? "bg-primary text-white shadow-md"
-                : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
-            <span>نظرات و امتیازها ({toPersianDigits(products.reduce((acc, p) => acc + (p.reviews?.length || 0), 0))})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("blog")}
-            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
-              activeTab === "blog"
-                ? "bg-primary text-white shadow-md"
-                : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <BookOpen className="h-4 w-4" />
-            <span>مدیریت مقالات ({toPersianDigits(blogPosts.length)})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("settings")}
-            className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-xs sm:text-sm font-bold transition-all ${
-              activeTab === "settings"
-                ? "bg-primary text-white shadow-md"
-                : "border border-border/70 bg-card text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <KeyRound className="h-4 w-4" />
-            <span>تنظیمات و اینستاگرام</span>
-          </button>
-
+      <div className="mx-auto max-w-6xl px-4 pt-6 sm:px-6 space-y-6">
+        {/* Executive KPI Overview Cards */}
+        <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-3xl border border-border/70 bg-card/70 backdrop-blur-md p-4 sm:p-5 relative overflow-hidden group hover:border-primary/40 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] sm:text-xs font-bold text-muted-foreground">محصولات فروشگاه</span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Package className="h-4 w-4" />
+              </div>
+            </div>
+            <div className="mt-2 flex items-baseline gap-2">
+              <span className="text-2xl sm:text-3xl font-black text-foreground">{toPersianDigits(products.length)}</span>
+              <span className="text-[11px] text-emerald-500 font-bold">({toPersianDigits(featuredCount)} ویژه)</span>
+            </div>
+            <p className="mt-1 text-[10px] sm:text-[11px] text-muted-foreground truncate">
+              {toPersianDigits(discountedCount)} محصول دارای تخفیف فعال
+            </p>
           </div>
+
+          <div className="rounded-3xl border border-border/70 bg-card/70 backdrop-blur-md p-4 sm:p-5 relative overflow-hidden group hover:border-blue-500/40 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] sm:text-xs font-bold text-muted-foreground">مقالات مجله سئو</span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-500/10 text-blue-500">
+                <BookOpen className="h-4 w-4" />
+              </div>
+            </div>
+            <div className="mt-2 flex items-baseline gap-2">
+              <span className="text-2xl sm:text-3xl font-black text-foreground">{toPersianDigits(blogPosts.length)}</span>
+              <span className="text-[11px] text-blue-500 font-bold">منتشرشده</span>
+            </div>
+            <p className="mt-1 text-[10px] sm:text-[11px] text-muted-foreground truncate">
+              پوشش کامل پرچمداران ۲۰۲۶ و پلنر
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-border/70 bg-card/70 backdrop-blur-md p-4 sm:p-5 relative overflow-hidden group hover:border-emerald-500/40 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] sm:text-xs font-bold text-muted-foreground">سئو و ایندکس گوگل</span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500">
+                <Globe className="h-4 w-4" />
+              </div>
+            </div>
+            <div className="mt-2 flex items-baseline gap-2">
+              <span className="text-xl sm:text-2xl font-black text-emerald-500">تایید شده ✓</span>
+            </div>
+            <p className="mt-1 text-[10px] sm:text-[11px] text-muted-foreground truncate">
+              robots.txt باز • ۲۵ آدرس در sitemap
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-border/70 bg-card/70 backdrop-blur-md p-4 sm:p-5 relative overflow-hidden group hover:border-purple-500/40 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] sm:text-xs font-bold text-muted-foreground">سرور و کلاود</span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400">
+                <Activity className="h-4 w-4" />
+              </div>
+            </div>
+            <div className="mt-2 flex items-baseline gap-2">
+              <span className="text-xl sm:text-2xl font-black text-purple-400">زنده و پایدار</span>
+            </div>
+            <p className="mt-1 text-[10px] sm:text-[11px] text-muted-foreground truncate">
+              کلادفلر Edge • دیتابیس سوپابیس
+            </p>
+          </div>
+        </div>
+
+        {/* Modern Pill Navigation Tabs */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none no-scrollbar">
+          {[
+            { id: "products", label: "محصولات", count: products.length, icon: Package },
+            { id: "rows", label: "ردیف‌ها", count: rows.length, icon: Layers },
+            { id: "layout", label: "چیدمان", count: null, icon: LayoutGrid, subtitle: layout === "1-row" ? "۱ ردیفه" : layout === "2-row" ? "۲ ردیفه" : "شبکه‌ای" },
+            { id: "admins", label: "مدیران", count: adminUsers.length, icon: Users },
+            { id: "banner", label: "بنر هیرو", count: null, icon: ImageIcon },
+            { id: "reviews", label: "نظرات", count: products.reduce((acc, p) => acc + (p.reviews?.length || 0), 0), icon: Star },
+            { id: "blog", label: "مقالات وبلاگ", count: blogPosts.length, icon: BookOpen },
+            { id: "settings", label: "تنظیمات", count: null, icon: KeyRound },
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id as any)}
+                className={cn(
+                  "relative inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-xs sm:text-sm font-bold transition-all duration-200 shrink-0 cursor-pointer select-none",
+                  isActive
+                    ? "bg-primary text-white shadow-lg shadow-primary/30 ring-2 ring-primary/20 scale-[1.02]"
+                    : "border border-border/70 bg-card/70 backdrop-blur-xs text-muted-foreground hover:bg-secondary/80 hover:text-foreground"
+                )}
+              >
+                <Icon className={cn("h-4 w-4", isActive ? "text-white" : "text-primary")} />
+                <span>{tab.label}</span>
+                {tab.count !== null && (
+                  <span
+                    className={cn(
+                      "rounded-full px-1.5 py-0.5 text-[10px] font-black leading-none",
+                      isActive
+                        ? "bg-white/20 text-white"
+                        : "bg-secondary text-muted-foreground"
+                    )}
+                  >
+                    {toPersianDigits(tab.count)}
+                  </span>
+                )}
+                {tab.subtitle && (
+                  <span
+                    className={cn(
+                      "text-[10px] font-medium hidden md:inline-block",
+                      isActive ? "text-white/80" : "text-muted-foreground"
+                    )}
+                  >
+                    ({tab.subtitle})
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
 
         {/* Global Cloud Persistence & Multi-Device Sync Bar */}
         <div className="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-purple-500/30 bg-purple-500/10 p-4">

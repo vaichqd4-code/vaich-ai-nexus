@@ -74,22 +74,36 @@ export const Route = createFileRoute("/checkout/$slug")({
       };
     }
 
-    const isLifetime = isProductLifetime(loaderData.product);
+    const { product } = loaderData;
+    const isLifetime = isProductLifetime(product);
+    const canonicalUrl = `https://vaich.ir/checkout/${product.slug}`;
+    const title = isLifetime
+      ? `پرداخت و دریافت مستقیم ${product.name} | وایچ`
+      : `پرداخت و خرید آنلاین اشتراک ${product.name} (${product.duration || "قانونی"}) | وایچ`;
+    const description = isLifetime
+      ? `صفحه پرداخت آنلاین و دریافت مستقیم ${product.name} با کارت به کارت، تحویل فوری و ضمانت اصالت در وایچ.`
+      : `صفحه پرداخت مستقیم و فعال‌سازی فوری اشتراک قانونی ${product.name} با پشتیبانی ۲۴ ساعته در وایچ.`;
+
+    const ogImg = product.iconUrl
+      ? (product.iconUrl.startsWith("http") ? product.iconUrl : `https://vaich.ir${product.iconUrl.split("?")[0]}`)
+      : "https://vaich.ir/vaich-logo.png";
+
     return {
       meta: [
-        {
-          title: `پرداخت ${loaderData.product.name} | VAICH`,
-        },
-        {
-          name: "robots",
-          content: "noindex, nofollow",
-        },
-        {
-          name: "description",
-          content: isLifetime
-            ? `پرداخت و دریافت مستقیم ${loaderData.product.name} در VAICH`
-            : `پرداخت اشتراک ${loaderData.product.name} در VAICH`,
-        },
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: canonicalUrl },
+        { property: "og:type", content: "website" },
+        { property: "og:image", content: ogImg },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+        { name: "twitter:image", content: ogImg },
+      ],
+      links: [
+        { rel: "canonical", href: canonicalUrl },
       ],
     };
   },

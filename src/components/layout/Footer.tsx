@@ -23,7 +23,7 @@ const navigationColumns = [
   {
     title: "دسترسی سریع و آموزش",
     links: [
-      { to: "/#blog", label: "مجله و مقالات آموزشی" },
+      { to: "/blog", label: "مجله و مقالات آموزشی" },
       { to: "/why", label: "راهنمای خرید و چرا VAICH" },
       { to: "/faq", label: "سوالات متداول مشتریان" },
       { to: "/support", label: "پشتیبانی آنلاین و مشاوره" },
