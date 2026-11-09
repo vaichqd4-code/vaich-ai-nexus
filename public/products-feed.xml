@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+  <product>
+    <id>vaich-life-planner</id>
+    <title><![CDATA[پلنر برنامه‌ریزی هوشمند (Google Sheets)]]></title>
+    <price>299000</price>
+    <old_price>499000</old_price>
+    <currency>IRR</currency>
+    <availability>in stock</availability>
+    <page_url>https://vaich.ir/products/vaich-life-planner</page_url>
+    <image_url>https://vaich.ir/planner-cover.webp</image_url>
+    <description><![CDATA[نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script (بدون نیاز به پرداخت ماهانه یا شارژ دوره)؛ مجهز به Habit Tracker، ماتریس آیزنهاور، سیستم Time Boxing و هوش مالی فردی.]]></description>
+  </product>
+  <product>
+    <id>gemini</id>
+    <title><![CDATA[Gemini Pro - ۶۰ روزه]]></title>
+    <price>160000</price>
+    <old_price>160000</old_price>
+    <currency>IRR</currency>
+    <availability>in stock</availability>
+    <page_url>https://vaich.ir/products/gemini</page_url>
+    <image_url>https://vaich.ir/file_000000007ea4822f9eac5c00be6be9eb.png?v=sq2</image_url>
+    <description><![CDATA[اشتراک رسمی ۶۰ روزه Google Gemini Advanced؛ دسترسی به پرچمدار غول‌آسای Google Gemini 4 Argon با خروجی ۱,۰۰۰,۰۰۰ توکن، لایه عامل‌محور انقلابی Project Astra (درک زنده ویدیوی دوربین با تاخیر زیر ۳۰۰ میلی‌ثانیه و حافظه فضایی)، مدل استدلال عمیق Gemini 3 Deep Think و پیوند کامل با Google Workspace.]]></description>
+  </product>
+  <product>
+    <id>gemini-pro</id>
+    <title><![CDATA[Gemini Pro - ۱۸ ماهه]]></title>
+    <price>399000</price>
+    <old_price>4700000</old_price>
+    <currency>IRR</currency>
+    <availability>out of stock</availability>
+    <page_url>https://vaich.ir/products/gemini-pro</page_url>
+    <image_url>https://vaich.ir/file_00000000377481f6b667af886cd18fb6.png?v=sq2</image_url>
+    <description><![CDATA[اشتراک رسمی ۱۸ ماهه اقتصادی Google Gemini Advanced با بیش از ۹۰٪ تخفیف اقتصادی ویژه دانشجویان، تریدرها، برنامه‌نویسان و محققان؛ مجهز به Gemini 4 Argon، پروژه انقلابی Project Astra، مدل استدلال عمیق Deep Think و پنجره ۲ میلیون توکنی بدون دغدغه تمدید ماهانه و جهش ارزی.]]></description>
+  </product>
+  <product>
+    <id>chatgpt-plus</id>
+    <title><![CDATA[ChatGPT Plus]]></title>
+    <price>5350000</price>
+    <old_price>5350000</old_price>
+    <currency>IRR</currency>
+    <availability>in stock</availability>
+    <page_url>https://vaich.ir/products/chatgpt-plus</page_url>
+    <image_url>https://vaich.ir/chatgpt-logo.svg</image_url>
+    <description><![CDATA[اشتراک قانونی و ۱۰۰٪ اختصاصی ChatGPT Plus شرکت OpenAI؛ مجهز به پرچمدار مرزی هوش مصنوعی GPT-6 Astra (با هوش خودمختار رایانه‌ای، مرورگر وب و حل مسائل مهندسی ارشد)، مدل‌های تعادلی GPT-6 Sol و GPT-6 Luna، مدل‌های استدلال عمیق o1 و o3-mini، فضای کاری نوین Prism، بوم تعاملی Canvas، تولید ویدیوی Sora و حالت صوتی زنده Advanced Voice Mode.]]></description>
+  </product>
+  <product>
+    <id>claude</id>
+    <title><![CDATA[Claude Pro]]></title>
+    <price>5450000</price>
+    <old_price>5450000</old_price>
+    <currency>IRR</currency>
+    <availability>in stock</availability>
+    <page_url>https://vaich.ir/products/claude</page_url>
+    <image_url>https://vaich.ir/Claude-.webp?v=sq1</image_url>
+    <description><![CDATA[اشتراک رسمی و ۱۰۰٪ اختصاصی Claude Pro آنتروپیک؛ دسترسی به پیشروترین مدل توسعه نرم‌افزار جهان Claude Sonnet 5.5، مدل فوق‌سنگین استدلالی Claude Opus 5.5، رده پردازشی Claude Fable 5.1، مدل فوق‌سریع Claude Haiku 5.5، سیستم تفکر تطبیقی (Adaptive Thinking) و محیط کاری Artifacts 2.0.]]></description>
+  </product>
+</products>

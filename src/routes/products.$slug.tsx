@@ -259,6 +259,12 @@ function ProductDetail() {
     name: isLifetime ? product.name : `اشتراک ${product.name}`,
     description: product.description,
     image: productImg,
+    sku: product.slug,
+    mpn: product.slug,
+    brand: {
+      "@type": "Brand",
+      name: isPlanner ? "VAICH" : product.name.includes("ChatGPT") ? "OpenAI" : product.name.includes("Claude") ? "Anthropic" : "Google",
+    },
     offers: {
       "@type": "Offer",
       url: `https://vaich.ir/products/${product.slug}`,

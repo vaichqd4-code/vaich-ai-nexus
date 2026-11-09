@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>مجله تخصصی و مقالات آموزشی VAICH</title>
+    <link>https://vaich.ir/blog</link>
+    <description>راهنمای جامع هوش مصنوعی، مقایسه تخصصی مدل‌ها و ابزارهای بهره‌وری فردی در فروشگاه VAICH</description>
+    <language>fa-IR</language>
+    <lastBuildDate>Mon, 09 Nov 2026 14:50:59 GMT</lastBuildDate>
+    <atom:link href="https://vaich.ir/rss.xml" rel="self" type="application/rss+xml" />
+    <image>
+      <url>https://vaich.ir/vaich-logo.png</url>
+      <title>VAICH Magazine</title>
+      <link>https://vaich.ir/blog</link>
+    </image>
+    <item>
+      <title><![CDATA[راهنمای جامع هوش مصنوعی‌های ۲۰۲۶: مقایسه GPT-6، Claude Sonnet 5.5 و Gemini 4 Argon]]></title>
+      <link>https://vaich.ir/blog/flagship-ai-models-comparison</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/flagship-ai-models-comparison</guid>
+      <pubDate>Thu, 05 Nov 2026 08:30:00 GMT</pubDate>
+      <category><![CDATA[هوش مصنوعی]]></category>
+      <description><![CDATA[بررسی و مقایسه جامع قابلیت‌های کلیدی، سرعت استدلال و هوش کاربردی سه پرچمدار هوش مصنوعی برای انتخاب بهترین اشتراک.]]></description>
+      <enclosure url="https://vaich.ir/blog/ai-models-comparison.webp" length="0" type="image/webp" />
+    </item>
+    <item>
+      <title><![CDATA[چرا نسخه‌های رایگان هوش مصنوعی کافی نیستند؟ مقایسه پلن‌های رایگان با ChatGPT Plus و Claude Pro]]></title>
+      <link>https://vaich.ir/blog/ai-free-vs-plus-comparison</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/ai-free-vs-plus-comparison</guid>
+      <pubDate>Thu, 05 Nov 2026 08:30:00 GMT</pubDate>
+      <category><![CDATA[هوش مصنوعی]]></category>
+      <description><![CDATA[بررسی تفاوت‌های اساسی پلن‌های رایگان با اشتراک‌های Plus و Pro؛ از پایداری سرعت در ساعات شلوغی تا دسترسی به ابزارهای پیشرفته.]]></description>
+      <enclosure url="https://vaich.ir/blog/copilot-vs-chatgpt.webp" length="0" type="image/webp" />
+    </item>
+    <item>
+      <title><![CDATA[چرا پلنر گوگل شیت VAICH پایدارتر از اپلیکیشن‌های پیچیده است؟]]></title>
+      <link>https://vaich.ir/blog/how-google-sheets-planner-transforms-habits-goals</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/how-google-sheets-planner-transforms-habits-goals</guid>
+      <pubDate>Wed, 04 Nov 2026 06:30:00 GMT</pubDate>
+      <category><![CDATA[بهره‌وری فردی]]></category>
+      <description><![CDATA[چرا سادگی و انعطاف گوگل‌شیت نسبت به اپلیکیشن‌های پیچیده، تعهد شما به روتین‌ها و دستیابی به اهداف را چندین برابر می‌کند.]]></description>
+      <enclosure url="https://vaich.ir/blog/google-sheets-planner.webp" length="0" type="image/webp" />
+    </item>
+    <item>
+      <title><![CDATA[رمزگشایی از پنجره زمینه دو میلیون توکنی جمینای و پروژه انقلابی Project Astra در سال ۲۰۲۶]]></title>
+      <link>https://vaich.ir/blog/gemini-2-million-context-window-big-data-analysis</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/gemini-2-million-context-window-big-data-analysis</guid>
+      <pubDate>Tue, 03 Nov 2026 07:30:00 GMT</pubDate>
+      <category><![CDATA[هوش مصنوعی]]></category>
+      <description><![CDATA[بررسی توانایی پردازش اسناد حجیم و ویدیو در جمینای و کاربرد حافظه دو میلیون توکنی در تحلیل داده‌ها و پروژه‌های بزرگ.]]></description>
+      <enclosure url="https://vaich.ir/blog/ai-tools-productivity.webp" length="0" type="image/webp" />
+    </item>
+    <item>
+      <title><![CDATA[چگونه با پلنر دیجیتال گوگل‌شیت، اهمال‌کاری را برای همیشه شکست دهیم؟]]></title>
+      <link>https://vaich.ir/blog/defeat-procrastination-google-sheets-planner</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/defeat-procrastination-google-sheets-planner</guid>
+      <pubDate>Mon, 02 Nov 2026 10:30:00 GMT</pubDate>
+      <category><![CDATA[بهره‌وری فردی]]></category>
+      <description><![CDATA[راهنمای کاربردی غلبه بر اهمال‌کاری و افزایش تمرکز روزانه با سیستم‌های رفتاری ساده و شفاف در گوگل‌شیت.]]></description>
+      <enclosure url="https://vaich.ir/blog/planner-procrastination.webp" length="0" type="image/webp" />
+    </item>
+    <item>
+      <title><![CDATA[بهترین روش برنامه‌ریزی درسی و کنکوری؛ چرا دفاتر کاغذی دیگر جواب نمی‌دهند؟]]></title>
+      <link>https://vaich.ir/blog/best-study-planning-methods-digital-vs-paper</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/best-study-planning-methods-digital-vs-paper</guid>
+      <pubDate>Sat, 31 Oct 2026 06:00:00 GMT</pubDate>
+      <category><![CDATA[آموزش و یادگیری]]></category>
+      <description><![CDATA[مقایسه روش‌های سنتی و دیجیتال برنامه‌ریزی درسی؛ روش‌های ثبت ساعات مطالعه، مرور فاصله‌دار و ارزیابی پیشرفت با نمودار.]]></description>
+      <enclosure url="https://vaich.ir/blog/study-planning.webp" length="0" type="image/webp" />
+    </item>
+    <item>
+      <title><![CDATA[عادت‌های روزانه و ساختن روتین فردی قدرتمند؛ جایگزینی انضباط سیستمی به جای انگیزه لحظه‌ای]]></title>
+      <link>https://vaich.ir/blog/daily-motivational-habits-powerful-routine</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/daily-motivational-habits-powerful-routine</guid>
+      <pubDate>Thu, 29 Oct 2026 12:30:00 GMT</pubDate>
+      <category><![CDATA[توسعه فردی]]></category>
+      <description><![CDATA[اصول ساخت روتین‌های صبحگاهی و شبانگاهی ماندگار بر مبنای خرده‌عادت‌ها و جایگزینی انضباط سیستمی به جای انگیزه لحظه‌ای.]]></description>
+      <enclosure url="https://vaich.ir/blog/daily-habits.webp" length="0" type="image/webp" />
+    </item>
+    <item>
+      <title><![CDATA[راهنمای جامع ردیابی عادت‌ها (Habit Tracking) و مدیریت زمان در موبایل و لپ‌تاپ]]></title>
+      <link>https://vaich.ir/blog/habit-tracking-time-management-guide</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/habit-tracking-time-management-guide</guid>
+      <pubDate>Tue, 27 Oct 2026 14:30:00 GMT</pubDate>
+      <category><![CDATA[مدیریت زمان]]></category>
+      <description><![CDATA[آموزش اولویت‌بندی کارها با ماتریس آیزنهاور و بلوک‌بندی زمانی، به همراه داشبورد خودکار ردیابی عادت‌ها در گوگل‌شیت.]]></description>
+      <enclosure url="https://vaich.ir/blog/habit-tracking.webp" length="0" type="image/webp" />
+    </item>
+    <item>
+      <title><![CDATA[آموزش کاربردی استفاده از هوش مصنوعی برای افزایش سرعت کار، تولید محتوا و درس خواندن]]></title>
+      <link>https://vaich.ir/blog/ai-tools-productivity-study-guide</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/ai-tools-productivity-study-guide</guid>
+      <pubDate>Sun, 25 Oct 2026 09:30:00 GMT</pubDate>
+      <category><![CDATA[هوش مصنوعی و آموزش]]></category>
+      <description><![CDATA[آموزش ترفندهای کاربردی استفاده از هوش مصنوعی برای افزایش سرعت مطالعه، خلاصه‌سازی مقالات و انجام امور کاری.]]></description>
+      <enclosure url="https://vaich.ir/blog/ai-productivity-study.webp" length="0" type="image/webp" />
+    </item>
+  </channel>
+</rss>
