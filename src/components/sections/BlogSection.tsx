@@ -63,7 +63,7 @@ export function BlogSection() {
       {/* Horizontal Carousel Container */}
       <div
         ref={scrollContainerRef}
-        className="flex gap-4 overflow-x-auto pb-4 pt-1 px-1 select-none scroll-smooth"
+        className="flex gap-4 overflow-x-auto pb-4 pt-1 select-none"
         style={{
           scrollSnapType: "x mandatory",
           scrollbarWidth: "none",
