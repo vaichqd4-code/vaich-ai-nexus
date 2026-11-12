@@ -92,7 +92,7 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
 
   const imageElement = (
     <div
-      className="float-slow glow-strong overflow-hidden rounded-3xl sm:rounded-4xl border border-border shadow-2xl bg-card aspect-[4/3] group"
+      className="glow-strong overflow-hidden rounded-3xl sm:rounded-4xl border border-border shadow-2xl bg-card aspect-[4/3] group"
       style={{ aspectRatio: "4/3" }}
     >
       <img
@@ -102,7 +102,7 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
         height={426}
         loading="eager"
         fetchPriority="high"
-        decoding="async"
+        decoding="sync"
         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
       />
     </div>

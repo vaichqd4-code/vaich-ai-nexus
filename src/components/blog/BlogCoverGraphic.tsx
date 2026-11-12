@@ -172,9 +172,9 @@ export function BlogCoverGraphic({
               {[28, 48, 68, 88, 108, 128].map((x, i) => (
                 <g key={i}>
                   <rect x={x - 8} y="32" width="16" height="16" rx="4" fill="#083344" stroke="#06b6d4" strokeWidth="1" strokeOpacity="0.6" />
-                  <path d={`${x - 4} 40l3 3 5-6`} stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d={`M${x - 4} 40l3 3 5-6`} stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   <rect x={x - 8} y="54" width="16" height="16" rx="4" fill="#083344" stroke="#06b6d4" strokeWidth="1" strokeOpacity={i % 2 === 0 ? "0.6" : "0.3"} />
-                  {i % 2 === 0 && <path d={`${x - 4} 62l3 3 5-6`} stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />}
+                  {i % 2 === 0 && <path d={`M${x - 4} 62l3 3 5-6`} stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />}
                 </g>
               ))}
             </svg>

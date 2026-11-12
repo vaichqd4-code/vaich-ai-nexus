@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { syncSiteConfigWithCloud } from "@/lib/products";
 // Blog data for VAICH - Articles authored by Younes Hayati (یونس حیاتی)
 // Deeply researched for 2026, optimized for SEO, JSON-LD Schema.org, and varying read-times.
 
@@ -753,26 +754,20 @@ export function saveStoredBlogPosts(posts: BlogPost[]): void {
 }
 
 export function useBlogPosts(): BlogPost[] {
-  const [posts, setPosts] = useState<BlogPost[]>(() => {
-    return getStoredBlogPosts();
-  });
+  const [posts, setPosts] = useState<BlogPost[]>(BLOG_POSTS);
 
   useEffect(() => {
     let isMounted = true;
-    const fetchPosts = async () => {
-      try {
-        const res = await fetch("/site-config.json?t=" + Date.now());
-        if (res.ok) {
-          const data = await res.json();
-          if (data && Array.isArray(data.blogPosts) && data.blogPosts.length > 0 && isMounted) {
-            setPosts(data.blogPosts);
-          }
-        }
-      } catch (err) {
-        // Fallback to static data
+    const stored = getStoredBlogPosts();
+    if (stored && stored.length > 0) {
+      setPosts(stored);
+    }
+
+    syncSiteConfigWithCloud().then((data) => {
+      if (data && Array.isArray(data.blogPosts) && data.blogPosts.length > 0 && isMounted) {
+        setPosts(data.blogPosts);
       }
-    };
-    fetchPosts();
+    });
 
     const handleUpdate = () => {
       setPosts(getStoredBlogPosts());

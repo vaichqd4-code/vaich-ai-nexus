@@ -41,13 +41,17 @@ const navigationColumns = [
 
 function getDynamicShamsiYear(): string {
   try {
-    return new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+    const parts = new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
       year: "numeric",
-    }).format(new Date());
+      timeZone: "Asia/Tehran",
+    }).formatToParts(new Date());
+    const yearPart = parts.find((p) => p.type === "year")?.value;
+    if (yearPart) return yearPart;
   } catch {
-    const gYear = new Date().getFullYear();
-    return toPersianDigits(gYear - 621);
+    // Fallback below
   }
+  const gYear = new Date().getFullYear();
+  return toPersianDigits(gYear - 621);
 }
 
 export function Footer() {

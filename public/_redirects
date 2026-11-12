@@ -1,6 +1,8 @@
 # 301 Permanent Redirects for VAICH.ir SEO
 /products/%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%DA%A9%20chatgpt%20plus%20%D8%B4%D8%AE%D8%B5%DB%8C /products/chatgpt-plus 301
+/products/%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%DA%A9chatgptplus%D8%B4%D8%AE%D8%B5%DB%8C /products/chatgpt-plus 301
 /checkout/%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%DA%A9%20chatgpt%20plus%20%D8%B4%D8%AE%D8%B5%DB%8C /checkout/chatgpt-plus 301
+/checkout/%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%DA%A9chatgptplus%D8%B4%D8%AE%D8%B5%DB%8C /checkout/chatgpt-plus 301
 /blog/claude-3-5-sonnet-vs-gpt-4o-developers-designers /blog/flagship-ai-models-comparison 301
 /blog/microsoft-copilot-vs-chatgpt-plus /blog/ai-free-vs-plus-comparison 301
 /planners /products/vaich-life-planner 301

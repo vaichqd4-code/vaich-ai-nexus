@@ -74,17 +74,7 @@ export function ProductCard({
   const isOutOfStock = product.inStock === false;
   const isLifetime = isProductLifetime(product);
 
-  const [extraReviews, setExtraReviews] = useState(() => {
-    if (typeof window === "undefined") return 0;
-    try {
-      const local = localStorage.getItem(`vaich_user_reviews_${product.slug}`);
-      if (local) {
-        const parsed = JSON.parse(local);
-        return Array.isArray(parsed) ? parsed.length : 0;
-      }
-    } catch {}
-    return 0;
-  });
+  const [extraReviews, setExtraReviews] = useState(0);
 
   useEffect(() => {
     const handleUpdate = () => {
@@ -97,6 +87,7 @@ export function ProductCard({
       } catch {}
     };
 
+    handleUpdate();
     window.addEventListener("vaich_products_updated", handleUpdate);
     window.addEventListener("storage", handleUpdate);
     return () => {
