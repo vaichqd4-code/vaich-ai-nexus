@@ -537,7 +537,7 @@
     {
       "slug": "claude",
       "name": "Claude Pro",
-      "price": 7100000,
+      "price": 7800000,
       "duration": "۱ ماهه",
       "description": "اشتراک رسمی و ۱۰۰٪ اختصاصی Claude Pro آنتروپیک؛ دسترسی به پیشروترین مدل توسعه نرم‌افزار جهان Claude Sonnet 5.5، مدل فوق‌سنگین استدلالی Claude Opus 5.5، رده پردازشی Claude Fable 5.1، مدل فوق‌سریع Claude Haiku 5.5، سیستم تفکر تطبیقی (Adaptive Thinking) و محیط کاری Artifacts 2.0.",
       "isLifetime": false,
@@ -1408,5 +1408,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-08T17:20:58.392Z"
+  "updatedAt": "2026-11-12T14:51:29.816Z"
 }
