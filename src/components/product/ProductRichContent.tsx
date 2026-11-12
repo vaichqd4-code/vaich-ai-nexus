@@ -70,8 +70,8 @@ export function ProductRichContent({ product, isPlanner, isLifetime }: ProductRi
   const tabs: { key: TabKey; label: string; icon: any }[] = [
     { key: "features", label: "ویژگی‌ها و مشخصات فنی", icon: Cpu },
     { key: "usecases", label: "موارد استفاده تخصصی", icon: Briefcase },
-    { key: "comparison", label: "مقایسه نسخه اختصاصی و رایگان", icon: Layers },
-    { key: "delivery", label: "نحوه فعال‌سازی و تضمین سلامت", icon: ShieldCheck },
+    { key: "comparison", label: "مقایسه پلن‌ها و نسخه رایگان", icon: Layers },
+    { key: "delivery", label: "فعال‌سازی، ضمانت و نکات ایمنی", icon: ShieldCheck },
     { key: "faq", label: "پرسش‌های متداول", icon: HelpCircle },
   ];
 
@@ -140,15 +140,19 @@ export function ProductRichContent({ product, isPlanner, isLifetime }: ProductRi
         )}
       </div>
 
-      {/* Persistent Bottom CTA Card with Neon Glow */}
+      {/* Persistent Bottom CTA Card */}
       <div className="rounded-3xl border border-primary/40 bg-linear-to-r from-primary/10 via-purple-600/10 to-cyan-500/10 p-5 sm:p-6 backdrop-blur-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-primary/5">
         <div className="space-y-1 text-center sm:text-right">
           <div className="text-sm font-black text-foreground flex items-center justify-center sm:justify-start gap-2">
             <Sparkles className="h-4 w-4 text-primary" />
-            ضمانت اصالت ۱۰۰٪ قانونی و سلامت پایدار در وایچ
+            {isLifetime
+              ? "دسترسی دائمی و مادام‌العمر بدون اشتراک ماهانه در وایچ"
+              : "فعال‌سازی قانونی با ضمانت تحویل سالم اولیه در وایچ"}
           </div>
           <p className="text-xs text-muted-foreground">
-            تحویل فوری پس از ثبت سفارش همراه با پشتیبانی تخصصی در تمام طول دوره اشتراک.
+            {isLifetime
+              ? "تحویل آنی لینک کپی فایل همراه با راهنمای گام‌به‌گام و پشتیبانی اختصاصی."
+              : "تحویل سریع پس از ثبت سفارش همراه با پشتیبانی راه‌اندازی و راهنمای استفاده ایمن."}
           </p>
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
@@ -192,47 +196,47 @@ function ChatGPTDetailContent({
           <div className="space-y-2">
             <h3 className="text-lg font-black text-foreground flex items-center gap-2">
               <Cpu className="h-5 w-5 text-primary" />
-              مدل‌های نسل ۲۰۲۶ و مشخصات فنی رسمی ChatGPT Plus (OpenAI)
+              مدل‌ها و مشخصات فنی رسمی پلن ChatGPT Plus (۲۰ دلاری OpenAI)
             </h3>
             <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              اشتراک رسمی ChatGPT Plus مجهز به آخرین معماری‌های استدلالی و عامل‌محور شرکت OpenAI است؛ شامل پرچمدار ارشد هوش مرزی <strong>GPT-6 Astra</strong> (با قابلیت خودمختار کنترل رایانه و مرورگر وب)، مدل‌های تعادلی <strong>GPT-6 Sol</strong> و <strong>GPT-6 Luna</strong>، خانواده استدلال عمیق <strong>o1</strong> و <strong>o3-mini</strong>، مدل پرسرعت <strong>GPT-4o</strong>، فضای کاری <strong>Prism</strong>، بوم تعاملی <strong>Canvas</strong> و تولید ویدیوی <strong>Sora</strong>.
+              اشتراک رسمی <strong>ChatGPT Plus</strong> شامل دسترسی به جدیدترین مدل پرچمدار روزمره و کدنویسی <strong>GPT-6.1 Sol</strong>، مدل استدلالی <strong>GPT-6 Sol</strong> (سطوح تفکر Medium و High)، مدل سریع <strong>GPT-6 Luna</strong> و دسترسی تخصصی به <strong>GPT-6 Astra</strong> در محیط‌های <strong>Codex</strong> و <strong>ChatGPT Work</strong> (با سهمیه ۵ ساعته چرخشی) است؛ به همراه <strong>Deep Research</strong>، محیط کاری <strong>Prism</strong>، بوم <strong>Canvas</strong> و حالت صوتی زنده.
             </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {/* GPT-6 Astra */}
+            {/* GPT-6.1 Sol */}
             <div className="rounded-3xl border border-primary/40 bg-primary/5 p-5 space-y-2.5 hover:border-primary transition-all">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 text-primary">
                 <Bot className="h-5 w-5" />
               </div>
               <div className="flex items-center justify-between">
-                <h4 className="text-sm font-bold text-foreground">پرچمدار ارشد: GPT-6 Astra</h4>
-                <span className="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded-full font-bold">فرانتیر ۲۰۲۶</span>
+                <h4 className="text-sm font-bold text-foreground">نسل جدید GPT-6.1 Sol و GPT-6 Sol</h4>
+                <span className="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded-full font-bold">پاییز ۲۰۲۶</span>
               </div>
               <p className="text-xs leading-6 text-muted-foreground">
-                هوشمندترین و توانمندترین مدل OpenAI با هوش خودمختار رایانه‌ای (Autonomous Computer & Browser Use)، رتبه بحرانی امنیت سایبری و بالاترین رکورد حل مسائل مهندسی نرم‌افزار.
+                موتور اصلی و پرسرعت پلن Plus با دقت بالاتر در پیروی از دستورات، تحلیل اسناد و کدنویسی، همراه با تنظیم سطح تفکر (Medium و High) و کانتکست تا ۲۵۶ هزار توکن.
               </p>
             </div>
 
-            {/* GPT-6 Sol & Luna */}
+            {/* GPT-6 Astra (Codex & Work) & Luna */}
             <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-cyan-500/50 transition-all">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
                 <Zap className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">مدل‌های تعادلی GPT-6 Sol و Luna</h4>
+              <h4 className="text-sm font-bold text-foreground">Codex با GPT-6 Astra و مدل Luna</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                مدل همه‌کاره GPT-6 Sol برای امور روزمره با سرعت بالا و رده GPT-6 Luna با توان تولید رعدآسای توکن برای استخراج و خلاصه مقالات حجیم بدون تاخیر.
+                دسترسی به GPT-6 Astra در ابزارهای تخصصی Codex و ChatGPT Work (سهمیه ۵ ساعته چرخشی) به علاوه مدل فوق‌سریع GPT-6 Luna برای کارهای روزمره و پرتکرار.
               </p>
             </div>
 
-            {/* o1 & o3-mini Reasoning */}
+            {/* Deep Research & Agent Mode */}
             <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-purple-500/50 transition-all">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
                 <Brain className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">استدلال عمیق o1 و o3-mini</h4>
+              <h4 className="text-sm font-bold text-foreground">Deep Research و Agent Mode</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                حل مسائل ریاضیات المپیادی، فیزیک کوانتوم و دیباگ معماری با قابلیت تنظیم سطح تفکر (Reasoning Effort: Low, Med, High) جهت صرفه‌جویی یا حداکثر دقت.
+                پژوهش عمیق خودکار در منابع وب، تحلیل جداول و فایل‌های پیچیده و اجرای جریان‌های کاری چندمرحله‌ای مطابق سهمیه رسمی ماهانه پلن Plus.
               </p>
             </div>
 
@@ -247,14 +251,14 @@ function ChatGPTDetailContent({
               </p>
             </div>
 
-            {/* Sora Video & DALL-E 3 Ultra HD */}
+            {/* Advanced Image Creation & Data Analysis */}
             <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-pink-500/50 transition-all">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400">
                 <Palette className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">تولید ویدیو با Sora و DALL-E 3</h4>
+              <h4 className="text-sm font-bold text-foreground">تولید تصویر پیشرفته و تحلیل اکسل</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                خلق صحنه‌های ویدیویی خیره‌کننده با موتور ویدیوساز Sora و تولید تصاویر با رزولوشن Ultra HD با پایبندی عمیق به جزئیات پرامپت.
+                تولید تصاویر گرافیکی و رندرهای دقیق با Advanced Image Creation به همراه تحلیل داده‌ها، CSV و نمودارهای پایتون در محیط ابری ایزوله.
               </p>
             </div>
 
@@ -280,13 +284,14 @@ function ChatGPTDetailContent({
             کاربردهای تخصصی اشتراک ChatGPT Plus
           </h3>
           <div className="grid gap-4 sm:grid-cols-2">
+            {/* توسعه‌دهندگان */}
             <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Terminal className="h-4 w-4 text-primary" />
                 توسعه‌دهندگان و مهندسان سیستم
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                استفاده از هوش خودمختار رایانه‌ای GPT-6 Astra برای بررسی ریپازیتوری‌ها، تست خودکار و رفع باگ‌های امنیتی، همراه با اجرای اسکریپت‌های پایتون در محیط ایزوله ابری.
+                کدنویسی و رفع خطای پروژه‌ها با <strong>GPT-6.1 Sol</strong> و <strong>Codex</strong> (دارای دسترسی GPT-6 Astra با سهمیه ۵ ساعته چرخشی)، ویرایش ساید‌بای‌ساید در Canvas و تحلیل فایل در محیط ایزوله پایتون.
               </p>
             </div>
 
@@ -296,7 +301,7 @@ function ChatGPTDetailContent({
                 دانشجویان، پژوهشگران و اساتید
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                پژوهش‌های چندمرحله‌ای با Prism، تحلیل داده‌های حجیم اکسل و CSV، حل مسائل ریاضیات دانشگاهی با استدلال o1 و خلاصه‌سازی مقالات رفرنس.
+                پژوهش‌های چندمرحله‌ای با <strong>Deep Research</strong> و فضای کاری <strong>Prism</strong>، تحلیل داده‌های اکسل و CSV، حل مسائل علمی با سطوح استدلال <strong>Medium / High</strong> در GPT-6 Sol و خلاصه‌سازی مقالات تا ۲۵۶ هزار توکن.
               </p>
             </div>
 
@@ -306,33 +311,33 @@ function ChatGPTDetailContent({
                 کپی‌رایترها، مدیران محتوا و بازاریابان
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                تدوین کمپین‌های ۳۶۰ درجه، ویرایش زنده متون در بوم Canvas، تولید استوری‌بورد و تیزرهای ویدیویی با Sora و خروجی‌های بصری چشم‌نواز با DALL-E 3.
+                تدوین کمپین‌ها، ویرایش زنده متون در بوم <strong>Canvas</strong>، تولید تصاویر باکیفیت با <strong>Advanced Image Creation</strong> و تعامل سریع صوتی با <strong>Advanced Voice Mode</strong>.
               </p>
             </div>
 
             <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Users className="h-4 w-4 text-cyan-400" />
-                مدیران عامل و استارتاپ‌ها
+                مدیران عامل و تیم‌های کاری
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                سازماندهی پروژه‌ها با حافظه ایزوله اختصاصی تا ۲۵ فایل ۵۱۲ مگابایتی برای هر بخش، بررسی قراردادهای حقوقی و خودکارسازی فرآیندهای اداری با اتوماسیون وب.
+                سازماندهی پوشه‌های <strong>Projects</strong> با حافظه ایزوله تا ۲۵ فایل ۵۱۲ مگابایتی، بررسی اسناد و استفاده از <strong>ChatGPT Work</strong> و <strong>Agent Mode</strong> طبق سهمیه رسمی پلن Plus.
               </p>
             </div>
           </div>
         </div>
       )}
 
-      {/* 3. Free vs Plus Comparison Table */}
+      {/* 3. Free vs Plus vs Pro Comparison Table */}
       {activeTab === "comparison" && (
         <div className="space-y-4">
           <div className="space-y-1">
             <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
               <Layers className="h-5 w-5 text-cyan-400" />
-              جدول مقایسه رسمی نسخه رایگان در برابر ChatGPT Plus وایچ
+              جدول مقایسه رسمی Free، ChatGPT Plus (این محصول) و ChatGPT Pro
             </h3>
             <p className="text-xs text-muted-foreground">
-              بررسی تفاوت‌های سقف دسترسی، پهنای باند و مدل‌های فعال در سال ۲۰۲۶
+              بررسی شفاف مدل‌ها، پنجره کانتکست و تفاوت سقف مصرف پلن Plus با نسخه Pro در نوامبر ۲۰۲۶
             </p>
           </div>
 
@@ -342,49 +347,46 @@ function ChatGPTDetailContent({
                 <tr>
                   <th className="p-3.5 sm:p-4 font-bold text-foreground">معیار مقایسه</th>
                   <th className="p-3.5 sm:p-4 font-bold text-muted-foreground">نسخه رایگان (Free)</th>
-                  <th className="p-3.5 sm:p-4 font-bold text-primary">اشتراک اختصاصی Plus (VAICH)</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-primary">ChatGPT Plus (همین محصول)</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-muted-foreground">ChatGPT Pro (۱۰۰ تا ۵۰۰ دلاری)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60">
                 <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">دسترسی به پرچمدار GPT-6 Astra</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground flex items-center gap-1.5"><X className="h-4 w-4 text-rose-500" /> غیرفعال</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400 flex items-center gap-1.5"><Check className="h-4 w-4" /> دسترسی کامل با استدلال رایانه‌ای</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل‌های اصلی</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">GPT-6 Luna با محدودیت شدید</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">GPT-6.1 Sol، GPT-6 Sol و GPT-6 Luna</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">همه مدل‌ها + GPT-6 Pro (Astra در چت)</td>
                 </tr>
                 <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل‌های استدلال o1 و o3-mini</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">محدود به چند پیام روزانه</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">دسترسی وسیع با تنظیم Reasoning Effort</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">دسترسی به GPT-6 Astra</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">غیرفعال</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">فعال در Codex و Work (سهمیه ۵ ساعته)</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">نامحدود با سقف هفتگی و Dots Agent</td>
                 </tr>
                 <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">فضای کاری Prism و بوم Canvas</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">پنجره کانتکست (Context)</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">محدود (حدود ۱۶ تا ۳۲K)</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">۵۴K سریع / تا ۲۵۶K استدلال</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">۱۲۸K سریع / تا ۴۰۰K استدلال</td>
+                </tr>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">پژوهش عمیق و ایجنت</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">بسیار محدود</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">Deep Research و Agent Mode ماهانه</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">ظرفیت بالا + Always-on Agent Dots</td>
+                </tr>
+                <tr>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">ابزارهای Prism، Canvas و Projects</td>
                   <td className="p-3.5 sm:p-4 text-muted-foreground">نسخه محدود آزمایشی</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">دسترسی نامحدود و فول آنلاک</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">کامل (تا ۲۵ فایل ۵۱۲MB در هر پروژه)</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">کامل با بالاترین ظرفیت پردازشی</td>
                 </tr>
                 <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">تولید ویدیو با Sora</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground flex items-center gap-1.5"><X className="h-4 w-4 text-rose-500" /> غیرفعال</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400 flex items-center gap-1.5"><Check className="h-4 w-4" /> فعال با سهمیه تولید اختصاصی</td>
-                </tr>
-                <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">پروژه‌ها و حافظه ایزوله (Projects)</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">حداکثر ۵ فایل سبک</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">تا ۲۵ فایل ۵۱۲ مگابایتی در هر پروژه</td>
-                </tr>
-                <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">اولویت سرور در ساعات شلوغی</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">انتظار در صف یا تنزل به مدل ضعیف</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">اولویت ترافیک سرور بدون قطعی</td>
-                </tr>
-                <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">تحلیل پیشرفته داده‌ها (پایتون ابری)</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">بسیار محدود با قطع نشست</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">اجرای نامحدود کدهای سنگین پایتون</td>
-                </tr>
-                <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">حالت صوتی پیشرفته (Advanced Voice)</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">نسخه معمولی با تاخیر</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">مکالمه روان زنده با پشتیبانی از Dynamic Island</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">تولید تصویر و حالت صوتی زنده</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">محدود روزانه با تاخیر</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">Advanced Image و Voice بدون تاخیر</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">حداکثر اولویت + حالت Ultrafast</td>
                 </tr>
               </tbody>
             </table>
@@ -397,26 +399,26 @@ function ChatGPTDetailContent({
         <div className="space-y-4">
           <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-emerald-400" />
-            نحوه فعال‌سازی، تحویل و تضمین سلامت اشتراک
+            نحوه فعال‌سازی، ضمانت قانونی و نکات ایمنی اکانت
           </h3>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                فعال‌سازی ۱۰۰٪ قانونی و اختصاصی
+                فعال‌سازی قانونی روی ایمیل شخصی یا اختصاصی
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                فعال‌سازی بر روی ایمیل شخصی خود کاربر یا ارائه اکانت کاملاً اختصاصی انجام می‌شود. بدون به اشتراک‌گذاری با اشخاص ثالث، تمام تاریخچه چت‌ها و پروژه‌ها خصوصی می‌ماند.
+                اشتراک با پرداخت معتبر روی ایمیل شما یا اکانت اختصاصی فعال‌سازی و پیش از تحویل تست می‌شود. تاریخچه چت‌ها و پروژه‌ها کاملاً خصوصی باقی می‌ماند.
               </p>
             </div>
 
-            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+            <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-2">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Award className="h-4 w-4 text-amber-400" />
-                گارانتی سلامت تا آخرین روز اشتراک
+                ضمانت فعال‌سازی + نکات جلوگیری از بن
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                تمام ۳۰ روز اشتراک تحت پوشش گارانتی سلامت ۱۰۰٪ وایچ است. در صورت بروز هرگونه مشکل یا قطعی از سوی سرورهای بین‌المللی، تعویض یا رفع عیب فوری صورت می‌گیرد.
+                ما <strong>فعال‌سازی قانونی و تحویل سالم اولیه</strong> را تضمین می‌کنیم. برای پیشگیری از محدودیت یا بن احتمالی پس از تحویل، حتماً از VPN با IP ثابت و تمیز استفاده کنید، IP را پشت‌سرهم تغییر ندهید و اکانت را اشتراکی مصرف نکنید.
               </p>
             </div>
           </div>
@@ -449,20 +451,20 @@ function ChatGPTDetailContent({
           </h3>
           {[
             {
-              q: "آیا مدل GPT-6 Astra برای همه خریداران اشتراک پلاس فعال است؟",
-              a: "بله، با تهیه اشتراک ChatGPT Plus از وایچ، دسترسی مستقیم به مدل‌های پرچمدار نسل GPT-6 شامل GPT-6 Astra، GPT-6 Sol و مدل‌های استدلال عمیق o1 و o3-mini در پنل شما فعال است.",
+              q: "کدام مدل‌ها در این اشتراک ChatGPT Plus فعال هستند؟",
+              a: "در پلن ۲۰ دلاری Plus به مدل‌های جدید GPT-6.1 Sol، GPT-6 Sol، GPT-6 Luna و در محیط‌های Codex و ChatGPT Work به GPT-6 Astra (دارای سقف مصرف ۵ ساعته چرخشی) دسترسی دارید. نسخه دائمی GPT-6 Pro / Dots مخصوص پلن Pro است.",
+            },
+            {
+              q: "ضمانت اکانت چگونه است و چکار کنیم بن نشویم؟",
+              a: "وایچ فعال‌سازی قانونی و تحویل سالم اولیه را تضمین می‌کند. با توجه به سخت‌گیری‌های OpenAI، تداوم سلامت اکانت پس از تحویل وابسته به رفتار کاربری (استفاده از VPN با IP ثابت و غیرآلوده، تغییر ندادن مکرر سرور و عدم استفاده هم‌زمان چند نفر) است.",
             },
             {
               q: "آیا برای فعال‌سازی اشتراک نیاز به ارسال پسورد ایمیل است؟",
-              a: "خیر، امنیت کاربران اولویت ماست. فعال‌سازی بدون نیاز به رمز عبور ایمیل شما انجام می‌شود و تمام اطلاعات اکانت و پروژه‌ها کاملاً خصوصی می‌ماند.",
-            },
-            {
-              q: "تفاوت فضای کاری Prism با چت معمولی چیست؟",
-              a: "ورک‌اسپیس Prism محیطی ساختاریافته برای تدوین مقالات طولانی، پروژه‌های تحقیقاتی و اسناد چندفایلی است که منابع و پیوست‌ها را به‌صورت یکپارچه در کنار ویرایشگر زنده قرار می‌دهد.",
+              a: "خیر، نیازی به رمز عبور ایمیل شخصی شما نیست یا اکانت کاملاً اختصاصی برایتان فعال می‌شود و تمام گفتگوها خصوصی می‌ماند.",
             },
             {
               q: "آیا امکان استفاده همزمان روی گوشی و لپ‌تاپ وجود دارد؟",
-              a: "بله، می‌توانید روی اپلیکیشن‌های رسمی iOS، اندروید، مک و نسخه وب بدون مشکل لاگین کرده و تاریخچه گفتگوی خود را به‌صورت لحظه‌ای همگام داشته باشید.",
+              a: "بله، روی اپلیکیشن‌های iOS، اندروید، دسکتاپ و وب قابل استفاده است؛ فقط توصیه می‌شود روی همه دستگاه‌ها از IP یکسان و پایدار استفاده کنید.",
             },
           ].map((item, idx) => (
             <div
@@ -516,10 +518,10 @@ function ClaudeDetailContent({
           <div className="space-y-2">
             <h3 className="text-lg font-black text-foreground flex items-center gap-2">
               <Cpu className="h-5 w-5 text-primary" />
-              مدل‌های نسل جدید و مشخصات رسمی Claude Pro (Anthropic)
+              مدل‌ها و مشخصات رسمی پلن Claude Pro (۲۰ دلاری Anthropic)
             </h3>
             <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              اشتراک رسمی Claude Pro پرچمدار بلامنازع مهندسی نرم‌افزار در جهان است؛ مجهز به مدل سرآمد <strong>Claude Sonnet 5.5</strong>، مدل استدلالی فوق‌سنگین <strong>Claude Opus 5.5</strong>، رده پردازشی <strong>Claude Fable 5.1</strong>، مدل فوق‌سریع <strong>Claude Haiku 5.5</strong>، سیستم تفکر تطبیقی <strong>Adaptive Thinking</strong> و محیط کاری <strong>Artifacts 2.0</strong>.
+              اشتراک رسمی <strong>Claude Pro</strong> دسترسی مستقیم به خانواده ۵.۵ آنتروپیک شامل پرچمدار کدنویسی <strong>Claude Sonnet 5.5</strong>، مدل استدلالی عمیق <strong>Claude Opus 5.5</strong> و مدل فوق‌سریع <strong>Claude Haiku 5.5</strong> را با پنجره متنی ۱ میلیون توکنی و خروجی تا ۱۲۸ هزار توکن فراهم می‌کند؛ به همراه <strong>Adaptive Thinking</strong>، بوم <strong>Artifacts</strong>، پروژه‌ها و ابزار <strong>Claude Code</strong> (توضیح شفاف: مدل Claude Fable 5.2 در پلن Pro با اعتبار مصرفی جداگانه یا در پلن‌های Max و Ultra ارائه می‌شود).
             </p>
           </div>
 
@@ -548,7 +550,7 @@ function ClaudeDetailContent({
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
                 <Layers3 className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">محیط تعاملی Artifacts 2.0</h4>
+              <h4 className="text-sm font-bold text-foreground">محیط تعاملی Claude Artifacts</h4>
               <p className="text-xs leading-6 text-muted-foreground">
                 رندر بلادرنگ وب‌اپلیکیشن‌های کامل (React, Tailwind)، نمودارهای تعاملی SVG و شبیه‌سازها در پنل کناری بدون نیاز به کامپایل یا لوکال هاست.
               </p>
@@ -644,10 +646,10 @@ function ClaudeDetailContent({
           <div className="space-y-1">
             <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
               <Layers className="h-5 w-5 text-cyan-400" />
-              جدول مقایسه نسخه رایگان کلود در برابر Claude Pro وایچ
+              مقایسه نسخه Free، اشتراک Claude Pro (این محصول) و Claude Max / Ultra
             </h3>
             <p className="text-xs text-muted-foreground">
-              تفاوت‌های بنیادین در سقف مجاز پیام‌ها، مدل‌های فعال و محیط Artifacts
+              بررسی دقیق مدل‌ها، سهمیه ۵ ساعته و هفتگی و دسترسی به Fable 5.2 در نوامبر ۲۰۲۶
             </p>
           </div>
 
@@ -657,39 +659,40 @@ function ClaudeDetailContent({
                 <tr>
                   <th className="p-3.5 sm:p-4 font-bold text-foreground">شاخص</th>
                   <th className="p-3.5 sm:p-4 font-bold text-muted-foreground">نسخه رایگان (Free)</th>
-                  <th className="p-3.5 sm:p-4 font-bold text-primary">اشتراک اختصاصی Pro (VAICH)</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-primary">Claude Pro (همین محصول)</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-muted-foreground">Claude Max / Ultra (۱۰۰ / ۲۰۰ دلار)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60">
                 <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">سقف پیام در هر نشست کاری</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">اخطار اتمام پیام پس از ۳ الی ۵ سوال</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400 flex items-center gap-1.5"><Check className="h-4 w-4" /> بیش از ۵ برابر ظرفیت مصرف بیشتر</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل‌های فعال</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">محدود (Haiku / سهمیه کم Sonnet)</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">Sonnet 5.5، Opus 5.5 و Haiku 5.5</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">همان مدل‌ها + سهمیه بومی Fable 5.2</td>
                 </tr>
                 <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">دسترسی به Claude Sonnet 5.5 و Opus 5.5</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">سقوط به مدل‌های سبک در ساعات شلوغی</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">دسترسی دائم و بدون وقفه به برترین مدل‌ها</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">ظرفیت مصرف و سهمیه</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">سقف بسیار محدود ۵ ساعته</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">~۵ برابر نسخه رایگان (۵ ساعته + هفتگی)</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">۵ تا ۱۰ برابر ظرفیت Pro + اعتبار API</td>
                 </tr>
                 <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">تفکر تطبیقی (Adaptive Thinking)</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">غیرفعال یا سقف زمانی بسیار کوتاه</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">تنظیم دستی بودجه تفکر تا بالاترین ضریب دقت</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل Claude Fable 5.2</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">غیرفعال</td>
+                  <td className="p-3.5 sm:p-4 text-amber-400 font-medium">فقط با اعتبار اضافی (Pay-as-you-go)</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">شامل‌شده در اشتراک (تا ۵۰٪ سقف هفتگی)</td>
                 </tr>
                 <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">محیط تعاملی Artifacts 2.0</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">محدود با خطای حافظه در کدهای حجیم</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">رندر نامحدود پروژه‌ها و شبیه‌سازهای پیچیده</td>
-                </tr>
-                <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">دستیار ترمینال Claude Code CLI</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground flex items-center gap-1.5"><X className="h-4 w-4 text-rose-500" /> مسدود</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400 flex items-center gap-1.5"><Check className="h-4 w-4" /> پشتیبانی کامل در ترمینال سیستم‌عامل</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">ابزارهای کدنویسی و ترمینال</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">Claude Code مسدود</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">Claude Code، Artifacts و Projects کامل</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">کامل با سقف نشست طولانی‌تر</td>
                 </tr>
                 <tr>
                   <td className="p-3.5 sm:p-4 font-semibold text-foreground">پنجره متنی و سقف خروجی</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">خروجی محدود به ۴,۰۰۰ توکن</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">۱ میلیون کانتکست با خروجی فوق‌العاده ۱۲۸K</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">محدود بر اساس حجم سرور</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">۱ میلیون کانتکست با خروجی تا ۱۲۸K</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">۱ میلیون کانتکست + ۱۲۸K خروجی</td>
                 </tr>
               </tbody>
             </table>
@@ -702,26 +705,26 @@ function ClaudeDetailContent({
         <div className="space-y-4">
           <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-emerald-400" />
-            نحوه فعال‌سازی، تحویل و تضمین سلامت Claude Pro
+            نحوه فعال‌سازی، ضمانت قانونی و نکات مهم ایمنی Claude Pro
           </h3>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                فعال‌سازی قانونی بدون تحریم
+                فعال‌سازی قانونی و اختصاصی
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                فعال‌سازی ۱۰۰٪ قانونی و اختصاصی بر روی ایمیل شخصی کاربر با پرداخت کارت‌های بین‌المللی بدون ریسک بن شدن یا لیمیت اکانت.
+                فعال‌سازی قانونی روی ایمیل کاربر یا اکانت اختصاصی با پرداخت رسمی انجام شده و هنگام تحویل از صحت عملکرد اشتراک اطمینان حاصل می‌شود.
               </p>
             </div>
 
-            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+            <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-2">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Award className="h-4 w-4 text-amber-400" />
-                گارانتی کامل سلامت در تمام ۳۰ روز
+                ضمانت فعال‌سازی + پیشگیری از بن شدن
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                اشتراک Claude Pro دارای گارانتی تعویض و پشتیبانی ۲۴ ساعته در تلگرام است تا بدون کوچک‌ترین دغدغه روی کدهایتان تمرکز کنید.
+                ما <strong>فعال‌سازی قانونی و تحویل سالم اولیه</strong> را ضمانت می‌کنیم. با توجه به سخت‌گیری بالای آنتروپیک روی آی‌پی، برای جلوگیری از مسدودیت بعد از تحویل حتماً از VPN با IP ثابت و اختصاصی (پرهیز از پروکسی‌های عمومی و تغییر مکرر IP) و به‌صورت تک‌کاربره استفاده کنید.
               </p>
             </div>
           </div>
@@ -737,16 +740,20 @@ function ClaudeDetailContent({
           </h3>
           {[
             {
-              q: "چرا کلود برای برنامه‌نویسان بهتر از چت‌جی‌پی‌تی است؟",
-              a: "مدل Claude Sonnet 5.5 با تسلط بر ساختار پروژه‌های چندفایلی و قابلیت رندر زنده کدهای فرانت‌اند در Artifacts 2.0، امکان تست بلادرنگ رابط کاربری را بدون نیاز به کپی-پیست در ادیتور فراهم می‌کند.",
+              q: "کدام مدل‌ها در اکانت Claude Pro باز هستند؟",
+              a: "مدل‌های Claude Sonnet 5.5، Claude Opus 5.5 و Claude Haiku 5.5 با کانتکست ۱ میلیونی و ابزارهایی مثل Artifacts و Claude Code در پلن ۲۰ دلاری Pro فعال‌اند. مدل Claude Fable 5.2 نیاز به اعتبار مصرفی جداگانه یا پلن‌های Max/Ultra دارد.",
+            },
+            {
+              q: "ضمانت کلود چگونه است و چطور جلوی بن شدن را بگیریم؟",
+              a: "فروشگاه وایچ فعال‌سازی قانونی و سلامت اولیه اکانت را تضمین می‌کند و راهنمای تنظیمات ایمن را در اختیارتان می‌گذارد. حفظ سلامت پس از تحویل (استفاده با IP ثابت غیرآلوده و عدم اشتراک‌گذاری اکانت) بر عهده کاربر است.",
             },
             {
               q: "آیا ابزار Claude Code روی سیستم‌های ویندوز و مک کار می‌کند؟",
-              a: "بله، ابزار خط فرمان Claude Code از طریق ترمینال (Terminal / PowerShell / Bash) مستقیماً به مخزن پروژه شما متصل شده و تست‌ها را اجرا می‌کند.",
+              a: "بله، ابزار خط فرمان Claude Code از طریق ترمینال (Terminal / PowerShell / Bash) مستقیماً به مخزن پروژه شما متصل شده و کدها و تست‌ها را اجرا می‌کند.",
             },
             {
               q: "نحوه تحویل اکانت کلود پرو به چه صورت است؟",
-              a: "پس از ثبت سفارش و ارسال رسید در ربات تلگرام، اطلاعات ورود به اکانت اختصاصی شما در اولین فرصت و در سریع‌ترین زمان ممکن در تلگرام برای شما ارسال می‌شود.",
+              a: "پس از ثبت سفارش و ارسال رسید در ربات تلگرام، اطلاعات ورود یا فعال‌سازی اکانت اختصاصی شما در اولین فرصت و سریع‌ترین زمان ممکن در تلگرام ارسال می‌شود.",
             },
           ].map((item, idx) => (
             <div
@@ -779,7 +786,7 @@ function ClaudeDetailContent({
 }
 
 /* =========================================================================
-   Google Gemini Advanced - Gemini 4 Argon & Project Astra
+   Google AI Pro (Gemini Pro) - Gemini 4 Argon & Google One 5 TB
    ========================================================================= */
 function GeminiDetailContent({
   product,
@@ -802,10 +809,10 @@ function GeminiDetailContent({
           <div className="space-y-2">
             <h3 className="text-lg font-black text-foreground flex items-center gap-2">
               <Cpu className="h-5 w-5 text-primary" />
-              موتورهای نسل ۲۰۲۶ گوگل: Gemini 4 Argon و لایه ادراکی Project Astra
+              مدل‌ها و امکانات رسمی Google AI Pro (نسخه Gemini Pro ۱۹.۹۹ دلاری)
             </h3>
             <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              اشتراک رسمی Google Gemini Advanced مجهز به انقلابی‌ترین فناوری‌های شرکت گوگل است؛ شامل پرچمدار غول‌آسای <strong>Gemini 4 Argon</strong> با خروجی ۱ میلیون توکن، لایه عامل‌محور بلادرنگ <strong>Project Astra</strong> (درک جریان زنده ویدیوی دوربین با تاخیر زیر ۳۰۰ میلی‌ثانیه و حافظه فضایی)، مدل استدلال عمیق <strong>Gemini 3 Deep Think</strong>، مدل‌های کاری <strong>Gemini 3.8 Flash</strong> و پیوند عمیق با <strong>Google Workspace</strong>.
+              اشتراک <strong>Google AI Pro</strong> (شناخته‌شده با نام پیشین Gemini Advanced) با مدل پرچمدار <strong>Gemini 4 Argon</strong>، مدل‌های پرسرعت <strong>Flash</strong>، استدلال عمیق <strong>Deep Think</strong>، یکپارچگی بومی با <strong>Google Workspace</strong> (Gmail، Docs، Drive، Vids)، ابزارهای <strong>NotebookLM</strong> و <strong>Canvas</strong> و همراه با <strong>۵ ترابایت فضای ابری Google One</strong> و <strong>۱۰ دلار اعتبار ماهانه Google Cloud</strong> عرضه می‌شود.
             </p>
           </div>
 
@@ -814,49 +821,49 @@ function GeminiDetailContent({
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 text-primary">
                 <Brain className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">پرچمدار غول‌آسا: Gemini 4 Argon</h4>
+              <h4 className="text-sm font-bold text-foreground">مدل پرچمدار Gemini 4 Argon و Flash</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                معماری بومی چندوجهی با خروجی طولانی بی‌سابقه تا ۱,۰۰۰,۰۰۰ توکن و بازیابی بی‌نقص اطلاعات از میان صدها هزار خط کد و اسناد سنگین.
+                دسترسی کامل به مدل‌های رده Pro از جمله Gemini 4 Argon با سطوح تفکر (Low / Medium / High) و مدل‌های پرسرعت Flash با سهمیه محاسباتی ~۴ برابر نسخه رایگان.
               </p>
             </div>
 
             <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-cyan-500/50 transition-all">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
-                <Camera className="h-5 w-5" />
+                <Activity className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">لایه چندوجهی زنده Project Astra</h4>
+              <h4 className="text-sm font-bold text-foreground">استدلال عمیق Deep Think و Deep Research</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                پیمایش بلادرنگ فریم‌به‌فریم دوربین گوشی یا وب‌کم، مکالمه صوتی انسان‌گونه با تاخیر زیر ۳۰۰ میلی‌ثانیه و حافظه فضایی از اشیای محیط پیرامون.
+                تفکر چندمرحله‌ای برای مسائل پیچیده ریاضی، کدنویسی و تحلیل داده همراه با گزارش‌های تحقیقی ساختاریافته از منابع معتبر وب.
               </p>
             </div>
 
             <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-purple-500/50 transition-all">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
-                <Activity className="h-5 w-5" />
+                <Layers className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">مدل استدلال عمیق Gemini 3 Deep Think</h4>
+              <h4 className="text-sm font-bold text-foreground">۵ ترابایت فضای Google One</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                تحلیل‌های چندلایه ریاضیاتی، داده‌کاوی، فیزیک و مدل‌سازی مالی با تمرکز بر زنجیره استدلال دقیق و بدون خطا.
+                همراه با اشتراک AI، فضای ابری گسترده ۵ ترابایتی برای بکاپ Gmail، فایل‌های Drive و عکس‌های Google Photos در اختیار خواهید داشت.
               </p>
             </div>
 
             <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-amber-500/50 transition-all">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
-                <FolderGit2 className="h-5 w-5" />
+                <Laptop className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">پنجره متنی ۲ میلیون توکنی پایدار</h4>
+              <h4 className="text-sm font-bold text-foreground">اتصال بومی با Google Workspace</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                بزرگ‌ترین حافظه فعال پردازش سند در جهان؛ پردازش همزمان بیش از ۱,۵۰۰ صفحه متن، فایل‌های صوتی طولانی یا ساعت‌ها ویدیوی خام.
+                استفاده مستقیم جمینای درون Gmail، Google Docs، Sheets، Drive و Google Vids برای خلاصه‌سازی اسناد، نوشتن نامه و تحلیل شیت‌ها بدون کپی-پیست.
               </p>
             </div>
 
             <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-emerald-500/50 transition-all">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                <Laptop className="h-5 w-5" />
+                <Code className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">ادغام بومی با Google Workspace</h4>
+              <h4 className="text-sm font-bold text-foreground">Colab، Android Studio و ۱۰$ اعتبار Cloud</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                جستجو، تحلیل و پاسخ‌گویی مستقیم میان اسناد گوگل درایو، ایمیل‌های جیمیل و شیت‌های کاربر بدون نیاز به آپلود مجدد فایل‌ها.
+                یکپارچگی مستقیم با محیط‌های برنامه‌نویسی Colab و Android Studio به علاوه ۱۰ دلار اعتبار ماهانه توسعه‌دهندگان Google Cloud.
               </p>
             </div>
 
@@ -864,9 +871,9 @@ function GeminiDetailContent({
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400">
                 <Sparkles className="h-5 w-5" />
               </div>
-              <h4 className="text-sm font-bold text-foreground">پلتفرم NotebookLM و Imagen 3</h4>
+              <h4 className="text-sm font-bold text-foreground">ابزارهای NotebookLM، Canvas و Gems</h4>
               <p className="text-xs leading-6 text-muted-foreground">
-                تولید پادکست‌های صوتی گفتگو‌محور (Audio Overviews) از اسناد و مقالات طولانی به همراه تصویرساز نسل جدید Imagen 3.
+                تبدیل منابع تحقیقاتی به خلاصه‌های صوتی در NotebookLM، ساخت دستیارهای اختصاصی Gems و کار تعاملی با کد و متن در بوم Canvas.
               </p>
             </div>
           </div>
@@ -878,7 +885,7 @@ function GeminiDetailContent({
         <div className="space-y-5">
           <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
             <Briefcase className="h-5 w-5 text-purple-400" />
-            کاربردهای پیشرفته Google Gemini Advanced
+            کاربردهای پیشرفته Google AI Pro (Gemini Pro)
           </h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
@@ -887,37 +894,37 @@ function GeminiDetailContent({
                 تحقیقات دانشگاهی و پایان‌نامه‌ها
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                بارگذاری ده‌ها کتاب مرجع و پایان‌نامه در کانتکست ۲ میلیونی و ساخت پادکست صوتی با NotebookLM برای مرور سریع فصول درسی.
+                پردازش منابع علمی و کتاب‌های حجیم در Deep Research و ساخت مرور صوتی از مقالات با NotebookLM برای یادگیری عمیق‌تر.
               </p>
             </div>
 
             <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <Camera className="h-4 w-4 text-cyan-400" />
-                تعامل در دنیای واقعی با Project Astra
+                <Code className="h-4 w-4 text-cyan-400" />
+                برنامه‌نویسان و متخصصان کلود
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                بررسی قطعات سخت‌افزاری، خواندن کدهای روی وایت‌برد و پرسش درباره اشیای فیزیکی از طریق دوربین با مکالمه صوتی فوق‌العاده سریع.
+                کدنویسی در Colab و Android Studio با کمک مدل‌های Gemini 4 Argon و استفاده از ۱۰ دلار اعتبار ماهانه توسعه‌دهندگان Google Cloud.
               </p>
             </div>
 
             <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <BarChart3 className="h-4 w-4 text-emerald-400" />
-                تریدرها و تحلیلگران داده
+                تحلیلگران داده و تریدرها
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                مدل‌سازی مالی با موتور Deep Think، تحلیل گزارش‌های سالانه بورس و اجرای اسکریپت‌های تحلیلی پایتون در کلود گوگل.
+                بررسی گزارش‌های مالی چندصفحه‌ای با حالت استدلال Deep Think و تنظیم سطوح تفکر (High Effort) جهت دقت حداکثری.
               </p>
             </div>
 
             <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Users className="h-4 w-4 text-amber-400" />
-                تیم‌های متکی به اکوسیستم گوگل
+                کاربران حرفه‌ای Gmail و Google Drive
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                اتوماسیون سریع اداری با خلاصه خودکار ایمیل‌های جیمیل، استخراج اکشن‌آیتم‌ها از داکس و تهیه گزارش‌های مستمر در گوگل درایو.
+                دسترسی هم‌زمان به ۵ ترابایت فضای ابری Google One و دستیار هوشمند داخلی در Docs، Gmail و Sheets برای مدیریت کارهای روزمره.
               </p>
             </div>
           </div>
@@ -930,10 +937,10 @@ function GeminiDetailContent({
           <div className="space-y-1">
             <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
               <Layers className="h-5 w-5 text-cyan-400" />
-              مقایسه نسخه رایگان گوگل با Gemini Advanced وایچ
+              مقایسه پلن‌های Google AI: رایگان / Plus در برابر Google AI Pro (این محصول) و AI Ultra
             </h3>
             <p className="text-xs text-muted-foreground">
-              بررسی تفاوت‌های پنجره کانتکست، مدل‌های استدلالی و Project Astra
+              مقایسه شفاف امکانات، مدل‌ها و فضای ذخیره‌سازی رسمی گوگل در نوامبر ۲۰۲۶
             </p>
           </div>
 
@@ -942,40 +949,47 @@ function GeminiDetailContent({
               <thead className="border-b border-border/80 bg-secondary/60 text-muted-foreground">
                 <tr>
                   <th className="p-3.5 sm:p-4 font-bold text-foreground">شاخص</th>
-                  <th className="p-3.5 sm:p-4 font-bold text-muted-foreground">نسخه رایگان (Free)</th>
-                  <th className="p-3.5 sm:p-4 font-bold text-primary">Gemini Advanced (VAICH)</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-muted-foreground">رایگان / AI Plus (۴.۹۹ دلار)</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-primary">Google AI Pro (همین محصول)</th>
+                  <th className="p-3.5 sm:p-4 font-bold text-muted-foreground">Google AI Ultra (۹۹+ دلار)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60">
                 <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">دسترسی به Gemini 4 Argon</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground flex items-center gap-1.5"><X className="h-4 w-4 text-rose-500" /> مسدود</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400 flex items-center gap-1.5"><Check className="h-4 w-4" /> فعال با خروجی ۱ میلیون توکن</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل‌های پرچمدار</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">مدل‌های سبک Flash</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">Gemini 4 Argon + Flash + Deep Think</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">همه مدل‌ها + دسترسی به Gemini Carbon</td>
                 </tr>
                 <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">لایه چندوجهی Project Astra</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">غیرفعال</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">درک زنده دوربین و مکالمه زیر ۳۰۰ms</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">سقف محاسباتی و سهمیه</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">سهمیه پایه</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">~۴ برابر نسخه رایگان (۵ ساعته / هفتگی)</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">۵ تا ۲۰ برابر ظرفیت پلن Pro</td>
                 </tr>
                 <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">اندازه پنجره متنی (Context Window)</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">۳۲ هزار توکن معمولی</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">۲ میلیون توکن پایدار (بزرگ‌ترین جهان)</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">فضای ابری Google One</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">۱۵ GB (رایگان) یا ۴۰۰ GB (Plus)</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">۵ ترابایت (Gmail, Drive, Photos)</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">۲۰ ترابایت فضای ابری</td>
                 </tr>
                 <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل تحلیل استدلال عمیق Deep Think</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground flex items-center gap-1.5"><X className="h-4 w-4 text-rose-500" /> غیرفعال</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400 flex items-center gap-1.5"><Check className="h-4 w-4" /> فعال برای داده‌کاوی و ریاضیات</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">یکپارچگی Workspace و Cloud</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">محدود</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">Workspace کامل + ۱۰$ اعتبار ماهانه Cloud</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">کامل + ابزارهای Google Antigravity</td>
                 </tr>
                 <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">پلتفرم علمی NotebookLM</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">سهمیه بسیار محدود پادکست</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">دسترسی وسیع برای تولید Audio Overviews</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">ابزارهای پژوهش و کد</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">محدود</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">NotebookLM، Canvas، Gems و Colab</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">سقف حداکثری در تمام ابزارها</td>
                 </tr>
                 <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مزیت طرح ۱۸ ماهه وایچ</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">عدم امکان خرید بلندمدت</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">تخفیف اقتصادی بیش از ۹۰٪ و مصونیت از تورم ارز</td>
+                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">صرفه اقتصادی {is18Month ? "۱۸ ماهه" : "۶۰ روزه"}</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">عدم پوشش کامل Pro</td>
+                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">بسیار اقتصادی بدون دغدغه تمدید دلاری</td>
+                  <td className="p-3.5 sm:p-4 text-muted-foreground">بسیار پرهزینه (نزدیک به ۲۰۰$/ماه)</td>
                 </tr>
               </tbody>
             </table>
@@ -988,26 +1002,26 @@ function GeminiDetailContent({
         <div className="space-y-4">
           <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-emerald-400" />
-            تحویل فوری، گارانتی و تضمین سلامت اکانت
+            تحویل سریع، ضمانت فعال‌سازی و نکات نگهداری
           </h3>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                تحویل فوری در اولین فرصت
+                تحویل سریع و تست کامل پیش از ارسال
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                اطلاعات اکانت و راهنمای کامل اتصال پایدار پس از ارسال رسید در ربات، در سریع‌ترین زمان ممکن در تلگرام به شما تحویل داده می‌شود.
+                اطلاعات اکانت و راهنمای اتصال پایدار پس از تایید رسید در ربات تلگرام، در سریع‌ترین زمان ممکن و با تست سالم بودن اشتراک تحویل شما می‌شود.
               </p>
             </div>
 
-            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+            <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-2">
               <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Award className="h-4 w-4 text-amber-400" />
-                گارانتی کامل سلامت در طول کل دوره
+                ضمانت فعال‌سازی قانونی + رعایت نکات ایمنی
               </h4>
               <p className="text-xs text-muted-foreground leading-6">
-                پلن ۶۰ روزه و پلن ۱۸ ماهه دارای گارانتی کامل سلامت و تعویض فوری در تمام طول دوره هستند.
+                وایچ <strong>فعال‌سازی قانونی و تحویل سالم اولیه</strong> سرویس را ضمانت می‌کند. پس از تحویل موفق، حفظ سلامت حساب وابسته به استفاده با IP ثابت و تمیز و رعایت قوانین گوگل توسط کاربر است.
               </p>
             </div>
           </div>
@@ -1019,20 +1033,20 @@ function GeminiDetailContent({
         <div className="space-y-3">
           <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2 mb-4">
             <HelpCircle className="h-5 w-5 text-primary" />
-            پرسش‌های متداول درباره Gemini Advanced
+            پرسش‌های متداول درباره Google AI Pro (Gemini Pro)
           </h3>
           {[
             {
-              q: "چرا پلن ۱۸ ماهه جمینای تا این حد اقتصادی است؟",
-              a: "طرح ۱۸ ماهه وایچ به دلیل تخصیص کردیت‌های رسمی و پارتنرشیپ بین‌المللی با بیش از ۹۰٪ تخفیف ارائه می‌شود و شما را تا ۱.۵ سال از نوسانات ارز و تمدید ماهانه بی‌نیاز می‌کند.",
+              q: "تفاوت نسخه ۱۹.۹۹ دلاری Google AI Pro با نسخه AI Ultra چیست؟",
+              a: "نسخه ارائه‌شده در وایچ پلن رسمی Google AI Pro (معادل ماهانه ۱۹.۹۹ دلار) با دسترسی به Gemini 4 Argon، استدلال Deep Think، امکانات Google Workspace، ۵ ترابایت فضا و ۱۰ دلار اعتبار Cloud است. امکانات سنگین‌تر مثل ۲۰ ترابایت فضا یا Gemini Carbon مربوط به پلن گران‌قیمت AI Ultra است.",
             },
             {
-              q: "پنجره متنی ۲ میلیون توکنی چه کاربردی دارد؟",
-              a: "این پنجره به شما اجازه می‌دهد کتاب‌های قطور، کل کدهای یک پروژه یا یک فایل ویدیویی ۱ ساعته را در چت بارگذاری کنید تا هوش مصنوعی کل آن را در یک ثانیه تحلیل و پاسخ دهد.",
+              q: "چه تفاوتی بین پلن ۶۰ روزه و پلن ۱۸ ماهه وجود دارد؟",
+              a: "هر دو پلن امکانات اصلی Google AI Pro را دارند؛ پلن ۶۰ روزه برای تست و استفاده کوتاه‌مدت مناسب است و پلن ۱۸ ماهه برای کسانی که نمی‌خواهند هر ماه تمدید کنند ارزش اقتصادی بسیار بالاتری دارد.",
             },
             {
               q: "آیا برای استفاده از جمینای نیاز به ابزار تغییر آی‌پی است؟",
-              a: "بله، به دلیل تحریم‌های شرکت گوگل علیه ایران، نیاز به یک ابزار پایدار است؛ اما اکانت به هیچ وجه مسدود یا بن نمی‌شود.",
+              a: "بله، به دلیل محدودیت‌های منطقه‌ای سرویس‌های هوش مصنوعی گوگل برای ایران، همیشه از یک VPN پایدار و معتبر استفاده کنید و در طول کار کشور/IP را مدام تغییر ندهید تا حساب بدون اختلال بماند.",
             },
           ].map((item, idx) => (
             <div

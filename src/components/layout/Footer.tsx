@@ -32,7 +32,7 @@ const navigationColumns = [
   {
     title: "اطلاعات و قوانین",
     links: [
-      { to: "/terms", label: "قوانین و ضمانت بازگشت وجه" },
+      { to: "/terms", label: "قوانین و شرایط ضمانت فعال‌سازی" },
       { to: "/privacy", label: "حریم خصوصی کاربران" },
       { to: "/support", label: "ارتباط مستقیم با کارشناسان" },
     ],
@@ -88,7 +88,7 @@ export function Footer() {
         <div className="space-y-4">
           <Logo />
           <p className="max-w-xs text-sm leading-7 text-muted-foreground">
-            VAICH مرجع تخصصی خدمات دیجیتالی و اشتراک‌های هوش مصنوعی؛ ساده، شفاف، با تحویل فوری و تضمین سلامت اکانت‌ها.
+            VAICH مرجع تخصصی خدمات دیجیتالی و اشتراک‌های هوش مصنوعی؛ شفاف، با تحویل سریع، ضمانت فعال‌سازی قانونی و پشتیبانی اختصاصی.
           </p>
           <div className="space-y-2 text-sm text-muted-foreground">
             <p>

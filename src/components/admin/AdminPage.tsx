@@ -65,6 +65,7 @@ import {
   Activity,
   Sun,
   Moon,
+  ChevronLeft,
 } from "lucide-react";
 
 // Client-side image compressor for mobile and desktop uploads
@@ -800,18 +801,18 @@ export function AdminPage() {
       reviewCount: 0,
       reviews: [],
       purchaseInfo: [
-        "اشتراک با بالاترین پایداری و سلامت فعال می‌شود.",
-        "دارای پشتیبانی ۲۴ ساعته در صورت بروز هرگونه مشکل.",
-        "اطلاعات پس از تأیید پرداخت ارسال می‌گردد.",
+        "اشتراک به‌صورت قانونی و اختصاصی با ضمانت فعال‌سازی سالم اولیه تحویل می‌شود.",
+        "دارای پشتیبانی ۲۴ ساعته در صورت بروز مشکل در فرآیند راه‌اندازی و فعال‌سازی.",
+        "رعایت نکات نگهداری اکانت (IP ثابت و قوانین سرویس‌دهنده) پس از تحویل بر عهده کاربر است.",
       ],
       features: [
-        "⚡ فعال‌سازی قانونی و تضمینی",
-        "🚀 دسترسی بدون قطعی و سریع",
-        "🛡️ گارانتی کامل در طول دوره",
+        "⚡ فعال‌سازی قانونی و رسمی",
+        "🚀 تحویل سریع و اختصاصی",
+        "🛡️ ضمانت فعال‌سازی و تحویل سالم",
       ],
     });
-    setFeaturesText("⚡ فعال‌سازی قانونی و تضمینی\n🚀 دسترسی بدون قطعی و سریع\n🛡️ گارانتی کامل در طول دوره");
-    setPurchaseInfoText("اشتراک با بالاترین پایداری و سلامت فعال می‌شود.\nدارای پشتیبانی ۲۴ ساعته در صورت بروز هرگونه مشکل.\nاطلاعات پس از تأیید پرداخت ارسال می‌گردد.");
+    setFeaturesText("⚡ فعال‌سازی قانونی و رسمی\n🚀 تحویل سریع و اختصاصی\n🛡️ ضمانت فعال‌سازی و تحویل سالم");
+    setPurchaseInfoText("اشتراک به‌صورت قانونی و اختصاصی با ضمانت فعال‌سازی سالم اولیه تحویل می‌شود.\nدارای پشتیبانی ۲۴ ساعته در صورت بروز مشکل در فرآیند راه‌اندازی و فعال‌سازی.\nرعایت نکات نگهداری اکانت (IP ثابت و قوانین سرویس‌دهنده) پس از تحویل بر عهده کاربر است.");
     setIsEditing(true);
   };
 
@@ -2187,34 +2188,33 @@ export function AdminPage() {
                   </span>
 
                   {/* The Preview Card */}
-                  <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-linear-to-br from-emerald-500/5 via-primary/5 to-teal-500/10 p-5 sm:p-6 backdrop-blur-md shadow-lg transition-all hover:border-emerald-500/50">
-                    <div className="flex flex-col sm:flex-row items-center gap-5">
+                  <div className="relative overflow-hidden rounded-2xl border border-border/80 border-r-4 border-r-emerald-500 bg-card/85 p-4 sm:p-5 shadow-sm transition-all">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                       {inArticleConfig.imageUrl && (
-                        <div className="relative w-full sm:w-44 h-32 shrink-0 overflow-hidden rounded-2xl border border-border/70 bg-secondary/30 shadow-md">
+                        <div className="relative w-full sm:w-40 aspect-[4/3] shrink-0 overflow-hidden rounded-xl border border-border/60 bg-secondary/40">
                           <img
                             src={inArticleConfig.imageUrl}
                             alt={inArticleConfig.title}
-                            className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                            className="h-full w-full object-cover"
                           />
                         </div>
                       )}
-                      <div className="flex-1 space-y-2.5 text-center sm:text-right">
+                      <div className="flex-1 space-y-2 text-right">
                         {inArticleConfig.badge && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
-                            <Sparkles className="h-3 w-3" />
+                          <span className="inline-block rounded-md bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
                             {inArticleConfig.badge}
                           </span>
                         )}
                         <h4 className="text-sm sm:text-base font-extrabold text-foreground leading-snug">
                           {inArticleConfig.title || "عنوان تبلیغات درون متنی"}
                         </h4>
-                        <p className="text-xs text-muted-foreground leading-relaxed">
-                          {inArticleConfig.description || "توضیحات معرفی و ترغیب کاربر برای خرید محصول یا اشتراک"}
+                        <p className="text-xs text-muted-foreground leading-6 line-clamp-2">
+                          {inArticleConfig.description || "توضیحات معرفی محصول یا اشتراک"}
                         </p>
                         <div className="pt-1">
-                          <span className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-linear-to-r from-emerald-500 to-teal-600 px-4 py-2 text-xs font-extrabold text-white shadow-md">
+                          <span className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-xs">
                             <span>{inArticleConfig.buttonText || "مشاهده و خرید"}</span>
-                            <ExternalLink className="h-3.5 w-3.5" />
+                            <ChevronLeft className="h-3.5 w-3.5" />
                           </span>
                         </div>
                       </div>

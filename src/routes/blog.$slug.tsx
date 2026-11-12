@@ -6,6 +6,7 @@ import {
   Calendar,
   Clock,
   ArrowRight,
+  ArrowLeft,
   CheckCircle2,
   Lightbulb,
   Sparkles,
@@ -448,20 +449,20 @@ function ProductRecommendationBanner({
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="space-y-1.5 text-center sm:text-right">
           <div className="flex items-center justify-center sm:justify-start gap-2">
-            <span className="rounded-full bg-primary/15 text-primary border border-primary/30 text-xs px-2.5 py-0.5 font-bold">
-              تضمین اصالت و پایداری
+            <span className="rounded-md bg-primary/12 text-primary text-xs px-2.5 py-0.5 font-bold">
+              ضمانت فعال‌سازی قانونی
             </span>
             <span className="text-sm sm:text-base font-bold text-foreground">
               خرید قانونی اشتراک‌های هوش مصنوعی (ChatGPT, Claude, Gemini)
             </span>
           </div>
           <p className="text-xs text-neutral-700 dark:text-slate-300 max-w-xl leading-relaxed">
-            تحویل آنی، فعال‌سازی مستقیم روی ایمیل شما، ضمانت ۱۰۰٪ و پشتیبانی ۲۴ ساعته متخصصان وایچ.
+            فعال‌سازی اختصاصی روی ایمیل شما با ضمانت تحویل سالم اولیه و راهنمایی تنظیمات ایمن در پشتیبانی ۲۴ ساعته وایچ.
           </p>
         </div>
         <Link
           to="/products"
-          className="inline-flex items-center gap-2 rounded-full neon-gradient text-primary-foreground px-5 py-2.5 text-xs sm:text-sm font-bold shadow-lg transition-all shrink-0 hover:scale-105"
+          className="inline-flex items-center gap-2 rounded-xl bg-primary text-primary-foreground px-5 py-2.5 text-xs sm:text-sm font-bold shadow-sm transition-opacity shrink-0 hover:opacity-90"
         >
           <ShoppingBag className="h-4 w-4" />
           <span>مشاهده پلن‌ها و خرید</span>
@@ -490,44 +491,47 @@ function InArticlePromoWidget({ config }: { config: InArticleBannerConfig }) {
       );
     }
     return (
-      <a href={config.linkUrl} className="block group no-underline">
+      <Link to={config.linkUrl as any} className="block group no-underline">
         {children}
-      </a>
+      </Link>
     );
   };
 
   return (
     <div className="my-8 not-prose">
       <ContentWrapper>
-        <div className="relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 via-background to-teal-500/10 p-5 sm:p-6 backdrop-blur-xl shadow-lg transition-all duration-300 hover:border-emerald-500/50 hover:shadow-emerald-500/10 hover:shadow-xl">
-          <div className="flex flex-col sm:flex-row items-center gap-5 sm:gap-6">
+        <div className="relative overflow-hidden rounded-2xl border border-border/80 border-r-4 border-r-emerald-500 bg-card/85 p-4 sm:p-5 shadow-sm transition-colors duration-200 hover:border-emerald-500/45">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-5">
             {config.imageUrl && (
-              <div className="relative w-full sm:w-48 h-36 shrink-0 overflow-hidden rounded-2xl border border-border/60 bg-secondary/40 shadow-md">
+              <div className="relative w-full sm:w-40 aspect-[4/3] shrink-0 overflow-hidden rounded-xl border border-border/60 bg-secondary/40">
                 <img
                   src={config.imageUrl}
                   alt={config.title}
                   loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                 />
               </div>
             )}
-            <div className="flex-1 space-y-2.5 text-center sm:text-right">
+            <div className="flex-1 space-y-2 text-right">
               {config.badge && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
-                  <Sparkles className="h-3.5 w-3.5" />
+                <span className="inline-block rounded-md bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
                   {config.badge}
                 </span>
               )}
-              <h3 className="text-base sm:text-lg font-black text-foreground leading-snug group-hover:text-emerald-500 transition-colors">
+              <h3 className="text-sm sm:text-base font-extrabold text-foreground leading-snug group-hover:text-emerald-500 transition-colors">
                 {config.title}
               </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              <p className="text-xs sm:text-[13px] text-muted-foreground leading-6 line-clamp-2">
                 {config.description}
               </p>
               <div className="pt-1">
-                <span className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-xs sm:text-sm font-extrabold text-white shadow-md shadow-emerald-500/20 transition-transform group-hover:scale-105">
+                <span className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-xs transition-colors group-hover:bg-emerald-500">
                   <span>{config.buttonText || "مشاهده و خرید"}</span>
-                  <ExternalLink className="h-4 w-4" />
+                  {isExternal ? (
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  ) : (
+                    <ArrowLeft className="h-3.5 w-3.5" />
+                  )}
                 </span>
               </div>
             </div>

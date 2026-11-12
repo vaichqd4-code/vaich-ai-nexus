@@ -20,13 +20,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی؛ خرید اشتراک ChatGPT Plus، Claude Pro، Gemini Advanced و پلنر هوشمند گوگل‌شیت با تحویل فوری و ضمانت در وایچ.",
+          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی؛ خرید اشتراک ChatGPT Plus، Claude Pro، Google AI Pro (Gemini Pro) و پلنر هوشمند گوگل‌شیت با تحویل فوری و ضمانت فعال‌سازی در وایچ.",
       },
       { property: "og:title", content: "VAICH | مرجع خدمات دیجیتال و خرید اشتراک‌های هوش مصنوعی" },
       {
         property: "og:description",
         content:
-          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی؛ خرید اشتراک ChatGPT Plus، Claude Pro، Gemini Advanced و پلنر هوشمند گوگل‌شیت با تحویل فوری و ضمانت در وایچ.",
+          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی؛ خرید اشتراک ChatGPT Plus، Claude Pro، Google AI Pro (Gemini Pro) و پلنر هوشمند گوگل‌شیت با تحویل فوری و ضمانت فعال‌سازی در وایچ.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://vaich.ir" },
@@ -36,7 +36,7 @@ export const Route = createFileRoute("/")({
       {
         name: "twitter:description",
         content:
-          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی؛ خرید اشتراک ChatGPT Plus، Claude Pro، Gemini Advanced و پلنر هوشمند گوگل‌شیت با تحویل فوری و ضمانت در وایچ.",
+          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی؛ خرید اشتراک ChatGPT Plus، Claude Pro، Google AI Pro (Gemini Pro) و پلنر هوشمند گوگل‌شیت با تحویل فوری و ضمانت فعال‌سازی در وایچ.",
       },
       { name: "twitter:image", content: "https://vaich.ir/vaich-logo.png" },
     ],
@@ -129,7 +129,7 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
           </h1>
 
           <p className="mt-3.5 max-w-lg text-xs sm:text-sm leading-6 sm:leading-7 text-muted-foreground font-medium">
-            دسترسی آنی و قانونی به خدمات دیجیتال و اشتراک‌های هوش مصنوعی با تضمین کیفیت و پشتیبانی دائمی.
+            دسترسی سریع و قانونی به خدمات دیجیتال و اشتراک‌های هوش مصنوعی با ضمانت فعال‌سازی سالم و پشتیبانی اختصاصی.
           </p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -158,7 +158,7 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </span>
-              <span>تضمین ۱۰۰٪ اصالت و کیفیت</span>
+              <span>ضمانت فعال‌سازی قانونی</span>
             </div>
 
             <div className="inline-flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-secondary/70 px-3.5 py-1.5 text-xs font-medium text-foreground backdrop-blur-md">

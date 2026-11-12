@@ -1,7 +1,7 @@
 {
   "store": "VAICH",
   "url": "https://vaich.ir",
-  "updated_at": "2026-11-09T14:50:59.546Z",
+  "updated_at": "2026-11-12T16:04:27.914Z",
   "products": [
     {
       "id": "vaich-life-planner",
@@ -27,7 +27,7 @@
       "url": "https://vaich.ir/products/gemini",
       "checkout_url": "https://vaich.ir/checkout/gemini",
       "image_url": "https://vaich.ir/gemini-60d-icon.webp",
-      "description": "اشتراک رسمی ۶۰ روزه Google Gemini Advanced؛ دسترسی به پرچمدار غول‌آسای Google Gemini 4 Argon با خروجی ۱,۰۰۰,۰۰۰ توکن، لایه عامل‌محور انقلابی Project Astra (درک زنده ویدیوی دوربین با تاخیر زیر ۳۰۰ میلی‌ثانیه و حافظه فضایی)، مدل استدلال عمیق Gemini 3 Deep Think و پیوند کامل با Google Workspace."
+      "description": "اشتراک رسمی ۶۰ روزه Google AI Pro (Gemini Pro)؛ دسترسی به مدل پرچمدار Gemini 4 Argon و خانواده Flash، استدلال عمیق Deep Think، پیوند بومی با Google Workspace (Gmail، Docs، Drive، Vids)، ابزارهای NotebookLM و Canvas و ۵ ترابایت فضای ابری Google One با بیشترین صرفه برای تست و پروژه‌های کوتاه‌مدت."
     },
     {
       "id": "gemini-pro",
@@ -40,7 +40,7 @@
       "url": "https://vaich.ir/products/gemini-pro",
       "checkout_url": "https://vaich.ir/checkout/gemini-pro",
       "image_url": "https://vaich.ir/gemini-pro-18m-icon.webp",
-      "description": "اشتراک رسمی ۱۸ ماهه اقتصادی Google Gemini Advanced با بیش از ۹۰٪ تخفیف اقتصادی ویژه دانشجویان، تریدرها، برنامه‌نویسان و محققان؛ مجهز به Gemini 4 Argon، پروژه انقلابی Project Astra، مدل استدلال عمیق Deep Think و پنجره ۲ میلیون توکنی بدون دغدغه تمدید ماهانه و جهش ارزی."
+      "description": "اشتراک بلندمدت ۱۸ ماهه اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، محققان، تریدرها و برنامه‌نویسان؛ شامل دسترسی به مدل‌های Gemini 4 Argon و Flash، استدلال Deep Think، امکانات Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه."
     },
     {
       "id": "chatgpt-plus",
@@ -53,12 +53,12 @@
       "url": "https://vaich.ir/products/chatgpt-plus",
       "checkout_url": "https://vaich.ir/checkout/chatgpt-plus",
       "image_url": "https://vaich.ir/chatgpt-logo.svg",
-      "description": "اشتراک قانونی و ۱۰۰٪ اختصاصی ChatGPT Plus شرکت OpenAI؛ مجهز به پرچمدار مرزی هوش مصنوعی GPT-6 Astra (با هوش خودمختار رایانه‌ای، مرورگر وب و حل مسائل مهندسی ارشد)، مدل‌های تعادلی GPT-6 Sol و GPT-6 Luna، مدل‌های استدلال عمیق o1 و o3-mini، فضای کاری نوین Prism، بوم تعاملی Canvas، تولید ویدیوی Sora و حالت صوتی زنده Advanced Voice Mode."
+      "description": "اشتراک قانونی و اختصاصی ChatGPT Plus شرکت OpenAI (پلن رسمی ۲۰ دلاری)؛ مجهز به مدل‌های پرچمدار و جدید GPT-6.1 Sol و GPT-6 Sol، مدل سریع GPT-6 Luna، دسترسی تخصصی GPT-6 Astra در محیط‌های Codex و ChatGPT Work، بوم تعاملی Canvas، فضای کاری Prism، پژوهش عمیق Deep Research و حالت صوتی زنده Advanced Voice Mode."
     },
     {
       "id": "claude",
       "title": "Claude Pro",
-      "price": 7100000,
+      "price": 7800000,
       "original_price": null,
       "discount_percent": null,
       "duration": "۱ ماهه",
@@ -66,29 +66,29 @@
       "url": "https://vaich.ir/products/claude",
       "checkout_url": "https://vaich.ir/checkout/claude",
       "image_url": "https://vaich.ir/claude-icon.webp",
-      "description": "اشتراک رسمی و ۱۰۰٪ اختصاصی Claude Pro آنتروپیک؛ دسترسی به پیشروترین مدل توسعه نرم‌افزار جهان Claude Sonnet 5.5، مدل فوق‌سنگین استدلالی Claude Opus 5.5، رده پردازشی Claude Fable 5.1، مدل فوق‌سریع Claude Haiku 5.5، سیستم تفکر تطبیقی (Adaptive Thinking) و محیط کاری Artifacts 2.0."
+      "description": "اشتراک رسمی و اختصاصی Claude Pro آنتروپیک (پلن رسمی ۲۰ دلاری)؛ دسترسی به مدل سرآمد توسعه نرم‌افزار Claude Sonnet 5.5، مدل استدلال سنگین Claude Opus 5.5، مدل سریع Claude Haiku 5.5، پنجره متنی ۱ میلیون توکنی با خروجی تا ۱۲۸ هزار توکن، سیستم تفکر تطبیقی (Adaptive Thinking)، بوم Artifacts و ابزار Claude Code."
     }
   ],
   "articles": [
     {
       "slug": "flagship-ai-models-comparison",
-      "title": "راهنمای جامع هوش مصنوعی‌های ۲۰۲۶: مقایسه GPT-6، Claude Sonnet 5.5 و Gemini 4 Argon",
-      "excerpt": "بررسی و مقایسه جامع قابلیت‌های کلیدی، سرعت استدلال و هوش کاربردی سه پرچمدار هوش مصنوعی برای انتخاب بهترین اشتراک.",
+      "title": "مقایسه پرچمداران AI نوامبر ۲۰۲۶: ChatGPT Plus، Claude Pro و Google AI Pro",
+      "excerpt": "کدام اشتراک برای کدنویسی، تحقیق یا کار روزانه به‌صرفه‌تر است؟ مقایسه واقعی GPT-6.1 Sol، Claude 5.5 و Gemini 4 Argon.",
       "category": "هوش مصنوعی",
-      "read_time": "۱۸ دقیقه",
+      "read_time": "۱۴ دقیقه",
       "url": "https://vaich.ir/blog/flagship-ai-models-comparison",
       "cover_image": "https://vaich.ir/blog/ai-models-comparison.webp",
-      "published_at": "2026-11-05T12:00:00+03:30"
+      "published_at": "2026-11-12T10:00:00+03:30"
     },
     {
       "slug": "ai-free-vs-plus-comparison",
-      "title": "چرا نسخه‌های رایگان هوش مصنوعی کافی نیستند؟ مقایسه پلن‌های رایگان با ChatGPT Plus و Claude Pro",
-      "excerpt": "بررسی تفاوت‌های اساسی پلن‌های رایگان با اشتراک‌های Plus و Pro؛ از پایداری سرعت در ساعات شلوغی تا دسترسی به ابزارهای پیشرفته.",
+      "title": "تفاوت نسخه رایگان با ChatGPT Plus و Claude Pro در ۲۰۲۶",
+      "excerpt": "مقایسه عملی سقف مصرف، دسترسی به GPT-6.1 Sol و Claude 5.5، ابزارهای کدنویسی و ارزش خرید اشتراک قانونی.",
       "category": "هوش مصنوعی",
-      "read_time": "۱۲ دقیقه",
+      "read_time": "۱۱ دقیقه",
       "url": "https://vaich.ir/blog/ai-free-vs-plus-comparison",
       "cover_image": "https://vaich.ir/blog/copilot-vs-chatgpt.webp",
-      "published_at": "2026-11-05T12:00:00+03:30"
+      "published_at": "2026-11-11T12:00:00+03:30"
     },
     {
       "slug": "how-google-sheets-planner-transforms-habits-goals",
@@ -102,17 +102,17 @@
     },
     {
       "slug": "gemini-2-million-context-window-big-data-analysis",
-      "title": "رمزگشایی از پنجره زمینه دو میلیون توکنی جمینای و پروژه انقلابی Project Astra در سال ۲۰۲۶",
-      "excerpt": "بررسی توانایی پردازش اسناد حجیم و ویدیو در جمینای و کاربرد حافظه دو میلیون توکنی در تحلیل داده‌ها و پروژه‌های بزرگ.",
+      "title": "بررسی Google AI Pro (Gemini Pro) در ۲۰۲۶: Gemini 4 Argon و ۵ ترابایت فضا",
+      "excerpt": "آشنایی با امکانات Google AI Pro: مدل پرچمدار Gemini 4 Argon، ادغام با جیمیل و داکس، NotebookLM و ۵ ترابایت Google One.",
       "category": "هوش مصنوعی",
       "read_time": "۱۰ دقیقه",
       "url": "https://vaich.ir/blog/gemini-2-million-context-window-big-data-analysis",
       "cover_image": "https://vaich.ir/blog/ai-tools-productivity.webp",
-      "published_at": "2026-11-03T11:00:00+03:30"
+      "published_at": "2026-11-12T10:30:00+03:30"
     },
     {
       "slug": "defeat-procrastination-google-sheets-planner",
-      "title": "چگونه با پلنر دیجیتال گوگل‌شیت، اهمال‌کاری را برای همیشه شکست دهیم؟",
+      "title": "شکست اهمال‌کاری با پلنر دیجیتال گوگل‌شیت",
       "excerpt": "راهنمای کاربردی غلبه بر اهمال‌کاری و افزایش تمرکز روزانه با سیستم‌های رفتاری ساده و شفاف در گوگل‌شیت.",
       "category": "بهره‌وری فردی",
       "read_time": "۸ دقیقه",
@@ -122,7 +122,7 @@
     },
     {
       "slug": "best-study-planning-methods-digital-vs-paper",
-      "title": "بهترین روش برنامه‌ریزی درسی و کنکوری؛ چرا دفاتر کاغذی دیگر جواب نمی‌دهند؟",
+      "title": "برنامه‌ریزی درسی هوشمند؛ پلنر دیجیتال بهتر است یا دفتر کاغذی؟",
       "excerpt": "مقایسه روش‌های سنتی و دیجیتال برنامه‌ریزی درسی؛ روش‌های ثبت ساعات مطالعه، مرور فاصله‌دار و ارزیابی پیشرفت با نمودار.",
       "category": "آموزش و یادگیری",
       "read_time": "۹ دقیقه",
@@ -132,7 +132,7 @@
     },
     {
       "slug": "daily-motivational-habits-powerful-routine",
-      "title": "عادت‌های روزانه و ساختن روتین فردی قدرتمند؛ جایگزینی انضباط سیستمی به جای انگیزه لحظه‌ای",
+      "title": "ساخت روتین روزانه پایدار؛ جایگزینی سیستم به جای انگیزه",
       "excerpt": "اصول ساخت روتین‌های صبحگاهی و شبانگاهی ماندگار بر مبنای خرده‌عادت‌ها و جایگزینی انضباط سیستمی به جای انگیزه لحظه‌ای.",
       "category": "توسعه فردی",
       "read_time": "۶ دقیقه",
@@ -142,7 +142,7 @@
     },
     {
       "slug": "habit-tracking-time-management-guide",
-      "title": "راهنمای جامع ردیابی عادت‌ها (Habit Tracking) و مدیریت زمان در موبایل و لپ‌تاپ",
+      "title": "ردیابی عادت‌ها و مدیریت زمان در موبایل و لپ‌تاپ",
       "excerpt": "آموزش اولویت‌بندی کارها با ماتریس آیزنهاور و بلوک‌بندی زمانی، به همراه داشبورد خودکار ردیابی عادت‌ها در گوگل‌شیت.",
       "category": "مدیریت زمان",
       "read_time": "۱۱ دقیقه",
@@ -152,13 +152,23 @@
     },
     {
       "slug": "ai-tools-productivity-study-guide",
-      "title": "آموزش کاربردی استفاده از هوش مصنوعی برای افزایش سرعت کار، تولید محتوا و درس خواندن",
-      "excerpt": "آموزش ترفندهای کاربردی استفاده از هوش مصنوعی برای افزایش سرعت مطالعه، خلاصه‌سازی مقالات و انجام امور کاری.",
+      "title": "ترفندهای کاربردی هوش مصنوعی برای افزایش سرعت کار و مطالعه",
+      "excerpt": "روش‌های عملی استفاده از هوش مصنوعی برای خلاصه‌سازی مقالات، پرامپت‌نویسی حرفه‌ای و بالا بردن سرعت انجام پروژه‌ها.",
       "category": "هوش مصنوعی و آموزش",
       "read_time": "۹ دقیقه",
       "url": "https://vaich.ir/blog/ai-tools-productivity-study-guide",
       "cover_image": "https://vaich.ir/blog/ai-productivity-study.webp",
-      "published_at": "2026-10-25T13:00:00+03:30"
+      "published_at": "2026-11-11T13:00:00+03:30"
+    },
+    {
+      "slug": "prevent-chatgpt-claude-account-ban",
+      "title": "چطور از بن شدن اکانت ChatGPT و Claude جلوگیری کنیم؟ (۷ اصل طلایی)",
+      "excerpt": "راهنمای عملی انتخاب IP ثابت، تنظیمات ایمن مرورگر و جلوگیری از مسدود یا محدود شدن اکانت‌های هوش مصنوعی در ایران.",
+      "category": "امنیت و نگهداری اکانت",
+      "read_time": "۷ دقیقه",
+      "url": "https://vaich.ir/blog/prevent-chatgpt-claude-account-ban",
+      "cover_image": "https://vaich.ir/blog/prevent-ai-ban.webp",
+      "published_at": "2026-11-12T11:00:00+03:30"
     }
   ]
 }

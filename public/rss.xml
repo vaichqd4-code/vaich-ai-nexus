@@ -5,7 +5,7 @@
     <link>https://vaich.ir/blog</link>
     <description>راهنمای جامع هوش مصنوعی، مقایسه تخصصی مدل‌ها و ابزارهای بهره‌وری فردی در فروشگاه VAICH</description>
     <language>fa-IR</language>
-    <lastBuildDate>Mon, 09 Nov 2026 14:50:59 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 12 Nov 2026 15:00:00 GMT</lastBuildDate>
     <atom:link href="https://vaich.ir/rss.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://vaich.ir/vaich-logo.png</url>
@@ -13,21 +13,30 @@
       <link>https://vaich.ir/blog</link>
     </image>
     <item>
-      <title><![CDATA[راهنمای جامع هوش مصنوعی‌های ۲۰۲۶: مقایسه GPT-6، Claude Sonnet 5.5 و Gemini 4 Argon]]></title>
+      <title><![CDATA[مقایسه پرچمداران AI نوامبر ۲۰۲۶: ChatGPT Plus، Claude Pro و Google AI Pro]]></title>
       <link>https://vaich.ir/blog/flagship-ai-models-comparison</link>
       <guid isPermaLink="true">https://vaich.ir/blog/flagship-ai-models-comparison</guid>
-      <pubDate>Thu, 05 Nov 2026 08:30:00 GMT</pubDate>
+      <pubDate>Thu, 12 Nov 2026 06:30:00 GMT</pubDate>
       <category><![CDATA[هوش مصنوعی]]></category>
-      <description><![CDATA[بررسی و مقایسه جامع قابلیت‌های کلیدی، سرعت استدلال و هوش کاربردی سه پرچمدار هوش مصنوعی برای انتخاب بهترین اشتراک.]]></description>
+      <description><![CDATA[کدام اشتراک برای کدنویسی، تحقیق یا کار روزانه به‌صرفه‌تر است؟ مقایسه واقعی GPT-6.1 Sol، Claude 5.5 و Gemini 4 Argon.]]></description>
       <enclosure url="https://vaich.ir/blog/ai-models-comparison.webp" length="0" type="image/webp" />
     </item>
     <item>
-      <title><![CDATA[چرا نسخه‌های رایگان هوش مصنوعی کافی نیستند؟ مقایسه پلن‌های رایگان با ChatGPT Plus و Claude Pro]]></title>
+      <title><![CDATA[چطور از بن شدن اکانت ChatGPT و Claude جلوگیری کنیم؟ (۷ اصل طلایی)]]></title>
+      <link>https://vaich.ir/blog/prevent-chatgpt-claude-account-ban</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/prevent-chatgpt-claude-account-ban</guid>
+      <pubDate>Thu, 12 Nov 2026 07:30:00 GMT</pubDate>
+      <category><![CDATA[امنیت و نگهداری اکانت]]></category>
+      <description><![CDATA[راهنمای عملی انتخاب IP ثابت، تنظیمات ایمن مرورگر و جلوگیری از مسدود یا محدود شدن اکانت‌های هوش مصنوعی در ایران.]]></description>
+      <enclosure url="https://vaich.ir/blog/prevent-ai-ban.webp" length="0" type="image/webp" />
+    </item>
+    <item>
+      <title><![CDATA[تفاوت نسخه رایگان با ChatGPT Plus و Claude Pro در ۲۰۲۶]]></title>
       <link>https://vaich.ir/blog/ai-free-vs-plus-comparison</link>
       <guid isPermaLink="true">https://vaich.ir/blog/ai-free-vs-plus-comparison</guid>
-      <pubDate>Thu, 05 Nov 2026 08:30:00 GMT</pubDate>
+      <pubDate>Wed, 11 Nov 2026 08:30:00 GMT</pubDate>
       <category><![CDATA[هوش مصنوعی]]></category>
-      <description><![CDATA[بررسی تفاوت‌های اساسی پلن‌های رایگان با اشتراک‌های Plus و Pro؛ از پایداری سرعت در ساعات شلوغی تا دسترسی به ابزارهای پیشرفته.]]></description>
+      <description><![CDATA[مقایسه عملی سقف مصرف، دسترسی به GPT-6.1 Sol و Claude 5.5، ابزارهای کدنویسی و ارزش خرید اشتراک قانونی.]]></description>
       <enclosure url="https://vaich.ir/blog/copilot-vs-chatgpt.webp" length="0" type="image/webp" />
     </item>
     <item>
@@ -40,12 +49,12 @@
       <enclosure url="https://vaich.ir/blog/google-sheets-planner.webp" length="0" type="image/webp" />
     </item>
     <item>
-      <title><![CDATA[رمزگشایی از پنجره زمینه دو میلیون توکنی جمینای و پروژه انقلابی Project Astra در سال ۲۰۲۶]]></title>
+      <title><![CDATA[بررسی Google AI Pro (Gemini Pro) در ۲۰۲۶: Gemini 4 Argon و ۵ ترابایت فضا]]></title>
       <link>https://vaich.ir/blog/gemini-2-million-context-window-big-data-analysis</link>
       <guid isPermaLink="true">https://vaich.ir/blog/gemini-2-million-context-window-big-data-analysis</guid>
-      <pubDate>Tue, 03 Nov 2026 07:30:00 GMT</pubDate>
+      <pubDate>Thu, 12 Nov 2026 07:00:00 GMT</pubDate>
       <category><![CDATA[هوش مصنوعی]]></category>
-      <description><![CDATA[بررسی توانایی پردازش اسناد حجیم و ویدیو در جمینای و کاربرد حافظه دو میلیون توکنی در تحلیل داده‌ها و پروژه‌های بزرگ.]]></description>
+      <description><![CDATA[آشنایی با امکانات Google AI Pro: مدل پرچمدار Gemini 4 Argon، ادغام با جیمیل و داکس، NotebookLM و ۵ ترابایت Google One.]]></description>
       <enclosure url="https://vaich.ir/blog/ai-tools-productivity.webp" length="0" type="image/webp" />
     </item>
     <item>
@@ -58,7 +67,7 @@
       <enclosure url="https://vaich.ir/blog/planner-procrastination.webp" length="0" type="image/webp" />
     </item>
     <item>
-      <title><![CDATA[بهترین روش برنامه‌ریزی درسی و کنکوری؛ چرا دفاتر کاغذی دیگر جواب نمی‌دهند؟]]></title>
+      <title><![CDATA[برنامه‌ریزی درسی هوشمند؛ پلنر دیجیتال بهتر است یا دفتر کاغذی؟]]></title>
       <link>https://vaich.ir/blog/best-study-planning-methods-digital-vs-paper</link>
       <guid isPermaLink="true">https://vaich.ir/blog/best-study-planning-methods-digital-vs-paper</guid>
       <pubDate>Sat, 31 Oct 2026 06:00:00 GMT</pubDate>
@@ -67,7 +76,7 @@
       <enclosure url="https://vaich.ir/blog/study-planning.webp" length="0" type="image/webp" />
     </item>
     <item>
-      <title><![CDATA[عادت‌های روزانه و ساختن روتین فردی قدرتمند؛ جایگزینی انضباط سیستمی به جای انگیزه لحظه‌ای]]></title>
+      <title><![CDATA[ساخت روتین روزانه پایدار؛ جایگزینی سیستم به جای انگیزه]]></title>
       <link>https://vaich.ir/blog/daily-motivational-habits-powerful-routine</link>
       <guid isPermaLink="true">https://vaich.ir/blog/daily-motivational-habits-powerful-routine</guid>
       <pubDate>Thu, 29 Oct 2026 12:30:00 GMT</pubDate>
@@ -76,7 +85,7 @@
       <enclosure url="https://vaich.ir/blog/daily-habits.webp" length="0" type="image/webp" />
     </item>
     <item>
-      <title><![CDATA[راهنمای جامع ردیابی عادت‌ها (Habit Tracking) و مدیریت زمان در موبایل و لپ‌تاپ]]></title>
+      <title><![CDATA[ردیابی عادت‌ها و مدیریت زمان در موبایل و لپ‌تاپ]]></title>
       <link>https://vaich.ir/blog/habit-tracking-time-management-guide</link>
       <guid isPermaLink="true">https://vaich.ir/blog/habit-tracking-time-management-guide</guid>
       <pubDate>Tue, 27 Oct 2026 14:30:00 GMT</pubDate>
@@ -85,12 +94,12 @@
       <enclosure url="https://vaich.ir/blog/habit-tracking.webp" length="0" type="image/webp" />
     </item>
     <item>
-      <title><![CDATA[آموزش کاربردی استفاده از هوش مصنوعی برای افزایش سرعت کار، تولید محتوا و درس خواندن]]></title>
+      <title><![CDATA[ترفندهای کاربردی هوش مصنوعی برای افزایش سرعت کار و مطالعه]]></title>
       <link>https://vaich.ir/blog/ai-tools-productivity-study-guide</link>
       <guid isPermaLink="true">https://vaich.ir/blog/ai-tools-productivity-study-guide</guid>
-      <pubDate>Sun, 25 Oct 2026 09:30:00 GMT</pubDate>
+      <pubDate>Wed, 11 Nov 2026 09:30:00 GMT</pubDate>
       <category><![CDATA[هوش مصنوعی و آموزش]]></category>
-      <description><![CDATA[آموزش ترفندهای کاربردی استفاده از هوش مصنوعی برای افزایش سرعت مطالعه، خلاصه‌سازی مقالات و انجام امور کاری.]]></description>
+      <description><![CDATA[روش‌های عملی استفاده از هوش مصنوعی برای خلاصه‌سازی مقالات، پرامپت‌نویسی حرفه‌ای و بالا بردن سرعت انجام پروژه‌ها.]]></description>
       <enclosure url="https://vaich.ir/blog/ai-productivity-study.webp" length="0" type="image/webp" />
     </item>
   </channel>

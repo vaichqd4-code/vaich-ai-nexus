@@ -20,7 +20,7 @@
     <availability>in stock</availability>
     <page_url>https://vaich.ir/products/gemini</page_url>
     <image_url>https://vaich.ir/gemini-60d-icon.webp</image_url>
-    <description><![CDATA[اشتراک رسمی ۶۰ روزه Google Gemini Advanced؛ دسترسی به پرچمدار غول‌آسای Google Gemini 4 Argon با خروجی ۱,۰۰۰,۰۰۰ توکن، لایه عامل‌محور انقلابی Project Astra (درک زنده ویدیوی دوربین با تاخیر زیر ۳۰۰ میلی‌ثانیه و حافظه فضایی)، مدل استدلال عمیق Gemini 3 Deep Think و پیوند کامل با Google Workspace.]]></description>
+    <description><![CDATA[اشتراک رسمی ۶۰ روزه Google AI Pro (Gemini Pro)؛ دسترسی به مدل پرچمدار Gemini 4 Argon و خانواده Flash، استدلال عمیق Deep Think، پیوند بومی با Google Workspace (Gmail، Docs، Drive، Vids)، ابزارهای NotebookLM و Canvas و ۵ ترابایت فضای ابری Google One با بیشترین صرفه برای تست و پروژه‌های کوتاه‌مدت.]]></description>
   </product>
   <product>
     <id>gemini-pro</id>
@@ -31,7 +31,7 @@
     <availability>out of stock</availability>
     <page_url>https://vaich.ir/products/gemini-pro</page_url>
     <image_url>https://vaich.ir/gemini-pro-18m-icon.webp</image_url>
-    <description><![CDATA[اشتراک رسمی ۱۸ ماهه اقتصادی Google Gemini Advanced با بیش از ۹۰٪ تخفیف اقتصادی ویژه دانشجویان، تریدرها، برنامه‌نویسان و محققان؛ مجهز به Gemini 4 Argon، پروژه انقلابی Project Astra، مدل استدلال عمیق Deep Think و پنجره ۲ میلیون توکنی بدون دغدغه تمدید ماهانه و جهش ارزی.]]></description>
+    <description><![CDATA[اشتراک بلندمدت ۱۸ ماهه اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، محققان، تریدرها و برنامه‌نویسان؛ شامل دسترسی به مدل‌های Gemini 4 Argon و Flash، استدلال Deep Think، امکانات Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه.]]></description>
   </product>
   <product>
     <id>chatgpt-plus</id>
@@ -42,17 +42,17 @@
     <availability>in stock</availability>
     <page_url>https://vaich.ir/products/chatgpt-plus</page_url>
     <image_url>https://vaich.ir/chatgpt-logo.svg</image_url>
-    <description><![CDATA[اشتراک قانونی و ۱۰۰٪ اختصاصی ChatGPT Plus شرکت OpenAI؛ مجهز به پرچمدار مرزی هوش مصنوعی GPT-6 Astra (با هوش خودمختار رایانه‌ای، مرورگر وب و حل مسائل مهندسی ارشد)، مدل‌های تعادلی GPT-6 Sol و GPT-6 Luna، مدل‌های استدلال عمیق o1 و o3-mini، فضای کاری نوین Prism، بوم تعاملی Canvas، تولید ویدیوی Sora و حالت صوتی زنده Advanced Voice Mode.]]></description>
+    <description><![CDATA[اشتراک قانونی و اختصاصی ChatGPT Plus شرکت OpenAI (پلن رسمی ۲۰ دلاری)؛ مجهز به مدل‌های پرچمدار و جدید GPT-6.1 Sol و GPT-6 Sol، مدل سریع GPT-6 Luna، دسترسی تخصصی GPT-6 Astra در محیط‌های Codex و ChatGPT Work، بوم تعاملی Canvas، فضای کاری Prism، پژوهش عمیق Deep Research و حالت صوتی زنده Advanced Voice Mode.]]></description>
   </product>
   <product>
     <id>claude</id>
     <title><![CDATA[Claude Pro]]></title>
-    <price>7100000</price>
-    <old_price>7100000</old_price>
+    <price>7800000</price>
+    <old_price>7800000</old_price>
     <currency>IRR</currency>
     <availability>in stock</availability>
     <page_url>https://vaich.ir/products/claude</page_url>
     <image_url>https://vaich.ir/claude-icon.webp</image_url>
-    <description><![CDATA[اشتراک رسمی و ۱۰۰٪ اختصاصی Claude Pro آنتروپیک؛ دسترسی به پیشروترین مدل توسعه نرم‌افزار جهان Claude Sonnet 5.5، مدل فوق‌سنگین استدلالی Claude Opus 5.5، رده پردازشی Claude Fable 5.1، مدل فوق‌سریع Claude Haiku 5.5، سیستم تفکر تطبیقی (Adaptive Thinking) و محیط کاری Artifacts 2.0.]]></description>
+    <description><![CDATA[اشتراک رسمی و اختصاصی Claude Pro آنتروپیک (پلن رسمی ۲۰ دلاری)؛ دسترسی به مدل سرآمد توسعه نرم‌افزار Claude Sonnet 5.5، مدل استدلال سنگین Claude Opus 5.5، مدل سریع Claude Haiku 5.5، پنجره متنی ۱ میلیون توکنی با خروجی تا ۱۲۸ هزار توکن، سیستم تفکر تطبیقی (Adaptive Thinking)، بوم Artifacts و ابزار Claude Code.]]></description>
   </product>
 </products>

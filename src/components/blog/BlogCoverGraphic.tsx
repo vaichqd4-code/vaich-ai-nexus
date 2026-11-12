@@ -222,7 +222,7 @@ export function BlogCoverGraphic({
 
           <div className="relative z-10 flex items-center justify-between text-[11px] text-neutral-400 border-t border-purple-500/20 pt-2 font-mono">
             <span>GPT • CLAUDE • GEMINI</span>
-            <span className="text-purple-400 font-bold">2024–2025 GUIDE</span>
+            <span className="text-purple-400 font-bold">2026 GUIDE</span>
           </div>
         </div>
       );
@@ -396,8 +396,57 @@ export function BlogCoverGraphic({
           </div>
 
           <div className="relative z-10 flex items-center justify-between text-[11px] text-neutral-400 border-t border-cyan-500/20 pt-2 font-mono">
-            <span>GEMINI 4 ARGON MULTIMODAL</span>
-            <span className="text-cyan-400 font-bold">2,000,000 TOKENS</span>
+            <span>GOOGLE AI PRO • ARGON</span>
+            <span className="text-cyan-400 font-bold">5TB &amp; WORKSPACE</span>
+          </div>
+        </div>
+      );
+
+    case "prevent-chatgpt-claude-account-ban":
+      return (
+        <div
+          className={`relative overflow-hidden bg-gradient-to-br from-neutral-900 via-emerald-950/35 to-neutral-950 flex flex-col justify-between p-5 border border-emerald-500/25 select-none ${className}`}
+        >
+          <div
+            className="absolute inset-0 opacity-[0.07]"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, #10b981 1px, transparent 1px), linear-gradient(to bottom, #10b981 1px, transparent 1px)",
+              backgroundSize: "20px 20px",
+            }}
+          />
+          <div className="absolute -top-12 -right-12 w-36 h-36 bg-emerald-500/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-cyan-500/15 rounded-full blur-2xl" />
+
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-wider uppercase text-emerald-400/90 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+              ACCOUNT SAFETY
+            </span>
+            <span className="text-[9px] font-mono text-emerald-300/80">SAFE IP GUIDE</span>
+          </div>
+
+          <div className="relative z-10 my-auto flex items-center justify-center py-2">
+            <svg viewBox="0 0 160 100" className="w-36 h-24" fill="none">
+              <path
+                d="M80 18L112 30V52C112 70 98 83 80 88C62 83 48 70 48 52V30L80 18Z"
+                fill="#064e3b"
+                fillOpacity="0.45"
+                stroke="#10b981"
+                strokeWidth="2"
+              />
+              <path
+                d="M68 53L76 61L94 43"
+                stroke="#34d399"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+
+          <div className="relative z-10 flex items-center justify-between text-[11px] text-neutral-400 border-t border-emerald-500/20 pt-2 font-mono">
+            <span>DEDICATED IP &amp; CARE</span>
+            <span className="text-emerald-400 font-bold">BAN PREVENTION</span>
           </div>
         </div>
       );

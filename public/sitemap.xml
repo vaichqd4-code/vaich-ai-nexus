@@ -139,9 +139,15 @@
   </url>
   <url>
     <loc>https://vaich.ir/blog/ai-tools-productivity-study-guide</loc>
-    <lastmod>2026-11-09</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vaich.ir/blog/prevent-chatgpt-claude-account-ban</loc>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
 
   <!-- Informational Pages -->

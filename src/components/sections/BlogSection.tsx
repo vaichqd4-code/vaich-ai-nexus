@@ -105,8 +105,8 @@ export function BlogSection() {
 
             {/* Card Content */}
             <div className="flex flex-1 flex-col p-4 sm:p-5 justify-between gap-3">
-              <div className="space-y-2">
-                <h3 className="text-sm sm:text-[15px] font-bold leading-snug text-foreground">
+              <div className="space-y-1.5">
+                <h3 className="text-sm sm:text-[15px] font-extrabold leading-snug text-foreground">
                   <Link
                     to="/blog/$slug"
                     params={{ slug: post.slug }}
@@ -115,20 +115,20 @@ export function BlogSection() {
                     {post.title}
                   </Link>
                 </h3>
-                <p className="text-xs text-muted-foreground/90 line-clamp-2 leading-relaxed font-normal">
+                <p className="text-xs text-muted-foreground/85 line-clamp-1 leading-relaxed font-normal">
                   {post.excerpt}
                 </p>
               </div>
 
               {/* Card Meta & Action Footer */}
-              <div className="pt-3 border-t border-border/50 flex items-center justify-between text-xs" aria-hidden="true">
+              <div className="pt-2.5 border-t border-border/50 flex items-center justify-between text-xs" aria-hidden="true">
                 <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
                   <Clock className="h-3.5 w-3.5 text-primary/70" />
                   <span>{post.readTime}</span>
                 </div>
 
                 <span className="inline-flex items-center gap-1 text-xs font-bold text-primary group-hover:translate-x-[-3px] transition-transform">
-                  <span>مطالعه مقاله</span>
+                  <span>خواندن</span>
                   <ArrowLeft className="h-3.5 w-3.5" />
                 </span>
               </div>

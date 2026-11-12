@@ -12,21 +12,21 @@ function getProductCardSubtitle(p: Product, isLifetime: boolean): string {
     return "نرم‌افزار هوشمند در گوگل‌شیت • ردیاب عادات و اهداف بدون اشتراک";
   }
   if (p.slug === "chatgpt-plus") {
-    return "دسترسی به GPT-4o، استدلال o1، بوم Canvas و دستیار صوتی";
+    return "دسترسی به GPT-6.1 Sol و GPT-6 Sol، استدلال عمیق، بوم Canvas و دستیار صوتی";
   }
   if (p.slug === "claude") {
-    return "دسترسی به Sonnet 3.5، کدنویسی، تحلیل اسناد و Artifacts";
+    return "دسترسی به Claude Sonnet 5.5 و Opus 5.5، کدنویسی، Artifacts و پنجره میلیونی";
   }
   if (p.slug === "gemini") {
-    return "مدل ادونسد با پنجره متنی میلیونی و اتصال به Google Workspace";
+    return "اکانت Google AI Pro (مدل Gemini 4 Argon) با ۵ ترابایت فضا و Workspace";
   }
   if (p.slug === "gemini-pro") {
-    return "دسترسی بلندمدت اقتصادی به جمینای ادونسد و استدلال عمیق";
+    return "دسترسی بلندمدت Google AI Pro با Gemini 4 Argon و ۵ ترابایت فضای گوگل‌وان";
   }
-  if (p.features && p.features.length > 0) {
+  if (p.features && p.features[0]) {
     return p.features[0].replace(/^[\p{Emoji}\s\u200d]+/u, "").trim();
   }
-  return isLifetime ? "دسترسی دائمی و مادام‌العمر • بدون هزینه ماهانه" : "تحویل فوری با تضمین ۱۰۰٪ سلامت اکانت";
+  return isLifetime ? "دسترسی دائمی و مادام‌العمر • بدون هزینه ماهانه" : "تحویل فوری با ضمانت فعال‌سازی قانونی و پشتیبانی راه‌اندازی";
 }
 
 export function ProductCard({

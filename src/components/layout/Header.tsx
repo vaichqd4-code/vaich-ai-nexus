@@ -392,18 +392,18 @@ export function Header() {
             )}
           </div>
 
-          {/* دکمه آیکونی و فشرده پشتیبانی آنلاین ۲۴ ساعته */}
+          {/* دکمه آیکونی پشتیبانی آنلاین ۲۴ ساعته (در موبایل داخل منوی کشویی است) */}
           <button
             type="button"
             onClick={handleOpenChat}
             title="پشتیبانی آنلاین ۲۴ ساعته"
             aria-label="پشتیبانی آنلاین ۲۴ ساعته"
-            className="group grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary hover:text-foreground active:scale-95 cursor-pointer"
+            className="hidden sm:grid group h-11 w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary hover:text-foreground active:scale-95 cursor-pointer"
           >
-            <Headphones className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-200 group-hover:scale-105" />
+            <Headphones className="h-5 w-5 transition-transform duration-200 group-hover:scale-105" />
           </button>
 
-          {/* Theme Toggle */}
+          {/* Theme Toggle (در موبایل داخل منوی کشویی است) */}
           <button
             type="button"
             onClick={toggleTheme}
@@ -417,7 +417,7 @@ export function Header() {
                 ? "حالت روشن"
                 : "حالت تاریک"
             }
-            className="grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary active:scale-95"
+            className="hidden sm:grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary active:scale-95"
           >
             {theme === "dark" ? (
               <svg
@@ -471,7 +471,7 @@ export function Header() {
             onClick={(e) => { e.preventDefault(); setOpen((v) => !v); }}
             aria-expanded={open}
             aria-label="باز و بسته کردن منو"
-            className="grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary active:scale-95 lg:hidden"
+            className="grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/25 transition-all duration-200 hover:opacity-90 active:scale-95 lg:hidden cursor-pointer"
           >
             <svg
               viewBox="0 0 24 24"

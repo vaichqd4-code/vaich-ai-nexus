@@ -63,7 +63,7 @@ export const Route = createFileRoute("/products/$slug")({
       ? (isPlanner
           ? `خرید آنلاین ${product.name} در گوگل شیت با ردیاب عادات ماهانه، نمودارهای تحلیلی، نسخه‌های دوبعدی و سه‌بعدی و تحویل آنی بدون نیاز به اشتراک ماهانه.`
           : `خرید آنلاین و دسترسی دائمی ${product.name} با تحویل فوری، گارانتی اصالت فایل‌ها و بدون نیاز به تمدید ماهانه در وایچ.`)
-      : `خرید آنلاین و قانونی اشتراک ${product.name} با تحویل سریع، پشتیبانی اختصاصی و گارانتی سلامت اکانت در سراسر ایران از فروشگاه وایچ.`;
+      : `خرید آنلاین و قانونی اشتراک ${product.name} با تحویل سریع، ضمانت فعال‌سازی قانونی و پشتیبانی تخصصی راه‌اندازی در فروشگاه وایچ.`;
     const canonicalUrl = `https://vaich.ir/products/${product.slug}`;
 
     const breadcrumbLd = {
@@ -374,15 +374,15 @@ function ProductDetail() {
               <div className="mt-6 flex flex-wrap gap-2 text-xs">
                 <div className="flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/50 px-3 py-1.5 text-muted-foreground">
                   <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                  <span>{isLifetime ? "دسترسی دائمی بدون اشتراک ماهانه" : "فعال‌سازی ۱۰۰٪ قانونی و اختصاصی"}</span>
+                  <span>{isLifetime ? "دسترسی دائمی بدون اشتراک ماهانه" : "فعال‌سازی قانونی و اختصاصی"}</span>
                 </div>
                 <div className="flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/50 px-3 py-1.5 text-muted-foreground">
                   <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                  <span>{isPlanner ? "تحویل آنی فایل در گوگل درایو" : "تحویل سریع و تضمین سلامت اکانت"}</span>
+                  <span>{isPlanner ? "تحویل آنی فایل در گوگل درایو" : "تحویل سریع و ضمانت فعال‌سازی"}</span>
                 </div>
                 <div className="flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/50 px-3 py-1.5 text-muted-foreground">
                   <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                  <span>پشتیبانی اختصاصی تا آخرین روز</span>
+                  <span>{isLifetime ? "پشتیبانی اختصاصی و راهنمای کامل" : "پشتیبانی راه‌اندازی و نکات استفاده ایمن"}</span>
                 </div>
               </div>
             </div>
@@ -469,7 +469,7 @@ function ProductDetail() {
                   <>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-500 font-bold">✓</span>
-                      <span>فعال‌سازی ۱۰۰٪ قانونی با گارانتی سلامت اکانت</span>
+                      <span>فعال‌سازی قانونی با ضمانت تحویل سالم اولیه</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-500 font-bold">✓</span>
@@ -477,7 +477,7 @@ function ProductDetail() {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-500 font-bold">✓</span>
-                      <span>پشتیبانی اختصاصی در تمام طول دوره اشتراک</span>
+                      <span>پشتیبانی و راهنمای استفاده ایمن در طول دوره</span>
                     </div>
                   </>
                 )}
