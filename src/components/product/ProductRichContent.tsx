@@ -420,6 +420,23 @@ function ChatGPTDetailContent({
               </p>
             </div>
           </div>
+
+          {product.purchaseInfo && product.purchaseInfo.length > 0 && (
+            <div className="mt-4 rounded-2xl border border-border/80 bg-secondary/10 p-4">
+              <h4 className="text-xs font-bold text-foreground mb-2 flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                <span>مراحل و قوانین تحویل:</span>
+              </h4>
+              <ul className="space-y-2">
+                {product.purchaseInfo.map((info, idx) => (
+                  <li key={idx} className="flex items-start gap-2 text-xs leading-6 text-muted-foreground">
+                    <span className="mt-2 h-1 w-1 rounded-full bg-primary/70 shrink-0" />
+                    <span>{info}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       )}
 

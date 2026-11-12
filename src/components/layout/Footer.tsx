@@ -16,14 +16,14 @@ const navigationColumns = [
       { to: "/products/vaich-life-planner", label: "خرید پلنر دیجیتال هوشمند" },
       { to: "/products/gemini-pro", label: "خرید اشتراک Gemini Pro ۱۸ ماهه" },
       { to: "/products/gemini", label: "خرید اشتراک Gemini Pro ۶۰ روزه" },
-      { to: "/products/اشتراک chatgpt plus شخصی", label: "خرید اکانت قانونی ChatGPT Plus" },
+      { to: "/products/chatgpt-plus", label: "خرید اکانت قانونی ChatGPT Plus" },
       { to: "/products/claude", label: "خرید اکانت قانونی Claude Pro" },
     ],
   },
   {
     title: "دسترسی سریع و آموزش",
     links: [
-      { to: "/#blog", label: "مجله و مقالات آموزشی" },
+      { to: "/blog", label: "مجله و مقالات آموزشی" },
       { to: "/why", label: "راهنمای خرید و چرا VAICH" },
       { to: "/faq", label: "سوالات متداول مشتریان" },
       { to: "/support", label: "پشتیبانی آنلاین و مشاوره" },
@@ -41,13 +41,17 @@ const navigationColumns = [
 
 function getDynamicShamsiYear(): string {
   try {
-    return new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+    const parts = new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
       year: "numeric",
-    }).format(new Date());
+      timeZone: "Asia/Tehran",
+    }).formatToParts(new Date());
+    const yearPart = parts.find((p) => p.type === "year")?.value;
+    if (yearPart) return yearPart;
   } catch {
-    const gYear = new Date().getFullYear();
-    return toPersianDigits(gYear - 621);
+    // Fallback below
   }
+  const gYear = new Date().getFullYear();
+  return toPersianDigits(gYear - 621);
 }
 
 export function Footer() {

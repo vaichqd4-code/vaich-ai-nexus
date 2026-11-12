@@ -245,19 +245,12 @@ export function Header() {
             </li>
 
             <li>
-              <a
-                href="/#blog"
-                onClick={(e) => {
-                  const el = document.getElementById("blog");
-                  if (el) {
-                    e.preventDefault();
-                    el.scrollIntoView({ behavior: "smooth" });
-                  }
-                }}
+              <Link
+                to="/blog"
                 className="rounded-full px-3.5 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground font-medium"
               >
                 مجله و وبلاگ
-              </a>
+              </Link>
             </li>
 
             <li>

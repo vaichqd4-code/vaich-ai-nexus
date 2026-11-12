@@ -22,7 +22,7 @@ export function Logo({
       className={cn("group flex items-center gap-2 shrink-0 select-none", className)}
     >
       <img
-        src="/vaich-logo-sm.png?v=4"
+        src="/vaich-logo-sm.webp"
         alt="لوگوی VAICH"
         width={size}
         height={size}

@@ -1,13 +1,13 @@
 import { cn } from "@/lib/utils";
 
 export const PRESET_LOGOS: Record<string, string> = {
-  gemini: "/file_000000007ea4822f9eac5c00be6be9eb.png?v=sq2",
-  "gemini-pro": "/file_00000000377481f6b667af886cd18fb6.png?v=sq2",
+  gemini: "/gemini-60d-icon.webp",
+  "gemini-pro": "/gemini-pro-18m-icon.webp",
   chatgpt: "/chatgpt-logo.svg",
   "chatgpt-plus": "/chatgpt-logo.svg",
   "اشتراک chatgpt plus شخصی": "/chatgpt-logo.svg",
-  claude: "/Claude-.webp?v=sq1",
-  "claude-pro": "/Claude-.webp?v=sq1",
+  claude: "/claude-icon.webp",
+  "claude-pro": "/claude-icon.webp",
   copilot: "/microsoft-copilot-logo.svg",
   "microsoft-copilot-pro": "/microsoft-copilot-logo.svg",
 };
@@ -15,10 +15,10 @@ export const PRESET_LOGOS: Record<string, string> = {
 export function getProductLogo(slug: string, iconUrl?: string): string | undefined {
   if (iconUrl && iconUrl.trim().length > 0) {
     const raw = iconUrl.trim();
-    if (raw.includes("Claude-") || raw.toLowerCase().includes("claude")) return "/Claude-.webp?v=sq1";
+    if (raw.includes("Claude-") || raw.includes("claude-icon") || raw.toLowerCase().includes("claude")) return "/claude-icon.webp";
     if (raw.toLowerCase().includes("copilot")) return "/microsoft-copilot-logo.svg";
-    if (raw.includes("377481f6") || raw.includes("gemini-pro")) return "/file_00000000377481f6b667af886cd18fb6.png?v=sq2";
-    if (raw.includes("7ea4822f") || raw.includes("gemini")) return "/file_000000007ea4822f9eac5c00be6be9eb.png?v=sq2";
+    if (raw.includes("377481f6") || raw.includes("gemini-pro-18m-icon") || raw.includes("gemini-pro")) return "/gemini-pro-18m-icon.webp";
+    if (raw.includes("7ea4822f") || raw.includes("gemini-60d-icon") || raw.includes("gemini")) return "/gemini-60d-icon.webp";
     return raw;
   }
   if (!slug) return undefined;

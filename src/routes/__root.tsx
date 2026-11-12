@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -16,20 +16,60 @@ import { Footer } from "@/components/layout/Footer";
 import { AiChatDrawer } from "@/components/chat/AiChatDrawer";
 
 function NotFoundComponent() {
+  const router = useRouter();
+  const [countdown, setCountdown] = useState(5);
+
+  useEffect(() => {
+    document.title = "صفحه پیدا نشد (۴۰۴) | VAICH";
+    let meta = document.querySelector('meta[name="robots"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "robots");
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", "noindex, nofollow");
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          router.navigate({ to: "/" });
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [router]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="gradient-text text-7xl font-extrabold">۴۰۴</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">صفحه پیدا نشد</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          صفحه‌ای که دنبال آن هستید وجود ندارد یا جابه‌جا شده است.
-        </p>
-        <div className="mt-6">
+    <div className="flex min-h-[70vh] items-center justify-center bg-background px-4 py-12">
+      <div className="max-w-md w-full text-center space-y-5">
+        <h1 className="gradient-text text-8xl font-black">۴۰۴</h1>
+        <div className="space-y-1.5">
+          <h2 className="text-xl font-bold text-foreground">صفحه مورد نظر پیدا نشد</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground">
+            صفحه‌ای که دنبال آن هستید وجود ندارد یا جابه‌جا شده است.
+          </p>
+        </div>
+        <div className="p-3 rounded-2xl border border-border/70 bg-secondary/40 text-xs text-muted-foreground">
+          <span>انتقال خودکار به صفحه اصلی تا </span>
+          <span className="font-bold text-primary font-mono text-sm px-1">{countdown}</span>
+          <span> ثانیه دیگر...</span>
+        </div>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-2">
           <Link
             to="/"
-            className="neon-gradient inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold text-primary-foreground"
+            className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl bg-primary px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md hover:bg-primary/90 transition-all cursor-pointer"
           >
             بازگشت به خانه
+          </Link>
+          <Link
+            to="/products"
+            className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl border border-border/80 bg-card px-5 py-2.5 text-xs sm:text-sm font-bold text-foreground hover:bg-secondary transition-all cursor-pointer"
+          >
+            مشاهده محصولات
           </Link>
         </div>
       </div>
@@ -116,7 +156,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         fetchPriority: "high",
       },
       { rel: "stylesheet", href: appCss },
-      { rel: "canonical", href: "https://vaich.ir" },
+      {
+        rel: "alternate",
+        type: "application/rss+xml",
+        title: "مجله تخصصی VAICH",
+        href: "https://vaich.ir/rss.xml",
+      },
       { rel: "icon", type: "image/png", sizes: "192x192", href: "/favicon-192x192.png?v=5" },
       { rel: "icon", type: "image/png", sizes: "96x96", href: "/favicon-96x96.png?v=5" },
       { rel: "icon", type: "image/png", sizes: "48x48", href: "/favicon-48x48.png?v=5" },

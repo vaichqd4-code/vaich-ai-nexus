@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { syncSiteConfigWithCloud } from "@/lib/products";
 // Blog data for VAICH - Articles authored by Younes Hayati (یونس حیاتی)
 // Deeply researched for 2026, optimized for SEO, JSON-LD Schema.org, and varying read-times.
 
@@ -52,22 +53,23 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
-    slug: "claude-3-5-sonnet-vs-gpt-4o-developers-designers",
+    slug: "flagship-ai-models-comparison",
     aliases: [
+      "claude-3-5-sonnet-vs-gpt-4o-developers-designers",
       "gemini-4-argon-vs-claude-sonnet-5-5-vs-gpt-6-terra",
       "ai-giants-2026-comparison",
       "ai-models-comparison",
       "gpt-6-astra-vs-claude-sonnet-gemini"
     ],
-    title: "راهنمای جامع و کالبدشکافی هوش مصنوعی‌های ۲۰۲۶: رقابت مرگبار GPT-6 Astra، Claude Sonnet 5.5 و Gemini 4 Argon با Project Astra",
-    excerpt: "بررسی عمیق و آزمایشگاهی سه ابرقدرت هوش مصنوعی ۲۰۲۶؛ کالبدشکافی GPT-6 Astra با ایجنت‌های مستقل، تفکر تطبیقی Claude Sonnet 5.5 و بینایی آنی Project Astra با پنجره ۲ میلیون توکنی.",
+    title: "راهنمای جامع هوش مصنوعی‌های ۲۰۲۶: مقایسه GPT-6، Claude Sonnet 5.5 و Gemini 4 Argon",
+    excerpt: "بررسی و مقایسه جامع قابلیت‌های کلیدی، سرعت استدلال و هوش کاربردی سه پرچمدار هوش مصنوعی برای انتخاب بهترین اشتراک.",
     category: "هوش مصنوعی",
     readTime: "۱۸ دقیقه",
     date: "۱۵ آبان ۱۴۰۵",
     publishIsoDate: "2026-11-05T12:00:00+03:30",
     lastUpdatedDate: "۱۵ آبان ۱۴۰۵",
     lastUpdatedIsoDate: "2026-11-05T12:00:00+03:30",
-    coverImage: "/blog/ai-models-comparison.jpg",
+    coverImage: "/blog/ai-models-comparison.webp",
     targetProductType: "ai",
     keywords: [
       "GPT-6 Astra",
@@ -95,7 +97,7 @@ export const BLOG_POSTS: BlogPost[] = [
         ],
         callout: {
           title: "چکیده تصمیم‌گیری سریع و راهنمای فوری انتخاب",
-          text: "اگر اولویت شما کدنویسی پیشرفته، ریفکتورینگ معماری و بازبینی نرم‌افزار است: اشتراک Claude Pro با مدل Sonnet 5.5 بی‌رقیب است. اگر نیازمند اتوماسیون وظایف وب، کارهای تلفیقی صوتی-تصویری، ویرایش تعاملی و ابزارهای تحلیلی هستید: اشتراک ChatGPT Plus با GPT-6 Astra کامل‌ترین محیط است. و اگر بر روی اسناد عظیم صدها هزار کلمه‌ای، تحلیل آرشیو ویدیو و یکپارچگی ابری گوگل کار می‌کنید: Gemini Advanced با Project Astra و پنجره ۲ میلیون توکنی قطعی‌ترین انتخاب شما خواهد بود."
+          text: "اگر اولویت شما کدنویسی پیشرفته، ریفکتورینگ معماری و بازبینی نرم‌افزار است: اشتراک Claude Pro با مدل Sonnet 5.5 گزینه‌ای پیشتاز و فوق‌العاده است. اگر نیازمند اتوماسیون وظایف وب، کارهای تلفیقی صوتی-تصویری، ویرایش تعاملی و ابزارهای تحلیلی هستید: اشتراک ChatGPT Plus با GPT-6 Astra کامل‌ترین محیط است. و اگر بر روی اسناد عظیم صدها هزار کلمه‌ای، تحلیل آرشیو ویدیو و یکپارچگی ابری گوگل کار می‌کنید: Gemini Advanced با Project Astra و پنجره ۲ میلیون توکنی قطعی‌ترین انتخاب شما خواهد بود."
         }
       },
       {
@@ -122,7 +124,7 @@ export const BLOG_POSTS: BlogPost[] = [
           "محیط ابری Artifacts 2.0 در اشتراک Claude Pro جهش یافته است؛ این بوم اکنون قادر است اپلیکیشن‌های کامل React، کامپوننت‌های تعاملی Tailwind، کدهای SVG متحرک، بازی‌های دوبعدی سبک و نمودارهای آماری را به‌صورت زنده رندر کند و فایل‌های خروجی را با یک کلیک تحویل دهد. پنجره زمینه ۱ میلیون توکنی در ترکیب با سقف خروجی فوق‌العاده ۱۲۸,۰۰۰ توکن به شما امکان می‌دهد کدهای یک سرویس کامل را در یک پاسخ تحویل بگیرید."
         ],
         bulletPoints: [
-          "تفکر تطبیقی (Adaptive Thinking) با بازبینی پیش‌فرض منطق برای ارتقای ۱۰۰ درصدی دقت",
+          "تفکر تطبیقی (Adaptive Thinking) با بازبینی پیش‌فرض منطق برای ارتقای چشمگیر دقت و شفافیت استدلال",
           "بوم رندر زنده Artifacts 2.0 برای اجرای اپلیکیشن‌های فرانت‌اند، نمودارها و گرافیک‌های وکتور",
           "پشتیبانی بومی از ابزار ترمینال Claude Code CLI برای خودکارسازی تست و کامیت‌های گیتهاب",
           "سقف خروجی ۱۲۸,۰۰۰ توکن واقعی برای نگارش ماژول‌های کامل نرم‌افزاری بدون نیاز به ادامه دادن (Continue)",
@@ -133,7 +135,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "۴. کالبدشکافی Google DeepMind: ابرپنجره ۲ میلیون توکنی Gemini 4 Argon و بینایی زنده Project Astra",
         paragraphs: [
-          "گوگل دیپ‌مایند با رونمایی از Gemini 4 Argon و معماری بینایی Project Astra قلمرویی را فتح کرده که هیچ رقیبی توان هماوردی با آن را ندارد: پردازش بی‌نقص کلان‌داده‌ها و بینایی آنی جهان فیزیکی. در حالی که بیشتر مدل‌ها در اسناد طولانی دچار پدیده فراموشی میانی (Lost in the Middle) می‌شوند، جمینای با پنجره متنی پایدار ۲ میلیون توکنی و سقف خروجی بی‌سابقه تا ۱,۰۰۰,۰۰۰ توکن، آزمایش Needle In A Haystack را با نرخ بازیابی صد در صد پشت سر می‌گذارد.",
+          "گوگل دیپ‌مایند با رونمایی از Gemini 4 Argon و معماری بینایی Project Astra قلمرویی را فتح کرده که هیچ رقیبی توان هماوردی با آن را ندارد: پردازش بی‌نقص کلان‌داده‌ها و بینایی آنی جهان فیزیکی. در حالی که بیشتر مدل‌ها در اسناد طولانی دچار پدیده فراموشی میانی (Lost in the Middle) می‌شوند، جمینای با پنجره متنی پایدار ۲ میلیون توکنی و سقف خروجی بی‌سابقه تا ۱,۰۰۰,۰۰۰ توکن، آزمایش Needle In A Haystack را با نرخ بازیابی بسیار بالا و نزدیک به ۱۰۰٪ پشت سر می‌گذارد.",
           "پروژه انقلابی Project Astra چشم و گوش بومی هوش مصنوعی است. آسترا دیگر صرفاً تحلیل‌گر فریم‌های ساکن عکس نیست؛ بلکه جریان زنده ویدیوی دوربین گوشی یا وب‌کم شما را با تاخیر شگفت‌انگیز کمتر از ۳۰۰ میلی‌ثانیه می‌بیند، اشیاء و قطعات الکترونیکی را شناسایی می‌کند، نقشه‌های ساختمانی را می‌خواند و به لطف حافظه مکانی پایدار، موقعیت فیزیکی وسایل را به خاطر می‌سپارد.",
           "برگ برنده دیگر Gemini Advanced، پیوند عمیق و بدون واسطه با Google Workspace است. شما می‌توانید مستقیماً از داخل جیمیل، گوگل داکس و گوگل درایو از مدل بخواهید قراردادهای سال گذشته را کندوکاو کند، ارائه‌های اسلاید بسازد یا فرمول‌های پیچیده گوگل‌شیت را تولید کند. همچنین مجهز بودن به موتور تولید تصویر فوق‌واقع‌گرایانه Imagen 3 و اجرای کدهای پایتون در فضای ابری ایزوله، بستری ایده‌آل برای دانشمندان داده و محققان آکادمیک فراهم ساخته است."
         ],
@@ -151,6 +153,7 @@ export const BLOG_POSTS: BlogPost[] = [
         paragraphs: [
           "برای درک بهتر جایگاه هر مدل، نتایج بنچمارک‌های استاندارد بین‌المللی در حوزه‌های کدنویسی، ریاضیات، استدلال چندمرحله‌ای و مدیریت حافظه کانتکست در جدول زیر تدوین شده است. این نتایج از تست‌های رسمی OpenAI، Anthropic، Google و دانشگاه استنفورد گردآوری شده‌اند:"
         ],
+        // TODO (Benchmark Review): Verify lab benchmark percentages (SWE-bench Verified: 74.8%, MATH-500: 96.2%, MMLU-Pro: 92.5%) against official laboratory publications.
         table: {
           caption: "جدول مقایسه آزمایشگاهی پرچمداران هوش مصنوعی در سال ۲۰۲۶",
           headers: ["معیار سنجش / بنچمارک", "ChatGPT Plus (GPT-6 Astra)", "Claude Pro (Sonnet 5.5)", "Gemini Advanced (4 Argon)"],
@@ -159,7 +162,7 @@ export const BLOG_POSTS: BlogPost[] = [
             ["حل مسائل المپیاد ریاضی (MATH-500)", "۹۶.۲٪ (با موتور استدلال o1)", "۸۹.۶٪ (با Adaptive Thinking)", "۹۱.۳٪ (با Gemini 3 Deep Think)"],
             ["استدلال علمی جامع (MMLU-Pro)", "۹۲.۵٪", "۹۱.۸٪", "۹۰.۴٪"],
             ["طول پنجره کانتکست (Context Window)", "۲۵۶,۰۰۰ توکن", "۱,۰۰۰,۰۰۰ توکن", "۲,۰۰۰,۰۰۰ توکن (بزرگ‌ترین حافظه)"],
-            ["سقف خروجی در یک پرامپت (Max Output)", "۱۶,۳۸۴ توکن", "۱۲۸,۰۰۰ توکن (ایده‌آل برای ماژول کامل)", "۱,۰۰۰,۰۰۰ توکن (بی‌رقیب در کل صنعت)"],
+            ["سقف خروجی در یک پرامپت (Max Output)", "۱۶,۳۸۴ توکن", "۱۲۸,۰۰۰ توکن (ایده‌آل برای ماژول کامل)", "۱,۰۰۰,۰۰۰ توکن (بالاترین ظرفیت خروجی ثبت‌شده)"],
             ["بینایی بلادرنگ ویدیویی (Live Video)", "محدود به فریم‌های منقطع", "محدود به تصویر و اسناد PDF", "بومی با Project Astra (تاخیر زیر ۳۰۰ms)"],
             ["ادغام ابری و اکوسیستم اداری", "بوم Prism و Canvas و Sora", "بوم تعاملی Artifacts 2.0 و CLI", "ادغام یکپارچه با Google Workspace"]
           ]
@@ -170,6 +173,7 @@ export const BLOG_POSTS: BlogPost[] = [
         paragraphs: [
           "انتخاب اشتراک نامناسب نه تنها اتلاف هزینه است، بلکه راندمان کاری شما را به شدت کاهش می‌دهد. بر اساس صدها ساعت بازخورد خریداران وایچ و تست‌های تیم فنی، ماتریس راهنمای خرید بر اساس رده شغلی به شرح زیر توصیه می‌شود:"
         ],
+        // TODO (Benchmark Review): Verify lab benchmark percentages (SWE-bench Verified: 74.8%, MATH-500: 96.2%, MMLU-Pro: 92.5%) against official laboratory publications.
         table: {
           caption: "ماتریس تطابق حرفه‌ای: کدام اشتراک برای شما ساخته شده؟",
           headers: ["حرفه / موقعیت شغلی", "اشتراک پیشنهادی اول", "اشتراک مکمل", "دلیل فنی و ارزش افزوده کلیدی"],
@@ -199,18 +203,19 @@ export const BLOG_POSTS: BlogPost[] = [
     ],
     conclusion: {
       heading: "جمع‌بندی و کلام پایانی موسس وایچ",
-      text: "سال ۲۰۲۶ نشان داد که دیگر چیزی به عنوان «بهترین هوش مصنوعی مطلق» وجود ندارد؛ بلکه «مناسب‌ترین ابزار برای نیاز شما» تعیین‌کننده برنده است. اگر کدهای تمیز و منطق بی‌خطا می‌خواهید به سراغ Claude Pro بروید، اگر پکیج جامع چندرسانه‌ای با ایجنت‌های هوشمند می‌خواهید ChatGPT Plus را انتخاب کنید، و اگر به دنبال حافظه اقیانوسی و بیشترین ارزش به ازای قیمت هستید Gemini Advanced بی‌رقیب است. ما در وایچ مسیر دستیابی قانونی و بی‌دغدغه به این فناوری‌های تحول‌آفرین را برای شما هموار کرده‌ایم."
+      text: "سال ۲۰۲۶ نشان داد که دیگر چیزی به عنوان «بهترین هوش مصنوعی مطلق» وجود ندارد؛ بلکه «مناسب‌ترین ابزار برای نیاز شما» تعیین‌کننده برنده است. اگر کدهای تمیز و منطق بی‌خطا می‌خواهید به سراغ Claude Pro بروید، اگر پکیج جامع چندرسانه‌ای با ایجنت‌های هوشمند می‌خواهید ChatGPT Plus را انتخاب کنید، و اگر به دنبال حافظه اقیانوسی و بیشترین ارزش به ازای قیمت هستید Gemini Advanced انتخابی بسیار ایده‌آل و مقرون‌به‌صرفه است. ما در وایچ مسیر دستیابی قانونی و بی‌دغدغه به این فناوری‌های تحول‌آفرین را برای شما هموار کرده‌ایم."
     }
   },
   {
-    slug: "microsoft-copilot-vs-chatgpt-plus",
+    slug: "ai-free-vs-plus-comparison",
     aliases: [
+      "microsoft-copilot-vs-chatgpt-plus",
       "free-vs-paid-ai-comparison",
       "chatgpt-plus-vs-claude-pro-roi",
       "why-free-ai-is-not-enough"
     ],
-    title: "چرا نسخه‌های رایگان هوش مصنوعی دیگر کافی نیستند؟ مقایسه آزمایشگاهی پلن‌های Free در برابر ChatGPT Plus و Claude Pro",
-    excerpt: "بررسی تفاوت‌های حیاتی میان هوش مصنوعی رایگان و اشتراک‌های قانونی پلاس و پرو؛ از افت شدید کیفیت در ساعات اوج مصرف تا حذف قابلیت‌های نجات‌بخش کانوَس و پروژه‌های کاری.",
+    title: "چرا نسخه‌های رایگان هوش مصنوعی کافی نیستند؟ مقایسه پلن‌های رایگان با ChatGPT Plus و Claude Pro",
+    excerpt: "بررسی تفاوت‌های اساسی پلن‌های رایگان با اشتراک‌های Plus و Pro؛ از پایداری سرعت در ساعات شلوغی تا دسترسی به ابزارهای پیشرفته.",
     category: "هوش مصنوعی",
     readTime: "۱۲ دقیقه",
     date: "۱۵ آبان ۱۴۰۵",
@@ -277,6 +282,7 @@ export const BLOG_POSTS: BlogPost[] = [
         paragraphs: [
           "جدول زیر نگاهی اجمالی به تمام محدودیت‌ها و برتری‌های نسخه‌های پولی در برابر نسخه‌های رایگان ارائه می‌دهد:"
         ],
+        // TODO (Benchmark Review): Verify lab benchmark percentages (SWE-bench Verified: 74.8%, MATH-500: 96.2%, MMLU-Pro: 92.5%) against official laboratory publications.
         table: {
           caption: "مقایسه ویژگی‌ها: نسخه رایگان در برابر ChatGPT Plus و Claude Pro",
           headers: ["شاخص فنی / قابلیت", "نسخه رایگان (Free)", "اشتراک قانونی وایچ (Plus / Pro)"],
@@ -311,7 +317,7 @@ export const BLOG_POSTS: BlogPost[] = [
       "why-google-sheets-planner-works"
     ],
     title: "چرا پلنر گوگل شیت VAICH پایدارتر از اپلیکیشن‌های پیچیده است؟",
-    excerpt: "تحلیل روانشناختی سندروم ابزارگرایی و علت شکست پلنرهای پیچیده؛ چرا سادگی پایدار گوگل‌شیت، نرخ تعهد به عادت‌ها را تا ۴ برابر افزایش می‌دهد.",
+    excerpt: "چرا سادگی و انعطاف گوگل‌شیت نسبت به اپلیکیشن‌های پیچیده، تعهد شما به روتین‌ها و دستیابی به اهداف را چندین برابر می‌کند.",
     category: "بهره‌وری فردی",
     readTime: "۵ دقیقه",
     date: "۱۴ آبان ۱۴۰۵",
@@ -380,7 +386,7 @@ export const BLOG_POSTS: BlogPost[] = [
       "gemini-big-data-analysis"
     ],
     title: "رمزگشایی از پنجره زمینه دو میلیون توکنی جمینای و پروژه انقلابی Project Astra در سال ۲۰۲۶",
-    excerpt: "تحلیل توان پردازش اسناد صدها هزار کلمه‌ای در Gemini 4 Argon؛ چگونه ترکیب پنجره ۲ میلیون توکنی با درک زنده Project Astra آینده تحلیل داده را تغییر داد؟",
+    excerpt: "بررسی توانایی پردازش اسناد حجیم و ویدیو در جمینای و کاربرد حافظه دو میلیون توکنی در تحلیل داده‌ها و پروژه‌های بزرگ.",
     category: "هوش مصنوعی",
     readTime: "۱۰ دقیقه",
     date: "۱۳ آبان ۱۴۰۵",
@@ -451,7 +457,7 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: "defeat-procrastination-google-sheets-planner",
     title: "چگونه با پلنر دیجیتال گوگل‌شیت، اهمال‌کاری را برای همیشه شکست دهیم؟",
-    excerpt: "راهنمای عملی غلبه بر به تعویق انداختن کارها با استفاده از تکنیک‌های روانشناسی رفتاری، قانون ۲ دقیقه و طراحی سیستم ردیابی تعهد در گوگل‌شیت.",
+    excerpt: "راهنمای کاربردی غلبه بر اهمال‌کاری و افزایش تمرکز روزانه با سیستم‌های رفتاری ساده و شفاف در گوگل‌شیت.",
     category: "بهره‌وری فردی",
     readTime: "۸ دقیقه",
     date: "۱۲ آبان ۱۴۰۵",
@@ -505,7 +511,7 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: "best-study-planning-methods-digital-vs-paper",
     title: "بهترین روش برنامه‌ریزی درسی و کنکوری؛ چرا دفاتر کاغذی دیگر جواب نمی‌دهند؟",
-    excerpt: "بررسی علمی چرایی منسوخ شدن برنامه‌ریزی کاغذی در عصر مدرن؛ چگونگی شخصی‌سازی ساعات مطالعه، مرور فاصله‌دار و رسم نمودارهای درصدی با پلنر گوگل‌شیت.",
+    excerpt: "مقایسه روش‌های سنتی و دیجیتال برنامه‌ریزی درسی؛ روش‌های ثبت ساعات مطالعه، مرور فاصله‌دار و ارزیابی پیشرفت با نمودار.",
     category: "آموزش و یادگیری",
     readTime: "۹ دقیقه",
     date: "۱۰ آبان ۱۴۰۵",
@@ -558,7 +564,7 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: "daily-motivational-habits-powerful-routine",
     title: "عادت‌های روزانه و ساختن روتین فردی قدرتمند؛ جایگزینی انضباط سیستمی به جای انگیزه لحظه‌ای",
-    excerpt: "راهنمای ساخت روتین‌های پایدار صبحگاهی و شبانگاهی بر پایه کتاب عادت‌های اتمی؛ چگونه هویت فردی خود را با گام‌های روزانه بازسازی کنیم؟",
+    excerpt: "اصول ساخت روتین‌های صبحگاهی و شبانگاهی ماندگار بر مبنای خرده‌عادت‌ها و جایگزینی انضباط سیستمی به جای انگیزه لحظه‌ای.",
     category: "توسعه فردی",
     readTime: "۶ دقیقه",
     date: "۰۸ آبان ۱۴۰۵",
@@ -605,7 +611,7 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: "habit-tracking-time-management-guide",
     title: "راهنمای جامع ردیابی عادت‌ها (Habit Tracking) و مدیریت زمان در موبایل و لپ‌تاپ",
-    excerpt: "متدولوژی عمیق مدیریت زمان با تکنیک بلوک‌بندی زمانی (Time Boxing) و ماتریس آیزنهاور به همراه داشبورد ردیابی خودکار در گوگل شیت.",
+    excerpt: "آموزش اولویت‌بندی کارها با ماتریس آیزنهاور و بلوک‌بندی زمانی، به همراه داشبورد خودکار ردیابی عادت‌ها در گوگل‌شیت.",
     category: "مدیریت زمان",
     readTime: "۱۱ دقیقه",
     date: "۰۶ آبان ۱۴۰۵",
@@ -658,7 +664,7 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: "ai-tools-productivity-study-guide",
     title: "آموزش کاربردی استفاده از هوش مصنوعی برای افزایش سرعت کار، تولید محتوا و درس خواندن",
-    excerpt: "راهنمای عملی بهره‌گیری از پرامپت‌های مهندسی‌شده در ChatGPT Plus، Claude Pro و Gemini Advanced برای خلاصه مقالات، یادگیری عمیق و اتوماسیون اداری.",
+    excerpt: "آموزش ترفندهای کاربردی استفاده از هوش مصنوعی برای افزایش سرعت مطالعه، خلاصه‌سازی مقالات و انجام امور کاری.",
     category: "هوش مصنوعی و آموزش",
     readTime: "۹ دقیقه",
     date: "۰۴ آبان ۱۴۰۵",
@@ -748,26 +754,20 @@ export function saveStoredBlogPosts(posts: BlogPost[]): void {
 }
 
 export function useBlogPosts(): BlogPost[] {
-  const [posts, setPosts] = useState<BlogPost[]>(() => {
-    return getStoredBlogPosts();
-  });
+  const [posts, setPosts] = useState<BlogPost[]>(BLOG_POSTS);
 
   useEffect(() => {
     let isMounted = true;
-    const fetchPosts = async () => {
-      try {
-        const res = await fetch("/site-config.json?t=" + Date.now());
-        if (res.ok) {
-          const data = await res.json();
-          if (data && Array.isArray(data.blogPosts) && data.blogPosts.length > 0 && isMounted) {
-            setPosts(data.blogPosts);
-          }
-        }
-      } catch (err) {
-        // Fallback to static data
+    const stored = getStoredBlogPosts();
+    if (stored && stored.length > 0) {
+      setPosts(stored);
+    }
+
+    syncSiteConfigWithCloud().then((data) => {
+      if (data && Array.isArray(data.blogPosts) && data.blogPosts.length > 0 && isMounted) {
+        setPosts(data.blogPosts);
       }
-    };
-    fetchPosts();
+    });
 
     const handleUpdate = () => {
       setPosts(getStoredBlogPosts());

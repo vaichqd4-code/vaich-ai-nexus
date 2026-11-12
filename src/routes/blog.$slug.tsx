@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { getBlogPostBySlug, getRelatedBlogPosts } from "@/lib/blog-data";
 import { BlogCoverGraphic } from "@/components/blog/BlogCoverGraphic";
 import { useDynamicProducts, type InArticleBannerConfig } from "@/lib/products";
@@ -23,22 +23,37 @@ export const Route = createFileRoute("/blog/$slug")({
     if (!post) {
       throw notFound();
     }
+    if (params.slug !== post.slug) {
+      throw redirect({
+        to: "/blog/$slug",
+        params: { slug: post.slug },
+        statusCode: 301,
+      });
+    }
     return { post };
   },
   head: ({ loaderData }) => {
     const post = loaderData?.post;
     if (!post) {
       return {
-        meta: [{ title: "مقاله پیدا نشد | وایچ" }],
+        meta: [
+          { title: "مقاله پیدا نشد | وایچ" },
+          { name: "robots", content: "noindex, nofollow" },
+        ],
       };
     }
+
+    const coverImgUrl = post.coverImage.startsWith("http")
+      ? post.coverImage
+      : `https://vaich.ir${post.coverImage.startsWith("/") ? "" : "/"}${post.coverImage}`;
+    const metaDesc = post.excerpt.length > 155 ? `${post.excerpt.slice(0, 152)}...` : post.excerpt;
 
     const jsonLd = {
       "@context": "https://schema.org",
       "@type": "Article",
       headline: post.title,
-      description: post.excerpt,
-      image: post.coverImage,
+      description: metaDesc,
+      image: coverImgUrl,
       datePublished: post.publishIsoDate,
       dateModified: (post as any).lastUpdatedIsoDate || post.publishIsoDate,
       author: {
@@ -76,7 +91,7 @@ export const Route = createFileRoute("/blog/$slug")({
           "@type": "ListItem",
           position: 2,
           name: "مجله و مقالات",
-          item: "https://vaich.ir/#blog",
+          item: "https://vaich.ir/blog",
         },
         {
           "@type": "ListItem",
@@ -90,18 +105,17 @@ export const Route = createFileRoute("/blog/$slug")({
     return {
       meta: [
         { title: `${post.title} | مجله وایچ` },
-        { name: "description", content: post.excerpt },
-        { name: "keywords", content: post.keywords.join(", ") },
+        { name: "description", content: metaDesc },
         { name: "author", content: "یونس حیاتی" },
         { property: "og:title", content: post.title },
-        { property: "og:description", content: post.excerpt },
+        { property: "og:description", content: metaDesc },
         { property: "og:type", content: "article" },
         { property: "og:url", content: `https://vaich.ir/blog/${post.slug}` },
-        { property: "og:image", content: post.coverImage },
+        { property: "og:image", content: coverImgUrl },
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: post.title },
-        { name: "twitter:description", content: post.excerpt },
-        { name: "twitter:image", content: post.coverImage },
+        { name: "twitter:description", content: metaDesc },
+        { name: "twitter:image", content: coverImgUrl },
       ],
       links: [
         { rel: "canonical", href: `https://vaich.ir/blog/${post.slug}` },
@@ -147,7 +161,7 @@ function BlogPostPage() {
             خانه
           </Link>
           <span>/</span>
-          <Link to="/" hash="blog" className="hover:text-primary transition-colors">
+          <Link to="/blog" className="hover:text-primary transition-colors">
             مجله و آموزش‌ها
           </Link>
           <span>/</span>

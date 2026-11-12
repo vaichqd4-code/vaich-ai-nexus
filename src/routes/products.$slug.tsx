@@ -11,6 +11,20 @@ import { Star, MessageSquarePlus, CheckCircle2, AlertTriangle, Sparkles } from "
 export const Route = createFileRoute("/products/$slug")({
   loader: async ({ params }) => {
     const raw = (params.slug || "").toLowerCase();
+    let decoded = "";
+    try {
+      decoded = decodeURIComponent(params.slug || "").trim().toLowerCase();
+    } catch {
+      decoded = raw;
+    }
+    if (
+      decoded === "اشتراک chatgpt plus شخصی" ||
+      decoded === "اشتراک-chatgpt-plus-شخصی" ||
+      raw.includes("chatgpt plus شخصی") ||
+      raw.includes("chatgptplus")
+    ) {
+      throw redirect({ to: "/products/chatgpt-plus", statusCode: 301 });
+    }
     if (raw === "planners" || raw === "planner" || raw.includes("پلنر")) {
       throw redirect({ to: "/" });
     }
@@ -27,6 +41,12 @@ export const Route = createFileRoute("/products/$slug")({
       }
     }
     if (!product) throw notFound();
+
+    // 301 redirect if requested slug does not match canonical slug
+    if (product.slug !== params.slug) {
+      throw redirect({ to: `/products/${product.slug}`, statusCode: 301 });
+    }
+
     return { product };
   },
   head: ({ loaderData }) => {
@@ -41,34 +61,82 @@ export const Route = createFileRoute("/products/$slug")({
       : `خرید اشتراک ${product.name} (${product.duration || "قانونی"}) | VAICH`;
     const description = isLifetime
       ? (isPlanner
-          ? `خرید آنلاین ${product.name} در گوگل شیت با ردیاب عادات ماهانه، نمودارهای تحلیلی داینامیک، نسخه‌های دوبعدی و سه‌بعدی و تحویل آنی. بدون نیاز به اشتراک ماهانه.`
-          : `خرید آنلاین و دسترسی دائمی ${product.name} با تحویل فوری و ضمانت اصالت. بدون نیاز به پرداخت مجدد یا هزینه اشتراک ماهانه. ${product.description}`)
-      : `خرید آنلاین اشتراک قانونی ${product.name} با تحویل فوری، پشتیبانی ۲۴ ساعته و ضمانت سلامت اکانت. ${product.description} قیمت: ${formatPrice(product.price)}`;
-    const keywords = isLifetime
-      ? (isPlanner
-          ? "خرید پلنر برنامه ریزی, پلنر گوگل شیت, پلنر دیجیتال, ردیاب عادات روزانه, پلنر هوشمند, مدیریت زمان, پلنر 1403, پلنر 1404"
-          : `خرید ${product.name}, دسترسی دائمی ${product.name}, خرید مستقیم ${product.name}, فایل دیجیتال`)
-      : `خرید اشتراک ${product.name}, خرید اکانت ${product.name}, اکانت قانونی ${product.name}, هوش مصنوعی`;
-    const canonicalUrl = `https://vaich.ir/products/${encodeURIComponent(product.slug)}`;
+          ? `خرید آنلاین ${product.name} در گوگل شیت با ردیاب عادات ماهانه، نمودارهای تحلیلی، نسخه‌های دوبعدی و سه‌بعدی و تحویل آنی بدون نیاز به اشتراک ماهانه.`
+          : `خرید آنلاین و دسترسی دائمی ${product.name} با تحویل فوری، گارانتی اصالت فایل‌ها و بدون نیاز به تمدید ماهانه در وایچ.`)
+      : `خرید آنلاین و قانونی اشتراک ${product.name} با تحویل سریع، پشتیبانی اختصاصی و گارانتی سلامت اکانت در سراسر ایران از فروشگاه وایچ.`;
+    const canonicalUrl = `https://vaich.ir/products/${product.slug}`;
+
+    const breadcrumbLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "صفحه اصلی",
+          item: "https://vaich.ir",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "محصولات و خدمات",
+          item: "https://vaich.ir",
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: product.name,
+          item: canonicalUrl,
+        },
+      ],
+    };
+
+    const ogImg = product.iconUrl
+      ? (product.iconUrl.startsWith("http") ? product.iconUrl : `https://vaich.ir${product.iconUrl.split("?")[0]}`)
+      : "https://vaich.ir/vaich-logo.png";
 
     return {
       meta: [
         { title },
         { name: "description", content: description },
-        { name: "keywords", content: keywords },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: canonicalUrl },
         { property: "og:type", content: "product" },
+        { property: "og:image", content: ogImg },
         { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+        { name: "twitter:image", content: ogImg },
       ],
       links: [
         { rel: "canonical", href: canonicalUrl },
+      ],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(breadcrumbLd),
+        },
       ],
     };
   },
   component: ProductDetail,
 });
+
+
+function formatReviewDate(dateStr: string): string {
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr.split("T")[0];
+    return new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }).format(d);
+  } catch {
+    return dateStr.split("T")[0];
+  }
+}
 
 function ProductDetail() {
   const { product } = Route.useLoaderData();
@@ -111,21 +179,36 @@ function ProductDetail() {
   const [newAuthor, setNewAuthor] = useState("");
   const [newRating, setNewRating] = useState(5);
   const [newComment, setNewComment] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewSubmittedMsg, setReviewSubmittedMsg] = useState("");
 
   const handleAddReview = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newComment.trim()) return;
+    if (honeypot.trim()) {
+      setReviewSubmittedMsg("دیدگاه شما با موفقیت ثبت شد و پس از بررسی منتشر خواهد شد.");
+      return;
+    }
+
+    const LAST_REVIEW_KEY = "vaich_last_review_ts";
+    const lastTs = typeof window !== "undefined" ? Number(localStorage.getItem(LAST_REVIEW_KEY) || 0) : 0;
+    if (Date.now() - lastTs < 60000) {
+      setReviewSubmittedMsg("جهت جلوگیری از ارسال مکرر، لطفاً ۱ دقیقه پس از ثبت دیدگاه قبلی صبر فرمایید.");
+      return;
+    }
+
+    const cleanComment = newComment.replace(/<[^>]*>?/gm, "").trim().slice(0, 600);
+    if (!cleanComment) return;
+    const cleanAuthor = newAuthor.replace(/<[^>]*>?/gm, "").trim().slice(0, 50) || "کاربر خریدار";
 
     const rev: ProductReview = {
       id: "usr-" + Date.now(),
-      author: newAuthor.trim() || "کاربر خریدار",
+      author: cleanAuthor,
       rating: newRating,
-      comment: newComment.trim(),
+      comment: cleanComment,
       createdAt: new Date().toISOString(),
-      verified: true,
-      status: "approved",
+      verified: false,
+      status: "pending",
     };
 
     const updated = [rev, ...reviews];
@@ -133,31 +216,18 @@ function ProductDetail() {
 
     if (typeof window !== "undefined") {
       try {
+        localStorage.setItem(LAST_REVIEW_KEY, String(Date.now()));
         const userSaved = localStorage.getItem(`vaich_user_reviews_${product.slug}`);
         const parsed = userSaved ? JSON.parse(userSaved) : [];
         localStorage.setItem(`vaich_user_reviews_${product.slug}`, JSON.stringify([rev, ...parsed]));
-
-        // Synchronize with stored products globally so outer preview cards instantly reflect the new review count
-        const storedProducts = getStoredProducts();
-        const updatedProducts = storedProducts.map((p) => {
-          if (p.slug === product.slug) {
-            const currentTotal = (p.reviewCount || p.reviews?.length || 0) + 1;
-            return {
-              ...p,
-              reviewCount: currentTotal,
-              reviews: [rev, ...(p.reviews || [])],
-            };
-          }
-          return p;
-        });
-        saveStoredProducts(updatedProducts);
       } catch {}
     }
 
     setNewAuthor("");
     setNewComment("");
+    setHoneypot("");
     setNewRating(5);
-    setReviewSubmittedMsg("دیدگاه ارزشمند شما با موفقیت ثبت شد! سپاس از همراهی شما با وایچ. ⭐");
+    setReviewSubmittedMsg("دیدگاه شما با موفقیت ثبت شد و پس از بررسی منتشر خواهد شد. سپاس از همراهی شما! ⭐");
     setTimeout(() => setReviewSubmittedMsg(""), 6000);
   };
 
@@ -179,17 +249,28 @@ function ProductDetail() {
   const countReviews = (product.reviewCount || 0) + (reviews.length - (product.reviews?.length || 0));
 
   // Google Search Console JSON-LD Structured Data with AggregateRating and Reviews
+  const productImg = product.iconUrl
+    ? (product.iconUrl.startsWith("http") ? product.iconUrl : `https://vaich.ir${product.iconUrl.split("?")[0]}`)
+    : "https://vaich.ir/vaich-logo.png";
+
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: isLifetime ? product.name : `اشتراک ${product.name}`,
     description: product.description,
-    image: "https://vaich.ir/vaich-logo.png",
+    image: productImg,
+    sku: product.slug,
+    mpn: product.slug,
+    brand: {
+      "@type": "Brand",
+      name: isPlanner ? "VAICH" : product.name.includes("ChatGPT") ? "OpenAI" : product.name.includes("Claude") ? "Anthropic" : "Google",
+    },
     offers: {
       "@type": "Offer",
-      url: `https://vaich.ir/products/${encodeURIComponent(product.slug)}`,
+      url: `https://vaich.ir/products/${product.slug}`,
       priceCurrency: "IRR",
       price: product.price,
+      priceValidUntil: "2027-12-31",
       availability: isOutOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
       seller: {
         "@type": "Organization",
@@ -290,21 +371,19 @@ function ProductDetail() {
                 </div>
               </div>
 
-              <div className="mt-8">
-                <h2 className="text-base font-bold flex items-center gap-2 text-foreground">
-                  <span className="h-2 w-2 rounded-full bg-primary" />
-                  اطلاعات مهم خرید و تحویل
-                </h2>
-                <ul className="mt-3 space-y-3">
-                  {product.purchaseInfo.map((info) => (
-                    <li
-                      key={info}
-                      className="rounded-2xl border border-border bg-background/50 px-4 py-3 text-sm leading-7 text-muted-foreground break-words"
-                    >
-                      {info}
-                    </li>
-                  ))}
-                </ul>
+              <div className="mt-6 flex flex-wrap gap-2 text-xs">
+                <div className="flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/50 px-3 py-1.5 text-muted-foreground">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                  <span>{isLifetime ? "دسترسی دائمی بدون اشتراک ماهانه" : "فعال‌سازی ۱۰۰٪ قانونی و اختصاصی"}</span>
+                </div>
+                <div className="flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/50 px-3 py-1.5 text-muted-foreground">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                  <span>{isPlanner ? "تحویل آنی فایل در گوگل درایو" : "تحویل سریع و تضمین سلامت اکانت"}</span>
+                </div>
+                <div className="flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/50 px-3 py-1.5 text-muted-foreground">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                  <span>پشتیبانی اختصاصی تا آخرین روز</span>
+                </div>
               </div>
             </div>
 
@@ -404,28 +483,7 @@ function ProductDetail() {
                 )}
               </div>
 
-              {product.features && product.features.length > 0 && (
-                <div className="mt-6 rounded-2xl border border-border/80 bg-background/50 p-4">
-                  <h3 className="mb-3.5 flex items-center gap-2 text-sm font-bold text-foreground">
-                    <span className="h-2 w-2 rounded-full bg-primary" />
-                    <span>قابلیت‌ها و دسترسی‌های این محصول</span>
-                  </h3>
-                  <ul className="space-y-2">
-                    {product.features.map((feature, idx) => {
-                      const cleanFeature = feature.replace(/^[\p{Emoji}\s\u200d]+/u, "").trim();
-                      return (
-                        <li
-                          key={idx}
-                          className="flex items-start gap-2.5 text-xs leading-6 text-muted-foreground"
-                        >
-                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                          <span className="flex-1">{cleanFeature || feature}</span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              )}
+
             </aside>
           </div>
 
@@ -488,9 +546,14 @@ function ProductDetail() {
                                     خریدار تأیید شده
                                   </span>
                                 )}
+                                {rev.status === "pending" && (
+                                  <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-1.5 py-0.5 text-[9px] font-bold text-amber-400 border border-amber-500/20 shrink-0">
+                                    در انتظار بررسی
+                                  </span>
+                                )}
                               </div>
                               <span className="text-[10px] text-muted-foreground block mt-0.5">
-                                {rev.createdAt.split("T")[0]}
+                                {formatReviewDate(rev.createdAt)}
                               </span>
                             </div>
                           </div>
@@ -550,6 +613,17 @@ function ProductDetail() {
                   </div>
                 ) : (
                   <form onSubmit={handleAddReview} className="mt-4 space-y-3.5">
+                    <input
+                      type="text"
+                      name="website_hp"
+                      value={honeypot}
+                      onChange={(e) => setHoneypot(e.target.value)}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      className="hidden"
+                      style={{ display: "none" }}
+                      aria-hidden="true"
+                    />
                     <div>
                       <label className="text-[11px] font-medium text-muted-foreground block mb-1">
                         امتیاز شما به این محصول:

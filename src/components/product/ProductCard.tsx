@@ -6,6 +6,29 @@ import { NeonLink } from "@/components/ui/NeonButton";
 import { formatPrice, toPersianDigits, isProductLifetime, type Product } from "@/lib/products";
 import { cn } from "@/lib/utils";
 
+
+function getProductCardSubtitle(p: Product, isLifetime: boolean): string {
+  if (p.slug.includes("planner")) {
+    return "نرم‌افزار هوشمند در گوگل‌شیت • ردیاب عادات و اهداف بدون اشتراک";
+  }
+  if (p.slug === "chatgpt-plus") {
+    return "دسترسی به GPT-4o، استدلال o1، بوم Canvas و دستیار صوتی";
+  }
+  if (p.slug === "claude") {
+    return "دسترسی به Sonnet 3.5، کدنویسی، تحلیل اسناد و Artifacts";
+  }
+  if (p.slug === "gemini") {
+    return "مدل ادونسد با پنجره متنی میلیونی و اتصال به Google Workspace";
+  }
+  if (p.slug === "gemini-pro") {
+    return "دسترسی بلندمدت اقتصادی به جمینای ادونسد و استدلال عمیق";
+  }
+  if (p.features && p.features.length > 0) {
+    return p.features[0].replace(/^[\p{Emoji}\s\u200d]+/u, "").trim();
+  }
+  return isLifetime ? "دسترسی دائمی و مادام‌العمر • بدون هزینه ماهانه" : "تحویل فوری با تضمین ۱۰۰٪ سلامت اکانت";
+}
+
 export function ProductCard({
   product,
   className,
@@ -51,17 +74,7 @@ export function ProductCard({
   const isOutOfStock = product.inStock === false;
   const isLifetime = isProductLifetime(product);
 
-  const [extraReviews, setExtraReviews] = useState(() => {
-    if (typeof window === "undefined") return 0;
-    try {
-      const local = localStorage.getItem(`vaich_user_reviews_${product.slug}`);
-      if (local) {
-        const parsed = JSON.parse(local);
-        return Array.isArray(parsed) ? parsed.length : 0;
-      }
-    } catch {}
-    return 0;
-  });
+  const [extraReviews, setExtraReviews] = useState(0);
 
   useEffect(() => {
     const handleUpdate = () => {
@@ -74,6 +87,7 @@ export function ProductCard({
       } catch {}
     };
 
+    handleUpdate();
     window.addEventListener("vaich_products_updated", handleUpdate);
     window.addEventListener("storage", handleUpdate);
     return () => {
@@ -218,7 +232,7 @@ export function ProductCard({
             {product.name}
           </h3>
           <p className="line-clamp-1 text-[10px] sm:text-xs text-muted-foreground">
-            {product.description || (isLifetime ? "خرید دائمی و مادام‌العمر • بدون اشتراک" : (product.duration ? `اشتراک معتبر • ${product.duration}` : "تحویل فوری و قانونی"))}
+            {getProductCardSubtitle(product, isLifetime)}
           </p>
 
           {/* Star Rating & Review count */}

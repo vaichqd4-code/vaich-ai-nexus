@@ -20,20 +20,27 @@ export function BlogSection() {
   };
 
   return (
-    <Section
+        <Section
       id="blog"
-      title="مجله تخصصی و مقالات آموزشی وایچ"
-      subtitle="جدیدترین یادداشت‌ها، راهنماهای کاربردی و مقالات عمیق در زمینه بهره‌وری دیجیتال، هوش مصنوعی و رشد فردی"
+      title="مجله و مقالات آموزشی وایچ"
+      subtitle="راهنماهای کاربردی و یادداشت‌های تحلیلی در زمینه هوش مصنوعی، برنامه‌ریزی دیجیتال و بهره‌وری فردی"
     >
       {/* Slider Header Controls */}
       <div className="mb-4 flex items-center justify-between px-1">
-        <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
+        <div className="flex md:hidden items-center gap-2 text-xs text-muted-foreground font-medium">
           <BookOpen className="h-4 w-4 text-primary" />
           <span>برای مرور مقالات به چپ و راست بکشید (Swipe)</span>
         </div>
 
-        {/* Carousel Arrow Buttons */}
-        <div className="hidden sm:flex items-center gap-2">
+        {/* Carousel Controls & Blog Archive Link */}
+        <div className="hidden md:flex items-center gap-3 mr-auto">
+          <Link
+            to="/blog"
+            className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-1 ml-2"
+          >
+            <span>آرشیو همه مقالات</span>
+            <ArrowLeft className="h-3.5 w-3.5" />
+          </Link>
           <button
             type="button"
             onClick={() => scroll("right")}
@@ -68,17 +75,15 @@ export function BlogSection() {
           <article
             key={post.slug}
             style={{ scrollSnapAlign: "start" }}
-            className="group flex flex-col justify-between w-[290px] xs:w-[320px] sm:w-[340px] shrink-0 rounded-3xl border border-border/80 bg-card/75 backdrop-blur-md overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5"
+            className="group relative flex flex-col justify-between w-[290px] xs:w-[320px] sm:w-[340px] shrink-0 rounded-3xl border border-border/80 bg-card/75 backdrop-blur-md overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5"
           >
-            {/* Clickable Card Header & Cover */}
-            <Link
-              to="/blog/$slug"
-              params={{ slug: post.slug }}
-              className="block relative aspect-[16/10] w-full overflow-hidden bg-neutral-950"
-            >
+            {/* Card Cover (Non-anchor, clean category pill) */}
+            <div className="relative aspect-[16/10] w-full overflow-hidden bg-neutral-950">
               <img
                 src={post.coverImage}
                 alt={post.title}
+                width={340}
+                height={212}
                 loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 onError={(e) => {
@@ -91,43 +96,41 @@ export function BlogSection() {
                 <BlogCoverGraphic slug={post.slug} category={post.category} />
               </div>
 
-              <div className="absolute top-3 right-3 z-20">
+              <div className="absolute top-3 right-3 z-20 pointer-events-none" aria-hidden="true">
                 <span className="rounded-full bg-background/90 backdrop-blur-md border border-border/70 px-2.5 py-0.5 text-[11px] font-bold text-primary shadow-xs">
                   {post.category}
                 </span>
               </div>
+            </div>
 
-              <div className="absolute bottom-3 right-3 z-20 flex items-center gap-1.5 text-[11px] text-foreground font-semibold bg-background/90 dark:bg-background/80 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-border/60 shadow-xs">
-                <Clock className="h-3.5 w-3.5 text-neutral-400" />
-                <span>{post.readTime}</span>
-              </div>
-            </Link>
-
-            {/* Card Content (Author name removed per instruction) */}
-            <div className="flex flex-1 flex-col p-5 justify-between gap-4">
+            {/* Card Content */}
+            <div className="flex flex-1 flex-col p-4 sm:p-5 justify-between gap-3">
               <div className="space-y-2">
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: post.slug }}
-                  className="block font-bold text-sm sm:text-base leading-snug text-foreground transition-colors group-hover:text-primary line-clamp-2"
-                >
-                  {post.title}
-                </Link>
-                <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed font-normal">
+                <h3 className="text-sm sm:text-[15px] font-bold leading-snug text-foreground">
+                  <Link
+                    to="/blog/$slug"
+                    params={{ slug: post.slug }}
+                    className="focus:outline-none transition-colors group-hover:text-primary line-clamp-2 after:absolute after:inset-0 after:z-10"
+                  >
+                    {post.title}
+                  </Link>
+                </h3>
+                <p className="text-xs text-muted-foreground/90 line-clamp-2 leading-relaxed font-normal">
                   {post.excerpt}
                 </p>
               </div>
 
-              {/* Action Link */}
-              <div className="pt-3 border-t border-border/50 flex items-center justify-end">
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: post.slug }}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary/80 transition-colors group-hover:translate-x-[-3px]"
-                >
+              {/* Card Meta & Action Footer */}
+              <div className="pt-3 border-t border-border/50 flex items-center justify-between text-xs" aria-hidden="true">
+                <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                  <Clock className="h-3.5 w-3.5 text-primary/70" />
+                  <span>{post.readTime}</span>
+                </div>
+
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-primary group-hover:translate-x-[-3px] transition-transform">
                   <span>مطالعه مقاله</span>
-                  <ArrowLeft className="h-3.5 w-3.5 transition-transform" />
-                </Link>
+                  <ArrowLeft className="h-3.5 w-3.5" />
+                </span>
               </div>
             </div>
           </article>

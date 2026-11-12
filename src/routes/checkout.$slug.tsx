@@ -1,4 +1,4 @@
-import { createFileRoute, notFound } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { Bell, AlertTriangle, Bot } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
@@ -19,6 +19,22 @@ import {
 
 export const Route = createFileRoute("/checkout/$slug")({
   loader: async ({ params }) => {
+    const raw = (params.slug || "").toLowerCase();
+    let decoded = "";
+    try {
+      decoded = decodeURIComponent(params.slug || "").trim().toLowerCase();
+    } catch {
+      decoded = raw;
+    }
+    if (
+      decoded === "اشتراک chatgpt plus شخصی" ||
+      decoded === "اشتراک-chatgpt-plus-شخصی" ||
+      raw.includes("chatgpt plus شخصی") ||
+      raw.includes("chatgptplus")
+    ) {
+      throw redirect({ to: "/checkout/chatgpt-plus", statusCode: 301 });
+    }
+
     let product: any = undefined;
 
     if (typeof window !== "undefined") {
@@ -41,6 +57,10 @@ export const Route = createFileRoute("/checkout/$slug")({
       throw notFound();
     }
 
+    if (product.slug !== params.slug) {
+      throw redirect({ to: `/checkout/${product.slug}`, statusCode: 301 });
+    }
+
     return { product };
   },
 
@@ -49,23 +69,41 @@ export const Route = createFileRoute("/checkout/$slug")({
       return {
         meta: [
           { title: "پرداخت کارت به کارت | VAICH" },
-          { name: "robots", content: "noindex" },
+          { name: "robots", content: "noindex, nofollow" },
         ],
       };
     }
 
-    const isLifetime = isProductLifetime(loaderData.product);
+    const { product } = loaderData;
+    const isLifetime = isProductLifetime(product);
+    const canonicalUrl = `https://vaich.ir/checkout/${product.slug}`;
+    const title = isLifetime
+      ? `پرداخت و دریافت مستقیم ${product.name} | وایچ`
+      : `پرداخت و خرید آنلاین اشتراک ${product.name} (${product.duration || "قانونی"}) | وایچ`;
+    const description = isLifetime
+      ? `صفحه پرداخت آنلاین و دریافت مستقیم ${product.name} با کارت به کارت، تحویل فوری و ضمانت اصالت در وایچ.`
+      : `صفحه پرداخت مستقیم و فعال‌سازی فوری اشتراک قانونی ${product.name} با پشتیبانی ۲۴ ساعته در وایچ.`;
+
+    const ogImg = product.iconUrl
+      ? (product.iconUrl.startsWith("http") ? product.iconUrl : `https://vaich.ir${product.iconUrl.split("?")[0]}`)
+      : "https://vaich.ir/vaich-logo.png";
+
     return {
       meta: [
-        {
-          title: `پرداخت ${loaderData.product.name} | VAICH`,
-        },
-        {
-          name: "description",
-          content: isLifetime
-            ? `پرداخت و دریافت مستقیم ${loaderData.product.name} در VAICH`
-            : `پرداخت اشتراک ${loaderData.product.name} در VAICH`,
-        },
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: canonicalUrl },
+        { property: "og:type", content: "website" },
+        { property: "og:image", content: ogImg },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+        { name: "twitter:image", content: ogImg },
+      ],
+      links: [
+        { rel: "canonical", href: canonicalUrl },
       ],
     };
   },

@@ -67,8 +67,8 @@ export const DEFAULT_CATEGORY_ROWS: ProductCategoryRow[] = [
   },
   {
     id: "row-mvampt3r",
-    title: "پلنر ها",
-    subtitle: "پلنر های مدیریت و سبک زندگی (Google sheets)",
+    title: "پلنرهای دیجیتال و هوشمند",
+    subtitle: "نرم‌افزارهای مدیریت فردی و سبک زندگی در Google Sheets (دسترسی همیشگی بدون اشتراک)",
   },
 ];
 
@@ -77,13 +77,16 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "slug": "vaich-life-planner",
     "name": "پلنر برنامه ریزی(استاندارد)",
     "price": 299000,
+    "originalPrice": 700000,
+    "discountPercent": 57,
     "duration": "دائمی (بدون اشتراک)",
     "description": "نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script (بدون نیاز به پرداخت ماهانه یا شارژ دوره)؛ مجهز به Habit Tracker، ماتریس آیزنهاور، سیستم Time Boxing و هوش مالی فردی.",
     "featured": true,
-    "badge": "پیشنهادی",
+    "badge": "پیشنهادی ویژه",
     "badgeColor": "fire",
     "categoryId": "row-mvampt3r",
     "inStock": true,
+    "isLifetime": true,
     "rating": 4.9,
     "reviewCount": 21,
     "features": [
@@ -299,9 +302,9 @@ export const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     "slug": "gemini",
-    "name": "Gemini Pro",
-    "price": 160000,
-    "duration": "60 روزه",
+    "name": "Gemini Pro - ۶۰ روزه",
+    "price": 230000,
+    "duration": "۶۰ روزه",
     "description": "اشتراک رسمی ۶۰ روزه Google Gemini Advanced؛ دسترسی به پرچمدار غول‌آسای Google Gemini 4 Argon با خروجی ۱,۰۰۰,۰۰۰ توکن، لایه عامل‌محور انقلابی Project Astra (درک زنده ویدیوی دوربین با تاخیر زیر ۳۰۰ میلی‌ثانیه و حافظه فضایی)، مدل استدلال عمیق Gemini 3 Deep Think و پیوند کامل با Google Workspace.",
     "featured": false,
     "badgeColor": "purple",
@@ -382,12 +385,12 @@ export const DEFAULT_PRODUCTS: Product[] = [
         "status": "approved"
       }
     ],
-    "iconUrl": "/file_000000007ea4822f9eac5c00be6be9eb.png?v=sq2"
+    "iconUrl": "/gemini-60d-icon.webp"
   },
   {
     "slug": "gemini-pro",
-    "name": "Gemini Pro",
-    "price": 399000,
+    "name": "Gemini Pro - ۱۸ ماهه",
+    "price": 590000,
     "originalPrice": 4700000,
     "discountPercent": 91,
     "duration": "۱۸ ماهه",
@@ -519,12 +522,12 @@ export const DEFAULT_PRODUCTS: Product[] = [
         "status": "approved"
       }
     ],
-    "iconUrl": "/file_00000000377481f6b667af886cd18fb6.png?v=sq2"
+    "iconUrl": "/gemini-pro-18m-icon.webp"
   },
   {
-    "slug": "اشتراک chatgpt plus شخصی",
+    "slug": "chatgpt-plus",
     "name": "ChatGPT Plus",
-    "price": 5350000,
+    "price": 6300000,
     "duration": "۱ ماهه",
     "description": "اشتراک قانونی و ۱۰۰٪ اختصاصی ChatGPT Plus شرکت OpenAI؛ مجهز به پرچمدار مرزی هوش مصنوعی GPT-6 Astra (با هوش خودمختار رایانه‌ای، مرورگر وب و حل مسائل مهندسی ارشد)، مدل‌های تعادلی GPT-6 Sol و GPT-6 Luna، مدل‌های استدلال عمیق o1 و o3-mini، فضای کاری نوین Prism، بوم تعاملی Canvas، تولید ویدیوی Sora و حالت صوتی زنده Advanced Voice Mode.",
     "featured": false,
@@ -603,7 +606,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
   {
     "slug": "claude",
     "name": "Claude Pro",
-    "price": 5450000,
+    "price": 7100000,
     "duration": "۱ ماهه",
     "description": "اشتراک رسمی و ۱۰۰٪ اختصاصی Claude Pro آنتروپیک؛ دسترسی به پیشروترین مدل توسعه نرم‌افزار جهان Claude Sonnet 5.5، مدل فوق‌سنگین استدلالی Claude Opus 5.5، رده پردازشی Claude Fable 5.1، مدل فوق‌سریع Claude Haiku 5.5، سیستم تفکر تطبیقی (Adaptive Thinking) و محیط کاری Artifacts 2.0.",
     "featured": false,
@@ -618,7 +621,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "پشتیبانی فوری تلگرام در طول کل دوره استفاده."
     ],
     "features": [
-      "مدل پرچمدار و پیشرو در توسعه نرم‌افزار: Claude Sonnet 5.5 (برترین مدل کدنویسی حال حاضر جهان، با تسلط بی‌رقیب بر ریفکتورینگ پروژه‌ها و ساخت کامپوننت‌ها)",
+      "مدل پرچمدار و پیشرو در توسعه نرم‌افزار: Claude Sonnet 5.5 (برترین مدل کدنویسی حال حاضر جهان، با تسلط کم‌نظیر بر ریفکتورینگ پروژه‌ها و ساخت کامپوننت‌ها)",
       "مدل فوق‌سنگین استدلالی: Claude Opus 5.5 و دسترسی به رده پردازشی Claude Fable 5.1 برای پروژه‌های طولانی، محاسبات آکادمیک و اسناد چندصدصفحه‌ای",
       "مدل فوق‌سریع: Claude Haiku 5.5 با کانتکست ۱ میلیون توکنی برای کارهای روتین و کم‌هزینه",
       "سیستم تفکر تطبیقی (Adaptive Thinking): امکان تنظیم هوشمند زمان فکر کردن مدل پیش از پاسخ‌دهی برای افزایش ضریب دقت تا ۱۰۰٪ در پروژه‌های پیچیده",
@@ -666,7 +669,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
         "status": "approved"
       }
     ],
-    "iconUrl": "/Claude-.webp?v=sq1"
+    "iconUrl": "/claude-icon.webp"
   }
 ];
 
@@ -1309,192 +1312,155 @@ export async function commitConfigToCloud(config: SiteConfig): Promise<{ success
   return { success: false, error: lastError || "خطا در برقراری ارتباط با سرور ابری" };
 }
 
-export async function syncSiteConfigWithCloud(): Promise<SiteConfig | null> {
+const SITE_CONFIG_SYNC_COOLDOWN_MS = 60_000;
+let inFlightSiteConfigSync: Promise<SiteConfig | null> | null = null;
+let lastSiteConfigSyncAt = 0;
+
+export async function syncSiteConfigWithCloud(force = false): Promise<SiteConfig | null> {
   if (typeof window === "undefined") return null;
 
-  try {
-    let fetchedData: SiteConfig | null = null;
+  if (!force && inFlightSiteConfigSync) {
+    return inFlightSiteConfigSync;
+  }
 
-    // 1. Live static file with cache-buster
+  const now = Date.now();
+  if (!force && lastSiteConfigSyncAt > 0 && now - lastSiteConfigSyncAt < SITE_CONFIG_SYNC_COOLDOWN_MS) {
+    return null;
+  }
+
+  const runSync = async (): Promise<SiteConfig | null> => {
     try {
-      const res = await fetch(`/site-config.json?v=${Date.now()}`, {
-        cache: "no-store",
-      });
-      if (res.ok) {
-        const json = await res.json();
-        if (json && Array.isArray(json.products) && json.products.length > 0) {
-          if (!json.products.some((p: any) => isMojibakeText(p.name))) {
-            fetchedData = json as SiteConfig;
-          }
-        }
-      }
-    } catch (e) {}
+      let fetchedData: SiteConfig | null = null;
 
-    // 2. Real-time fallback: If static file is missing, stale, or lacks promoBanner/instagramUrl, pull direct from GitHub
-    const localUpdatedAt = localStorage.getItem("vaich_config_updated_at");
-    const isStaticStale =
-      !fetchedData ||
-      !fetchedData.promoBanner ||
-      !fetchedData.instagramUrl ||
-      (localUpdatedAt && fetchedData.updatedAt && new Date(localUpdatedAt) > new Date(fetchedData.updatedAt));
-
-    if (isStaticStale) {
+      // 1. Live static file (uses ETag / must-revalidate unless admin forces cache-bust)
       try {
-        const ghRes = await fetch(
-          `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main&_t=${Date.now()}`,
-          {
-            headers: {
-              Authorization: `Bearer ${GITHUB_TOKEN}`,
-              Accept: "application/vnd.github.v3+json",
-            },
-          }
-        );
-        if (ghRes.ok) {
-          const ghJson = await ghRes.json();
-          if (ghJson && ghJson.content) {
-            const rawDecoded = decodeUtf8Base64(ghJson.content.replace(/\s/g, ""));
-            const parsed = JSON.parse(rawDecoded);
-            if (parsed && Array.isArray(parsed.products) && parsed.products.length > 0) {
-              if (!parsed.products.some((p: any) => isMojibakeText(p.name))) {
-                fetchedData = parsed as SiteConfig;
-                if (ghJson.sha && typeof ghJson.sha === "string") {
-                  latestKnownSha = ghJson.sha;
-                }
-              }
+        const configUrl = force ? `/site-config.json?v=${Date.now()}` : "/site-config.json";
+        const res = await fetch(configUrl, {
+          cache: force ? "no-store" : "no-cache",
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json && Array.isArray(json.products) && json.products.length > 0) {
+            if (!json.products.some((p: any) => isMojibakeText(p.name))) {
+              fetchedData = json as SiteConfig;
             }
           }
         }
       } catch (e) {}
-    }
 
-    if (fetchedData) {
-      const localUpdatedAt = typeof window !== "undefined" ? localStorage.getItem("vaich_config_updated_at") : null;
-      const storedProductsRaw = typeof window !== "undefined" ? localStorage.getItem("vaich_custom_products") : null;
-      const hasProductsChanged = !storedProductsRaw || storedProductsRaw !== JSON.stringify(fetchedData.products);
+      // 2. Real-time fallback: only hit GitHub API when static file is missing/stale for admin or lacks required config
+      const localUpdatedAt = localStorage.getItem("vaich_config_updated_at");
+      const isStaticStale =
+        !fetchedData ||
+        !fetchedData.promoBanner ||
+        !fetchedData.instagramUrl ||
+        (localUpdatedAt && fetchedData.updatedAt && new Date(localUpdatedAt) > new Date(fetchedData.updatedAt));
 
-      if (!hasProductsChanged && localUpdatedAt && fetchedData.updatedAt && localUpdatedAt === fetchedData.updatedAt) {
-        // Config is up-to-date. Skip redundant localStorage writes and re-renders.
+      if (isStaticStale) {
+        try {
+          const ghRes = await fetch(
+            `https://api.github.com/repos/${GITHUB_REPO_OWNER}/${GITHUB_REPO_NAME}/contents/${CONFIG_FILE_PATH}?ref=main&_t=${Date.now()}`,
+            {
+              headers: {
+                Authorization: `Bearer ${GITHUB_TOKEN}`,
+                Accept: "application/vnd.github.v3+json",
+              },
+            }
+          );
+          if (ghRes.ok) {
+            const ghJson = await ghRes.json();
+            if (ghJson && ghJson.content) {
+              const rawDecoded = decodeUtf8Base64(ghJson.content.replace(/\s/g, ""));
+              const parsed = JSON.parse(rawDecoded);
+              if (parsed && Array.isArray(parsed.products) && parsed.products.length > 0) {
+                if (!parsed.products.some((p: any) => isMojibakeText(p.name))) {
+                  fetchedData = parsed as SiteConfig;
+                  if (ghJson.sha && typeof ghJson.sha === "string") {
+                    latestKnownSha = ghJson.sha;
+                  }
+                }
+              }
+            }
+          }
+        } catch (e) {}
+      }
+
+      if (fetchedData) {
+        const storedProductsRaw = typeof window !== "undefined" ? localStorage.getItem("vaich_custom_products") : null;
+        const hasProductsChanged = !storedProductsRaw || storedProductsRaw !== JSON.stringify(fetchedData.products);
+
+        if (!hasProductsChanged && localUpdatedAt && fetchedData.updatedAt && localUpdatedAt === fetchedData.updatedAt) {
+          // Config is up-to-date. Skip redundant localStorage writes and re-renders.
+          return fetchedData;
+        }
+
+        localStorage.setItem("vaich_custom_products", JSON.stringify(fetchedData.products));
+        if (Array.isArray(fetchedData.categoryRows)) {
+          localStorage.setItem("vaich_category_rows", JSON.stringify(fetchedData.categoryRows));
+        }
+        if (fetchedData.layout) {
+          localStorage.setItem("vaich_layout_config", fetchedData.layout);
+        }
+        if (fetchedData.masterPin) {
+          localStorage.setItem("vaich_admin_pin", fetchedData.masterPin);
+          window.dispatchEvent(new CustomEvent("vaich_admin_pin_updated", { detail: fetchedData.masterPin }));
+        }
+        if (Array.isArray(fetchedData.adminUsers) && fetchedData.adminUsers.length > 0) {
+          localStorage.setItem("vaich_admin_users", JSON.stringify(fetchedData.adminUsers));
+          window.dispatchEvent(new CustomEvent("vaich_admin_users_updated", { detail: fetchedData.adminUsers }));
+        }
+        if (fetchedData.promoBanner) {
+          localStorage.setItem("vaich_promo_banner", JSON.stringify(fetchedData.promoBanner));
+          window.dispatchEvent(new CustomEvent("vaich_promo_banner_updated", { detail: fetchedData.promoBanner }));
+        }
+        if (fetchedData.instagramUrl) {
+          localStorage.setItem("vaich_instagram_url", fetchedData.instagramUrl);
+          window.dispatchEvent(new CustomEvent("vaich_instagram_url_updated", { detail: fetchedData.instagramUrl }));
+        }
+        if (fetchedData.blogPosts && Array.isArray(fetchedData.blogPosts)) {
+          localStorage.setItem("vaich_blog_posts", JSON.stringify(fetchedData.blogPosts));
+          window.dispatchEvent(new CustomEvent("vaich_blog_updated", { detail: fetchedData.blogPosts }));
+        }
+        if (fetchedData.updatedAt) {
+          localStorage.setItem("vaich_config_updated_at", fetchedData.updatedAt);
+        }
+
+        window.dispatchEvent(new CustomEvent("vaich_products_updated", { detail: fetchedData.products }));
+        window.dispatchEvent(new CustomEvent("vaich_rows_updated", { detail: fetchedData.categoryRows }));
+        window.dispatchEvent(new CustomEvent("vaich_layout_updated", { detail: fetchedData.layout }));
+
         return fetchedData;
       }
-
-      localStorage.setItem("vaich_custom_products", JSON.stringify(fetchedData.products));
-      if (Array.isArray(fetchedData.categoryRows)) {
-        localStorage.setItem("vaich_category_rows", JSON.stringify(fetchedData.categoryRows));
-      }
-      if (fetchedData.layout) {
-        localStorage.setItem("vaich_layout_config", fetchedData.layout);
-      }
-      if (fetchedData.masterPin) {
-        localStorage.setItem("vaich_admin_pin", fetchedData.masterPin);
-        window.dispatchEvent(new CustomEvent("vaich_admin_pin_updated", { detail: fetchedData.masterPin }));
-      }
-      if (Array.isArray(fetchedData.adminUsers) && fetchedData.adminUsers.length > 0) {
-        localStorage.setItem("vaich_admin_users", JSON.stringify(fetchedData.adminUsers));
-        window.dispatchEvent(new CustomEvent("vaich_admin_users_updated", { detail: fetchedData.adminUsers }));
-      }
-      if (fetchedData.promoBanner) {
-        localStorage.setItem("vaich_promo_banner", JSON.stringify(fetchedData.promoBanner));
-        window.dispatchEvent(new CustomEvent("vaich_promo_banner_updated", { detail: fetchedData.promoBanner }));
-      }
-      if (fetchedData.instagramUrl) {
-        localStorage.setItem("vaich_instagram_url", fetchedData.instagramUrl);
-        window.dispatchEvent(new CustomEvent("vaich_instagram_url_updated", { detail: fetchedData.instagramUrl }));
-      }
-      if (fetchedData.blogPosts && Array.isArray(fetchedData.blogPosts)) {
-        localStorage.setItem("vaich_blog_posts", JSON.stringify(fetchedData.blogPosts));
-        window.dispatchEvent(new CustomEvent("vaich_blog_updated", { detail: fetchedData.blogPosts }));
-      }
-      if (fetchedData.updatedAt) {
-        localStorage.setItem("vaich_config_updated_at", fetchedData.updatedAt);
-      }
-
-      window.dispatchEvent(new CustomEvent("vaich_products_updated", { detail: fetchedData.products }));
-      window.dispatchEvent(new CustomEvent("vaich_rows_updated", { detail: fetchedData.categoryRows }));
-      window.dispatchEvent(new CustomEvent("vaich_layout_updated", { detail: fetchedData.layout }));
-
-      return fetchedData;
+    } catch (err) {
+      console.error("Cloud sync error:", err);
+    } finally {
+      lastSiteConfigSyncAt = Date.now();
     }
-  } catch (err) {
-    console.error("Cloud sync error:", err);
+
+    return null;
+  };
+
+  if (force) {
+    return runSync();
   }
 
-  return null;
+  inFlightSiteConfigSync = runSync().finally(() => {
+    inFlightSiteConfigSync = null;
+  });
+  return inFlightSiteConfigSync;
 }
 
 export function useDynamicProducts() {
-  // Zero-flash client initialization from persistent storage
-  const [items, setItems] = useState<Product[]>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredProducts();
-        if (stored && stored.length > 0) return stored;
-      } catch {}
-    }
-    return DEFAULT_PRODUCTS;
-  });
-  const [rows, setRowsState] = useState<ProductCategoryRow[]>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredCategoryRows();
-        if (stored && stored.length > 0) return stored;
-      } catch {}
-    }
-    return DEFAULT_CATEGORY_ROWS;
-  });
-  const [layout, setLayoutState] = useState<LayoutMode>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredLayout();
-        if (stored) return stored;
-      } catch {}
-    }
-    return "1-row";
-  });
-  const [adminUsers, setAdminUsersState] = useState<AdminUser[]>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredAdminUsers();
-        if (stored && stored.length > 0) return stored;
-      } catch {}
-    }
-    return DEFAULT_ADMIN_USERS;
-  });
-  const [masterPin, setMasterPinState] = useState<string>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredMasterPin();
-        if (stored) return stored;
-      } catch {}
-    }
-    return DEFAULT_ADMIN_PIN;
-  });
-  const [promoBanner, setPromoBannerState] = useState<PromoBannerConfig>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredPromoBanner();
-        if (stored && stored.imageUrl) return stored;
-      } catch {}
-    }
-    return DEFAULT_PROMO_BANNER;
-  });
-  const [instagramUrl, setInstagramUrlState] = useState<string>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredInstagramUrl();
-        if (stored) return stored;
-      } catch {}
-    }
-    return DEFAULT_INSTAGRAM_URL;
-  });
-  const [inArticleBanner, setInArticleBannerState] = useState<InArticleBannerConfig>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = getStoredInArticleBanner();
-        if (stored) return stored;
-      } catch {}
-    }
-    return DEFAULT_IN_ARTICLE_BANNER;
-  });
+  // Match SSR initial state identically to prevent React hydration mismatch (#418);
+  // localStorage values are hydrated immediately in useEffect below.
+  const [items, setItems] = useState<Product[]>(DEFAULT_PRODUCTS);
+  const [rows, setRowsState] = useState<ProductCategoryRow[]>(DEFAULT_CATEGORY_ROWS);
+  const [layout, setLayoutState] = useState<LayoutMode>("1-row");
+  const [adminUsers, setAdminUsersState] = useState<AdminUser[]>(DEFAULT_ADMIN_USERS);
+  const [masterPin, setMasterPinState] = useState<string>(DEFAULT_ADMIN_PIN);
+  const [promoBanner, setPromoBannerState] = useState<PromoBannerConfig>(DEFAULT_PROMO_BANNER);
+  const [instagramUrl, setInstagramUrlState] = useState<string>(DEFAULT_INSTAGRAM_URL);
+  const [inArticleBanner, setInArticleBannerState] = useState<InArticleBannerConfig>(DEFAULT_IN_ARTICLE_BANNER);
   const [isCloudSyncing, setIsCloudSyncing] = useState(false);
   const [lastCloudSync, setLastCloudSync] = useState<string | null>(null);
 
@@ -1750,7 +1716,7 @@ export function useDynamicProducts() {
     restoreSnapshot,
     isCloudSyncing,
     lastCloudSync,
-    syncFromCloud: syncSiteConfigWithCloud,
+    syncFromCloud: () => syncSiteConfigWithCloud(true),
   };
 }
 
