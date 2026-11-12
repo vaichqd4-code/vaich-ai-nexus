@@ -81,7 +81,8 @@ export function ServiceIcon({
             maskImage: "radial-gradient(white, black)",
             transform: "translateZ(0)",
           }}
-          loading="lazy"
+          loading="eager"
+          fetchPriority="high"
         />
       ) : (
         <span className="text-neon-blue text-lg font-black">

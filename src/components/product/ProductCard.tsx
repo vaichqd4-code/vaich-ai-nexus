@@ -151,8 +151,9 @@ export function ProductCard({
                 width={280}
                 height={175}
                 decoding="async"
+                fetchPriority="high"
                 className="h-full w-full object-cover rounded-xl sm:rounded-2xl group-hover:scale-105 transition-transform duration-300"
-                loading="lazy"
+                loading="eager"
               />
             ) : (
               <span className="text-2xl sm:text-3xl font-black text-primary">
@@ -190,7 +191,8 @@ export function ProductCard({
                       maskImage: "radial-gradient(white, black)",
                       transform: "translateZ(0)",
                     }}
-                    loading="lazy"
+                    fetchPriority="high"
+                    loading="eager"
                   />
                 </div>
               ) : (

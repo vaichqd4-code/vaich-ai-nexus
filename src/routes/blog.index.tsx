@@ -299,6 +299,7 @@ function BlogArchivePage() {
                       <Link
                         to="/blog/$slug"
                         params={{ slug: post.slug }}
+                        preload="intent"
                         className="focus:outline-none transition-colors group-hover:text-primary line-clamp-2 after:absolute after:inset-0 after:z-10"
                       >
                         {post.title}

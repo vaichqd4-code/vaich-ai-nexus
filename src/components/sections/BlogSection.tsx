@@ -81,10 +81,10 @@ export function BlogSection() {
       const endX = e.changedTouches[0]?.clientX ?? touchStartX;
       const diff = endX - touchStartX;
       if (Math.abs(diff) > 40) {
-        if (diff > 0) {
-          goNext();
+        if (diff < 0) {
+          goNext(); // کشیدن انگشت به چپ -> حرکت به اسلاید بعدی
         } else {
-          goPrev();
+          goPrev(); // کشیدن انگشت به راست -> بازگشت به اسلاید قبلی
         }
       }
     }
@@ -107,6 +107,7 @@ export function BlogSection() {
 
         <Link
           to="/blog"
+          preload="intent"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary/80 transition-colors"
         >
           <span>مشاهده همه مقالات</span>
@@ -175,6 +176,7 @@ export function BlogSection() {
                     <Link
                       to="/blog/$slug"
                       params={{ slug: post.slug }}
+                      preload="intent"
                       className="transition-colors group-hover:text-primary line-clamp-2 focus:outline-none"
                     >
                       {post.title}
@@ -190,6 +192,7 @@ export function BlogSection() {
                   <Link
                     to="/blog/$slug"
                     params={{ slug: post.slug }}
+                    preload="intent"
                     className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow-sm shadow-primary/20 transition-all hover:opacity-90 active:scale-95"
                   >
                     <span>مطالعه کامل مقاله</span>

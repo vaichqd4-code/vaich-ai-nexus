@@ -155,6 +155,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "/promo-banner.webp",
         fetchPriority: "high",
       },
+      { rel: "preload", as: "image", type: "image/svg+xml", href: "/chatgpt-logo.svg" },
+      { rel: "preload", as: "image", type: "image/webp", href: "/gemini-60d-icon.webp" },
+      { rel: "preload", as: "image", type: "image/webp", href: "/gemini-pro-18m-icon.webp" },
+      { rel: "preload", as: "image", type: "image/webp", href: "/claude-icon.webp" },
       { rel: "stylesheet", href: appCss },
       {
         rel: "alternate",
