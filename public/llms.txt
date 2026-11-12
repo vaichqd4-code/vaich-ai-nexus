@@ -1,0 +1,38 @@
+# VAICH
+
+> مرجع تخصصی و قانونی خرید اشتراک‌های هوش مصنوعی (ChatGPT Plus، Claude Pro، Gemini Pro) و پلنر برنامه‌ریزی هوشمند مبتنی بر Google Sheets در ایران با تحویل سریع و ضمانت پایداری.
+
+VAICH (وایچ) یک فروشگاه تخصصی خدمات دیجیتال و اشتراک‌های هوش مصنوعی است. این وب‌سایت امکان بررسی مشخصات، مشاهده قیمت به‌روز، مطالعه راهنماها و ثبت سفارش آنلاین برای اشتراک‌های قانونی هوش مصنوعی و ابزارهای بهره‌وری فردی را فراهم می‌کند.
+
+## محصولات و اشتراک‌ها
+
+- [همه محصولات و خدمات VAICH](https://vaich.ir/products): فهرست کامل اشتراک‌های هوش مصنوعی و ابزارهای بهره‌وری با قیمت و جزئیات
+- [پلنر برنامه‌ریزی وایچ (استاندارد)](https://vaich.ir/products/vaich-life-planner): سیستم دائمی برنامه‌ریزی فردی، ردیاب عادات (Habit Tracker) و مدیریت مالی مبتنی بر Google Sheets
+- [اشتراک ChatGPT Plus](https://vaich.ir/products/chatgpt-plus): اشتراک ۱ ماهه قانونی و اختصاصی ChatGPT Plus روی ایمیل شخصی یا اکانت اختصاصی
+- [اشتراک Claude Pro](https://vaich.ir/products/claude): اشتراک قانونی و اختصاصی Claude Pro مناسب کدنویسی و تحلیل‌های تخصصی
+- [اشتراک Gemini Pro - ۱۸ ماهه](https://vaich.ir/products/gemini-pro): اشتراک طولانی‌مدت ۱۸ ماهه Google Gemini Pro با قابلیت‌های کامل مدل‌های جمینای
+- [اشتراک Gemini Pro - ۶۰ روزه](https://vaich.ir/products/gemini): اشتراک ۶۰ روزه Google Gemini Pro برای تست و پروژه‌های کوتاه‌مدت
+
+## فیدها و منابع داده‌ای
+
+- [فید JSON محصولات](https://vaich.ir/products-feed.json): فهرست ساخت‌یافته محصولات و مشخصات به فرمت JSON
+- [فید XML محصولات](https://vaich.ir/products-feed.xml): فید استاندارد XML کاتالوگ محصولات
+- [پیکربندی زنده کاتالوگ](https://vaich.ir/site-config.json): قیمت‌ها و تنظیمات جاری فروشگاه به فرمت JSON
+- [نقشه سایت (Sitemap)](https://vaich.ir/sitemap.xml): فهرست کامل آدرس‌های ایندکس‌شده سایت
+- [فید RSS مجله](https://vaich.ir/rss.xml): خوراک RSS مقالات تخصصی وایچ
+- [مانیفست کشف منابع (ARD)](https://vaich.ir/.well-known/ard.json): فهرست ماشینی منابع قابل کشف توسط عامل‌های هوش مصنوعی
+
+## مجله و راهنماهای تخصصی
+
+- [مجله تخصصی وایچ](https://vaich.ir/blog): آرشیو مقالات مقایسه و آموزش ابزارهای هوش مصنوعی و مدیریت زمان
+- [مقایسه مدل‌های پرچمدار هوش مصنوعی](https://vaich.ir/blog/flagship-ai-models-comparison): بررسی تفاوت‌های کلیدی ChatGPT، Claude و Gemini
+- [مقایسه نسخه‌های رایگان و پلاس](https://vaich.ir/blog/ai-free-vs-plus-comparison): چه زمانی ارتقا به اشتراک پولی ارزشمند است
+- [چگونه پلنر Google Sheets عادت‌ها و اهداف را متحول می‌کند](https://vaich.ir/blog/how-google-sheets-planner-transforms-habits-goals): راهنمای بهره‌وری با پلنر وایچ
+
+## پشتیبانی و اطلاعات تکمیلی
+
+- [چرا وایچ؟](https://vaich.ir/why): ضمانت‌ها، اصالت اکانت‌ها و تفاوت خدمات وایچ
+- [سوالات متداول](https://vaich.ir/faq): پاسخ پرسش‌های رایج درباره سفارش، فعال‌سازی و گارانتی
+- [پشتیبانی آنلاین](https://vaich.ir/support): راه‌های ارتباط سریع با تیم پشتیبانی
+- [قوانین و مقررات](https://vaich.ir/terms): شرایط و ضوابط استفاده از خدمات
+- [حریم خصوصی](https://vaich.ir/privacy): سیاست نگهداری و امنیت اطلاعات کاربران

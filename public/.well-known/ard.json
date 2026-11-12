@@ -1,0 +1,58 @@
+{
+  "entries": [
+    {
+      "identifier": "urn:air:vaich.ir:feed:products-json",
+      "displayName": "VAICH Product Catalog (JSON)",
+      "type": "application/json",
+      "url": "https://vaich.ir/products-feed.json",
+      "description": "Structured product catalog for VAICH AI subscriptions (ChatGPT Plus, Claude Pro, Gemini Pro) and digital Google Sheets planners.",
+      "representativeQueries": [
+        "What AI subscriptions and digital planners does VAICH sell?",
+        "Get VAICH product catalog with ChatGPT Plus and Claude Pro details",
+        "List available plans and pricing on vaich.ir"
+      ],
+      "tags": [
+        "catalog",
+        "ai-subscriptions",
+        "chatgpt-plus",
+        "claude-pro",
+        "gemini-pro",
+        "digital-planner"
+      ]
+    },
+    {
+      "identifier": "urn:air:vaich.ir:docs:llms-txt",
+      "displayName": "VAICH AI & LLM Site Guide (llms.txt)",
+      "type": "text/markdown",
+      "url": "https://vaich.ir/llms.txt",
+      "description": "Concise Markdown index of VAICH products, structured feeds, blog guides, and support pages for LLMs and AI agents.",
+      "representativeQueries": [
+        "Summarize VAICH website structure and key pages",
+        "Find links to VAICH AI subscription pages and FAQ"
+      ],
+      "tags": [
+        "llms-txt",
+        "documentation",
+        "sitemap",
+        "support"
+      ]
+    },
+    {
+      "identifier": "urn:air:vaich.ir:feed:blog-rss",
+      "displayName": "VAICH AI & Productivity Magazine RSS",
+      "type": "application/rss+xml",
+      "url": "https://vaich.ir/rss.xml",
+      "description": "RSS feed of Persian articles covering AI model comparisons, productivity workflows, and digital habit planning.",
+      "representativeQueries": [
+        "Read latest VAICH blog articles comparing AI models",
+        "Find productivity and Google Sheets planner guides on VAICH"
+      ],
+      "tags": [
+        "rss",
+        "blog",
+        "ai-guides",
+        "productivity"
+      ]
+    }
+  ]
+}

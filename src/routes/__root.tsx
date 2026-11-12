@@ -162,6 +162,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         title: "مجله تخصصی VAICH",
         href: "https://vaich.ir/rss.xml",
       },
+      { rel: "ard", type: "application/json", href: "/.well-known/ard.json" },
       { rel: "icon", type: "image/png", sizes: "192x192", href: "/favicon-192x192.png?v=5" },
       { rel: "icon", type: "image/png", sizes: "96x96", href: "/favicon-96x96.png?v=5" },
       { rel: "icon", type: "image/png", sizes: "48x48", href: "/favicon-48x48.png?v=5" },
