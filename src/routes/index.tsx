@@ -225,9 +225,32 @@ function ProductRowSection({
   layout: LayoutMode;
 }) {
   const carouselRef = useRef<HTMLDivElement>(null);
+  const userInteractedRef = useRef(false);
+  const productOrderKey = products.map((p) => p.slug).join(",");
+
+  useEffect(() => {
+    userInteractedRef.current = false;
+    const resetToRightmostStart = () => {
+      if (carouselRef.current && !userInteractedRef.current) {
+        carouselRef.current.scrollLeft = 0;
+      }
+    };
+    resetToRightmostStart();
+    const raf = requestAnimationFrame(resetToRightmostStart);
+    const timer = setTimeout(resetToRightmostStart, 80);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(timer);
+    };
+  }, [productOrderKey, layout]);
+
+  const markInteracted = () => {
+    userInteractedRef.current = true;
+  };
 
   const scrollCarousel = (direction: "left" | "right") => {
     if (!carouselRef.current) return;
+    userInteractedRef.current = true;
     const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
     const scrollAmount = (direction === "right" ? 1 : -1) * (isMobile ? 215 : 330);
     carouselRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
@@ -285,7 +308,12 @@ function ProductRowSection({
         {layout === "1-row" && (
           <div
             ref={carouselRef}
-            className="flex gap-3 sm:gap-6 overflow-x-auto snap-x snap-mandatory py-2 scrollbar-none overscroll-x-contain"
+            dir="rtl"
+            onPointerDown={markInteracted}
+            onTouchStart={markInteracted}
+            onWheel={markInteracted}
+            style={{ overflowAnchor: "none", WebkitOverflowScrolling: "touch" }}
+            className="flex gap-3 sm:gap-6 overflow-x-auto snap-x snap-proximity py-2 scrollbar-none overscroll-x-contain"
           >
             {products.map((p) => (
               <ProductCard key={p.slug} product={p} />
@@ -297,7 +325,12 @@ function ProductRowSection({
         {layout === "2-row" && (
           <div
             ref={carouselRef}
-            className="grid grid-rows-2 grid-flow-col auto-cols-[185px] xs:auto-cols-[210px] sm:auto-cols-[285px] gap-3 sm:gap-6 overflow-x-auto snap-x snap-mandatory py-2 scrollbar-none overscroll-x-contain"
+            dir="rtl"
+            onPointerDown={markInteracted}
+            onTouchStart={markInteracted}
+            onWheel={markInteracted}
+            style={{ overflowAnchor: "none", WebkitOverflowScrolling: "touch" }}
+            className="grid grid-rows-2 grid-flow-col auto-cols-[185px] xs:auto-cols-[210px] sm:auto-cols-[285px] gap-3 sm:gap-6 overflow-x-auto snap-x snap-proximity py-2 scrollbar-none overscroll-x-contain"
           >
             {products.map((p) => (
               <ProductCard key={p.slug} product={p} />

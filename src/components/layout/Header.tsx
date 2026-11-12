@@ -392,13 +392,13 @@ export function Header() {
             )}
           </div>
 
-          {/* دکمه آیکونی پشتیبانی آنلاین ۲۴ ساعته (در موبایل داخل منوی کشویی است) */}
+          {/* دکمه آیکونی پشتیبانی آنلاین ۲۴ ساعته */}
           <button
             type="button"
             onClick={handleOpenChat}
             title="پشتیبانی آنلاین ۲۴ ساعته"
             aria-label="پشتیبانی آنلاین ۲۴ ساعته"
-            className="hidden sm:grid group h-11 w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary hover:text-foreground active:scale-95 cursor-pointer"
+            className="grid group h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-muted-foreground transition-all duration-200 hover:border-primary/50 hover:bg-secondary hover:text-foreground active:scale-95 cursor-pointer"
           >
             <Headphones className="h-5 w-5 transition-transform duration-200 group-hover:scale-105" />
           </button>

@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   useDynamicProducts,
   formatPrice,
@@ -66,6 +66,9 @@ import {
   Sun,
   Moon,
   ChevronLeft,
+  GripVertical,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 
 // Client-side image compressor for mobile and desktop uploads
@@ -610,6 +613,237 @@ export function AdminPage() {
     setCurrentUser(null);
     setInputPin("");
     setInputEmail("");
+  };
+
+  // Hold-to-drag & step reordering state for products
+  const [draggingSlug, setDraggingSlug] = useState<string | null>(null);
+  const [dragPreviewProducts, setDragPreviewProducts] = useState<typeof products | null>(null);
+  const dragRowNodesRef = useRef<Map<string, HTMLDivElement>>(new Map());
+  const holdTimerRef = useRef<number | null>(null);
+  const autoScrollRafRef = useRef<number | null>(null);
+  const dragStateRef = useRef<{
+    slug: string;
+    pointerId: number;
+    startX: number;
+    startY: number;
+    lastClientY: number;
+    hasMoved: boolean;
+    isDragging: boolean;
+    activeList: typeof products;
+    initialOrder: string[];
+  } | null>(null);
+  const productsRef = useRef(products);
+  productsRef.current = products;
+
+  const displayProducts = dragPreviewProducts ?? products;
+
+  const commitProductOrder = (orderedList: typeof products) => {
+    setProducts(orderedList);
+    handlePublishCloud({ products: orderedList });
+  };
+
+  const handleMoveProductStep = (slug: string, direction: -1 | 1) => {
+    const idx = products.findIndex((item) => item.slug === slug);
+    if (idx === -1) return;
+    const targetIdx = idx + direction;
+    if (targetIdx < 0 || targetIdx >= products.length) return;
+    const nextList = [...products];
+    const [moved] = nextList.splice(idx, 1);
+    if (!moved) return;
+    nextList.splice(targetIdx, 0, moved);
+    commitProductOrder(nextList);
+  };
+
+  useEffect(() => {
+    const clearHoldTimer = () => {
+      if (holdTimerRef.current !== null) {
+        window.clearTimeout(holdTimerRef.current);
+        holdTimerRef.current = null;
+      }
+    };
+
+    const stopAutoScroll = () => {
+      if (autoScrollRafRef.current !== null) {
+        window.cancelAnimationFrame(autoScrollRafRef.current);
+        autoScrollRafRef.current = null;
+      }
+    };
+
+    const reorderByPointerY = (clientY: number) => {
+      const state = dragStateRef.current;
+      if (!state) return;
+
+      const list = state.activeList;
+      const currentIdx = list.findIndex((item) => item.slug === state.slug);
+      if (currentIdx === -1) return;
+
+      let targetIdx = currentIdx;
+      for (let i = 0; i < list.length; i++) {
+        if (i === currentIdx) continue;
+        const rowItem = list[i];
+        if (!rowItem) continue;
+        const node = dragRowNodesRef.current.get(rowItem.slug);
+        if (!node) continue;
+        const rect = node.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+        if (i < currentIdx && clientY < midY) {
+          targetIdx = i;
+          break;
+        }
+        if (i > currentIdx && clientY > midY) {
+          targetIdx = i;
+        }
+      }
+
+      if (targetIdx !== currentIdx) {
+        const nextList = [...list];
+        const [moved] = nextList.splice(currentIdx, 1);
+        if (!moved) return;
+        nextList.splice(targetIdx, 0, moved);
+        state.activeList = nextList;
+        state.hasMoved = true;
+        setDragPreviewProducts(nextList);
+      }
+    };
+
+    const runAutoScroll = () => {
+      const state = dragStateRef.current;
+      if (!state || !draggingSlug) {
+        autoScrollRafRef.current = null;
+        return;
+      }
+      const edgeThreshold = 105;
+      const vh = window.innerHeight;
+      let delta = 0;
+      if (state.lastClientY < edgeThreshold) {
+        delta = -Math.max(4, Math.round(((edgeThreshold - state.lastClientY) / edgeThreshold) * 16));
+      } else if (state.lastClientY > vh - edgeThreshold) {
+        delta = Math.max(4, Math.round(((state.lastClientY - (vh - edgeThreshold)) / edgeThreshold) * 16));
+      }
+      if (delta !== 0) {
+        window.scrollBy(0, delta);
+        reorderByPointerY(state.lastClientY);
+      }
+      autoScrollRafRef.current = window.requestAnimationFrame(runAutoScroll);
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      const state = dragStateRef.current;
+      if (!state || e.pointerId !== state.pointerId) return;
+
+      if (!state.isDragging) {
+        // Still waiting for 220ms hold threshold; cancel hold if user scrolls/moves away
+        const dist = Math.hypot(e.clientX - state.startX, e.clientY - state.startY);
+        if (dist > 10) {
+          clearHoldTimer();
+          dragStateRef.current = null;
+        }
+        return;
+      }
+
+      state.lastClientY = e.clientY;
+      reorderByPointerY(e.clientY);
+    };
+
+    const onTouchMoveLock = (e: TouchEvent) => {
+      if (draggingSlug) {
+        e.preventDefault();
+      }
+    };
+
+    const finishDrag = () => {
+      clearHoldTimer();
+      stopAutoScroll();
+      const state = dragStateRef.current;
+      dragStateRef.current = null;
+
+      if (draggingSlug) {
+        setDraggingSlug(null);
+        setDragPreviewProducts(null);
+        document.body.style.userSelect = "";
+        if (state) {
+          const changed = state.activeList.some(
+            (item, idx) => item.slug !== state.initialOrder[idx]
+          );
+          if (changed) {
+            commitProductOrder(state.activeList);
+          }
+        }
+      }
+    };
+
+    if (draggingSlug) {
+      document.body.style.userSelect = "none";
+      autoScrollRafRef.current = window.requestAnimationFrame(runAutoScroll);
+    }
+
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", finishDrag);
+    window.addEventListener("pointercancel", finishDrag);
+    window.addEventListener("touchmove", onTouchMoveLock, { passive: false });
+
+    return () => {
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", finishDrag);
+      window.removeEventListener("pointercancel", finishDrag);
+      window.removeEventListener("touchmove", onTouchMoveLock);
+      clearHoldTimer();
+      stopAutoScroll();
+      document.body.style.userSelect = "";
+    };
+  }, [draggingSlug]);
+
+  const handleProductRowPointerDown = (
+    e: React.PointerEvent<HTMLElement>,
+    slug: string,
+    immediate = false
+  ) => {
+    if (e.button !== 0 && e.pointerType === "mouse") return;
+    if (!immediate) {
+      const target = e.target as HTMLElement | null;
+      if (target?.closest("button, a, input, select, textarea, label, code")) return;
+    }
+
+    if (holdTimerRef.current !== null) {
+      window.clearTimeout(holdTimerRef.current);
+      holdTimerRef.current = null;
+    }
+
+    const snapshot = [...productsRef.current];
+    dragStateRef.current = {
+      slug,
+      pointerId: e.pointerId,
+      startX: e.clientX,
+      startY: e.clientY,
+      lastClientY: e.clientY,
+      hasMoved: false,
+      isDragging: false,
+      activeList: snapshot,
+      initialOrder: snapshot.map((item) => item.slug),
+    };
+
+    const beginDrag = () => {
+      if (!dragStateRef.current || dragStateRef.current.slug !== slug) return;
+      dragStateRef.current.isDragging = true;
+      setDragPreviewProducts(dragStateRef.current.activeList);
+      setDraggingSlug(slug);
+      try {
+        if ("vibrate" in navigator) navigator.vibrate(14);
+      } catch {
+        // Ignore vibration unavailability
+      }
+    };
+
+    if (immediate) {
+      e.stopPropagation();
+      e.preventDefault();
+      beginDrag();
+    } else {
+      holdTimerRef.current = window.setTimeout(() => {
+        holdTimerRef.current = null;
+        beginDrag();
+      }, 220);
+    }
   };
 
   // Toggle "ویژه" (Featured) status on a product
@@ -1477,27 +1711,82 @@ export function AdminPage() {
 
             {/* Products Table */}
             <div className="rounded-3xl border border-border/80 bg-card overflow-hidden shadow-xs">
-              <div className="border-b border-border/60 p-4 sm:px-6">
-                <h2 className="text-base font-bold text-foreground">
-                  لیست اشتراک‌ها و محصولات فروشگاه
-                </h2>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  می‌توانید برچسب دلخواه با رنگ‌های اختصاصی بنویسید، آن را حذف کنید یا به ردیف‌های مختلف اختصاص دهید.
-                </p>
+              <div className="border-b border-border/60 p-4 sm:px-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 className="text-base font-bold text-foreground">
+                    لیست اشتراک‌ها و محصولات فروشگاه
+                  </h2>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    برای جابه‌جایی ترتیب نمایش در سایت، روی ردیف یا دستگیره کنار محصول نگه دارید و به بالا یا پایین بکشید (یا از فلش‌ها استفاده کنید)؛ تغییر ترتیب بلافاصله روی سرور ابری ذخیره می‌شود.
+                  </p>
+                </div>
+                <span className="inline-flex w-fit items-center gap-1.5 rounded-xl border border-primary/25 bg-primary/8 px-3 py-1.5 text-[11px] font-bold text-primary shrink-0">
+                  <GripVertical className="h-3.5 w-3.5" />
+                  نگه دارید و جابه‌جا کنید
+                </span>
               </div>
 
               <div className="divide-y divide-border/60">
-                {products.map((p) => {
+                {displayProducts.map((p, idx) => {
                   const hasBadge = Boolean(p.badge || p.featured);
                   const rowObj = rows.find((r) => r.id === (p.categoryId || "ai"));
+                  const isDraggingThis = draggingSlug === p.slug;
 
                   return (
                     <div
                       key={p.slug}
-                      className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 hover:bg-secondary/20 transition-colors"
+                      ref={(el) => {
+                        if (el) dragRowNodesRef.current.set(p.slug, el);
+                        else dragRowNodesRef.current.delete(p.slug);
+                      }}
+                      onPointerDown={(e) => handleProductRowPointerDown(e, p.slug, false)}
+                      className={`flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 transition-all duration-200 select-none ${
+                        isDraggingThis
+                          ? "relative z-20 scale-[1.015] bg-primary/10 ring-2 ring-primary/60 shadow-[0_14px_35px_rgba(0,0,0,0.22)] rounded-2xl cursor-grabbing"
+                          : draggingSlug
+                          ? "opacity-90"
+                          : "hover:bg-secondary/20"
+                      }`}
                     >
-                      {/* Product Info */}
-                      <div className="flex items-center gap-3.5">
+                      {/* Product Info + Drag Handle */}
+                      <div className="flex items-center gap-2.5 sm:gap-3.5">
+                        <div className="flex items-center gap-1 shrink-0">
+                          <button
+                            type="button"
+                            onPointerDown={(e) => handleProductRowPointerDown(e, p.slug, true)}
+                            className="grid h-9 w-7 place-items-center rounded-xl border border-border/60 bg-secondary/40 text-muted-foreground hover:text-primary hover:border-primary/40 hover:bg-primary/10 cursor-grab active:cursor-grabbing touch-none transition-colors"
+                            title="نگه دارید و برای تغییر ترتیب به بالا یا پایین بکشید"
+                            aria-label={`جابه‌جایی ترتیب ${p.name}`}
+                          >
+                            <GripVertical className="h-4 w-4" />
+                          </button>
+                          <div className="flex flex-col items-center gap-0.5">
+                            <button
+                              type="button"
+                              onClick={() => handleMoveProductStep(p.slug, -1)}
+                              disabled={idx === 0}
+                              className="grid h-4 w-5 place-items-center rounded text-muted-foreground hover:text-primary hover:bg-primary/10 disabled:opacity-25 disabled:pointer-events-none transition-colors"
+                              title="انتقال به بالاتر (اولِ ردیف)"
+                              aria-label={`انتقال ${p.name} به بالا`}
+                            >
+                              <ArrowUp className="h-3 w-3" />
+                            </button>
+                            <span className="text-[10px] font-black text-muted-foreground leading-none">
+                              {toPersianDigits(idx + 1)}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleMoveProductStep(p.slug, 1)}
+                              disabled={idx === displayProducts.length - 1}
+                              className="grid h-4 w-5 place-items-center rounded text-muted-foreground hover:text-primary hover:bg-primary/10 disabled:opacity-25 disabled:pointer-events-none transition-colors"
+                              title="انتقال به پایین‌تر"
+                              aria-label={`انتقال ${p.name} به پایین`}
+                            >
+                              <ArrowDown className="h-3 w-3" />
+                            </button>
+                          </div>
+                        </div>
+
                         <ServiceIcon
                           slug={p.slug}
                           {...(p.iconUrl ? { iconUrl: p.iconUrl } : {})}

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   Headphones,
   X,
@@ -34,6 +35,11 @@ export function AiChatDrawer() {
   const [isOpen, setIsOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
     if (typeof window !== "undefined") {
       try {
@@ -251,7 +257,7 @@ export function AiChatDrawer() {
     }
   };
 
-  if (!isOpen) {
+  if (!isOpen || !isMounted) {
     return null;
   }
 
@@ -316,10 +322,10 @@ export function AiChatDrawer() {
     });
   };
 
-  return (
+  return createPortal(
     <div
       dir="rtl"
-      className="fixed bottom-3 left-3 sm:bottom-6 sm:left-6 z-[99999] flex flex-col font-sans select-none"
+      className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-[99999] flex flex-col font-sans select-none"
     >
       {isMinimized ? (
         <button
@@ -338,7 +344,7 @@ export function AiChatDrawer() {
         </button>
       ) : (
         <div
-          className={`w-[calc(100vw-24px)] xs:w-[380px] sm:w-[415px] h-[540px] max-h-[86vh] rounded-3xl border border-white/20 dark:border-white/10 bg-background/85 dark:bg-[#0b0f19]/90 backdrop-blur-3xl shadow-[0_25px_70px_rgba(0,0,0,0.25)] dark:shadow-[0_25px_80px_rgba(0,0,0,0.8)] ring-1 ring-black/5 dark:ring-white/5 flex flex-col overflow-hidden text-foreground ${
+          className={`w-[calc(100vw-24px)] xs:w-[380px] sm:w-[415px] h-[min(520px,calc(100dvh-5.5rem))] max-h-[calc(100dvh-5.5rem)] rounded-3xl border border-white/20 dark:border-white/10 bg-background/85 dark:bg-[#0b0f19]/90 backdrop-blur-3xl shadow-[0_25px_70px_rgba(0,0,0,0.25)] dark:shadow-[0_25px_80px_rgba(0,0,0,0.8)] ring-1 ring-black/5 dark:ring-white/5 flex flex-col overflow-hidden text-foreground ${
             isClosing
               ? "animate-vaich-chat-out pointer-events-none"
               : "animate-vaich-chat-in"
@@ -479,6 +485,7 @@ export function AiChatDrawer() {
           </form>
         </div>
       )}
-    </div>
+    </div>,
+    document.body
   );
 }
