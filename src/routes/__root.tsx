@@ -149,19 +149,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "/fonts/vazirmatn-arabic.woff2",
         crossOrigin: "anonymous",
       },
-      {
-        rel: "preload",
-        as: "image",
-        type: "image/webp",
-        href: "/promo-banner.webp",
-        fetchPriority: "high",
-      },
-      { rel: "preload", as: "image", type: "image/svg+xml", href: "/chatgpt-logo.svg" },
-      { rel: "preload", as: "image", type: "image/webp", href: "/gemini-60d-icon.webp" },
-      { rel: "preload", as: "image", type: "image/webp", href: "/gemini-pro-18m-icon.webp" },
-      { rel: "preload", as: "image", type: "image/webp", href: "/claude-icon.webp" },
-      { rel: "preload", as: "image", type: "image/webp", href: "/planner-cover.webp" },
-      { rel: "stylesheet", href: appCss },
+                                          { rel: "stylesheet", href: appCss },
       {
         rel: "alternate",
         type: "application/rss+xml",
@@ -189,7 +177,10 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="fa" dir="rtl" data-theme="light">
       <head>
+        <title>67540732</title>
         <meta name="enamad" content="67540732" />
+        <meta name="enamad" content ="67540732"/>
+        <meta name="enamad" content="67540732"/>
         <meta name="enamad" content ="67540732"/>
         <meta name="enamad" content="67540732"/>
         <script
