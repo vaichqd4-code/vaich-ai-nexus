@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
-import { getBlogPostBySlug, getRelatedBlogPosts } from "@/lib/blog-data";
+import { getBlogPostBySlug, getRelatedBlogPosts, type BlogPost } from "@/lib/blog-data";
 import { BlogCoverGraphic } from "@/components/blog/BlogCoverGraphic";
 import { useDynamicProducts, type InArticleBannerConfig } from "@/lib/products";
 import {
@@ -212,9 +212,11 @@ function BlogPostPage() {
         {/* Cover Artwork — Guaranteed 100% Crisp Metallic Visual (No Broken Images) */}
         <div className="mb-10 overflow-hidden rounded-3xl border border-border/80 bg-neutral-950 shadow-xl aspect-[16/9] w-full relative">
           <img
-            src={post.coverImage}
+            src={post.coverImage.includes("?") ? post.coverImage : `${post.coverImage}?v=20261113`}
             alt={post.title}
-            loading="lazy"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
             className="w-full h-full object-cover"
             onError={(e) => {
               (e.currentTarget as HTMLElement).style.display = "none";
@@ -304,10 +306,10 @@ function BlogPostPage() {
 
               {/* Mid-article In-Article Promo Banner (Admin Managed) or Fallback */}
               {idx === 1 && (
-                inArticleBanner && inArticleBanner.enabled ? (
+                post.targetProductType === "planner" && inArticleBanner && inArticleBanner.enabled ? (
                   <InArticlePromoWidget config={inArticleBanner} />
                 ) : (
-                  <ProductRecommendationBanner targetType={post.targetProductType} />
+                  <ProductRecommendationBanner post={post} />
                 )
               )}
             </section>
@@ -332,7 +334,7 @@ function BlogPostPage() {
 
         {/* Bottom CTA Banner */}
         <div className="my-10">
-          <ProductRecommendationBanner targetType={post.targetProductType} isFullWidth />
+          <ProductRecommendationBanner post={post} isFullWidth />
         </div>
 
         {/* Related Articles Carousel / Grid */}
@@ -399,73 +401,118 @@ function BlogPostPage() {
   );
 }
 
+function getArticlePromoDetails(post: BlogPost) {
+  const slug = post.slug.toLowerCase();
+
+  // 1. Gemini articles
+  if (slug.includes("gemini")) {
+    return {
+      badge: "پیشنهاد ویژه اشتراک هوش مصنوعی",
+      title: "خرید قانونی اشتراک Google AI Pro (Gemini Pro)",
+      description: "دسترسی رسمی به مدل پرچمدار Gemini 4 Argon با استدلال عمیق Deep Think، یکپارچگی مستقیم با Google Workspace و ۵ ترابایت فضای ابری Google One با فعال‌سازی قانونی و تست تحویل سالم اولیه.",
+      linkUrl: "/products/gemini",
+      buttonText: "مشاهده پلن‌های Gemini Pro",
+      accentBorder: "border-purple-500/35",
+      accentBg: "from-purple-950/20 via-background to-card",
+      badgeClass: "bg-purple-500/15 text-purple-400 border-purple-500/30",
+      btnClass: "bg-purple-600 hover:bg-purple-500 text-white shadow-purple-600/20",
+    };
+  }
+
+  // 2. Claude articles
+  if (slug.includes("claude") && !slug.includes("comparison") && !slug.includes("flagship")) {
+    return {
+      badge: "پرچمدار کدنویسی و استدلال",
+      title: "خرید قانونی اکانت Claude Pro آنتروپیک",
+      description: "مجهز به Claude Sonnet 5.5، مدل استدلال عمیق Opus 5.5، بوم تعاملی Artifacts، ابزار پیشرفته Claude Code و کانتکست ۱ میلیون توکنی با ضمانت فعال‌سازی اختصاصی روی ایمیل شما.",
+      linkUrl: "/products/claude",
+      buttonText: "مشاهده اشتراک Claude Pro",
+      accentBorder: "border-amber-500/35",
+      accentBg: "from-amber-950/20 via-background to-card",
+      badgeClass: "bg-amber-500/15 text-amber-400 border-amber-500/30",
+      btnClass: "bg-amber-600 hover:bg-amber-500 text-white shadow-amber-600/20",
+    };
+  }
+
+  // 3. ChatGPT Plus / Free vs Plus / Ban Prevention
+  if (slug.includes("ai-free-vs-plus") || slug.includes("prevent-chatgpt")) {
+    return {
+      badge: "پلن رسمی ۲۰ دلاری OpenAI",
+      title: "خرید اکانت قانونی و اختصاصی ChatGPT Plus",
+      description: "دسترسی نامحدود به GPT-6.1 Sol، فضای کاری نوین Prism، بوم تعاملی Canvas، حالت صوتی زنده و Deep Research روی ایمیل شخصی شما با ضمانت فعال‌سازی قانونی.",
+      linkUrl: "/products/chatgpt-plus",
+      buttonText: "مشاهده اشتراک ChatGPT Plus",
+      accentBorder: "border-emerald-500/35",
+      accentBg: "from-emerald-950/20 via-background to-card",
+      badgeClass: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+      btnClass: "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20",
+    };
+  }
+
+  // 4. Comparison / General AI
+  if (post.targetProductType === "ai") {
+    return {
+      badge: "ضمانت فعال‌سازی قانونی",
+      title: "خرید قانونی اشتراک‌های هوش مصنوعی (ChatGPT, Claude, Gemini)",
+      description: "فعال‌سازی اختصاصی روی ایمیل شما با ضمانت تحویل سالم اولیه و راهنمایی تنظیمات ایمن در پشتیبانی ۲۴ ساعته وایچ.",
+      linkUrl: "/products",
+      buttonText: "مشاهده و مقایسه پلن‌های AI",
+      accentBorder: "border-primary/35",
+      accentBg: "from-primary/10 via-background to-card",
+      badgeClass: "bg-primary/15 text-primary border-primary/30",
+      btnClass: "bg-primary text-primary-foreground hover:opacity-90 shadow-primary/20",
+    };
+  }
+
+  // 5. Default: Planner & Productivity
+  return {
+    badge: "دسترسی همیشگی بدون اشتراک",
+    title: "پلنر جامع و هوشمند گوگل‌شیت وایچ (Life Planner)",
+    description: "سیستم ردیابی روزانه، نمودارهای خودکار پیشرفت، فرمول‌های پیشرفته، Habit Tracker، ماتریس آیزنهاور و سازگاری کامل در موبایل و لپ‌تاپ.",
+    linkUrl: "/products/vaich-life-planner",
+    buttonText: "مشاهده و دریافت پلنر",
+    accentBorder: "border-emerald-500/35",
+    accentBg: "from-emerald-950/20 via-background to-card",
+    badgeClass: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+    btnClass: "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20",
+  };
+}
+
 function ProductRecommendationBanner({
-  targetType,
+  post,
   isFullWidth = false,
 }: {
-  targetType: "planner" | "ai";
+  post: BlogPost;
   isFullWidth?: boolean;
 }) {
-  if (targetType === "planner") {
-    return (
-      <div
-        className={`my-6 rounded-3xl border border-emerald-500/30 bg-gradient-to-r from-emerald-950/20 via-background to-card p-5 sm:p-6 shadow-md ${
-          isFullWidth ? "w-full" : ""
-        }`}
-      >
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="space-y-1.5 text-center sm:text-right">
-            <div className="flex items-center justify-center sm:justify-start gap-2">
-              <span className="rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-xs px-2.5 py-0.5 font-bold">
-                پیشنهاد ویژه
-              </span>
-              <span className="text-sm sm:text-base font-bold text-foreground">
-                پلنر جامع و هوشمند گوگل‌شیت وایچ
-              </span>
-            </div>
-            <p className="text-xs text-neutral-700 dark:text-slate-300 max-w-xl leading-relaxed">
-              سیستم ردیابی روزانه، نمودارهای خودکار پیشرفت، فرمول‌های محاسبه عملکرد و دسترسی مادام‌العمر در موبایل و لپ‌تاپ.
-            </p>
-          </div>
-          <Link
-            to="/products/$slug"
-            params={{ slug: "vaich-life-planner" }}
-            className="inline-flex items-center gap-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 text-xs sm:text-sm font-bold shadow-lg shadow-emerald-600/20 transition-all shrink-0 hover:scale-105"
-          >
-            <ShoppingBag className="h-4 w-4" />
-            <span>مشاهده و دریافت پلنر</span>
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const promo = getArticlePromoDetails(post);
 
   return (
     <div
-      className={`my-6 rounded-3xl border border-primary/30 bg-gradient-to-r from-primary/10 via-background to-card p-5 sm:p-6 shadow-md ${
+      className={`my-6 rounded-3xl border ${promo.accentBorder} bg-gradient-to-r ${promo.accentBg} p-5 sm:p-6 shadow-md transition-all ${
         isFullWidth ? "w-full" : ""
       }`}
     >
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="space-y-1.5 text-center sm:text-right">
           <div className="flex items-center justify-center sm:justify-start gap-2">
-            <span className="rounded-md bg-primary/12 text-primary text-xs px-2.5 py-0.5 font-bold">
-              ضمانت فعال‌سازی قانونی
+            <span className={`rounded-full border text-xs px-2.5 py-0.5 font-bold ${promo.badgeClass}`}>
+              {promo.badge}
             </span>
             <span className="text-sm sm:text-base font-bold text-foreground">
-              خرید قانونی اشتراک‌های هوش مصنوعی (ChatGPT, Claude, Gemini)
+              {promo.title}
             </span>
           </div>
           <p className="text-xs text-neutral-700 dark:text-slate-300 max-w-xl leading-relaxed">
-            فعال‌سازی اختصاصی روی ایمیل شما با ضمانت تحویل سالم اولیه و راهنمایی تنظیمات ایمن در پشتیبانی ۲۴ ساعته وایچ.
+            {promo.description}
           </p>
         </div>
         <Link
-          to="/products"
-          className="inline-flex items-center gap-2 rounded-xl bg-primary text-primary-foreground px-5 py-2.5 text-xs sm:text-sm font-bold shadow-sm transition-opacity shrink-0 hover:opacity-90"
+          to={promo.linkUrl as any}
+          className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs sm:text-sm font-bold shadow-lg transition-all shrink-0 hover:scale-105 ${promo.btnClass}`}
         >
           <ShoppingBag className="h-4 w-4" />
-          <span>مشاهده پلن‌ها و خرید</span>
+          <span>{promo.buttonText}</span>
         </Link>
       </div>
     </div>

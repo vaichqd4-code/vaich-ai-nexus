@@ -16,11 +16,16 @@ const SupportCta = lazy(() => import("@/components/sections/SupportCta").then((m
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "خرید اشتراک هوش مصنوعی | اکانت چت جی پی تی، جمینای، کلود | VAICH" },
+      { title: "خرید اشتراک هوش مصنوعی و پلنر دیجیتال | ChatGPT، جمینای، کلود | VAICH" },
       {
         name: "description",
         content:
           "مرجع خرید قانونی اشتراک‌های هوش مصنوعی؛ خرید اشتراک ChatGPT Plus، Claude Pro، Google AI Pro (Gemini Pro) و پلنر هوشمند گوگل‌شیت با تحویل فوری و ضمانت فعال‌سازی در وایچ.",
+      },
+      {
+        name: "keywords",
+        content:
+          "خرید پلنر دیجیتال, پلنر برنامه ریزی گوگل شیت, ردیاب عادات فارسی, بهترین پلنر برنامه ریزی ۱۴۰۵, ماتریس آیزنهاور, تکنیک time boxing, خرید اکانت ChatGPT Plus قانونی, خرید اکانت Claude Pro, خرید اشتراک Gemini Pro, خرید هوش مصنوعی, وایچ",
       },
       { property: "og:title", content: "VAICH | مرجع خدمات دیجیتال و خرید اشتراک‌های هوش مصنوعی" },
       {
@@ -111,7 +116,7 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
   return (
     <section className="aurora relative overflow-hidden">
       <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-14 pb-8 sm:px-6 sm:pt-20 lg:grid-cols-2 lg:pt-24">
-        <div className="rise-in">
+        <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-secondary/60 px-4 py-1.5 text-xs font-semibold text-foreground shadow-xs">
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>مرجع تخصصی خدمات دیجیتالی و اشتراک‌های هوش مصنوعی</span>

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { Section } from "@/components/layout/Section";
 import { useBlogPosts, BLOG_POSTS, type BlogPost } from "@/lib/blog-data";
 import { BlogCoverGraphic } from "@/components/blog/BlogCoverGraphic";
@@ -38,6 +38,8 @@ export function BlogSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const lastWheelTimeRef = useRef(0);
+  const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     if (activeIndex >= featuredPosts.length) {
@@ -69,6 +71,44 @@ export function BlogSection() {
   const goNext = () => {
     if (featuredPosts.length <= 1) return;
     setActiveIndex((prev) => (prev + 1) % featuredPosts.length);
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
+    const rawDx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : (e.shiftKey ? e.deltaY : 0);
+    if (Math.abs(rawDx) < 24) return;
+    const now = Date.now();
+    if (now - lastWheelTimeRef.current < 450) return;
+    lastWheelTimeRef.current = now;
+    setIsPaused(true);
+    if (rawDx > 0) {
+      goNext();
+    } else {
+      goPrev();
+    }
+    setTimeout(() => setIsPaused(false), 3000);
+  };
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    const target = e.target as HTMLElement | null;
+    if (target?.closest("a, button")) return;
+    pointerStartRef.current = { x: e.clientX, y: e.clientY };
+    setIsPaused(true);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    if (!pointerStartRef.current) return;
+    const dx = e.clientX - pointerStartRef.current.x;
+    const dy = e.clientY - pointerStartRef.current.y;
+    pointerStartRef.current = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) {
+        goNext();
+      } else {
+        goPrev();
+      }
+    }
+    setTimeout(() => setIsPaused(false), 3000);
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -115,13 +155,16 @@ export function BlogSection() {
         </Link>
       </div>
 
-      {/* باکس محصور و اسلایدر خودکار (بدون بیرون‌زدگی اسکرول) */}
+      {/* باکس محصور و اسلایدر خودکار با پشتیبانی از اسکرول لمسی و دو انگشتی ترک‌پد */}
       <div
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
+        onWheel={handleWheel}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
-        className="relative overflow-hidden rounded-3xl border border-border/80 bg-card/85 backdrop-blur-md shadow-sm"
+        className="relative overflow-hidden rounded-3xl border border-border/80 bg-card/85 backdrop-blur-md shadow-sm select-none cursor-grab active:cursor-grabbing"
       >
         <div
           dir="ltr"
@@ -137,7 +180,7 @@ export function BlogSection() {
               {/* تصویر کاور داخل باکس */}
               <div className="relative md:col-span-5 aspect-[16/10] md:aspect-auto md:min-h-[270px] overflow-hidden bg-neutral-950">
                 <img
-                  src={post.coverImage}
+                  src={post.coverImage.includes("?") ? post.coverImage : `${post.coverImage}?v=20261113`}
                   alt={post.title}
                   width={800}
                   height={500}

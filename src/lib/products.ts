@@ -73,7 +73,83 @@ export const DEFAULT_CATEGORY_ROWS: ProductCategoryRow[] = [
 ];
 
 export const DEFAULT_PRODUCTS: Product[] = [
-{
+  {
+    "slug": "chatgpt-plus",
+    "name": "ChatGPT Plus",
+    "price": 6300000,
+    "duration": "۱ ماهه",
+    "description": "اشتراک قانونی و اختصاصی ChatGPT Plus شرکت OpenAI (پلن رسمی ۲۰ دلاری)؛ مجهز به مدل‌های پرچمدار و جدید GPT-6.1 Sol و GPT-6 Sol، مدل سریع GPT-6 Luna، دسترسی تخصصی GPT-6 Astra در محیط‌های Codex و ChatGPT Work، بوم تعاملی Canvas، فضای کاری Prism، پژوهش عمیق Deep Research و حالت صوتی زنده Advanced Voice Mode.",
+    "featured": false,
+    "categoryId": "ai",
+    "inStock": true,
+    "rating": 4.6,
+    "reviewCount": 5,
+    "purchaseInfo": [
+      "اشتراک رسمی ChatGPT Plus (نسخه ۲۰ دلاری) به مدت ۳۰ روز کامل با ضمانت فعال‌سازی قانونی و تحویل سالم اولیه ارائه می‌شود.",
+      "فعال‌سازی اختصاصی روی ایمیل کاربر یا اکانت شخصی؛ تمام گفتگوها، پروژه‌ها و حافظه شما کاملاً خصوصی و محفوظ باقی می‌ماند.",
+      "نکته مهم نگهداری اکانت: حفظ پایداری اشتراک پس از تحویل به استفاده از IP پایدار و تمیز، عدم جابه‌جایی مداوم VPN، عدم اشتراک‌گذاری اکانت و رعایت قوانین OpenAI بستگی دارد.",
+      "پشتیبانی سریع در تلگرام برای راهنمایی راه‌اندازی اولیه و نکات پیشگیری از محدودیت."
+    ],
+    "features": [
+      "مدل‌های اصلی پلن Plus: جدیدترین مدل متعادل و قدرتمند GPT-6.1 Sol به همراه GPT-6 Sol (با قابلیت استدلال Medium و High) و مدل فوق‌سریع GPT-6 Luna",
+      "دسترسی به GPT-6 Astra در محیط‌های تخصصی Codex و ChatGPT Work با سهمیه ۵ ساعته چرخشی (نسخه دائمی GPT-6 Pro و ایجنت Dots مخصوص پلن Pro است)",
+      "پنجره کانتکست تا ۲۵۶,۰۰۰ توکن در حالت استدلال و ۵۴,۰۰۰ توکن در حالت پاسخ‌دهی سریع (Instant) برای پردازش اسناد و کدها",
+      "محیط کاری نوین Prism و بوم تعاملی Canvas: ویرایش هم‌زمان اسناد، مقالات و کدهای برنامه‌نویسی در پنل کناری بدون نیاز به تکرار پرامپت",
+      "پژوهش عمیق (Deep Research) و حالت ایجنتی (Agent Mode) مطابق سهمیه ماهانه رسمی پلن Plus",
+      "پروژه‌ها و حافظه ایزوله (Projects & Memory): پوشه‌های کاری تفکیک‌شده تا سقف ۲۵ فایل ۵۱۲ مگابایتی",
+      "تولید تصاویر پیشرفته (Advanced Image Generation) و تحلیل داده‌ها و اکسل در محیط امن پایتون",
+      "حالت صوتی پیشرفته زنده (Advanced Voice Mode) با پشتیبانی از تعامل در پس‌زمینه و Dynamic Island"
+    ],
+    "reviews": [
+      {
+        "id": "rev-gpt-1",
+        "author": "farhad",
+        "rating": 5,
+        "comment": "رو ایمیل خودم فعال شد بدون اینکه پسورد بخوان، صدا و کانواس هم کار میکنه مرسی",
+        "createdAt": "2026-10-21T20:10:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gpt-2",
+        "author": "کاربر ناشناس",
+        "rating": 5,
+        "comment": "عالی",
+        "createdAt": "2026-10-28T16:45:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gpt-3",
+        "author": "زهرا م.",
+        "rating": 4,
+        "comment": "خوبه فقط ای کاش درگاه مستقیم ریالی بود ولی کارت به کارت و تلگرام هم سریع اوکی شد👍",
+        "createdAt": "2026-10-24T15:30:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gpt-4",
+        "author": "کاربر",
+        "rating": 5,
+        "comment": "تایید شد و سلامت اکانت تا الان کاملا اوکی بوده❤️",
+        "createdAt": "2026-10-27T11:20:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-gpt-5",
+        "author": "ناشناس",
+        "rating": 4,
+        "comment": "خوب بود ممنون، صدا و مدل های جدید او۱ فعاله",
+        "createdAt": "2026-10-28T13:00:00.000Z",
+        "verified": true,
+        "status": "approved"
+      }
+    ],
+    "iconUrl": "/chatgpt-logo.svg"
+  },
+  {
     "slug": "vaich-life-planner",
     "name": "پلنر برنامه ریزی(استاندارد)",
     "price": 299000,
@@ -519,82 +595,6 @@ export const DEFAULT_PRODUCTS: Product[] = [
       }
     ],
     "iconUrl": "/gemini-pro-18m-icon.webp"
-  },
-  {
-    "slug": "chatgpt-plus",
-    "name": "ChatGPT Plus",
-    "price": 6300000,
-    "duration": "۱ ماهه",
-    "description": "اشتراک قانونی و اختصاصی ChatGPT Plus شرکت OpenAI (پلن رسمی ۲۰ دلاری)؛ مجهز به مدل‌های پرچمدار و جدید GPT-6.1 Sol و GPT-6 Sol، مدل سریع GPT-6 Luna، دسترسی تخصصی GPT-6 Astra در محیط‌های Codex و ChatGPT Work، بوم تعاملی Canvas، فضای کاری Prism، پژوهش عمیق Deep Research و حالت صوتی زنده Advanced Voice Mode.",
-    "featured": false,
-    "categoryId": "ai",
-    "inStock": true,
-    "rating": 4.6,
-    "reviewCount": 5,
-    "purchaseInfo": [
-      "اشتراک رسمی ChatGPT Plus (نسخه ۲۰ دلاری) به مدت ۳۰ روز کامل با ضمانت فعال‌سازی قانونی و تحویل سالم اولیه ارائه می‌شود.",
-      "فعال‌سازی اختصاصی روی ایمیل کاربر یا اکانت شخصی؛ تمام گفتگوها، پروژه‌ها و حافظه شما کاملاً خصوصی و محفوظ باقی می‌ماند.",
-      "نکته مهم نگهداری اکانت: حفظ پایداری اشتراک پس از تحویل به استفاده از IP پایدار و تمیز، عدم جابه‌جایی مداوم VPN، عدم اشتراک‌گذاری اکانت و رعایت قوانین OpenAI بستگی دارد.",
-      "پشتیبانی سریع در تلگرام برای راهنمایی راه‌اندازی اولیه و نکات پیشگیری از محدودیت."
-    ],
-    "features": [
-      "مدل‌های اصلی پلن Plus: جدیدترین مدل متعادل و قدرتمند GPT-6.1 Sol به همراه GPT-6 Sol (با قابلیت استدلال Medium و High) و مدل فوق‌سریع GPT-6 Luna",
-      "دسترسی به GPT-6 Astra در محیط‌های تخصصی Codex و ChatGPT Work با سهمیه ۵ ساعته چرخشی (نسخه دائمی GPT-6 Pro و ایجنت Dots مخصوص پلن Pro است)",
-      "پنجره کانتکست تا ۲۵۶,۰۰۰ توکن در حالت استدلال و ۵۴,۰۰۰ توکن در حالت پاسخ‌دهی سریع (Instant) برای پردازش اسناد و کدها",
-      "محیط کاری نوین Prism و بوم تعاملی Canvas: ویرایش هم‌زمان اسناد، مقالات و کدهای برنامه‌نویسی در پنل کناری بدون نیاز به تکرار پرامپت",
-      "پژوهش عمیق (Deep Research) و حالت ایجنتی (Agent Mode) مطابق سهمیه ماهانه رسمی پلن Plus",
-      "پروژه‌ها و حافظه ایزوله (Projects & Memory): پوشه‌های کاری تفکیک‌شده تا سقف ۲۵ فایل ۵۱۲ مگابایتی",
-      "تولید تصاویر پیشرفته (Advanced Image Generation) و تحلیل داده‌ها و اکسل در محیط امن پایتون",
-      "حالت صوتی پیشرفته زنده (Advanced Voice Mode) با پشتیبانی از تعامل در پس‌زمینه و Dynamic Island"
-    ],
-    "reviews": [
-      {
-        "id": "rev-gpt-1",
-        "author": "farhad",
-        "rating": 5,
-        "comment": "رو ایمیل خودم فعال شد بدون اینکه پسورد بخوان، صدا و کانواس هم کار میکنه مرسی",
-        "createdAt": "2026-10-21T20:10:00.000Z",
-        "verified": true,
-        "status": "approved"
-      },
-      {
-        "id": "rev-gpt-2",
-        "author": "کاربر ناشناس",
-        "rating": 5,
-        "comment": "عالی",
-        "createdAt": "2026-10-28T16:45:00.000Z",
-        "verified": true,
-        "status": "approved"
-      },
-      {
-        "id": "rev-gpt-3",
-        "author": "زهرا م.",
-        "rating": 4,
-        "comment": "خوبه فقط ای کاش درگاه مستقیم ریالی بود ولی کارت به کارت و تلگرام هم سریع اوکی شد👍",
-        "createdAt": "2026-10-24T15:30:00.000Z",
-        "verified": true,
-        "status": "approved"
-      },
-      {
-        "id": "rev-gpt-4",
-        "author": "کاربر",
-        "rating": 5,
-        "comment": "تایید شد و سلامت اکانت تا الان کاملا اوکی بوده❤️",
-        "createdAt": "2026-10-27T11:20:00.000Z",
-        "verified": true,
-        "status": "approved"
-      },
-      {
-        "id": "rev-gpt-5",
-        "author": "ناشناس",
-        "rating": 4,
-        "comment": "خوب بود ممنون، صدا و مدل های جدید او۱ فعاله",
-        "createdAt": "2026-10-28T13:00:00.000Z",
-        "verified": true,
-        "status": "approved"
-      }
-    ],
-    "iconUrl": "/chatgpt-logo.svg"
   },
   {
     "slug": "claude",

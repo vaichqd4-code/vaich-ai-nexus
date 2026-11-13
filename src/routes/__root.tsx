@@ -120,12 +120,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=5" },
-      { title: "VAICH | مرجع خدمات دیجیتال و اشتراک‌های هوش مصنوعی" },
+      { title: "VAICH | خرید اشتراک هوش مصنوعی و پلنر برنامه ریزی دیجیتال" },
       {
         name: "description",
         content: "خرید آنلاین، قانونی و با تحویل فوری اشتراک‌های هوش مصنوعی (ChatGPT, Gemini, Claude)، پلنرهای تخصصی دیجیتال و خدمات آنلاین در فروشگاه VAICH.",
       },
-      { name: "keywords", content: "خرید اکانت chatgpt, خرید اشتراک gemini pro, خرید اکانت claude pro, خرید هوش مصنوعی, vaich" },
+      { name: "keywords", content: "خرید پلنر دیجیتال, پلنر برنامه ریزی گوگل شیت, ردیاب عادات فارسی, بهترین پلنر برنامه ریزی ۱۴۰۵, ماتریس آیزنهاور, تکنیک time boxing, خرید اکانت chatgpt plus, خرید اشتراک gemini pro, خرید اکانت claude pro, خرید هوش مصنوعی, vaich, وایچ" },
       { name: "author", content: "VAICH" },
       { name: "theme-color", content: "#2563eb" },
       { name: "language", content: "Persian" },
@@ -159,6 +159,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preload", as: "image", type: "image/webp", href: "/gemini-60d-icon.webp" },
       { rel: "preload", as: "image", type: "image/webp", href: "/gemini-pro-18m-icon.webp" },
       { rel: "preload", as: "image", type: "image/webp", href: "/claude-icon.webp" },
+      { rel: "preload", as: "image", type: "image/webp", href: "/planner-cover.webp" },
       { rel: "stylesheet", href: appCss },
       {
         rel: "alternate",

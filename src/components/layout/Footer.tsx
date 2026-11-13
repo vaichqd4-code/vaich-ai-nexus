@@ -1,4 +1,4 @@
-import { ShoppingBag, BookOpen, ShieldCheck, Headphones, ExternalLink } from "lucide-react";
+import { ShoppingBag, BookOpen, ShieldCheck, Headphones, ExternalLink, ShieldAlert, Award, CheckCircle2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/brand/Logo";
 import {
@@ -30,11 +30,12 @@ const navigationColumns = [
     ],
   },
   {
-    title: "اطلاعات و قوانین",
+    title: "قوانین و نمادهای اعتماد",
     links: [
-      { to: "/terms", label: "قوانین و شرایط ضمانت فعال‌سازی" },
-      { to: "/privacy", label: "حریم خصوصی کاربران" },
-      { to: "/support", label: "ارتباط مستقیم با کارشناسان" },
+      { to: "/terms", label: "قوانین و ضمانت فعال‌سازی" },
+      { to: "/terms#refund", label: "رویه بازگشت وجه (مواد ۳۷ و ۳۸)" },
+      { to: "/support#complaints", label: "ثبت و پیگیری شکایات (پاسخ < ۴۸ ساعت)" },
+      { to: "/privacy", label: "حفظ حریم خصوصی کاربران" },
     ],
   },
 ];
@@ -88,17 +89,26 @@ export function Footer() {
         <div className="space-y-4">
           <Logo />
           <p className="max-w-xs text-sm leading-7 text-muted-foreground">
-            VAICH مرجع تخصصی خدمات دیجیتالی و اشتراک‌های هوش مصنوعی؛ شفاف، با تحویل سریع، ضمانت فعال‌سازی قانونی و پشتیبانی اختصاصی.
+            VAICH مرجع تخصصی خدمات دیجیتالی و اشتراک‌های قانونی هوش مصنوعی؛ شفاف، با تحویل سریع، تضمین اصالت و پشتیبانی اختصاصی ۲۴ ساعته.
           </p>
-          <div className="space-y-2 text-sm text-muted-foreground">
+          <div className="space-y-1.5 text-xs text-muted-foreground">
             <p>
-              <span className="text-xs">شماره تماس:</span>{" "}
-              <a href={`tel:${CONTACT_PHONE}`} className="font-medium text-foreground hover:text-neon-blue" dir="ltr">
+              <span className="font-semibold text-foreground">تلفن پشتیبانی:</span>{" "}
+              <a href={`tel:${CONTACT_PHONE}`} className="font-bold text-foreground hover:text-neon-blue transition-colors" dir="ltr">
                 {CONTACT_PHONE_PERSIAN}
               </a>
             </p>
+            <p>
+              <span className="font-semibold text-foreground">ایمیل سازمانی:</span>{" "}
+              <a href="mailto:support@vaich.ir" className="hover:text-foreground transition-colors" dir="ltr">
+                support@vaich.ir
+              </a>
+            </p>
+            <p className="text-[11px] text-muted-foreground/80 leading-5">
+              ساعات پاسخگویی تلفنی: شنبه تا پنج‌شنبه ۹ الی ۲۱ (پشتیبانی آنلاین و چت: ۲۴ ساعته ۷ روز هفته)
+            </p>
           </div>
-          <ul className="flex gap-2">
+          <ul className="flex gap-2 pt-1">
             {socials.map((s) => (
               <li key={s.label}>
                 <a
@@ -122,7 +132,7 @@ export function Footer() {
               {col.links.map((l) => (
                 <li key={l.to}>
                   <Link
-                    to={l.to}
+                    to={l.to as any}
                     className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
                     {l.label}
@@ -134,8 +144,73 @@ export function Footer() {
         ))}
       </div>
 
+      {/* Enamad 5-Star Trust & Compliance Section */}
+      <div className="border-t border-border/60 bg-card/40 px-4 py-8 sm:px-6">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-6 md:grid-cols-[1.5fr_1fr] items-center">
+            {/* Legal Statement & Complaints Notice */}
+            <div className="space-y-2 text-right">
+              <div className="flex items-center gap-2 text-xs font-bold text-foreground">
+                <ShieldCheck className="h-4 w-4 text-emerald-500" />
+                <span>ضمانت اصالت، شفافیت حقوقی و امنیت خرید در VAICH</span>
+              </div>
+              <p className="text-[12px] leading-6 text-muted-foreground">
+                کلیه فعالیت‌های فروشگاه اینترنتی وایچ (VAICH) تابع قوانین و مقررات جمهوری اسلامی ایران و قانون تجارت الکترونیک است. در راستای ماده ۲۵ آیین‌نامه اجرایی قانون تجارت الکترونیک، شکایات ثبت‌شده در سامانه رسیدگی به شکایات سایت ظرف کمتر از ۴۸ ساعت کاری بررسی و پاسخ داده خواهند شد.
+              </p>
+              <div className="flex flex-wrap gap-4 pt-1 text-[11px]">
+                <Link to="/support" hash="complaints" className="text-primary hover:underline font-semibold flex items-center gap-1">
+                  <span>سامانه آنلاین ثبت و پیگیری شکایات</span>
+                  <ExternalLink className="h-3 w-3" />
+                </Link>
+                <span className="text-border">|</span>
+                <Link to="/terms" hash="refund" className="text-muted-foreground hover:text-foreground transition-colors">
+                  رویه شفاف انصراف از خرید و بازگشت وجه (ماده ۳۷ و ۳۸)
+                </Link>
+              </div>
+            </div>
+
+            {/* Trust Seals Badges (اینماد، ساماندهی، پرداخت امن شاپرک) */}
+            <div className="flex flex-wrap items-center justify-center md:justify-end gap-3">
+              {/* اینماد ۵ ستاره */}
+              <div className="relative group flex flex-col items-center justify-center rounded-2xl border border-border/80 bg-background/80 p-3 shadow-xs min-w-[105px] h-[105px] text-center hover:border-primary/50 transition-all">
+                <div className="flex items-center gap-0.5 text-amber-400 mb-1">
+                  {[...Array(5)].map((_, i) => (
+                    <span key={i} className="text-[10px]">★</span>
+                  ))}
+                </div>
+                <div className="font-extrabold text-[11px] text-foreground">اینماد الکترونیکی</div>
+                <div className="text-[9px] text-muted-foreground mt-0.5">مرکز توسعه تجارت</div>
+                <span className="mt-1.5 inline-block rounded-full bg-emerald-500/15 text-emerald-500 text-[9px] px-1.5 py-0.5 font-bold">
+                  آماده اعطا
+                </span>
+              </div>
+
+              {/* نشان ملی ساماندهی */}
+              <div className="relative group flex flex-col items-center justify-center rounded-2xl border border-border/80 bg-background/80 p-3 shadow-xs min-w-[105px] h-[105px] text-center hover:border-primary/50 transition-all">
+                <Award className="h-5 w-5 text-neon-blue mb-1" />
+                <div className="font-extrabold text-[11px] text-foreground">نشان ساماندهی</div>
+                <div className="text-[9px] text-muted-foreground mt-0.5">رسانه‌های دیجیتال</div>
+                <span className="mt-1.5 inline-block rounded-full bg-blue-500/15 text-blue-400 text-[9px] px-1.5 py-0.5 font-bold">
+                  ثبت رسمی
+                </span>
+              </div>
+
+              {/* پرداخت امن شاپرک */}
+              <div className="relative group flex flex-col items-center justify-center rounded-2xl border border-border/80 bg-background/80 p-3 shadow-xs min-w-[105px] h-[105px] text-center hover:border-primary/50 transition-all">
+                <ShieldCheck className="h-5 w-5 text-emerald-500 mb-1" />
+                <div className="font-extrabold text-[11px] text-foreground">پرداخت امن شاپرک</div>
+                <div className="text-[9px] text-muted-foreground mt-0.5">تضمین امنیت کارت</div>
+                <span className="mt-1.5 inline-block rounded-full bg-emerald-500/15 text-emerald-500 text-[9px] px-1.5 py-0.5 font-bold">
+                  رمزگذاری SSL
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="border-t border-border/70 px-4 py-6 text-center text-xs text-muted-foreground sm:px-6">
-        © {currentShamsiYear} VAICH — تمامی حقوق مادی و معنوی محفوظ است.
+        © {currentShamsiYear} VAICH — تمامی حقوق مادی و معنوی برای فروشگاه اینترنتی وایچ محفوظ است.
       </div>
     </footer>
   );
