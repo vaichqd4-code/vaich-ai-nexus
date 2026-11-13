@@ -17,7 +17,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { name: "enamad", content: "67540732" },
-      { title: "خرید اشتراک هوش مصنوعی و پلنر دیجیتال | ChatGPT، جمینای، کلود | VAICH" },
+      { title: "67540732" },
       {
         name: "description",
         content:
