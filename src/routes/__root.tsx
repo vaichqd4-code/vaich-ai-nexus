@@ -119,6 +119,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
+      { name: "enamad", content: "67540732" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=5" },
       { title: "VAICH | خرید اشتراک هوش مصنوعی و پلنر برنامه ریزی دیجیتال" },
       {
