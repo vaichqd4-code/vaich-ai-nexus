@@ -119,9 +119,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "enamad", content: "67540732" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=5" },
-      { title: "67540732" },
+      { title: "VAICH | خرید اشتراک هوش مصنوعی و پلنر برنامه ریزی دیجیتال" },
       {
         name: "description",
         content: "خرید آنلاین، قانونی و با تحویل فوری اشتراک‌های هوش مصنوعی (ChatGPT, Gemini, Claude)، پلنرهای تخصصی دیجیتال و خدمات آنلاین در فروشگاه VAICH.",
@@ -149,7 +148,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "/fonts/vazirmatn-arabic.woff2",
         crossOrigin: "anonymous",
       },
-                                          { rel: "stylesheet", href: appCss },
+                                          {
+        rel: "preload",
+        as: "image",
+        type: "image/webp",
+        href: "/promo-banner.webp",
+        fetchPriority: "high",
+      },
+      { rel: "preload", as: "image", type: "image/svg+xml", href: "/chatgpt-logo.svg" },
+      { rel: "preload", as: "image", type: "image/webp", href: "/gemini-60d-icon.webp" },
+      { rel: "preload", as: "image", type: "image/webp", href: "/gemini-pro-18m-icon.webp" },
+      { rel: "preload", as: "image", type: "image/webp", href: "/claude-icon.webp" },
+      { rel: "preload", as: "image", type: "image/webp", href: "/planner-cover.webp" },
+      { rel: "stylesheet", href: appCss },
       {
         rel: "alternate",
         type: "application/rss+xml",
@@ -177,8 +188,6 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="fa" dir="rtl" data-theme="light">
       <head>
-        <meta name="enamad" content="67540732" />
-        <title>67540732</title>
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('vaich-theme')||'light';document.documentElement.setAttribute('data-theme',t);if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`,

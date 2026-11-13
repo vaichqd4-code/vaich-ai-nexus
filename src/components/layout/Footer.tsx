@@ -1,4 +1,4 @@
-import { ShoppingBag, BookOpen, ShieldCheck, Headphones, ExternalLink, ShieldAlert, Award, CheckCircle2 } from "lucide-react";
+import { ShoppingBag, BookOpen, ShieldCheck, Headphones, ExternalLink, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/brand/Logo";
 import {
@@ -169,41 +169,14 @@ export function Footer() {
               </div>
             </div>
 
-            {/* Trust Seals Badges (اینماد، ساماندهی، پرداخت امن شاپرک) */}
-            <div className="flex flex-wrap items-center justify-center md:justify-end gap-3">
-              {/* اینماد ۵ ستاره */}
-              <div className="relative group flex flex-col items-center justify-center rounded-2xl border border-border/80 bg-background/80 p-3 shadow-xs min-w-[105px] h-[105px] text-center hover:border-primary/50 transition-all">
-                <div className="flex items-center gap-0.5 text-amber-400 mb-1">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className="text-[10px]">★</span>
-                  ))}
-                </div>
-                <div className="font-extrabold text-[11px] text-foreground">اینماد الکترونیکی</div>
-                <div className="text-[9px] text-muted-foreground mt-0.5">مرکز توسعه تجارت</div>
-                <span className="mt-1.5 inline-block rounded-full bg-emerald-500/15 text-emerald-500 text-[9px] px-1.5 py-0.5 font-bold">
-                  آماده اعطا
-                </span>
-              </div>
-
-              {/* نشان ملی ساماندهی */}
-              <div className="relative group flex flex-col items-center justify-center rounded-2xl border border-border/80 bg-background/80 p-3 shadow-xs min-w-[105px] h-[105px] text-center hover:border-primary/50 transition-all">
-                <Award className="h-5 w-5 text-neon-blue mb-1" />
-                <div className="font-extrabold text-[11px] text-foreground">نشان ساماندهی</div>
-                <div className="text-[9px] text-muted-foreground mt-0.5">رسانه‌های دیجیتال</div>
-                <span className="mt-1.5 inline-block rounded-full bg-blue-500/15 text-blue-400 text-[9px] px-1.5 py-0.5 font-bold">
-                  ثبت رسمی
-                </span>
-              </div>
-
-              {/* پرداخت امن شاپرک */}
-              <div className="relative group flex flex-col items-center justify-center rounded-2xl border border-border/80 bg-background/80 p-3 shadow-xs min-w-[105px] h-[105px] text-center hover:border-primary/50 transition-all">
-                <ShieldCheck className="h-5 w-5 text-emerald-500 mb-1" />
-                <div className="font-extrabold text-[11px] text-foreground">پرداخت امن شاپرک</div>
-                <div className="text-[9px] text-muted-foreground mt-0.5">تضمین امنیت کارت</div>
-                <span className="mt-1.5 inline-block rounded-full bg-emerald-500/15 text-emerald-500 text-[9px] px-1.5 py-0.5 font-bold">
-                  رمزگذاری SSL
-                </span>
-              </div>
+            {/* Official Enamad Trust Seal Badge */}
+            <div className="flex items-center justify-center md:justify-end">
+              <div
+                className="flex items-center justify-center rounded-2xl border border-border/80 bg-white dark:bg-card p-3 shadow-xs hover:border-primary/50 transition-all min-w-[110px] min-h-[110px]"
+                dangerouslySetInnerHTML={{
+                  __html: `<a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=8384738&Code=uheWuqQQ5oUE4yf9V0AiQ0sdFaLdLhdP' title='نماد اعتماد الکترونیکی (اینماد)'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=8384738&Code=uheWuqQQ5oUE4yf9V0AiQ0sdFaLdLhdP' alt='نماد اعتماد الکترونیکی' style='cursor:pointer; max-height: 90px; width: auto; display: block;' code='uheWuqQQ5oUE4yf9V0AiQ0sdFaLdLhdP'></a>`,
+                }}
+              />
             </div>
           </div>
         </div>
