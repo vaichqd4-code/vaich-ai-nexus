@@ -189,6 +189,9 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="fa" dir="rtl" data-theme="light">
       <head>
+        <meta name="enamad" content="67540732" />
+        <meta name="enamad" content ="67540732"/>
+        <meta name="enamad" content="67540732"/>
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('vaich-theme')||'light';document.documentElement.setAttribute('data-theme',t);if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`,
