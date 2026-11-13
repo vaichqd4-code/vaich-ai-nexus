@@ -174,7 +174,7 @@ export function Footer() {
               <div
                 className="flex items-center justify-center rounded-2xl border border-border/80 bg-white dark:bg-card p-3 shadow-xs hover:border-primary/50 transition-all min-w-[110px] min-h-[110px]"
                 dangerouslySetInnerHTML={{
-                  __html: `<a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=8384738&Code=uheWuqQQ5oUE4yf9V0AiQ0sdFaLdLhdP' title='نماد اعتماد الکترونیکی (اینماد)'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=8384738&Code=uheWuqQQ5oUE4yf9V0AiQ0sdFaLdLhdP' alt='نماد اعتماد الکترونیکی' style='cursor:pointer; max-height: 90px; width: auto; display: block;' code='uheWuqQQ5oUE4yf9V0AiQ0sdFaLdLhdP'></a>`,
+                  __html: `<a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=8384738&Code=uheWuqQQ5oUE4yf9V0AiQ0sdFaLdLhdP' title='نماد اعتماد الکترونیکی (اینماد)'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=8384738&Code=uheWuqQQ5oUE4yf9V0AiQ0sdFaLdLhdP' onerror="this.onerror=null;this.src='/enamad-logo.png';" loading='lazy' decoding='async' width='90' height='90' alt='نماد اعتماد الکترونیکی' style='cursor:pointer; max-height: 90px; width: auto; display: block;' code='uheWuqQQ5oUE4yf9V0AiQ0sdFaLdLhdP'></a>`,
                 }}
               />
             </div>
