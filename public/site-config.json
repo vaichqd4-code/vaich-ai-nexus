@@ -309,7 +309,7 @@
     {
       "slug": "gemini",
       "name": "Gemini Pro - ۶۰ روزه",
-      "price": 230000,
+      "price": 320000,
       "duration": "۶۰ روزه",
       "description": "اشتراک رسمی ۶۰ روزه Google AI Pro (Gemini Pro)؛ دسترسی به مدل پرچمدار Gemini 4 Argon و خانواده Flash، استدلال عمیق Deep Think، پیوند بومی با Google Workspace (Gmail، Docs، Drive، Vids)، ابزارهای NotebookLM و Canvas و ۵ ترابایت فضای ابری Google One با بیشترین صرفه برای تست و پروژه‌های کوتاه‌مدت.",
       "isLifetime": false,
@@ -1447,5 +1447,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-12T16:03:49.173Z"
+  "updatedAt": "2026-11-14T03:41:58.252Z"
 }
