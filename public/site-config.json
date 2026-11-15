@@ -396,9 +396,9 @@
     {
       "slug": "gemini-pro",
       "name": "Gemini Pro - ۱۸ ماهه",
-      "price": 590000,
+      "price": 690000,
       "originalPrice": 4700000,
-      "discountPercent": 91,
+      "discountPercent": 81,
       "duration": "۱۸ ماهه",
       "description": "اشتراک بلندمدت ۱۸ ماهه اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، محققان، تریدرها و برنامه‌نویسان؛ شامل دسترسی به مدل‌های Gemini 4 Argon و Flash، استدلال Deep Think، امکانات Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه.",
       "isLifetime": false,
@@ -1447,5 +1447,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-14T03:41:58.252Z"
+  "updatedAt": "2026-11-15T19:43:15.566Z"
 }
