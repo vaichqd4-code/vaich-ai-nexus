@@ -455,9 +455,16 @@ export const Route = createFileRoute("/api/telegram-webhook")({
           }
 
           return Response.json({ ok: true });
-        } catch (error) {
+        } catch (error: any) {
           console.error("[Telegram Webhook Error]:", error);
-          return Response.json({ ok: false, error: "Internal Error" }, { status: 500 });
+          return Response.json(
+            {
+              ok: false,
+              error: error?.message || String(error),
+              stack: error?.stack,
+            },
+            { status: 500 },
+          );
         }
       },
     },
