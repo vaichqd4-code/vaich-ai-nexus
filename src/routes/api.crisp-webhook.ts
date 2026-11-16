@@ -9,10 +9,8 @@ function decodeSecret(b64: string): string {
   }
 }
 
-// کلیدهای پیش‌فرض کریسپ و گوگل استودیو ارائه شده توسط مالک وبسایت VAICH
-const DEFAULT_GEMINI_API_KEY =
-  process.env.GEMINI_API_KEY ||
-  decodeSecret("QVEuQWI4Uk42S0Zyb1lOZVFLQ3Z2RmhDQTd2ZmR5eWxjYmNaM1RuY09ZUG1VSGNXdElpVGc=");
+// کلیدهای پیش‌فرض کریسپ و گوگل استودیو (فقط و فقط از متغیرهای محیطی سمت سرور خوانده می‌شوند)
+const DEFAULT_GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
 
 const DEFAULT_CRISP_IDENTIFIER =
   process.env.CRISP_IDENTIFIER ||

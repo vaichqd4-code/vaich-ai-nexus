@@ -14,8 +14,8 @@ const decodeSecret = (b64) => {
   }
 };
 
-// کلیدهای پیش‌فرض گوگل استودیو و کریسپ VAICH
-const DEFAULT_GEMINI_KEY = decodeSecret("QVEuQWI4Uk42S0Zyb1lOZVFLQ3Z2RmhDQTd2ZmR5eWxjYmNaM1RuY09ZUG1VSGNXdElpVGc=");
+// کلیدهای پیش‌فرض کریسپ و گوگل استودیو (از طریق Cloudflare Environment Variables / Secrets تزریق می‌شوند)
+const DEFAULT_GEMINI_KEY = "";
 const DEFAULT_CRISP_IDENTIFIER = decodeSecret("ZjYyMjAzZDktNTVmMy00Yzc2LWEzYTktNGViZmVlNDcyMWIy");
 const DEFAULT_CRISP_KEY = decodeSecret("OTI4Y2Q2NDVlN2M5MDMzYWZlOTRlYTQ3YTJkMDU4NDk1NWUyZTIzMzc3NjkyNzZjNjgwYTExNTg3MTNjODAxYQ==");
 
