@@ -21,6 +21,7 @@ import { Route as WhyRouteImport } from './routes/why'
 import { Route as ApiAnalyticsRouteImport } from './routes/api.analytics'
 import { Route as ApiCreateOrderRouteImport } from './routes/api.create-order'
 import { Route as ApiCrispWebhookRouteImport } from './routes/api.crisp-webhook'
+import { Route as ApiTelegramWebhookRouteImport } from './routes/api.telegram-webhook'
 import { Route as ApiSendReceiptRouteImport } from './routes/api.send-receipt'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -89,6 +90,11 @@ const ApiCrispWebhookRoute = ApiCrispWebhookRouteImport.update({
   path: '/api/crisp-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiTelegramWebhookRoute = ApiTelegramWebhookRouteImport.update({
+  id: '/api/telegram-webhook',
+  path: '/api/telegram-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSendReceiptRoute = ApiSendReceiptRouteImport.update({
   id: '/api/send-receipt',
   path: '/api/send-receipt',
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/api/analytics': typeof ApiAnalyticsRoute
   '/api/create-order': typeof ApiCreateOrderRoute
   '/api/crisp-webhook': typeof ApiCrispWebhookRoute
+  '/api/telegram-webhook': typeof ApiTelegramWebhookRoute
   '/api/send-receipt': typeof ApiSendReceiptRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
@@ -160,6 +167,7 @@ export interface FileRoutesByTo {
   '/api/analytics': typeof ApiAnalyticsRoute
   '/api/create-order': typeof ApiCreateOrderRoute
   '/api/crisp-webhook': typeof ApiCrispWebhookRoute
+  '/api/telegram-webhook': typeof ApiTelegramWebhookRoute
   '/api/send-receipt': typeof ApiSendReceiptRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
@@ -182,6 +190,7 @@ export interface FileRoutesById {
   '/api/analytics': typeof ApiAnalyticsRoute
   '/api/create-order': typeof ApiCreateOrderRoute
   '/api/crisp-webhook': typeof ApiCrispWebhookRoute
+  '/api/telegram-webhook': typeof ApiTelegramWebhookRoute
   '/api/send-receipt': typeof ApiSendReceiptRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/checkout/$slug': typeof CheckoutSlugRoute
@@ -205,6 +214,7 @@ export interface FileRouteTypes {
     | '/api/analytics'
     | '/api/create-order'
     | '/api/crisp-webhook'
+    | '/api/telegram-webhook'
     | '/api/send-receipt'
     | '/blog/$slug'
     | '/checkout/$slug'
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/api/analytics'
     | '/api/create-order'
     | '/api/crisp-webhook'
+    | '/api/telegram-webhook'
     | '/api/send-receipt'
     | '/blog/$slug'
     | '/checkout/$slug'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '/api/analytics'
     | '/api/create-order'
     | '/api/crisp-webhook'
+    | '/api/telegram-webhook'
     | '/api/send-receipt'
     | '/blog/$slug'
     | '/checkout/$slug'
@@ -364,6 +376,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCrispWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/telegram-webhook': {
+      id: '/api/telegram-webhook'
+      path: '/api/telegram-webhook'
+      fullPath: '/api/telegram-webhook'
+      preLoaderRoute: typeof ApiTelegramWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/send-receipt': {
       id: '/api/send-receipt'
       path: '/api/send-receipt'
@@ -429,6 +448,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAnalyticsRoute: ApiAnalyticsRoute,
   ApiCreateOrderRoute: ApiCreateOrderRoute,
   ApiCrispWebhookRoute: ApiCrispWebhookRoute,
+  ApiTelegramWebhookRoute: ApiTelegramWebhookRoute,
   ApiSendReceiptRoute: ApiSendReceiptRoute,
   BlogSlugRoute: BlogSlugRoute,
   CheckoutSlugRoute: CheckoutSlugRoute,
