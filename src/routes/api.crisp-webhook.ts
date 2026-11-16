@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DEFAULT_PRODUCTS, DEFAULT_CATEGORY_ROWS } from "@/lib/products";
+import fs from "node:fs";
+import path from "node:path";
 
 function decodeSecret(b64: string): string {
   try {
@@ -32,30 +34,74 @@ const GEMINI_MODELS = [
   "gemini-3.8-flash",
 ];
 
+let cachedLiveConfig: any = null;
+let lastLiveConfigReadTime = 0;
+
+/**
+ * خواندن زنده و بی‌درنگ آخرین اطلاعات، قیمت‌ها و موجودی کاتالوگ از فایل مرکزی public/site-config.json
+ */
+function getLiveSiteConfig(): { products: any[]; blogPosts: any[]; categoryRows?: any[] } {
+  const now = Date.now();
+  if (cachedLiveConfig && now - lastLiveConfigReadTime < 15000) {
+    return cachedLiveConfig;
+  }
+
+  try {
+    const configPath = path.resolve(process.cwd(), "public", "site-config.json");
+    if (fs.existsSync(configPath)) {
+      const raw = fs.readFileSync(configPath, "utf-8");
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed?.products) && parsed.products.length > 0) {
+        cachedLiveConfig = parsed;
+        lastLiveConfigReadTime = now;
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.warn("[getLiveSiteConfig read error]:", err);
+  }
+
+  return { products: DEFAULT_PRODUCTS, blogPosts: [], categoryRows: DEFAULT_CATEGORY_ROWS };
+}
+
 /**
  * تولید خودکار و زنده دانش‌پایه و کاتالوگ محصولات بر اساس دیتای روز سایت
- * هر محصول، قیمت، دسته‌بندی یا ویژگی جدیدی که به سایت اضافه شود بلافاصله برای هوش مصنوعی در دسترس است.
+ * هر محصول، قیمت، دسته‌بندی، وضعیت موجودی یا ویژگی جدیدی که به سایت اضافه شود بلافاصله برای هوش مصنوعی در دسترس است.
  */
 function getLiveSiteCatalogContext(): string {
   try {
-    const categories = DEFAULT_CATEGORY_ROWS.map(
-      (c) => `• دسته‌بندی: ${c.title} (${c.subtitle || ""})`,
+    const siteConfig = getLiveSiteConfig();
+    const prods = siteConfig.products || DEFAULT_PRODUCTS;
+    const blogs = siteConfig.blogPosts || [];
+
+    const categories = (siteConfig.categoryRows || DEFAULT_CATEGORY_ROWS).map(
+      (c: any) => `• دسته‌بندی: ${c.title} (${c.subtitle || ""})`,
     ).join("\n");
 
-    const productsInfo = DEFAULT_PRODUCTS.map((p) => {
+    const productsInfo = prods.map((p: any) => {
       const priceFormatted =
         new Intl.NumberFormat("fa-IR").format(p.price) + " تومان";
-      const features = (p.features || []).slice(0, 5).join(" | ");
+      const features = (p.features || []).join(" | ");
+      const inStock = p.inStock !== false;
+      const stockStatus = inStock
+        ? "🟢 موجود و فعال (آماده خرید آنلاین و تحویل فوری)"
+        : "🔴 ناموجود (اتمام ظرفیت فعلی). قانون قطعی: اگر مشتری از این پلن پرسید، حتماً و صراحتاً بفرمایید که این پلن به دلیل تکمیل ظرفیت در حال حاضر ناموجود است، اما پلن ۶۰ روزه موجود است یا می‌توانند جهت رزرو به تلگرام @youneshayati پیام دهند.";
+
       return `🔹 نام محصول: ${p.name}
   - اسلاگ صفحه: ${p.slug}
   - لینک خرید در سایت: https://vaich.ir/products/${p.slug}
-  - قیمت فعلی: ${priceFormatted} (${p.duration || "دسترسی دائمی"})
+  - وضعیت موجودی: ${stockStatus}
+  - قیمت فعلی: ${priceFormatted} (${p.duration || "دسترسی اختصاصی"})
   - نوع لایسنس: ${p.isLifetime ? "دائمی و مادام‌العمر (بدون نیاز به شارژ ماهانه)" : "اشتراک قانونی اختصاصی"}
   - خلاصه معرفی: ${p.description}
-  - مشخصات کلیدی: ${features}`;
+  - ویژگی‌ها و امکانات فنی: ${features}`;
     }).join("\n\n");
 
-    return `اطلاعات و کاتالوگ زنده وب‌سایت VAICH.ir:\n${categories}\n\n${productsInfo}`;
+    const blogInfo = blogs.map((b: any) =>
+      `📝 مقاله آموزشی: ${b.title} | لینک: https://vaich.ir/blog/${b.slug} (${b.excerpt || ""})`
+    ).join("\n");
+
+    return `اطلاعات و کاتالوگ زنده وب‌سایت VAICH.ir:\n${categories}\n\n${productsInfo}\n\nمقالات راهنما و آموزش‌های وبلاگ VAICH:\n${blogInfo}`;
   } catch {
     return "";
   }

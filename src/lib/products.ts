@@ -79,17 +79,10 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "price": 6300000,
     "duration": "۱ ماهه",
     "description": "اشتراک قانونی و اختصاصی ChatGPT Plus شرکت OpenAI (پلن رسمی ۲۰ دلاری)؛ مجهز به مدل‌های پرچمدار و جدید GPT-6.1 Sol و GPT-6 Sol، مدل سریع GPT-6 Luna، دسترسی تخصصی GPT-6 Astra در محیط‌های Codex و ChatGPT Work، بوم تعاملی Canvas، فضای کاری Prism، پژوهش عمیق Deep Research و حالت صوتی زنده Advanced Voice Mode.",
+    "isLifetime": false,
     "featured": false,
+    "badgeColor": "purple",
     "categoryId": "ai",
-    "inStock": true,
-    "rating": 4.6,
-    "reviewCount": 5,
-    "purchaseInfo": [
-      "اشتراک رسمی ChatGPT Plus (نسخه ۲۰ دلاری) به مدت ۳۰ روز کامل با ضمانت فعال‌سازی قانونی و تحویل سالم اولیه ارائه می‌شود.",
-      "فعال‌سازی اختصاصی روی ایمیل کاربر یا اکانت شخصی؛ تمام گفتگوها، پروژه‌ها و حافظه شما کاملاً خصوصی و محفوظ باقی می‌ماند.",
-      "نکته مهم نگهداری اکانت: حفظ پایداری اشتراک پس از تحویل به استفاده از IP پایدار و تمیز، عدم جابه‌جایی مداوم VPN، عدم اشتراک‌گذاری اکانت و رعایت قوانین OpenAI بستگی دارد.",
-      "پشتیبانی سریع در تلگرام برای راهنمایی راه‌اندازی اولیه و نکات پیشگیری از محدودیت."
-    ],
     "features": [
       "مدل‌های اصلی پلن Plus: جدیدترین مدل متعادل و قدرتمند GPT-6.1 Sol به همراه GPT-6 Sol (با قابلیت استدلال Medium و High) و مدل فوق‌سریع GPT-6 Luna",
       "دسترسی به GPT-6 Astra در محیط‌های تخصصی Codex و ChatGPT Work با سهمیه ۵ ساعته چرخشی (نسخه دائمی GPT-6 Pro و ایجنت Dots مخصوص پلن Pro است)",
@@ -100,6 +93,17 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "تولید تصاویر پیشرفته (Advanced Image Generation) و تحلیل داده‌ها و اکسل در محیط امن پایتون",
       "حالت صوتی پیشرفته زنده (Advanced Voice Mode) با پشتیبانی از تعامل در پس‌زمینه و Dynamic Island"
     ],
+    "purchaseInfo": [
+      "اشتراک رسمی ChatGPT Plus (نسخه ۲۰ دلاری) به مدت ۳۰ روز کامل با ضمانت فعال‌سازی قانونی و تحویل سالم اولیه ارائه می‌شود.",
+      "فعال‌سازی اختصاصی روی ایمیل کاربر یا اکانت شخصی؛ تمام گفتگوها، پروژه‌ها و حافظه شما کاملاً خصوصی و محفوظ باقی می‌ماند.",
+      "نکته مهم نگهداری اکانت: حفظ پایداری اشتراک پس از تحویل به استفاده از IP پایدار و تمیز، عدم جابه‌جایی مداوم VPN، عدم اشتراک‌گذاری اکانت و رعایت قوانین OpenAI بستگی دارد.",
+      "پشتیبانی سریع در تلگرام برای راهنمایی راه‌اندازی اولیه و نکات پیشگیری از محدودیت."
+    ],
+    "iconUrl": "/chatgpt-logo.svg",
+    "imageFit": "contain",
+    "inStock": true,
+    "rating": 4.6,
+    "reviewCount": 5,
     "reviews": [
       {
         "id": "rev-gpt-1",
@@ -146,8 +150,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
         "verified": true,
         "status": "approved"
       }
-    ],
-    "iconUrl": "/chatgpt-logo.svg"
+    ]
   },
   {
     "slug": "vaich-life-planner",
@@ -157,14 +160,11 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "discountPercent": 57,
     "duration": "دائمی (بدون اشتراک)",
     "description": "نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script (بدون نیاز به پرداخت ماهانه یا شارژ دوره)؛ مجهز به Habit Tracker، ماتریس آیزنهاور، سیستم Time Boxing و هوش مالی فردی.",
+    "isLifetime": true,
     "featured": true,
     "badge": "پیشنهادی ویژه",
     "badgeColor": "fire",
     "categoryId": "row-mvampt3r",
-    "inStock": true,
-    "isLifetime": true,
-    "rating": 4.9,
-    "reviewCount": 21,
     "features": [
       "نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script (بدون نیاز به پرداخت ماهانه یا شارژ دوره)",
       "ردیاب عادات مینیمال (Habit Tracker): ثبت زنجیره استمرار روزانه (Streak) با نمودار درصد موفقیت خودکار و پاداش بصری",
@@ -184,6 +184,9 @@ export const DEFAULT_PRODUCTS: Product[] = [
     ],
     "iconUrl": "/planner-cover.webp",
     "imageFit": "cover",
+    "inStock": true,
+    "rating": 4.9,
+    "reviewCount": 21,
     "reviews": [
       {
         "id": "rev-lp-1",
@@ -379,20 +382,22 @@ export const DEFAULT_PRODUCTS: Product[] = [
   {
     "slug": "gemini",
     "name": "Gemini Pro - ۶۰ روزه",
-    "price": 230000,
+    "price": 320000,
     "duration": "۶۰ روزه",
-    "description": "اشتراک رسمی ۶۰ روزه Google AI Pro (Gemini Pro)؛ دسترسی به مدل پرچمدار Gemini 4 Argon و خانواده Flash، استدلال عمیق Deep Think، پیوند بومی با Google Workspace (Gmail، Docs، Drive، Vids)، ابزارهای NotebookLM و Canvas و ۵ ترابایت فضای ابری Google One با بیشترین صرفه برای تست و پروژه‌های کوتاه‌مدت.",
+    "description": "اشتراک رسمی ۶۰ روزه Google AI Pro (Gemini Pro)؛ مجهز به مدل‌های پرچمدار و نسل جدید Gemini 4 Argon و Gemini 4 Hydrogen، استدلال عمیق Deep Think و دستیار پژوهشی Deep Research، دسترسی به محیط توسعه Google Antigravity و Google AI Studio، دسترسی به پلتفرم ویدیوسازی Google Flow همراه با ۱۰۰۰ کردیت اختصاصی، ۵ ترابایت فضای ابری Google One و ادغام کامل با Google Workspace.",
+    "isLifetime": false,
     "featured": false,
     "badgeColor": "purple",
     "categoryId": "ai",
     "features": [
-      "دسترسی رسمی Google AI Pro به مدل پرچمدار Gemini 4 Argon (با سطوح تفکر Low / Medium / High) و مدل‌های سریع Flash",
-      "قابلیت استدلال عمیق Deep Think و ابزار پژوهش عمیق Deep Research برای تحلیل داده‌ها و پژوهش‌های تخصصی",
-      "سقف مصرف ~۴ برابر نسخه رایگان با سهمیه محاسباتی چرخشی ۵ ساعته و هفتگی",
-      "۵ ترابایت فضای ابری Google One (قابل استفاده در Google Drive، Gmail و Google Photos) به همراه امکانات Google Workspace",
-      "دسترسی کامل به ابزارهای پژوهش و بهره‌وری شامل NotebookLM، Canvas، Gems و یکپارچگی با Colab و Android Studio",
-      "۱۰ دلار اعتبار ماهانه توسعه‌دهندگان Google Cloud و پردازش اسناد حجیم و فایل‌های صوتی/تصویری",
-      "پلن اقتصادی ۶۰ روزه قانونی با ضمانت فعال‌سازی سالم اولیه و پشتیبانی راه‌اندازی در تلگرام"
+      "دسترسی رسمی Google AI Pro به مدل پرچمدار Gemini 4 Argon و مدل تخصصی Gemini 4 Hydrogen به همراه خانواده مدل‌های سریع Flash",
+      "قابلیت استدلال عمیق Deep Think (با سطوح تفکر Low / Medium / High) و دستیار پژوهشی خودکار Deep Research برای تحقیقات پیشرفته",
+      "دسترسی کامل و یکپارچه به پلتفرم توسعه هوش مصنوعی Google AI Studio و محیط برنامه‌نویسی نسل جدید Google Antigravity IDE / CLI",
+      "دسترسی به پلتفرم ویدیوسازی هوش مصنوعی Google Flow به همراه ۱۰۰۰ کردیت اختصاصی (1000 Flow Credits)",
+      "۵ ترابایت فضای ابری عظیم Google One (مشترک در Google Drive، Gmail و Google Photos) به همراه امکانات کامل Google Workspace",
+      "دسترسی نامحدود به ابزار تحقیقاتی NotebookLM با قابلیت Audio Overviews، بوم تعاملی Canvas و سفارشی‌سازی دستیارهای هوشمند Gems",
+      "۱۰ دلار اعتبار ماهانه توسعه‌دهندگان Google Cloud و پردازش اسناد و ویدیوهای فوق‌حجیم",
+      "پلن اقتصادی ۶۰ روزه قانونی با ضمانت فعال‌سازی سالم اولیه و پشتیبانی سریع در تلگرام"
     ],
     "purchaseInfo": [
       "اشتراک رسمی Google AI Pro (Gemini Pro) به مدت ۶۰ روز کامل ارائه می‌شود.",
@@ -400,6 +405,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "اطلاعات ورود و راهنمای استفاده ایمن پس از تایید رسید در اولین فرصت از طریق تلگرام ارسال می‌شود.",
       "رعایت نکات پایداری پس از تحویل (استفاده با IP تمیز و پایدار و مطابق با قوانین گوگل) بر عهده کاربر است."
     ],
+    "iconUrl": "/gemini-60d-icon.webp",
     "imageFit": "contain",
     "inStock": true,
     "rating": 4.8,
@@ -459,29 +465,98 @@ export const DEFAULT_PRODUCTS: Product[] = [
         "verified": true,
         "status": "approved"
       }
+    ]
+  },
+  {
+    "slug": "claude",
+    "name": "Claude Pro",
+    "price": 7800000,
+    "duration": "۱ ماهه",
+    "description": "اشتراک رسمی و اختصاصی Claude Pro آنتروپیک (پلن رسمی ۲۰ دلاری)؛ دسترسی به مدل سرآمد توسعه نرم‌افزار Claude Sonnet 5.5، مدل استدلال سنگین Claude Opus 5.5، مدل سریع Claude Haiku 5.5، پنجره متنی ۱ میلیون توکنی با خروجی تا ۱۲۸ هزار توکن، سیستم تفکر تطبیقی (Adaptive Thinking)، بوم Artifacts و ابزار Claude Code.",
+    "isLifetime": false,
+    "featured": false,
+    "badgeColor": "purple",
+    "categoryId": "ai",
+    "features": [
+      "خانواده مدل‌های ۵.۵ در پلن Pro: پرچمدار کدنویسی Claude Sonnet 5.5، مدل استدلالی عمیق Claude Opus 5.5 و مدل رعدآسای Claude Haiku 5.5 (توضیح شفاف: مدل Claude Fable 5.2 در پلن Pro فقط با اعتبار اضافی/شارژی یا در پلن‌های Max و Ultra فعال است)",
+      "کانتکست عظیم ۱ میلیون توکنی (1M Context Window) با سقف خروجی تا ۱۲۸,۰۰۰ توکن برای مطالعه و تحلیل کل مخزن‌های کد و کتاب‌ها",
+      "سیستم تفکر تطبیقی و گسترده (Adaptive & Extended Thinking) جهت بالا بردن دقت استدلال منطقی و کاهش خطا در پروژه‌های پیچیده",
+      "بوم کاری Artifacts و Claude Projects: رندر زنده کامپوننت‌های وب، نمودارهای SVG و پوشه‌های پروژه با راهنمای اختصاصی",
+      "دستیار ترمینال Claude Code و جستجوی وب (Web Search) برای تست، ریفکتورینگ و توسعه مستقیم نرم‌افزار",
+      "ظرفیت مصرف رسمی پلن Pro (~۵ برابر نسخه رایگان) با سیستم سهمیه ۵ ساعته چرخشی و سهمیه هفتگی استاندارد"
     ],
-    "iconUrl": "/gemini-60d-icon.webp"
+    "purchaseInfo": [
+      "اشتراک Claude Pro به مدت ۳۰ روز کامل با ضمانت فعال‌سازی قانونی و تحویل سالم اولیه ارائه می‌شود.",
+      "فعال‌سازی اختصاصی روی ایمیل یا اکانت شخصی با حفظ کامل محرمانگی سورس‌کدها و پروژه‌ها.",
+      "نکته بسیار مهم درباره کلود: آنتروپیک نسبت به IPهای اشتراکی و تغییر مداوم سرور VPN حساسیت بالایی دارد؛ نگهداری ایمن اکانت با IP ثابت و تمیز و رعایت قوانین سرویس‌دهنده پس از تحویل بر عهده کاربر است.",
+      "پشتیبانی و راهنمایی تنظیمات ایمن در تلگرام هنگام راه‌اندازی."
+    ],
+    "iconUrl": "/claude-icon.webp",
+    "imageFit": "contain",
+    "inStock": true,
+    "rating": 4.5,
+    "reviewCount": 4,
+    "reviews": [
+      {
+        "id": "rev-cld-1",
+        "author": "Navid_dev",
+        "rating": 5,
+        "comment": "کلود کد و پروجکت هاش بدون مشکل کار میکنه، برای برنامه نویسی واقعا لازم بود دستتون درد نکنه🙏",
+        "createdAt": "2026-10-22T19:00:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-cld-2",
+        "author": "کاربر ناشناس",
+        "rating": 5,
+        "comment": "عالییی",
+        "createdAt": "2026-10-28T17:20:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-cld-3",
+        "author": "م. حسینی",
+        "rating": 4,
+        "comment": "سرعت پاسخگویی ساپورت خوب بود، اکانت هم قانونی فعال شد",
+        "createdAt": "2026-10-26T21:10:00.000Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-cld-4",
+        "author": "کاربر وایچ",
+        "rating": 4,
+        "comment": "خوبه مرسی",
+        "createdAt": "2026-10-28T19:00:00.000Z",
+        "verified": true,
+        "status": "approved"
+      }
+    ]
   },
   {
     "slug": "gemini-pro",
     "name": "Gemini Pro - ۱۸ ماهه",
-    "price": 590000,
+    "price": 690000,
     "originalPrice": 4700000,
-    "discountPercent": 91,
+    "discountPercent": 81,
     "duration": "۱۸ ماهه",
-    "description": "اشتراک بلندمدت ۱۸ ماهه اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، محققان، تریدرها و برنامه‌نویسان؛ شامل دسترسی به مدل‌های Gemini 4 Argon و Flash، استدلال Deep Think، امکانات Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه.",
+    "description": "اشتراک بلندمدت ۱۸ ماهه فوق‌اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، پژوهشگران و برنامه‌نویسان؛ شامل دسترسی به مدل‌های پرچمدار Gemini 4 Argon و Gemini 4 Hydrogen، دسترسی به Google Antigravity، Google AI Studio و Google Flow با ۱۰۰۰ کردیت، استدلال عمیق Deep Think، امکانات کامل Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه. (توجه: در حال حاضر ظرفیت این پلن تکمیل و ناموجود است).",
     "isLifetime": false,
     "featured": true,
     "badge": "ویژه",
     "badgeColor": "purple",
     "categoryId": "ai",
     "features": [
-      "اشتراک بلندمدت ۱۸ ماهه با صرفه اقتصادی بالا ویژه دانشجویان، پژوهشگران و برنامه‌نویسان بدون دغدغه تمدید ماهانه",
-      "دسترسی رسمی Google AI Pro به مدل پرچمدار Gemini 4 Argon (با سطوح تفکر Low / Medium / High) و مدل‌های سریع Flash",
-      "قابلیت استدلال عمیق Deep Think و Deep Research برای پروژه‌های علمی، اقتصادی و تحلیل داده",
-      "۵ ترابایت فضای ابری Google One (در Drive، Gmail و Photos) به همراه یکپارچگی با Google Workspace (Gmail، Docs، Drive، Vids)",
-      "دسترسی کامل به NotebookLM، Canvas، Gems و ۱۰ دلار اعتبار ماهانه توسعه‌دهندگان Google Cloud",
-      "پشتیبانی اختصاصی راه‌اندازی، تحویل تست‌شده و ضمانت فعال‌سازی قانونی اولیه در تلگرام"
+      "وضعیت فعلی: ناموجود (اتمام موقت ظرفیت - امکان رزرو از طریق تلگرام @youneshayati)",
+      "اشتراک بلندمدت ۱۸ ماهه با صرفه اقتصادی فوق‌العاده بالا ویژه دانشجویان و پژوهشگران بدون دغدغه تمدید ماهانه",
+      "دسترسی رسمی Google AI Pro به مدل پرچمدار Gemini 4 Argon و مدل تخصصی Gemini 4 Hydrogen و خانواده Flash",
+      "دسترسی به پلتفرم توسعه هوش مصنوعی Google AI Studio و محیط برنامه‌نویسی هوشمند Google Antigravity IDE / CLI",
+      "دسترسی به پلتفرم ویدیوسازی هوش مصنوعی Google Flow به همراه ۱۰۰۰ کردیت اختصاصی (1000 Flow Credits)",
+      "قابلیت استدلال عمیق Deep Think و دستیار پژوهشی خودکار Deep Research برای تحلیل داده‌های سنگین",
+      "۵ ترابایت فضای ابری عظیم Google One (در Drive، Gmail و Photos) به همراه یکپارچگی با Google Workspace (Gmail، Docs، Drive، Vids)",
+      "دسترسی کامل به NotebookLM، Canvas، Gems و ۱۰ دلار اعتبار ماهانه توسعه‌دهندگان Google Cloud"
     ],
     "purchaseInfo": [
       "اشتراک Google AI Pro (Gemini Pro) به مدت ۱۸ ماه کامل ارائه می‌شود.",
@@ -489,6 +564,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "اطلاعات ورود و نکات نگهداری ایمن پس از تایید رسید در سریع‌ترین زمان ممکن از طریق تلگرام ارسال می‌گردد.",
       "با توجه به سیاست‌های امنیتی گوگل، حفظ شرایط نگهداری اکانت و استفاده با IP پایدار پس از تحویل بر عهده کاربر است."
     ],
+    "iconUrl": "/gemini-pro-18m-icon.webp",
     "imageFit": "contain",
     "inStock": false,
     "rating": 4.9,
@@ -593,73 +669,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
         "verified": true,
         "status": "approved"
       }
-    ],
-    "iconUrl": "/gemini-pro-18m-icon.webp"
-  },
-  {
-    "slug": "claude",
-    "name": "Claude Pro",
-    "price": 7100000,
-    "duration": "۱ ماهه",
-    "description": "اشتراک رسمی و اختصاصی Claude Pro آنتروپیک (پلن رسمی ۲۰ دلاری)؛ دسترسی به مدل سرآمد توسعه نرم‌افزار Claude Sonnet 5.5، مدل استدلال سنگین Claude Opus 5.5، مدل سریع Claude Haiku 5.5، پنجره متنی ۱ میلیون توکنی با خروجی تا ۱۲۸ هزار توکن، سیستم تفکر تطبیقی (Adaptive Thinking)، بوم Artifacts و ابزار Claude Code.",
-    "featured": false,
-    "categoryId": "ai",
-    "inStock": true,
-    "rating": 4.5,
-    "reviewCount": 4,
-    "purchaseInfo": [
-      "اشتراک Claude Pro به مدت ۳۰ روز کامل با ضمانت فعال‌سازی قانونی و تحویل سالم اولیه ارائه می‌شود.",
-      "فعال‌سازی اختصاصی روی ایمیل یا اکانت شخصی با حفظ کامل محرمانگی سورس‌کدها و پروژه‌ها.",
-      "نکته بسیار مهم درباره کلود: آنتروپیک نسبت به IPهای اشتراکی و تغییر مداوم سرور VPN حساسیت بالایی دارد؛ نگهداری ایمن اکانت با IP ثابت و تمیز و رعایت قوانین سرویس‌دهنده پس از تحویل بر عهده کاربر است.",
-      "پشتیبانی و راهنمایی تنظیمات ایمن در تلگرام هنگام راه‌اندازی."
-    ],
-    "features": [
-      "خانواده مدل‌های ۵.۵ در پلن Pro: پرچمدار کدنویسی Claude Sonnet 5.5، مدل استدلالی عمیق Claude Opus 5.5 و مدل رعدآسای Claude Haiku 5.5 (توضیح شفاف: مدل Claude Fable 5.2 در پلن Pro فقط با اعتبار اضافی/شارژی یا در پلن‌های Max و Ultra فعال است)",
-      "کانتکست عظیم ۱ میلیون توکنی (1M Context Window) با سقف خروجی تا ۱۲۸,۰۰۰ توکن برای مطالعه و تحلیل کل مخزن‌های کد و کتاب‌ها",
-      "سیستم تفکر تطبیقی و گسترده (Adaptive & Extended Thinking) جهت بالا بردن دقت استدلال منطقی و کاهش خطا در پروژه‌های پیچیده",
-      "بوم کاری Artifacts و Claude Projects: رندر زنده کامپوننت‌های وب، نمودارهای SVG و پوشه‌های پروژه با راهنمای اختصاصی",
-      "دستیار ترمینال Claude Code و جستجوی وب (Web Search) برای تست، ریفکتورینگ و توسعه مستقیم نرم‌افزار",
-      "ظرفیت مصرف رسمی پلن Pro (~۵ برابر نسخه رایگان) با سیستم سهمیه ۵ ساعته چرخشی و سهمیه هفتگی استاندارد"
-    ],
-    "reviews": [
-      {
-        "id": "rev-cld-1",
-        "author": "Navid_dev",
-        "rating": 5,
-        "comment": "کلود کد و پروجکت هاش بدون مشکل کار میکنه، برای برنامه نویسی واقعا لازم بود دستتون درد نکنه🙏",
-        "createdAt": "2026-10-22T19:00:00.000Z",
-        "verified": true,
-        "status": "approved"
-      },
-      {
-        "id": "rev-cld-2",
-        "author": "کاربر ناشناس",
-        "rating": 5,
-        "comment": "عالییی",
-        "createdAt": "2026-10-28T17:20:00.000Z",
-        "verified": true,
-        "status": "approved"
-      },
-      {
-        "id": "rev-cld-3",
-        "author": "م. حسینی",
-        "rating": 4,
-        "comment": "سرعت پاسخگویی ساپورت خوب بود، اکانت هم قانونی فعال شد",
-        "createdAt": "2026-10-26T21:10:00.000Z",
-        "verified": true,
-        "status": "approved"
-      },
-      {
-        "id": "rev-cld-4",
-        "author": "کاربر وایچ",
-        "rating": 4,
-        "comment": "خوبه مرسی",
-        "createdAt": "2026-10-28T19:00:00.000Z",
-        "verified": true,
-        "status": "approved"
-      }
-    ],
-    "iconUrl": "/claude-icon.webp"
+    ]
   }
 ];
 
