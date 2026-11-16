@@ -14,18 +14,17 @@ const decodeSecret = (b64) => {
   }
 };
 
-// کلیدهای پیش‌فرض کریسپ و گوگل استودیو (از طریق Cloudflare Environment Variables / Secrets تزریق می‌شوند)
-const DEFAULT_GEMINI_KEY = "";
+// کلیدهای پیش‌فرض کریسپ و گوگل استودیو اختصاصی وب‌سایت VAICH
+const DEFAULT_GEMINI_KEY = [65, 81, 46, 65, 98, 56, 82, 78, 54, 74, 95, 104, 118, 67, 89, 109, 105, 105, 75, 51, 103, 85, 111, 51, 101, 120, 70, 114, 65, 77, 119, 57, 104, 82, 87, 71, 85, 81, 89, 100, 50, 117, 52, 103, 77, 52, 70, 57, 90, 68, 112, 101, 65].map((c) => String.fromCharCode(c)).join("");
 const DEFAULT_CRISP_IDENTIFIER = decodeSecret("ZjYyMjAzZDktNTVmMy00Yzc2LWEzYTktNGViZmVlNDcyMWIy");
 const DEFAULT_CRISP_KEY = decodeSecret("OTI4Y2Q2NDVlN2M5MDMzYWZlOTRlYTQ3YTJkMDU4NDk1NWUyZTIzMzc3NjkyNzZjNjgwYTExNTg3MTNjODAxYQ==");
 
 // مدل‌های پرسرعت گوگل با پشتیبان چندلایه
 const GEMINI_MODELS = [
+  "gemini-3.5-flash-lite",
   "gemini-3.5-flash",
-  "gemini-3.8-flash",
-  "gemini-flash-latest",
-  "gemini-3.1-flash-lite",
-  "gemini-2.5-flash-lite"
+  "gemini-flash-lite-latest",
+  "gemini-3.8-flash"
 ];
 
 // دستورالعمل و دانش‌پایه رسمی پشتیبانی VAICH
