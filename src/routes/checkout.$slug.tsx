@@ -385,7 +385,7 @@ function Checkout() {
                     slug={product.slug}
                     iconUrl={product.iconUrl}
                     imageFit={product.imageFit}
-                    className="h-16 w-16 sm:h-20 sm:w-20 shrink-0 aspect-square rounded-full border border-border/80 bg-secondary/60 shadow-md"
+                    className="h-16 w-16 sm:h-20 sm:w-20 shrink-0 aspect-square rounded-2xl sm:rounded-3xl border border-border/80 bg-secondary/60 shadow-md"
                   />
 
                   <div className="min-w-0 flex-1">

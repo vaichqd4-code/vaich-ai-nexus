@@ -440,12 +440,12 @@ function ProductDetail() {
           <div className="grid gap-6 sm:gap-8 lg:grid-cols-[1.35fr_1fr] items-start">
             <div className="min-w-0">
               <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-right gap-4 sm:gap-5">
-                {/* Circular Centered Product Icon */}
+                {/* Unified 3D Rounded Square Product Icon */}
                 <ServiceIcon
                   slug={product.slug}
                   {...(product.iconUrl ? { iconUrl: product.iconUrl } : {})}
                   {...(product.imageFit ? { imageFit: product.imageFit } : {})}
-                  className="h-24 w-24 sm:h-28 sm:w-28 shrink-0 aspect-square rounded-full border-2 border-primary/30 shadow-lg shadow-primary/10 bg-secondary/70 ring-4 ring-primary/10"
+                  className="h-20 w-20 sm:h-24 sm:w-24 shrink-0 aspect-square rounded-2xl sm:rounded-3xl border border-border/90 shadow-md bg-secondary/60"
                 />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">

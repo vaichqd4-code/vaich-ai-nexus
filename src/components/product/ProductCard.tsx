@@ -93,12 +93,6 @@ export function ProductCard({
   const pricing = getProductPricingSummary(product);
   const isOutOfStock = pricing.isOutOfStock;
   const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
-  const isSquareFullBleedIcon = Boolean(
-    logoUrl &&
-      (logoUrl.includes("telegram-premium") ||
-        logoUrl.includes("telegram-stars") ||
-        logoUrl.includes("canva-pro"))
-  );
 
   const [extraReviews, setExtraReviews] = useState(0);
 
@@ -190,12 +184,9 @@ export function ProductCard({
               </span>
             )
           ) : (
-            /* Standard Product Logo Tile: Centered Square App-Icon Frame */
+            /* Standard Product Logo Tile: Unified 3D Rounded Square Squircle Frame (identical to Gemini, Claude & ChatGPT) */
             <div
-              className={cn(
-                "relative flex items-center justify-center rounded-2xl sm:rounded-3xl bg-secondary/80 border border-border/90 shadow-md group-hover:border-primary/50 group-hover:shadow-primary/10 group-hover:scale-105 transition-all duration-300 h-[82%] sm:h-[86%] aspect-square overflow-hidden",
-                isSquareFullBleedIcon ? "p-0" : "p-1.5 sm:p-2"
-              )}
+              className="relative flex items-center justify-center p-1.5 sm:p-2 rounded-2xl sm:rounded-3xl bg-secondary/80 border border-border/90 shadow-md group-hover:border-primary/50 group-hover:shadow-primary/10 group-hover:scale-105 transition-all duration-300 h-[82%] sm:h-[86%] aspect-square overflow-hidden"
               style={{
                 WebkitMaskImage: "-webkit-radial-gradient(white, black)",
                 maskImage: "radial-gradient(white, black)",
@@ -203,20 +194,29 @@ export function ProductCard({
               }}
             >
               {logoUrl ? (
-                <img
-                  src={logoUrl}
-                  alt={product.name}
-                  width={128}
-                  height={128}
-                  decoding="async"
-                  className={cn(
-                    "h-full w-full object-center",
-                    isSquareFullBleedIcon
-                      ? "object-cover"
-                      : "object-contain rounded-xl sm:rounded-2xl drop-shadow-sm"
-                  )}
-                  loading="lazy"
-                />
+                <div
+                  className="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden flex items-center justify-center"
+                  style={{
+                    WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+                    maskImage: "radial-gradient(white, black)",
+                    transform: "translateZ(0)",
+                  }}
+                >
+                  <img
+                    src={logoUrl}
+                    alt={product.name}
+                    width={128}
+                    height={128}
+                    decoding="async"
+                    className="h-full w-full object-contain object-center rounded-xl sm:rounded-2xl drop-shadow-sm"
+                    style={{
+                      WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+                      maskImage: "radial-gradient(white, black)",
+                      transform: "translateZ(0)",
+                    }}
+                    loading="lazy"
+                  />
+                </div>
               ) : (
                 <span className="text-xl sm:text-2xl font-black text-primary">
                   {initial}

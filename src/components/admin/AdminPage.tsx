@@ -3610,14 +3610,30 @@ export function AdminPage() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center gap-4">
-                  {/* Live Preview of the Image */}
-                  <div className={`relative h-24 w-24 sm:h-28 sm:w-28 shrink-0 rounded-2xl overflow-hidden bg-background/80 border border-border/80 flex items-center justify-center shadow-inner ${editProduct.imageFit === "cover" ? "p-0" : "p-2"}`}>
+                  {/* Live Preview of the Image — Exact 1:1 Match with Storefront */}
+                  <div
+                    className={`relative h-24 w-24 sm:h-28 sm:w-28 shrink-0 rounded-2xl sm:rounded-3xl overflow-hidden border border-border/90 flex items-center justify-center shadow-md ${
+                      editProduct.imageFit === "cover"
+                        ? "p-0 bg-background/80"
+                        : "p-1.5 sm:p-2 bg-linear-to-b from-secondary/80 to-secondary/50 shadow-[0_0_24px_-12px_var(--neon-blue)]"
+                    }`}
+                  >
                     {getProductLogo(editProduct.slug || "", editProduct.iconUrl) ? (
-                      <img
-                        src={getProductLogo(editProduct.slug || "", editProduct.iconUrl)}
-                        alt="پیش‌نمایش تصویر"
-                        className={editProduct.imageFit === "cover" ? "h-full w-full object-cover rounded-2xl" : "max-h-full max-w-full object-contain rounded-xl drop-shadow-sm"}
-                      />
+                      <div
+                        className={`h-full w-full overflow-hidden flex items-center justify-center ${
+                          editProduct.imageFit === "cover" ? "rounded-2xl sm:rounded-3xl" : "rounded-xl sm:rounded-2xl"
+                        }`}
+                      >
+                        <img
+                          src={getProductLogo(editProduct.slug || "", editProduct.iconUrl)}
+                          alt="پیش‌نمایش تصویر"
+                          className={
+                            editProduct.imageFit === "cover"
+                              ? "h-full w-full object-cover object-center"
+                              : "h-full w-full object-contain object-center rounded-xl sm:rounded-2xl drop-shadow-sm"
+                          }
+                        />
+                      </div>
                     ) : (
                       <span className="text-2xl font-black text-muted-foreground/60">
                         {editProduct.slug ? editProduct.slug.charAt(0).toUpperCase() : "AI"}
@@ -3737,7 +3753,7 @@ export function AdminPage() {
                               : "bg-card border-border text-muted-foreground hover:text-foreground"
                           }`}
                         >
-                          <span>لوگوی متمرکز (Contain)</span>
+                          <span>غیرمتمرکز (مربعی قاب سه‌بعدی)</span>
                         </button>
                         <button
                           type="button"
@@ -3748,11 +3764,11 @@ export function AdminPage() {
                               : "bg-card border-border text-muted-foreground hover:text-foreground"
                           }`}
                         >
-                          <span>کاور لبه‌به‌لبه و افقی (Cover)</span>
+                          <span>متمرکز / بنری (تمام‌عرض پلنر)</span>
                         </button>
                       </div>
                       <p className="text-[10px] text-muted-foreground leading-4">
-                        💡 حالت «کاور لبه‌به‌لبه و افقی» کادر بالای کارت را بدون حاشیه پر می‌کند (پیشنهادی برای پلنرها، اسکرین‌شات‌ها و تصاویر افقی).
+                        💡 حالت «غیرمتمرکز» دقیقاً همان قاب مربعی گوشه‌گرد و نوار سه‌بعدی اکانت‌های جمنای و کلاد است؛ حالت «متمرکز / بنری» تصویر را تمام‌عرض (مشابه پلنرهای گوگل‌شیت) نمایش می‌دهد.
                       </p>
                     </div>
                   </div>

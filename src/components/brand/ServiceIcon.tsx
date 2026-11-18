@@ -59,20 +59,11 @@ export function ServiceIcon({
   const cleanSlug = slug ? slug.replace(/^vaich[-_]?/i, "") : "";
   const initial = cleanSlug ? cleanSlug.charAt(0).toUpperCase() : "AI";
 
-  const isFullBleedIcon =
-    imageFit === "cover" ||
-    Boolean(
-      logo &&
-        (logo.includes("telegram-premium") ||
-          logo.includes("telegram-stars") ||
-          logo.includes("canva-pro"))
-    );
-
   return (
     <span
       className={cn(
         "grid h-14 w-14 shrink-0 place-items-center rounded-2xl sm:rounded-3xl border border-border/80 bg-linear-to-b from-secondary/70 to-secondary/40 shadow-[0_0_28px_-16px_var(--neon-blue)] transition-all overflow-hidden",
-        isFullBleedIcon ? "p-0" : "p-1.5 sm:p-2",
+        imageFit === "cover" ? "p-0" : "p-1.5 sm:p-2",
         className,
       )}
       style={{
@@ -82,21 +73,33 @@ export function ServiceIcon({
       }}
     >
       {logo ? (
-        <img
-          src={logo}
-          alt={slug}
-          width={96}
-          height={96}
-          decoding="async"
+        <div
           className={cn(
-            isFullBleedIcon
-              ? "h-full w-full object-cover object-center"
-              : "h-full w-full object-contain object-center drop-shadow-sm",
-            imgClassName,
+            "h-full w-full overflow-hidden flex items-center justify-center",
+            imageFit === "cover" ? "rounded-2xl sm:rounded-3xl" : "rounded-xl sm:rounded-2xl",
           )}
-          loading="eager"
-          fetchPriority="high"
-        />
+          style={{
+            WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+            maskImage: "radial-gradient(white, black)",
+            transform: "translateZ(0)",
+          }}
+        >
+          <img
+            src={logo}
+            alt={slug}
+            width={96}
+            height={96}
+            decoding="async"
+            className={cn(
+              imageFit === "cover"
+                ? "h-full w-full object-cover object-center"
+                : "h-full w-full object-contain object-center rounded-xl sm:rounded-2xl drop-shadow-sm",
+              imgClassName,
+            )}
+            loading="eager"
+            fetchPriority="high"
+          />
+        </div>
       ) : (
         <span className="text-neon-blue text-lg font-black">
           {initial}
