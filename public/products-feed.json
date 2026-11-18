@@ -1,7 +1,7 @@
 {
   "store": "VAICH",
   "url": "https://vaich.ir",
-  "updated_at": "2026-11-18T16:34:06.385260+00:00",
+  "updated_at": "2026-11-18T17:08:12.507924+00:00",
   "products": [
     {
       "id": "chatgpt-plus",
@@ -141,8 +141,8 @@
     {
       "id": "telegram-stars",
       "title": "استارز تلگرام",
-      "price": 584000,
-      "max_price": 54859000,
+      "price": 590000,
+      "max_price": 54900000,
       "original_price": null,
       "discount_percent": 0,
       "duration": "شارژ فوری",
@@ -156,70 +156,70 @@
           "id": "tg-stars-100",
           "option1": "شارژ مستقیم با آیدی",
           "option2": "۱۰۰ استارز فوری",
-          "price": 584000,
+          "price": 590000,
           "in_stock": true
         },
         {
           "id": "tg-stars-150",
           "option1": "شارژ مستقیم با آیدی",
           "option2": "۱۵۰ استارز فوری",
-          "price": 858000,
+          "price": 860000,
           "in_stock": true
         },
         {
           "id": "tg-stars-250",
           "option1": "شارژ مستقیم با آیدی",
           "option2": "۲۵۰ استارز فوری",
-          "price": 1560000,
+          "price": 1600000,
           "in_stock": true
         },
         {
           "id": "tg-stars-350",
           "option1": "شارژ مستقیم با آیدی",
           "option2": "۳۵۰ استارز فوری",
-          "price": 2599000,
+          "price": 2600000,
           "in_stock": true
         },
         {
           "id": "tg-stars-500",
           "option1": "شارژ مستقیم با آیدی",
           "option2": "۵۰۰ استارز فوری",
-          "price": 3510000,
+          "price": 3550000,
           "in_stock": true
         },
         {
           "id": "tg-stars-750",
           "option1": "شارژ مستقیم با آیدی",
           "option2": "۷۵۰ استارز فوری",
-          "price": 4419000,
+          "price": 4450000,
           "in_stock": true
         },
         {
           "id": "tg-stars-1000",
           "option1": "شارژ مستقیم با آیدی",
           "option2": "۱,۰۰۰ استارز فوری",
-          "price": 6109000,
+          "price": 6150000,
           "in_stock": true
         },
         {
           "id": "tg-stars-2500",
           "option1": "شارژ مستقیم با آیدی",
           "option2": "۲,۵۰۰ استارز فوری",
-          "price": 14559000,
+          "price": 14600000,
           "in_stock": true
         },
         {
           "id": "tg-stars-5000",
           "option1": "شارژ مستقیم با آیدی",
           "option2": "۵,۰۰۰ استارز فوری",
-          "price": 29769000,
+          "price": 29800000,
           "in_stock": true
         },
         {
           "id": "tg-stars-10000",
           "option1": "شارژ مستقیم با آیدی",
           "option2": "۱۰,۰۰۰ استارز فوری",
-          "price": 54859000,
+          "price": 54900000,
           "in_stock": true
         }
       ]
@@ -227,8 +227,8 @@
     {
       "id": "telegram-premium",
       "title": "اشتراک تلگرام پرمیوم",
-      "price": 2491000,
-      "max_price": 12879000,
+      "price": 2500000,
+      "max_price": 12900000,
       "original_price": null,
       "discount_percent": 0,
       "duration": "۱ تا ۱۲ ماهه",
@@ -242,28 +242,28 @@
           "id": "tg-prem-1m",
           "option1": "گیفت رسمی (بدون نیاز به رمز)",
           "option2": "پرمیوم گیفتی ۱ ماهه",
-          "price": 2491000,
+          "price": 2500000,
           "in_stock": true
         },
         {
           "id": "tg-prem-3m",
           "option1": "گیفت رسمی (بدون نیاز به رمز)",
           "option2": "پرمیوم گیفتی ۳ ماهه",
-          "price": 5599000,
+          "price": 5600000,
           "in_stock": true
         },
         {
           "id": "tg-prem-6m",
           "option1": "گیفت رسمی (بدون نیاز به رمز)",
           "option2": "پرمیوم گیفتی ۶ ماهه",
-          "price": 7279000,
+          "price": 7300000,
           "in_stock": true
         },
         {
           "id": "tg-prem-12m",
           "option1": "گیفت رسمی (بدون نیاز به رمز)",
           "option2": "پرمیوم گیفتی ۱ ساله",
-          "price": 12879000,
+          "price": 12900000,
           "in_stock": true
         }
       ]
@@ -271,8 +271,8 @@
     {
       "id": "canva-pro",
       "title": "اشتراک کانوا پرو",
-      "price": 233000,
-      "max_price": 987000,
+      "price": 240000,
+      "max_price": 990000,
       "original_price": null,
       "discount_percent": 0,
       "duration": "۱ تا ۶ ماهه",
@@ -286,28 +286,28 @@
           "id": "canva-fam-1m",
           "option1": "فمیلی (دعوت تیمی روی ایمیل شخصی)",
           "option2": "۱ ماهه (قابل تمدید و بدون تعویض اکانت)",
-          "price": 233000,
+          "price": 240000,
           "in_stock": true
         },
         {
           "id": "canva-fam-2m",
           "option1": "فمیلی (دعوت تیمی روی ایمیل شخصی)",
           "option2": "۲ ماهه (قابل تمدید و بدون تعویض اکانت)",
-          "price": 337000,
+          "price": 340000,
           "in_stock": true
         },
         {
           "id": "canva-fam-3m",
           "option1": "فمیلی (دعوت تیمی روی ایمیل شخصی)",
           "option2": "۳ ماهه (قابل تمدید و بدون تعویض اکانت)",
-          "price": 493000,
+          "price": 500000,
           "in_stock": true
         },
         {
           "id": "canva-fam-6m",
           "option1": "فمیلی (دعوت تیمی روی ایمیل شخصی)",
           "option2": "۶ ماهه (قابل تمدید و بدون تعویض اکانت)",
-          "price": 987000,
+          "price": 990000,
           "in_stock": true
         },
         {
