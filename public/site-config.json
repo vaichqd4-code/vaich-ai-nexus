@@ -3,7 +3,7 @@
     {
       "slug": "chatgpt-plus",
       "name": "ChatGPT Plus",
-      "price": 6300000,
+      "price": 6400000,
       "duration": "۱ ماهه",
       "description": "اشتراک قانونی و اختصاصی ChatGPT Plus شرکت OpenAI (پلن رسمی ۲۰ دلاری)؛ مجهز به مدل‌های پرچمدار و جدید GPT-6.1 Sol و GPT-6 Sol، مدل سریع GPT-6 Luna، دسترسی تخصصی GPT-6 Astra در محیط‌های Codex و ChatGPT Work، بوم تعاملی Canvas، فضای کاری Prism، پژوهش عمیق Deep Research و حالت صوتی زنده Advanced Voice Mode.",
       "isLifetime": false,
@@ -1450,5 +1450,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-18T12:33:16.622Z"
+  "updatedAt": "2026-11-18T15:43:38.348Z"
 }
