@@ -68,11 +68,23 @@ function getLiveSiteCatalogContext(): string {
         ? "🟢 موجود و فعال (آماده خرید آنلاین و تحویل فوری)"
         : "🔴 ناموجود (اتمام ظرفیت فعلی). قانون قطعی: اگر مشتری از این پلن پرسید، حتماً و صراحتاً بفرمایید که این پلن به دلیل تکمیل ظرفیت در حال حاضر ناموجود است، اما پلن ۶۰ روزه موجود است یا می‌توانند جهت رزرو به تلگرام @youneshayati پیام دهند.";
 
+      const variantsLine = Array.isArray(p.variants) && p.variants.length > 0
+        ? "\n  - پلن‌ها و متغیرها: " +
+          p.variants
+            .map((v: any) => {
+              const label = [v.option1, v.option2].filter(Boolean).join(" / ");
+              return v.inStock === false
+                ? `${label}: ناموجود`
+                : `${label}: ${new Intl.NumberFormat("fa-IR").format(v.price)} تومان`;
+            })
+            .join(" | ")
+        : "";
+
       return `🔹 نام محصول: ${p.name}
   - اسلاگ: ${p.slug}
   - لینک خرید در سایت: https://vaich.ir/products/${p.slug}
   - وضعیت موجودی: ${stockStatus}
-  - قیمت فعلی: ${priceFormatted} (${p.duration || "دسترسی اختصاصی"})
+  - قیمت فعلی: ${priceFormatted} (${p.duration || "دسترسی اختصاصی"})${variantsLine}
   - نوع لایسنس: ${p.isLifetime ? "دائمی و مادام‌العمر (بدون نیاز به شارژ ماهانه)" : "اشتراک قانونی اختصاصی"}
   - خلاصه: ${p.description}
   - ویژگی‌ها و امکانات: ${features}`;

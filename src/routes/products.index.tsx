@@ -39,6 +39,7 @@ function ProductsPage() {
   const categories = [
     { id: "all", label: "همه محصولات" },
     { id: "planner", label: "پلنرهای دیجیتال" },
+    { id: "premium-apps", label: "اشتراک‌های پرمیوم و کاربردی" },
     { id: "chatgpt", label: "ChatGPT Plus" },
     { id: "gemini", label: "Gemini Pro" },
     { id: "claude", label: "Claude Pro" },
@@ -53,6 +54,15 @@ function ProductsPage() {
         const text = (p.name + " " + p.slug + " " + (p.categoryId || "")).toLowerCase();
         if (selectedCategory === "planner") {
           return text.includes("planner") || text.includes("پلنر") || p.categoryId === "row-mvampt3r";
+        }
+        if (selectedCategory === "premium-apps") {
+          return (
+            p.categoryId === "premium-apps" ||
+            text.includes("telegram") ||
+            text.includes("canva") ||
+            text.includes("تلگرام") ||
+            text.includes("کانوا")
+          );
         }
         return text.includes(selectedCategory);
       });
@@ -94,7 +104,7 @@ function ProductsPage() {
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="جستجوی محصول (مثال: پلنر، Gemini, ChatGPT, Claude)..."
+              placeholder="جستجوی محصول (مثال: پلنر، تلگرام پرمیوم، استارز، کانوا، Gemini, ChatGPT)..."
               className="w-full rounded-2xl border border-border bg-card/70 px-5 py-3.5 pr-5 pl-12 text-right text-sm sm:text-base outline-none transition-all duration-300 placeholder:text-muted-foreground focus:border-neon-purple/60 focus:ring-2 focus:ring-neon-purple/20 shadow-xs"
               dir="rtl"
               autoComplete="off"

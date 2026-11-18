@@ -24,14 +24,33 @@ export type CustomerInfo = {
  * Everything comes from the product catalogue, so new products/plans work
  * automatically without any code change.
  */
-export function buildOrderMessage(product: Product, customer: CustomerInfo): string {
+export function buildOrderMessage(
+  product: Product,
+  customer: CustomerInfo,
+  options?: {
+    variantLabel?: string | undefined;
+    priceOverride?: number | undefined;
+  },
+): string {
+  const finalPrice =
+    options?.priceOverride !== undefined && options.priceOverride > 0
+      ? options.priceOverride
+      : product.price;
+  const planSuffix = options?.variantLabel
+    ? ` (${options.variantLabel})`
+    : isProductLifetime(product)
+      ? " (دسترسی دائمی و مادام‌العمر)"
+      : product.duration
+        ? ` (${product.duration})`
+        : "";
+
   const lines: string[] = [
     "🧾 رسید پرداخت جدید — VAICH",
     "",
     `سرویس: ${product.name}`,
-    `محصول / نوع دسترسی: ${product.name}${isProductLifetime(product) ? " (دسترسی دائمی و مادام‌العمر)" : (product.duration ? ` (${product.duration})` : "")}`,
-    `قیمت محصول: ${formatPrice(product.price)}`,
-    `مبلغ نهایی پرداخت: ${formatPrice(product.price)}`,
+    `محصول / پلن انتخابی: ${product.name}${planSuffix}`,
+    `قیمت محصول: ${formatPrice(finalPrice)}`,
+    `مبلغ نهایی پرداخت: ${formatPrice(finalPrice)}`,
     "",
     "— اطلاعات مشتری —",
     `نام و نام خانوادگی: ${customer.fullName || "—"}`,

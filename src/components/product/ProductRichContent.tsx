@@ -50,11 +50,155 @@ interface ProductRichContentProps {
   product: Product;
   isPlanner: boolean;
   isLifetime: boolean;
+  selectedPrice?: number;
+  selectedVariantId?: string;
+  selectedOutOfStock?: boolean;
 }
 
 type TabKey = "features" | "usecases" | "comparison" | "delivery" | "faq";
 
-export function ProductRichContent({ product, isPlanner, isLifetime }: ProductRichContentProps) {
+function getCustomTabIcon(title: string, idx: number) {
+  const t = title.toLowerCase();
+  if (t.includes("سوال") || t.includes("پرسش") || t.includes("faq")) return HelpCircle;
+  if (t.includes("گارانتی") || t.includes("شرایط") || t.includes("ضمانت") || t.includes("فعال")) return ShieldCheck;
+  if (t.includes("مقایسه") || t.includes("امکانات") || t.includes("ویژگی") || t.includes("کاربرد")) return Layers;
+  if (t.includes("توضیح") || t.includes("معرفی")) return BookOpen;
+  const fallback = [BookOpen, Layers, ShieldCheck, HelpCircle];
+  return fallback[idx % fallback.length] || FileText;
+}
+
+function CustomTabContentRenderer({
+  title,
+  content,
+  openFaqIndex,
+  toggleFaq,
+}: {
+  title: string;
+  content: string;
+  openFaqIndex: number | null;
+  toggleFaq: (i: number) => void;
+}) {
+  const isFaqTab = title.includes("سوال") || title.includes("پرسش");
+
+  if (isFaqTab) {
+    const blocks = content
+      .split(/\n\s*\n/)
+      .map((b) => b.trim())
+      .filter(Boolean);
+    const faqPairs = blocks
+      .map((block) => {
+        const lines = block.split("\n").map((l) => l.trim()).filter(Boolean);
+        if (lines.length >= 2) {
+          return { q: lines[0], a: lines.slice(1).join(" ") };
+        }
+        return null;
+      })
+      .filter((x): x is { q: string; a: string } => Boolean(x));
+
+    if (faqPairs.length > 0) {
+      return (
+        <div className="space-y-3">
+          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2 mb-4">
+            <HelpCircle className="h-5 w-5 text-primary shrink-0" />
+            <span>{title}</span>
+          </h3>
+          {faqPairs.map((item, idx) => {
+            const isOpen = openFaqIndex === idx;
+            return (
+              <div
+                key={idx}
+                className="rounded-2xl border border-border/80 bg-secondary/20 overflow-hidden transition-all"
+              >
+                <button
+                  type="button"
+                  onClick={() => toggleFaq(idx)}
+                  className="w-full flex items-center justify-between gap-3 p-4 text-right text-xs sm:text-sm font-bold text-foreground hover:bg-secondary/40 transition-colors cursor-pointer"
+                >
+                  <span>{item.q}</span>
+                  <ChevronDown
+                    className={cn(
+                      "h-4 w-4 shrink-0 text-primary transition-transform duration-200",
+                      isOpen && "rotate-180"
+                    )}
+                  />
+                </button>
+                {isOpen && (
+                  <div className="px-4 pb-4 text-xs sm:text-sm leading-7 text-muted-foreground border-t border-border/50 pt-3">
+                    {item.a}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+  }
+
+  const lines = content
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  return (
+    <div className="space-y-3.5">
+      <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
+        <Sparkles className="h-5 w-5 text-primary shrink-0" />
+        <span>{title}</span>
+      </h3>
+      <div className="space-y-2.5">
+        {lines.map((line, idx) => {
+          const isBullet = /^([•\-*✅⚡🔹🔸])\s*/.test(line);
+          if (isBullet) {
+            const clean = line.replace(/^([•\-*✅⚡🔹🔸])\s*/, "");
+            const colonIdx = clean.indexOf(":");
+            return (
+              <div
+                key={idx}
+                className="flex items-start gap-2.5 rounded-2xl border border-border/60 bg-secondary/20 p-3.5 text-xs sm:text-sm leading-7 text-muted-foreground"
+              >
+                <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0 mt-1.5" />
+                <div className="flex-1">
+                  {colonIdx > 0 && colonIdx < 60 ? (
+                    <>
+                      <strong className="text-foreground font-bold">
+                        {clean.slice(0, colonIdx + 1)}
+                      </strong>{" "}
+                      <span>{clean.slice(colonIdx + 1).trim()}</span>
+                    </>
+                  ) : (
+                    <span>{clean}</span>
+                  )}
+                </div>
+              </div>
+            );
+          }
+          return (
+            <p
+              key={idx}
+              className="text-xs sm:text-sm leading-7 text-muted-foreground"
+            >
+              {line}
+            </p>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export function ProductRichContent({
+  product,
+  isPlanner,
+  isLifetime,
+  selectedPrice,
+  selectedVariantId,
+  selectedOutOfStock,
+}: ProductRichContentProps) {
+  const hasCustomTabs = Array.isArray(product.customTabs) && product.customTabs.length > 0;
+  const [activeCustomTabId, setActiveCustomTabId] = useState<string>(
+    hasCustomTabs ? product.customTabs![0].id : ""
+  );
   const [activeTab, setActiveTab] = useState<TabKey>("features");
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
@@ -62,10 +206,47 @@ export function ProductRichContent({ product, isPlanner, isLifetime }: ProductRi
   const isClaude = product.slug.includes("claude");
   const isGemini = product.slug.includes("gemini");
   const is18Month = product.slug === "gemini-pro";
+  const hasLegacyRich = isChatGPT || isClaude || isGemini || isPlanner;
 
   const toggleFaq = (idx: number) => {
     setOpenFaqIndex((prev) => (prev === idx ? null : idx));
   };
+
+  const effectivePrice = selectedPrice !== undefined ? selectedPrice : product.price;
+  const effectiveOutOfStock = selectedOutOfStock !== undefined ? selectedOutOfStock : product.inStock === false;
+
+  const fallbackTabs = !hasCustomTabs && !hasLegacyRich
+    ? [
+        {
+          id: "auto-desc",
+          title: "توضیحات محصول",
+          content: product.description || `معرفی کامل ${product.name}`,
+        },
+        ...(product.features && product.features.length > 0
+          ? [
+              {
+                id: "auto-features",
+                title: "امکانات و ویژگی‌ها",
+                content: product.features.map((f) => `• ${f}`).join("\n"),
+              },
+            ]
+          : []),
+        ...(product.purchaseInfo && product.purchaseInfo.length > 0
+          ? [
+              {
+                id: "auto-warranty",
+                title: "شرایط فعال‌سازی و گارانتی",
+                content: product.purchaseInfo.map((i) => `• ${i}`).join("\n"),
+              },
+            ]
+          : []),
+      ]
+    : [];
+
+  const dynamicTabs = hasCustomTabs ? product.customTabs! : fallbackTabs;
+  const useDynamicMode = dynamicTabs.length > 0;
+  const resolvedDynamicTab =
+    dynamicTabs.find((t) => t.id === activeCustomTabId) || dynamicTabs[0];
 
   const tabs: { key: TabKey; label: string; icon: any }[] = [
     { key: "features", label: "ویژگی‌ها و مشخصات فنی", icon: Cpu },
@@ -77,66 +258,102 @@ export function ProductRichContent({ product, isPlanner, isLifetime }: ProductRi
 
   return (
     <div className="mt-8 space-y-6">
-      {/* Tab Navigation with Dark Metallic Glassmorphism */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none rounded-2xl bg-secondary/40 p-1.5 border border-border/70 backdrop-blur-md">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.key;
-          return (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={cn(
-                "flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer select-none",
-                isActive
-                  ? "bg-linear-to-r from-primary to-purple-600 text-white shadow-md shadow-primary/25 border border-primary/40"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
-              )}
-            >
-              <Icon className="h-4 w-4" />
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
+      {/* Horizontal Tab Navigation */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 scrollbar-none rounded-2xl bg-secondary/40 p-1.5 border border-border/70 backdrop-blur-md">
+        {useDynamicMode
+          ? dynamicTabs.map((tab, idx) => {
+              const Icon = getCustomTabIcon(tab.title, idx);
+              const isActive = resolvedDynamicTab?.id === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveCustomTabId(tab.id);
+                    setOpenFaqIndex(0);
+                  }}
+                  className={cn(
+                    "flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer select-none",
+                    isActive
+                      ? "bg-linear-to-r from-primary to-purple-600 text-white shadow-md shadow-primary/25 border border-primary/40"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
+                  )}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span>{tab.title}</span>
+                </button>
+              );
+            })
+          : tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setActiveTab(tab.key)}
+                  className={cn(
+                    "flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap cursor-pointer select-none",
+                    isActive
+                      ? "bg-linear-to-r from-primary to-purple-600 text-white shadow-md shadow-primary/25 border border-primary/40"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
+                  )}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
       </div>
 
       {/* Tab Contents */}
-      <div className="rounded-3xl border border-border/80 bg-card/60 backdrop-blur-xl p-5 sm:p-7 shadow-xl shadow-black/20">
-        {isChatGPT && (
-          <ChatGPTDetailContent
-            product={product}
-            activeTab={activeTab}
+      <div className="rounded-3xl border border-border/80 bg-card/60 backdrop-blur-xl p-5 sm:p-7 shadow-xl shadow-black/15">
+        {useDynamicMode && resolvedDynamicTab ? (
+          <CustomTabContentRenderer
+            title={resolvedDynamicTab.title}
+            content={resolvedDynamicTab.content}
             openFaqIndex={openFaqIndex}
             toggleFaq={toggleFaq}
           />
-        )}
+        ) : (
+          <>
+            {isChatGPT && (
+              <ChatGPTDetailContent
+                product={product}
+                activeTab={activeTab}
+                openFaqIndex={openFaqIndex}
+                toggleFaq={toggleFaq}
+              />
+            )}
 
-        {isClaude && (
-          <ClaudeDetailContent
-            product={product}
-            activeTab={activeTab}
-            openFaqIndex={openFaqIndex}
-            toggleFaq={toggleFaq}
-          />
-        )}
+            {isClaude && (
+              <ClaudeDetailContent
+                product={product}
+                activeTab={activeTab}
+                openFaqIndex={openFaqIndex}
+                toggleFaq={toggleFaq}
+              />
+            )}
 
-        {isGemini && (
-          <GeminiDetailContent
-            product={product}
-            is18Month={is18Month}
-            activeTab={activeTab}
-            openFaqIndex={openFaqIndex}
-            toggleFaq={toggleFaq}
-          />
-        )}
+            {isGemini && (
+              <GeminiDetailContent
+                product={product}
+                is18Month={is18Month}
+                activeTab={activeTab}
+                openFaqIndex={openFaqIndex}
+                toggleFaq={toggleFaq}
+              />
+            )}
 
-        {isPlanner && (
-          <PlannerDetailContent
-            product={product}
-            activeTab={activeTab}
-            openFaqIndex={openFaqIndex}
-            toggleFaq={toggleFaq}
-          />
+            {isPlanner && (
+              <PlannerDetailContent
+                product={product}
+                activeTab={activeTab}
+                openFaqIndex={openFaqIndex}
+                toggleFaq={toggleFaq}
+              />
+            )}
+          </>
         )}
       </div>
 
@@ -147,27 +364,42 @@ export function ProductRichContent({ product, isPlanner, isLifetime }: ProductRi
             <Sparkles className="h-4 w-4 text-primary" />
             {isLifetime
               ? "دسترسی دائمی و مادام‌العمر بدون اشتراک ماهانه در وایچ"
-              : "فعال‌سازی قانونی با ضمانت تحویل سالم اولیه در وایچ"}
+              : "فعال‌سازی قانونی با ضمانت تحویل سالم در وایچ"}
           </div>
           <p className="text-xs text-muted-foreground">
             {isLifetime
               ? "تحویل آنی لینک کپی فایل همراه با راهنمای گام‌به‌گام و پشتیبانی اختصاصی."
-              : "تحویل سریع پس از ثبت سفارش همراه با پشتیبانی راه‌اندازی و راهنمای استفاده ایمن."}
+              : "تحویل سریع پس از ثبت سفارش همراه با پشتیبانی راه‌اندازی و ضمانت پایداری."}
           </p>
         </div>
         <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
           <div className="text-left hidden xs:block">
-            <div className="text-[11px] text-muted-foreground">قیمت با تخفیف</div>
-            <div className="text-base font-black text-primary">{formatPrice(product.price)}</div>
+            <div className="text-[11px] text-muted-foreground">
+              {effectiveOutOfStock ? "وضعیت" : "قیمت پلن انتخابی"}
+            </div>
+            <div className={cn("text-base font-black", effectiveOutOfStock ? "text-rose-500" : "text-primary")}>
+              {effectiveOutOfStock ? "ناموجود" : formatPrice(effectivePrice)}
+            </div>
           </div>
-          <Link
-            to="/checkout/$slug"
-            params={{ slug: product.slug }}
-            className="neon-button-glow flex-1 sm:flex-none inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-black text-white bg-linear-to-r from-primary via-purple-600 to-primary hover:from-primary/90 hover:to-purple-600/90 transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 cursor-pointer"
-          >
-            <span>خرید و فعال‌سازی فوری</span>
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
+          {effectiveOutOfStock ? (
+            <button
+              type="button"
+              disabled
+              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-black text-muted-foreground bg-secondary/80 border border-border cursor-not-allowed select-none"
+            >
+              <span>ناموجود</span>
+            </button>
+          ) : (
+            <Link
+              to="/checkout/$slug"
+              params={{ slug: product.slug }}
+              search={selectedVariantId ? ({ variant: selectedVariantId } as any) : undefined}
+              className="neon-button-glow flex-1 sm:flex-none inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-black text-white bg-linear-to-r from-primary via-purple-600 to-primary hover:from-primary/90 hover:to-purple-600/90 transition-all shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 cursor-pointer"
+            >
+              <span>پرداخت و فعال‌سازی فوری</span>
+              <ArrowLeft className="h-4 w-4" />
+            </Link>
+          )}
         </div>
       </div>
     </div>

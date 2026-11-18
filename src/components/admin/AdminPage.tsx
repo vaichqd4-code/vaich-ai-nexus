@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import {
   useDynamicProducts,
   formatPrice,
+  formatPriceNumber,
+  formatRtlSafeTitle,
+  getProductPricingSummary,
   toPersianDigits,
   normalizePin,
   DEFAULT_ADMIN_PIN,
@@ -13,6 +16,8 @@ import {
   DEFAULT_IN_ARTICLE_BANNER,
   DEFAULT_INSTAGRAM_URL,
   type Product,
+  type ProductVariant,
+  type ProductCustomTab,
   type ProductCategoryRow,
   type LayoutMode,
   type AdminUser,
@@ -357,6 +362,8 @@ export function AdminPage() {
   const [originalProductSlug, setOriginalProductSlug] = useState<string | null>(null);
   const [featuresText, setFeaturesText] = useState("");
   const [purchaseInfoText, setPurchaseInfoText] = useState("");
+  const [editVariants, setEditVariants] = useState<ProductVariant[]>([]);
+  const [editCustomTabs, setEditCustomTabs] = useState<ProductCustomTab[]>([]);
   const [isCompressingImage, setIsCompressingImage] = useState(false);
   const [imageUploadError, setImageUploadError] = useState("");
 
@@ -867,18 +874,37 @@ export function AdminPage() {
     handlePublishCloud({ products: updated });
   };
 
-  // Quick discount applicator (e.g. 10%, 20%, 30%, 0%)
+  // Quick discount applicator (e.g. 10%, 20%, 30%, 0%) — supports both simple & variant products
   const handleApplyDiscount = (slug: string, percent: number) => {
     const updated = products.map((p) => {
       if (p.slug === slug) {
+        const nextVariants = Array.isArray(p.variants) && p.variants.length > 0
+          ? p.variants.map((v) => {
+              if (v.inStock === false) return v;
+              const vBase = v.originalPrice || v.price;
+              if (percent === 0) {
+                const cleanV: ProductVariant = { ...v, price: vBase, discountPercent: 0 };
+                delete cleanV.originalPrice;
+                return cleanV;
+              }
+              return {
+                ...v,
+                price: Math.round((vBase * (100 - percent)) / 100),
+                originalPrice: vBase,
+                discountPercent: percent,
+              };
+            })
+          : p.variants;
+
         const basePrice = p.originalPrice || p.price;
         if (percent === 0) {
-          const next = {
+          const next: Product = {
             ...p,
             price: basePrice,
+            discountPercent: 0,
+            ...(nextVariants ? { variants: nextVariants } : {}),
           };
           delete next.originalPrice;
-          delete next.discountPercent;
           return next;
         }
         const discounted = Math.round((basePrice * (100 - percent)) / 100);
@@ -887,6 +913,7 @@ export function AdminPage() {
           price: discounted,
           originalPrice: basePrice,
           discountPercent: percent,
+          ...(nextVariants ? { variants: nextVariants } : {}),
         };
       }
       return p;
@@ -1003,9 +1030,13 @@ export function AdminPage() {
       imageFit: product.imageFit || "contain",
       inStock: product.inStock !== false,
       isLifetime: isProductLifetime(product),
+      variantOption1Label: product.variantOption1Label || "نوع اکانت / اشتراک",
+      variantOption2Label: product.variantOption2Label || "مدت زمان / بسته",
     });
     setFeaturesText(product.features ? product.features.join("\n") : "");
     setPurchaseInfoText(product.purchaseInfo ? product.purchaseInfo.join("\n") : "");
+    setEditVariants(product.variants ? product.variants.map((v) => ({ ...v })) : []);
+    setEditCustomTabs(product.customTabs ? product.customTabs.map((t) => ({ ...t })) : []);
     setImageUploadError("");
     setIsCompressingImage(false);
     setIsEditing(true);
@@ -1021,7 +1052,7 @@ export function AdminPage() {
       name: "",
       price: 0,
       originalPrice: undefined,
-      discountPercent: undefined,
+      discountPercent: 0,
       duration: "۱ ماهه",
       description: "",
       isLifetime: false,
@@ -1034,6 +1065,10 @@ export function AdminPage() {
       rating: 5.0,
       reviewCount: 0,
       reviews: [],
+      variantOption1Label: "نوع اشتراک",
+      variantOption2Label: "مدت زمان / بسته",
+      requiredFieldLabel: "ایمیل یا آیدی تلگرام جهت تحویل",
+      requiredFieldPlaceholder: "example@gmail.com / @username",
       purchaseInfo: [
         "اشتراک به‌صورت قانونی و اختصاصی با ضمانت فعال‌سازی سالم اولیه تحویل می‌شود.",
         "دارای پشتیبانی ۲۴ ساعته در صورت بروز مشکل در فرآیند راه‌اندازی و فعال‌سازی.",
@@ -1047,13 +1082,149 @@ export function AdminPage() {
     });
     setFeaturesText("⚡ فعال‌سازی قانونی و رسمی\n🚀 تحویل سریع و اختصاصی\n🛡️ ضمانت فعال‌سازی و تحویل سالم");
     setPurchaseInfoText("اشتراک به‌صورت قانونی و اختصاصی با ضمانت فعال‌سازی سالم اولیه تحویل می‌شود.\nدارای پشتیبانی ۲۴ ساعته در صورت بروز مشکل در فرآیند راه‌اندازی و فعال‌سازی.\nرعایت نکات نگهداری اکانت (IP ثابت و قوانین سرویس‌دهنده) پس از تحویل بر عهده کاربر است.");
+    setEditVariants([]);
+    setEditCustomTabs([
+      { id: `tab-${Date.now()}-1`, title: "توضیحات محصول", content: "" },
+      { id: `tab-${Date.now()}-2`, title: "امکانات و مقایسه", content: "" },
+      { id: `tab-${Date.now()}-3`, title: "شرایط فعال‌سازی و گارانتی", content: "" },
+      { id: `tab-${Date.now()}-4`, title: "سوالات متداول", content: "" },
+    ]);
     setIsEditing(true);
+  };
+
+  // Helper to add a new variant row
+  const handleAddVariantRow = () => {
+    setEditVariants((prev) => [
+      ...prev,
+      {
+        id: `var-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 5)}`,
+        option1: prev[prev.length - 1]?.option1 || "اختصاصی",
+        option2: "۱ ماهه",
+        price: Number(editProduct?.price || 0),
+        discountPercent: 0,
+        inStock: true,
+        shortNote: "",
+      },
+    ]);
+  };
+
+  const handleUpdateVariantRow = (idx: number, patch: Partial<ProductVariant>) => {
+    setEditVariants((prev) => prev.map((v, i) => (i === idx ? { ...v, ...patch } : v)));
+  };
+
+  const handleMoveVariantRow = (idx: number, dir: -1 | 1) => {
+    setEditVariants((prev) => {
+      const target = idx + dir;
+      if (target < 0 || target >= prev.length) return prev;
+      const copy = [...prev];
+      const temp = copy[idx];
+      copy[idx] = copy[target];
+      copy[target] = temp;
+      return copy;
+    });
+  };
+
+  const handleDeleteVariantRow = (idx: number) => {
+    setEditVariants((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  // Helpers for Dynamic Horizontal Tabs
+  const handleAddCustomTab = () => {
+    setEditCustomTabs((prev) => [
+      ...prev,
+      {
+        id: `tab-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 5)}`,
+        title: "تب جدید",
+        content: "",
+      },
+    ]);
+  };
+
+  const handleLoadDefaultTabs = () => {
+    const base = Date.now().toString(36);
+    setEditCustomTabs([
+      { id: `tab-${base}-1`, title: "توضیحات محصول", content: editProduct?.description || "" },
+      {
+        id: `tab-${base}-2`,
+        title: "امکانات و مقایسه",
+        content: featuresText
+          .split("\n")
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .map((s) => `• ${s}`)
+          .join("\n"),
+      },
+      {
+        id: `tab-${base}-3`,
+        title: "شرایط فعال‌سازی و گارانتی",
+        content: purchaseInfoText
+          .split("\n")
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .map((s) => `• ${s}`)
+          .join("\n"),
+      },
+      {
+        id: `tab-${base}-4`,
+        title: "سوالات متداول",
+        content: "نحوه تحویل سفارش چگونه است؟\nپس از ثبت سفارش و تأیید رسید، محصول در کوتاه‌ترین زمان ممکن فعال و تحویل شما می‌گردد.",
+      },
+    ]);
+  };
+
+  const handleUpdateCustomTab = (idx: number, patch: Partial<ProductCustomTab>) => {
+    setEditCustomTabs((prev) => prev.map((t, i) => (i === idx ? { ...t, ...patch } : t)));
+  };
+
+  const handleMoveCustomTab = (idx: number, dir: -1 | 1) => {
+    setEditCustomTabs((prev) => {
+      const target = idx + dir;
+      if (target < 0 || target >= prev.length) return prev;
+      const copy = [...prev];
+      const temp = copy[idx];
+      copy[idx] = copy[target];
+      copy[target] = temp;
+      return copy;
+    });
+  };
+
+  const handleDeleteCustomTab = (idx: number) => {
+    setEditCustomTabs((prev) => prev.filter((_, i) => i !== idx));
   };
 
   // Save Product (Add or Edit)
   const handleSaveProduct = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editProduct || !editProduct.name || editProduct.price === undefined || editProduct.price === null || isNaN(Number(editProduct.price))) {
+    const cleanedVariants: ProductVariant[] = editVariants
+      .filter((v) => v.option1.trim() || (v.option2 && v.option2.trim()))
+      .map((v, i) => ({
+        id: v.id || `var-${Date.now().toString(36)}-${i}`,
+        option1: v.option1.trim() || "استاندارد",
+        ...(v.option2?.trim() ? { option2: v.option2.trim() } : {}),
+        price: Math.max(0, Number(v.price || 0)),
+        ...(v.originalPrice && Number(v.originalPrice) > 0 ? { originalPrice: Number(v.originalPrice) } : {}),
+        discountPercent: Math.max(0, Math.min(99, Number(v.discountPercent || 0))),
+        inStock: v.inStock !== false,
+        ...(v.shortNote?.trim() ? { shortNote: v.shortNote.trim() } : {}),
+      }));
+
+    const cleanedTabs: ProductCustomTab[] = editCustomTabs
+      .filter((t) => t.title.trim() && t.content.trim())
+      .map((t, i) => ({
+        id: t.id || `tab-${Date.now().toString(36)}-${i}`,
+        title: t.title.trim(),
+        content: t.content.trim(),
+      }));
+
+    const inStockVariantPrices = cleanedVariants
+      .filter((v) => v.inStock !== false && v.price > 0)
+      .map((v) => v.price);
+    const computedBasePrice =
+      inStockVariantPrices.length > 0
+        ? Math.min(...inStockVariantPrices)
+        : Number(editProduct?.price || 0);
+
+    if (!editProduct || !editProduct.name || isNaN(computedBasePrice)) {
       alert("لطفاً نام و قیمت معتبر محصول را وارد کنید.");
       return;
     }
@@ -1078,9 +1249,9 @@ export function AdminPage() {
       ...(existingProd || {}),
       slug: cleanSlug,
       name: editProduct.name.trim(),
-      price: Number(editProduct.price),
+      price: computedBasePrice,
       originalPrice: editProduct.originalPrice ? Number(editProduct.originalPrice) : undefined,
-      discountPercent: editProduct.discountPercent ? Number(editProduct.discountPercent) : undefined,
+      discountPercent: editProduct.discountPercent ? Number(editProduct.discountPercent) : 0,
       duration: isLifetime ? (editProduct.duration?.trim() || "دائمی (بدون اشتراک)") : (editProduct.duration || "۱ ماهه"),
       description: editProduct.description || (isLifetime ? `خرید و دسترسی دائمی به ${editProduct.name}` : `اشتراک ${editProduct.name}`),
       isLifetime: isLifetime,
@@ -1096,6 +1267,12 @@ export function AdminPage() {
       rating: editProduct.rating || existingProd?.rating || 5.0,
       reviewCount: editProduct.reviewCount || existingProd?.reviewCount || existingProd?.reviews?.length || 0,
       reviews: editProduct.reviews || existingProd?.reviews || [],
+      variantOption1Label: editProduct.variantOption1Label?.trim() || undefined,
+      variantOption2Label: editProduct.variantOption2Label?.trim() || undefined,
+      variants: cleanedVariants.length > 0 ? cleanedVariants : undefined,
+      customTabs: cleanedTabs.length > 0 ? cleanedTabs : undefined,
+      requiredFieldLabel: editProduct.requiredFieldLabel?.trim() || undefined,
+      requiredFieldPlaceholder: editProduct.requiredFieldPlaceholder?.trim() || undefined,
     };
 
     let updated: Product[];
@@ -1117,6 +1294,8 @@ export function AdminPage() {
     handlePublishCloud({ products: updated });
     setIsEditing(false);
     setEditProduct(null);
+    setEditVariants([]);
+    setEditCustomTabs([]);
     setOriginalProductSlug(null);
   };
 
@@ -1794,8 +1973,10 @@ export function AdminPage() {
                           className="h-12 w-12"
                         />
                         <div>
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-bold text-foreground">{p.name}</h3>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 dir="rtl" style={{ unicodeBidi: "isolate" }} className="font-bold text-foreground">
+                              {formatRtlSafeTitle(p.name)}
+                            </h3>
                             {hasBadge && (
                               <span
                                 className={`rounded-full px-2 py-0.5 text-[10px] font-bold text-white shadow-xs ${
@@ -1813,9 +1994,17 @@ export function AdminPage() {
                                 {p.badge || "پیشنهاد ویژه 🔥"}
                               </span>
                             )}
-                            {p.discountPercent && (
-                              <span className="rounded-full bg-rose-500/10 px-2 py-0.5 text-[10px] font-bold text-rose-500 border border-rose-500/20">
-                                %{toPersianDigits(p.discountPercent)} تخفیف
+                            {(() => {
+                              const ps = getProductPricingSummary(p);
+                              return ps.maxDiscountPercent > 0 ? (
+                                <span className="rounded-full bg-rose-500/10 px-2 py-0.5 text-[10px] font-bold text-rose-500 border border-rose-500/20">
+                                  %{toPersianDigits(ps.maxDiscountPercent)} تخفیف
+                                </span>
+                              ) : null;
+                            })()}
+                            {p.variants && p.variants.length > 0 && (
+                              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary border border-primary/20">
+                                {toPersianDigits(p.variants.length)} پلن
                               </span>
                             )}
                           </div>
@@ -1835,14 +2024,31 @@ export function AdminPage() {
 
                       {/* Price Details */}
                       <div className="flex items-baseline gap-2 sm:text-left">
-                        <span className="gradient-text text-lg font-black">
-                          {formatPrice(p.price)}
-                        </span>
-                        {p.originalPrice && (
-                          <span className="text-xs text-muted-foreground line-through">
-                            {formatPrice(p.originalPrice)}
-                          </span>
-                        )}
+                        {(() => {
+                          const ps = getProductPricingSummary(p);
+                          if (ps.isOutOfStock) {
+                            return <span className="text-sm font-black text-rose-500">ناموجود</span>;
+                          }
+                          if (ps.isRange) {
+                            return (
+                              <span className="gradient-text text-sm sm:text-base font-black">
+                                از {formatPriceNumber(ps.minPrice)} تا {formatPrice(ps.maxPrice)}
+                              </span>
+                            );
+                          }
+                          return (
+                            <>
+                              <span className="gradient-text text-lg font-black">
+                                {formatPrice(ps.minPrice)}
+                              </span>
+                              {ps.singleOriginalPrice && ps.maxDiscountPercent > 0 && (
+                                <span className="text-xs text-muted-foreground line-through">
+                                  {formatPrice(ps.singleOriginalPrice)}
+                                </span>
+                              )}
+                            </>
+                          );
+                        })()}
                       </div>
 
                       {/* Action Controls */}
@@ -3180,7 +3386,7 @@ export function AdminPage() {
                   </label>
                   <input
                     type="number"
-                    required
+                    required={editVariants.length === 0}
                     value={editProduct.price || ""}
                     onChange={(e) => setEditProduct({ ...editProduct, price: Number(e.target.value) })}
                     placeholder="5350000"
@@ -3476,6 +3682,27 @@ export function AdminPage() {
                       </button>
                       <button
                         type="button"
+                        onClick={() => setEditProduct({ ...editProduct, iconUrl: PRESET_LOGOS["telegram-premium"] })}
+                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors cursor-pointer"
+                      >
+                        تلگرام پرمیوم
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setEditProduct({ ...editProduct, iconUrl: PRESET_LOGOS["telegram-stars"] })}
+                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors cursor-pointer"
+                      >
+                        استارز تلگرام
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setEditProduct({ ...editProduct, iconUrl: PRESET_LOGOS["canva-pro"] })}
+                        className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors cursor-pointer"
+                      >
+                        کانوا پرو
+                      </button>
+                      <button
+                        type="button"
                         onClick={() => setEditProduct({ ...editProduct, iconUrl: "/vaich-logo.webp" })}
                         className="rounded-lg border border-border bg-card px-2.5 py-1 text-[11px] font-medium hover:border-primary transition-colors text-primary font-bold cursor-pointer"
                       >
@@ -3614,6 +3841,292 @@ export function AdminPage() {
                   placeholder="نکته اول خرید&#10;نکته دوم خرید"
                   className="w-full rounded-2xl border border-border bg-background/60 p-3 text-xs leading-6 outline-none focus:border-primary"
                 />
+              </div>
+
+              {/* ---------------- VARIANT MANAGER (TWO-STAGE DROPDOWNS) ---------------- */}
+              <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4 space-y-3.5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-black text-foreground flex items-center gap-1.5">
+                      <Layers className="h-4 w-4 text-primary" />
+                      <span>مدیریت متغیرها و پلن‌های کشویی ({toPersianDigits(editVariants.length)} ترکیب)</span>
+                    </h3>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      به‌سادگی ترکیب‌های نوع اشتراک (کشوی اول) و مدت زمان/بسته (کشوی دوم)، قیمت، تخفیف و وضعیت موجودی را تعریف کنید.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleAddVariantRow}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3 py-2 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-colors cursor-pointer"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    <span>افزودن ترکیب جدید</span>
+                  </button>
+                </div>
+
+                {/* Dropdown Titles & Customer Field Label */}
+                <div className="grid gap-2.5 sm:grid-cols-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-foreground mb-1">
+                      عنوان کشوی اول:
+                    </label>
+                    <input
+                      type="text"
+                      value={editProduct.variantOption1Label || ""}
+                      onChange={(e) => setEditProduct({ ...editProduct, variantOption1Label: e.target.value })}
+                      placeholder="مثلاً: نوع اکانت / اشتراک"
+                      className="w-full rounded-xl border border-border bg-background/80 px-3 py-2 text-xs outline-none focus:border-primary"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-foreground mb-1">
+                      عنوان کشوی دوم:
+                    </label>
+                    <input
+                      type="text"
+                      value={editProduct.variantOption2Label || ""}
+                      onChange={(e) => setEditProduct({ ...editProduct, variantOption2Label: e.target.value })}
+                      placeholder="مثلاً: مدت زمان / تعداد استارز"
+                      className="w-full rounded-xl border border-border bg-background/80 px-3 py-2 text-xs outline-none focus:border-primary"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-foreground mb-1">
+                      عنوان فیلد مشتری در باکس خرید:
+                    </label>
+                    <input
+                      type="text"
+                      value={editProduct.requiredFieldLabel || ""}
+                      onChange={(e) => setEditProduct({ ...editProduct, requiredFieldLabel: e.target.value })}
+                      placeholder="مثلاً: آیدی تلگرام (@Username) یا ایمیل"
+                      className="w-full rounded-xl border border-border bg-background/80 px-3 py-2 text-xs outline-none focus:border-primary"
+                    />
+                  </div>
+                </div>
+
+                {editVariants.length === 0 ? (
+                  <div className="rounded-xl border border-dashed border-border/80 bg-background/40 p-3 text-center text-[11px] text-muted-foreground">
+                    هنوز متغیری تعریف نشده است (محصول به‌صورت تک‌قیمتی با قیمت پایه نمایش داده می‌شود). برای ایجاد کشوی انتخاب پلن روی «افزودن ترکیب جدید» بزنید.
+                  </div>
+                ) : (
+                  <div className="space-y-2.5">
+                    {editVariants.map((v, idx) => (
+                      <div
+                        key={v.id || idx}
+                        className="rounded-2xl border border-border/80 bg-card/90 p-3 space-y-2.5 shadow-xs"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[11px] font-black text-primary">
+                            ترکیب #{toPersianDigits(idx + 1)}
+                          </span>
+                          <div className="flex items-center gap-1.5">
+                            {/* Simple Stock Toggle Switch */}
+                            <button
+                              type="button"
+                              onClick={() => handleUpdateVariantRow(idx, { inStock: v.inStock === false ? true : false })}
+                              className={`rounded-lg px-2.5 py-1 text-[11px] font-bold border transition-colors cursor-pointer ${
+                                v.inStock !== false
+                                  ? "bg-emerald-500/15 text-emerald-500 border-emerald-500/30"
+                                  : "bg-rose-500/15 text-rose-500 border-rose-500/30"
+                              }`}
+                            >
+                              {v.inStock !== false ? "موجود ✓" : "ناموجود ✕"}
+                            </button>
+                            <button
+                              type="button"
+                              disabled={idx === 0}
+                              onClick={() => handleMoveVariantRow(idx, -1)}
+                              className="rounded-lg border border-border p-1 text-muted-foreground hover:text-foreground disabled:opacity-30 cursor-pointer"
+                              title="انتقال به بالا"
+                            >
+                              <ArrowUp className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              disabled={idx === editVariants.length - 1}
+                              onClick={() => handleMoveVariantRow(idx, 1)}
+                              className="rounded-lg border border-border p-1 text-muted-foreground hover:text-foreground disabled:opacity-30 cursor-pointer"
+                              title="انتقال به پایین"
+                            >
+                              <ArrowDown className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteVariantRow(idx)}
+                              className="rounded-lg border border-rose-500/30 p-1 text-rose-500 hover:bg-rose-500 hover:text-white transition-colors cursor-pointer"
+                              title="حذف این ترکیب"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="grid gap-2 sm:grid-cols-4">
+                          <div>
+                            <label className="block text-[10px] text-muted-foreground mb-0.5">گزینه اول (نوع)</label>
+                            <input
+                              type="text"
+                              value={v.option1}
+                              onChange={(e) => handleUpdateVariantRow(idx, { option1: e.target.value })}
+                              placeholder="مثلاً: فمیلی / اختصاصی"
+                              className="w-full rounded-xl border border-border bg-background/70 px-2.5 py-1.5 text-xs outline-none focus:border-primary"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] text-muted-foreground mb-0.5">گزینه دوم (مدت / بسته)</label>
+                            <input
+                              type="text"
+                              value={v.option2 || ""}
+                              onChange={(e) => handleUpdateVariantRow(idx, { option2: e.target.value })}
+                              placeholder="مثلاً: ۳ ماهه / ۵۰ استارز"
+                              className="w-full rounded-xl border border-border bg-background/70 px-2.5 py-1.5 text-xs outline-none focus:border-primary"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] text-muted-foreground mb-0.5">قیمت (تومان)</label>
+                            <input
+                              type="number"
+                              value={v.price || ""}
+                              onChange={(e) => handleUpdateVariantRow(idx, { price: Number(e.target.value) })}
+                              placeholder="150000"
+                              className="w-full rounded-xl border border-border bg-background/70 px-2.5 py-1.5 text-xs outline-none focus:border-primary"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] text-muted-foreground mb-0.5">تخفیف اختصاصی (%)</label>
+                            <input
+                              type="number"
+                              min={0}
+                              max={99}
+                              value={v.discountPercent || ""}
+                              onChange={(e) =>
+                                handleUpdateVariantRow(idx, {
+                                  discountPercent: e.target.value ? Number(e.target.value) : 0,
+                                })
+                              }
+                              placeholder="0"
+                              className="w-full rounded-xl border border-border bg-background/70 px-2.5 py-1.5 text-xs outline-none focus:border-primary"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] text-muted-foreground mb-0.5">
+                            توضیح کوتاه اختصاصی هنگام انتخاب این گزینه (نمایش بالای دکمه پرداخت):
+                          </label>
+                          <input
+                            type="text"
+                            value={v.shortNote || ""}
+                            onChange={(e) => handleUpdateVariantRow(idx, { shortNote: e.target.value })}
+                            placeholder="مثلاً: فعال‌سازی با گیفت رسمی صرفاً با آیدی تلگرام بدون نیاز به رمز..."
+                            className="w-full rounded-xl border border-border bg-background/70 px-3 py-1.5 text-xs outline-none focus:border-primary"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* ---------------- DYNAMIC HORIZONTAL TABS MANAGER ---------------- */}
+              <div className="rounded-2xl border border-border/80 bg-secondary/25 p-4 space-y-3.5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <h3 className="text-xs sm:text-sm font-black text-foreground flex items-center gap-1.5">
+                      <BookOpen className="h-4 w-4 text-primary" />
+                      <span>مدیریت نوارها و تب‌های افقی صفحه محصول ({toPersianDigits(editCustomTabs.length)} تب)</span>
+                    </h3>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      تب‌های پایین صفحه محصول (توضیحات، امکانات، گارانتی، سوالات متداول و...) را به‌دلخواه اضافه، ویرایش یا مرتب کنید.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {editCustomTabs.length === 0 && (
+                      <button
+                        type="button"
+                        onClick={handleLoadDefaultTabs}
+                        className="inline-flex items-center gap-1 rounded-xl border border-primary/40 bg-primary/10 px-3 py-1.5 text-[11px] font-bold text-primary hover:bg-primary/20 transition-colors cursor-pointer"
+                      >
+                        <Sparkles className="h-3.5 w-3.5" />
+                        <span>بارگذاری ۴ تب پیش‌فرض</span>
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={handleAddCustomTab}
+                      className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-primary/90 transition-colors cursor-pointer"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                      <span>افزودن نوار/تب جدید</span>
+                    </button>
+                  </div>
+                </div>
+
+                {editCustomTabs.length === 0 ? (
+                  <div className="rounded-xl border border-dashed border-border/80 bg-background/40 p-3 text-center text-[11px] text-muted-foreground">
+                    تب اختصاصی تعریف نشده است (از قالب استاندارد سایت استفاده می‌شود). با زدن «بارگذاری ۴ تب پیش‌فرض» یا «افزودن نوار/تب جدید» می‌توانید تمام تب‌ها را شخصی‌سازی کنید.
+                  </div>
+                ) : (
+                  <div className="space-y-2.5">
+                    {editCustomTabs.map((tab, idx) => (
+                      <div
+                        key={tab.id || idx}
+                        className="rounded-2xl border border-border/80 bg-card/90 p-3 space-y-2 shadow-xs"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[11px] font-black text-primary">
+                            تب #{toPersianDigits(idx + 1)}
+                          </span>
+                          <div className="flex items-center gap-1">
+                            <button
+                              type="button"
+                              disabled={idx === 0}
+                              onClick={() => handleMoveCustomTab(idx, -1)}
+                              className="rounded-lg border border-border p-1 text-muted-foreground hover:text-foreground disabled:opacity-30 cursor-pointer"
+                              title="انتقال به راست/بالا"
+                            >
+                              <ArrowUp className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              disabled={idx === editCustomTabs.length - 1}
+                              onClick={() => handleMoveCustomTab(idx, 1)}
+                              className="rounded-lg border border-border p-1 text-muted-foreground hover:text-foreground disabled:opacity-30 cursor-pointer"
+                              title="انتقال به چپ/پایین"
+                            >
+                              <ArrowDown className="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteCustomTab(idx)}
+                              className="rounded-lg border border-rose-500/30 p-1 text-rose-500 hover:bg-rose-500 hover:text-white transition-colors cursor-pointer"
+                              title="حذف این تب"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        </div>
+
+                        <input
+                          type="text"
+                          value={tab.title}
+                          onChange={(e) => handleUpdateCustomTab(idx, { title: e.target.value })}
+                          placeholder="عنوان تب (مثلاً: توضیحات محصول، امکانات و مقایسه، شرایط و گارانتی، سوالات متداول)"
+                          className="w-full rounded-xl border border-border bg-background/70 px-3 py-2 text-xs font-bold outline-none focus:border-primary"
+                        />
+
+                        <textarea
+                          rows={4}
+                          value={tab.content}
+                          onChange={(e) => handleUpdateCustomTab(idx, { content: e.target.value })}
+                          placeholder="متن توضیحات این تب را بنویسید (برای بولت‌گذاری از «• » در ابتدای سطر استفاده کنید؛ در تب سوالات متداول، هر سوال و جواب را با یک سطر خالی جدا کنید)..."
+                          className="w-full rounded-xl border border-border bg-background/70 p-3 text-xs leading-6 outline-none focus:border-primary resize-y"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-border/60">

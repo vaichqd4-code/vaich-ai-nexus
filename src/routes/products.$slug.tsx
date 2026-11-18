@@ -1,12 +1,35 @@
 import { ProductRichContent } from "@/components/product/ProductRichContent";
 import { createFileRoute, notFound, Link, redirect } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { Section } from "@/components/layout/Section";
 import { NeonLink } from "@/components/ui/NeonButton";
-import { formatPrice, toPersianDigits, getProduct, isProductLifetime, getStoredProducts, saveStoredProducts, type Product, type ProductReview } from "@/lib/products";
+import {
+  formatPrice,
+  formatPriceNumber,
+  formatRtlSafeTitle,
+  toPersianDigits,
+  getProduct,
+  isProductLifetime,
+  getProductPricingSummary,
+  getVariantOriginalPrice,
+  useDynamicProducts,
+  type Product,
+  type ProductReview,
+  type ProductVariant,
+} from "@/lib/products";
 import { cn } from "@/lib/utils";
-import { Star, MessageSquarePlus, CheckCircle2, AlertTriangle, Sparkles } from "lucide-react";
+import {
+  Star,
+  MessageSquarePlus,
+  CheckCircle2,
+  AlertTriangle,
+  Sparkles,
+  ChevronDown,
+  Info,
+  ArrowLeft,
+  ShieldCheck,
+} from "lucide-react";
 
 export const Route = createFileRoute("/products/$slug")({
   loader: async ({ params }) => {
@@ -139,7 +162,95 @@ function formatReviewDate(dateStr: string): string {
 }
 
 function ProductDetail() {
-  const { product } = Route.useLoaderData();
+  const { product: loaderProduct } = Route.useLoaderData();
+  const { products: liveProducts } = useDynamicProducts();
+
+  // همگام‌سازی زنده با آخرین نسخه کاتالوگ (پنل ادمین / کلاد)
+  const product: Product = useMemo(() => {
+    const matched = liveProducts.find((p) => p.slug === loaderProduct.slug);
+    return matched || loaderProduct;
+  }, [liveProducts, loaderProduct]);
+
+  const variants: ProductVariant[] = product.variants || [];
+  const hasVariants = variants.length > 0;
+
+  const option1List = useMemo(() => {
+    const set: string[] = [];
+    for (const v of variants) {
+      if (v.option1 && !set.includes(v.option1)) set.push(v.option1);
+    }
+    return set;
+  }, [variants]);
+
+  const initialVariant = useMemo(() => {
+    if (!hasVariants) return undefined;
+    return variants.find((v) => v.inStock !== false) || variants[0];
+  }, [hasVariants, variants]);
+
+  const [selectedOption1, setSelectedOption1] = useState<string>(initialVariant?.option1 || "");
+  const [selectedOption2, setSelectedOption2] = useState<string>(initialVariant?.option2 || "");
+  const [customerAccount, setCustomerAccount] = useState<string>("");
+
+  // بازنشانی انتخابگر هنگام جابه‌جایی بین محصولات
+  useEffect(() => {
+    const def = variants.find((v) => v.inStock !== false) || variants[0];
+    setSelectedOption1(def?.option1 || "");
+    setSelectedOption2(def?.option2 || "");
+    setCustomerAccount("");
+  }, [product.slug, variants.length]);
+
+  const option2List = useMemo(() => {
+    const set: string[] = [];
+    const matching = selectedOption1
+      ? variants.filter((v) => v.option1 === selectedOption1)
+      : variants;
+    for (const v of matching) {
+      if (v.option2 && !set.includes(v.option2)) set.push(v.option2);
+    }
+    return set;
+  }, [variants, selectedOption1]);
+
+  const handleOption1Change = (nextOpt1: string) => {
+    setSelectedOption1(nextOpt1);
+    const matching = variants.filter((v) => v.option1 === nextOpt1);
+    const sameOpt2 = matching.find((v) => v.option2 === selectedOption2);
+    if (sameOpt2) {
+      setSelectedOption2(sameOpt2.option2 || "");
+    } else {
+      const firstAvail = matching.find((v) => v.inStock !== false) || matching[0];
+      setSelectedOption2(firstAvail?.option2 || "");
+    }
+  };
+
+  const activeVariant: ProductVariant | undefined = useMemo(() => {
+    if (!hasVariants) return undefined;
+    return (
+      variants.find(
+        (v) =>
+          v.option1 === selectedOption1 &&
+          (!option2List.length || v.option2 === selectedOption2)
+      ) ||
+      variants.find((v) => v.option1 === selectedOption1) ||
+      variants[0]
+    );
+  }, [hasVariants, variants, selectedOption1, selectedOption2, option2List.length]);
+
+  const pricingSummary = useMemo(() => getProductPricingSummary(product), [product]);
+  const isGlobalOutOfStock = product.inStock === false;
+  const isVariantOutOfStock = activeVariant ? activeVariant.inStock === false : isGlobalOutOfStock;
+  const isPurchaseDisabled = isGlobalOutOfStock || isVariantOutOfStock;
+  const displayPrice = activeVariant ? activeVariant.price : product.price;
+  const displayDiscount = activeVariant
+    ? Number(activeVariant.discountPercent || 0)
+    : Number(product.discountPercent || 0);
+  const displayOriginalPrice = activeVariant
+    ? getVariantOriginalPrice(activeVariant)
+    : displayDiscount > 0
+      ? product.originalPrice
+      : undefined;
+  const showOption1Dropdown = option1List.length >= 2;
+  const showOption2Dropdown = option2List.length >= 2;
+  const safeTitle = formatRtlSafeTitle(product.name);
 
   // Reviews state with persistence to localStorage and real-time cloud sync
   const [reviews, setReviews] = useState<ProductReview[]>(() => {
@@ -326,122 +437,297 @@ function ProductDetail() {
         </nav>
 
         <div className="glass-panel rounded-3xl sm:rounded-4xl p-4 sm:p-8 overflow-hidden">
-          <div className="grid gap-6 sm:gap-8 lg:grid-cols-[1.4fr_1fr]">
+          <div className="grid gap-6 sm:gap-8 lg:grid-cols-[1.35fr_1fr] items-start">
             <div className="min-w-0">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-right gap-4 sm:gap-5">
+                {/* Circular Centered Product Icon */}
                 <ServiceIcon
                   slug={product.slug}
                   {...(product.iconUrl ? { iconUrl: product.iconUrl } : {})}
                   {...(product.imageFit ? { imageFit: product.imageFit } : {})}
-                  className="h-20 w-20 sm:h-24 sm:w-24 shrink-0 aspect-square rounded-2xl sm:rounded-3xl border border-border/90 shadow-md bg-secondary/60"
+                  className="h-24 w-24 sm:h-28 sm:w-28 shrink-0 aspect-square rounded-full border-2 border-primary/30 shadow-lg shadow-primary/10 bg-secondary/70 ring-4 ring-primary/10"
                 />
                 <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h1 className="text-xl sm:text-3xl font-extrabold text-foreground break-words">
-                      {product.name}
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                    <h1
+                      dir="rtl"
+                      style={{ unicodeBidi: "isolate" }}
+                      className="text-xl sm:text-3xl font-extrabold text-foreground break-words"
+                    >
+                      {safeTitle}
                     </h1>
                     {product.badge && (
                       <span className={cn("rounded-full px-2.5 py-0.5 text-xs font-bold text-white shadow-xs", badgeClass)}>
                         {product.badge}
                       </span>
                     )}
-                    {isOutOfStock && (
-                      <span className="rounded-full bg-neutral-200 text-neutral-900 border border-neutral-300 px-3 py-0.5 text-xs font-black shadow-xs select-none">ناموجود</span>
+                    {isGlobalOutOfStock && (
+                      <span className="rounded-full bg-neutral-200 text-neutral-900 border border-neutral-300 px-3 py-0.5 text-xs font-black shadow-xs select-none">
+                        ناموجود
+                      </span>
                     )}
                   </div>
 
                   {isLifetime && (
-                    <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400">
-                      <Sparkles className="h-4 w-4 shrink-0 text-emerald-400" />
+                    <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-500">
+                      <Sparkles className="h-4 w-4 shrink-0 text-emerald-500" />
                       <span>خرید دائمی و مادام‌العمر • بدون نیاز به تمدید یا هزینه اشتراک ماهانه</span>
                     </div>
                   )}
 
-                  {/* Rating summary line */}
-                  <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+                  {/* Rating & Price Range overview */}
+                  <div className="mt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs text-muted-foreground">
                     <div className="flex items-center gap-1 text-amber-400 font-bold">
                       <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                       <span className="text-foreground">{toPersianDigits(avgRating.toFixed(1))}</span>
                     </div>
-                    <span>•</span>
-                    <span>{toPersianDigits(countReviews)} نظر ثبت‌شده خریداران</span>
+                    {countReviews > 0 && (
+                      <>
+                        <span>•</span>
+                        <span>{toPersianDigits(countReviews)} نظر ثبت‌شده خریداران</span>
+                      </>
+                    )}
+                    {pricingSummary.isRange && !isGlobalOutOfStock && (
+                      <>
+                        <span>•</span>
+                        <span className="font-bold text-primary">
+                          بازه قیمت: از {formatPriceNumber(pricingSummary.minPrice)} تا {formatPrice(pricingSummary.maxPrice)}
+                        </span>
+                      </>
+                    )}
                   </div>
 
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground break-words">{product.description}</p>
+                  <p className="mt-2.5 text-sm leading-7 text-muted-foreground break-words">{product.description}</p>
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-wrap gap-2 text-xs">
+              <div className="mt-6 flex flex-wrap justify-center sm:justify-start gap-2 text-xs">
                 <div className="flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/50 px-3 py-1.5 text-muted-foreground">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                  <span>{isLifetime ? "دسترسی دائمی بدون اشتراک ماهانه" : "فعال‌سازی قانونی و اختصاصی"}</span>
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                  <span>{isLifetime ? "دسترسی دائمی بدون اشتراک ماهانه" : "فعال‌سازی قانونی و رسمی"}</span>
                 </div>
                 <div className="flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/50 px-3 py-1.5 text-muted-foreground">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                  <span>{isPlanner ? "تحویل آنی فایل در گوگل درایو" : "تحویل سریع و ضمانت فعال‌سازی"}</span>
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                  <span>{isPlanner ? "تحویل آنی فایل در گوگل درایو" : "تحویل سریع و ضمانت پایداری"}</span>
                 </div>
                 <div className="flex items-center gap-1.5 rounded-xl border border-border/80 bg-background/50 px-3 py-1.5 text-muted-foreground">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-                  <span>{isLifetime ? "پشتیبانی اختصاصی و راهنمای کامل" : "پشتیبانی راه‌اندازی و نکات استفاده ایمن"}</span>
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                  <span>{isLifetime ? "پشتیبانی اختصاصی و راهنمای کامل" : "پشتیبانی سریع در تلگرام"}</span>
                 </div>
               </div>
             </div>
 
-            <aside className="h-fit rounded-3xl border border-border bg-card/70 p-4 sm:p-6 shadow-lg min-w-0">
-              {/* Out of Stock Notice Banner */}
-              {isOutOfStock && (
-                <div className="mb-4 rounded-2xl border border-rose-500/30 bg-rose-500/10 p-3 text-center">
+            {/* Unified Purchase & Plan Selector Box (BodoCP / License-Market Style) */}
+            <aside className="h-fit rounded-3xl border border-border bg-card/85 p-4 sm:p-6 shadow-xl min-w-0 space-y-4">
+              {/* Overall Out of Stock Notice Banner */}
+              {isGlobalOutOfStock && (
+                <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-3 text-center">
                   <span className="text-xs sm:text-sm font-bold text-rose-500 flex items-center justify-center gap-1.5">
-                    <AlertTriangle className="h-4 w-4 shrink-0 text-rose-500" /> این محصول در حال حاضر ناموجود است
+                    <AlertTriangle className="h-4 w-4 shrink-0 text-rose-500" />
+                    این محصول در حال حاضر ناموجود است
                   </span>
                   <p className="mt-1 text-[11px] sm:text-xs text-muted-foreground">
-                    برای اطلاع از شارژ مجدد یا سفارش خصوصی می‌توانید با پشتیبانی در ارتباط باشید.
+                    برای اطلاع از شارژ مجدد یا رزرو می‌توانید با پشتیبانی در ارتباط باشید.
                   </p>
                 </div>
               )}
 
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">{isLifetime ? "مبلغ خرید دائمی:" : "قیمت سرویس:"}</span>
-                {product.duration && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-secondary/60 px-2.5 py-0.5 text-xs font-medium text-foreground">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    {isLifetime ? "دسترسی مادام‌العمر" : `مدت: ${product.duration}`}
+              {/* Live Price Header */}
+              <div className="rounded-2xl border border-border/70 bg-secondary/35 p-3.5">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs text-muted-foreground">
+                    {isLifetime ? "مبلغ خرید دائمی:" : "قیمت پلن انتخابی:"}
                   </span>
-                )}
+                  {activeVariant?.option2 && !showOption2Dropdown ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-background/80 px-2.5 py-0.5 text-[11px] font-bold text-foreground">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                      {activeVariant.option2}
+                    </span>
+                  ) : product.duration && !showOption2Dropdown ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-background/80 px-2.5 py-0.5 text-[11px] font-bold text-foreground">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                      {isLifetime ? "دسترسی مادام‌العمر" : product.duration}
+                    </span>
+                  ) : null}
+                </div>
+
+                <div className="mt-2 flex flex-wrap items-baseline gap-2">
+                  {isVariantOutOfStock ? (
+                    <p className="text-2xl font-black text-rose-500">ناموجود</p>
+                  ) : (
+                    <>
+                      <p className="gradient-text text-2xl sm:text-3xl font-extrabold tracking-tight">
+                        {formatPrice(displayPrice)}
+                      </p>
+                      {displayOriginalPrice && displayDiscount > 0 ? (
+                        <span className="text-xs text-muted-foreground line-through">
+                          {formatPrice(displayOriginalPrice)}
+                        </span>
+                      ) : null}
+                      {displayDiscount > 0 ? (
+                        <span
+                          dir="ltr"
+                          className="rounded-lg bg-rose-500 font-sans text-xs font-black text-white px-2 py-0.5 shadow-xs tracking-tight"
+                        >
+                          -{displayDiscount}%
+                        </span>
+                      ) : null}
+                    </>
+                  )}
+                </div>
               </div>
 
-              <div className="mt-2 flex items-baseline gap-2">
-                <p className="gradient-text text-3xl font-extrabold tracking-tight">
-                  {formatPrice(product.price)}
-                </p>
-                {product.originalPrice && (
-                  <span className="text-xs text-muted-foreground line-through">
-                    {formatPrice(product.originalPrice)}
-                  </span>
-                )}
-                {product.discountPercent ? (
-                  <span
-                    dir="ltr"
-                    className="rounded-lg bg-rose-500 font-sans text-xs font-black text-white px-2 py-0.5 shadow-xs tracking-tight"
+              {/* Two-Stage Dynamic Dropdown Selectors */}
+              {hasVariants && (
+                <div className="space-y-3">
+                  {/* Single Option1 Pill when Option1 has 1 value and Option2 has multiple */}
+                  {!showOption1Dropdown && option1List.length === 1 && (
+                    <div className="flex items-center justify-between rounded-2xl border border-border/70 bg-background/60 px-3.5 py-2.5 text-xs">
+                      <span className="text-muted-foreground font-medium">
+                        {product.variantOption1Label || "نوع فعال‌سازی"}:
+                      </span>
+                      <span className="font-bold text-foreground inline-flex items-center gap-1.5">
+                        <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+                        {option1List[0]}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Dropdown 1: نوع اشتراک / نوع اکانت */}
+                  {showOption1Dropdown && (
+                    <div>
+                      <label
+                        htmlFor="variant-option-1"
+                        className="block text-xs font-bold text-foreground mb-1.5"
+                      >
+                        {product.variantOption1Label || "نوع اشتراک / اکانت"}:
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="variant-option-1"
+                          value={selectedOption1}
+                          onChange={(e) => handleOption1Change(e.target.value)}
+                          className="w-full appearance-none rounded-2xl border border-border bg-background/90 pr-4 pl-10 py-3 text-xs sm:text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 cursor-pointer"
+                        >
+                          {option1List.map((opt1) => {
+                            const hasAnyStock = variants.some(
+                              (v) => v.option1 === opt1 && v.inStock !== false
+                            );
+                            return (
+                              <option key={opt1} value={opt1}>
+                                {opt1}
+                                {!hasAnyStock ? " (ناموجود)" : ""}
+                              </option>
+                            );
+                          })}
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Dropdown 2: مدت زمان / تعداد بسته */}
+                  {showOption2Dropdown && (
+                    <div>
+                      <label
+                        htmlFor="variant-option-2"
+                        className="block text-xs font-bold text-foreground mb-1.5"
+                      >
+                        {product.variantOption2Label || "مدت زمان / بسته"}:
+                      </label>
+                      <div className="relative">
+                        <select
+                          id="variant-option-2"
+                          value={selectedOption2}
+                          onChange={(e) => setSelectedOption2(e.target.value)}
+                          className="w-full appearance-none rounded-2xl border border-border bg-background/90 pr-4 pl-10 py-3 text-xs sm:text-sm font-bold text-foreground outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 cursor-pointer"
+                        >
+                          {option2List.map((opt2) => {
+                            const match = variants.find(
+                              (v) => v.option1 === selectedOption1 && v.option2 === opt2
+                            );
+                            const isOut = match?.inStock === false;
+                            return (
+                              <option key={opt2} value={opt2}>
+                                {opt2}
+                                {isOut
+                                  ? " — ناموجود"
+                                  : match && match.price > 0
+                                    ? ` — ${formatPrice(match.price)}`
+                                    : ""}
+                              </option>
+                            );
+                          })}
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Dynamic Short Description for the Selected Variant */}
+                  {activeVariant?.shortNote && (
+                    <div
+                      className={cn(
+                        "rounded-2xl border p-3 text-[11px] sm:text-xs leading-6 flex items-start gap-2",
+                        isVariantOutOfStock
+                          ? "border-rose-500/30 bg-rose-500/10 text-rose-500"
+                          : "border-primary/25 bg-primary/5 text-muted-foreground"
+                      )}
+                    >
+                      <Info className={cn("h-4 w-4 shrink-0 mt-0.5", isVariantOutOfStock ? "text-rose-500" : "text-primary")} />
+                      <span>{activeVariant.shortNote}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Required Customer Identifier Input (Email or Telegram ID) */}
+              {!isPurchaseDisabled && (
+                <div>
+                  <label
+                    htmlFor="product-customer-account"
+                    className="block text-xs font-bold text-foreground mb-1.5"
                   >
-                    -{product.discountPercent}%
-                  </span>
-                ) : null}
-              </div>
+                    {product.requiredFieldLabel || "ایمیل یا آیدی تلگرام جهت تحویل"}:
+                    <span className="mr-1 text-[10px] font-normal text-muted-foreground">(انتقال خودکار به مرحله پرداخت)</span>
+                  </label>
+                  <input
+                    id="product-customer-account"
+                    type="text"
+                    dir="ltr"
+                    value={customerAccount}
+                    onChange={(e) => setCustomerAccount(e.target.value)}
+                    placeholder={product.requiredFieldPlaceholder || "example@gmail.com / @username"}
+                    className="w-full rounded-2xl border border-border bg-background/80 px-4 py-2.5 text-left text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  />
+                </div>
+              )}
 
-              <div className="mt-6 flex flex-col gap-2.5">
-                {isOutOfStock ? (
+              {/* Prominent Purple Payment CTA Button */}
+              <div className="flex flex-col gap-2.5 pt-1">
+                {isPurchaseDisabled ? (
                   <button
                     disabled
                     type="button"
-                    className="w-full rounded-2xl bg-secondary/80 py-3 text-center text-sm font-bold text-muted-foreground border border-border cursor-not-allowed select-none"
+                    className="w-full rounded-2xl bg-secondary/80 py-3.5 text-center text-sm font-black text-muted-foreground border border-border cursor-not-allowed select-none"
                   >
-                    ناموجود (اتمام موجودی)
+                    ناموجود (امکان خرید غیرفعال است)
                   </button>
                 ) : (
-                  <NeonLink to="/checkout/$slug" params={{ slug: product.slug }} size="lg" className="w-full text-center font-bold">
-                    {isLifetime ? "خرید مستقیم و دریافت فایل" : "خرید آنلاین و تحویل فوری"}
-                  </NeonLink>
+                  <Link
+                    to="/checkout/$slug"
+                    params={{ slug: product.slug }}
+                    search={
+                      {
+                        ...(activeVariant?.id ? { variant: activeVariant.id } : {}),
+                        ...(customerAccount.trim() ? { account: customerAccount.trim() } : {}),
+                      } as any
+                    }
+                    className="group/pay w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-purple-600 via-primary to-indigo-600 py-3.5 px-5 text-sm font-black text-white shadow-lg shadow-purple-600/25 hover:shadow-xl hover:shadow-purple-600/40 hover:brightness-110 active:scale-[0.99] transition-all cursor-pointer"
+                  >
+                    <span>{isLifetime ? "پرداخت و دریافت مستقیم فایل" : "ادامه جهت پرداخت و فعال‌سازی"}</span>
+                    <ArrowLeft className="h-4 w-4 transition-transform group-hover/pay:-translate-x-0.5" />
+                  </Link>
                 )}
                 <NeonLink to="/support" variant="outline" size="lg" className="w-full text-center">
                   مشاوره و پشتیبانی
@@ -449,7 +735,7 @@ function ProductDetail() {
               </div>
 
               {/* Conversion Trust Checklist */}
-              <div className="mt-5 space-y-2.5 border-t border-border/60 pt-4 text-xs text-muted-foreground">
+              <div className="space-y-2 border-t border-border/60 pt-3.5 text-xs text-muted-foreground">
                 {isLifetime ? (
                   <>
                     <div className="flex items-center gap-2">
@@ -469,7 +755,7 @@ function ProductDetail() {
                   <>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-500 font-bold">✓</span>
-                      <span>فعال‌سازی قانونی با ضمانت تحویل سالم اولیه</span>
+                      <span>فعال‌سازی قانونی با ضمانت تحویل سالم</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-500 font-bold">✓</span>
@@ -482,13 +768,18 @@ function ProductDetail() {
                   </>
                 )}
               </div>
-
-
             </aside>
           </div>
 
-          {/* Deep SEO & Educational Feature Cards & Comparison Table */}
-          <ProductRichContent product={product} isPlanner={isPlanner} isLifetime={isLifetime} />
+          {/* Horizontal Tabs: Product Details, Comparison, Warranty & FAQ */}
+          <ProductRichContent
+            product={product}
+            isPlanner={isPlanner}
+            isLifetime={isLifetime}
+            selectedPrice={displayPrice}
+            selectedVariantId={activeVariant?.id}
+            selectedOutOfStock={isPurchaseDisabled}
+          />
 
           {/* Customer Reviews & Google Rating Section */}
           <section className="mt-12 border-t border-border/80 pt-8">

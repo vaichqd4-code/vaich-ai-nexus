@@ -1,6 +1,6 @@
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { Bell, AlertTriangle, Bot } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { Section } from "@/components/layout/Section";
 import {
@@ -8,7 +8,7 @@ import {
   neonButtonClass,
 } from "@/components/ui/NeonButton";
 import { CONTACT_TELEGRAM_ID } from "@/components/brand/ContactLinks";
-import { formatPrice, getProduct, isProductLifetime } from "@/lib/products";
+import { formatPrice, formatRtlSafeTitle, getProduct, isProductLifetime, type ProductVariant } from "@/lib/products";
 import {
   buildOrderMessage,
   CARD_HOLDER,
@@ -18,6 +18,10 @@ import {
 } from "@/lib/payment";
 
 export const Route = createFileRoute("/checkout/$slug")({
+  validateSearch: (search: Record<string, unknown>): { variant?: string; account?: string } => ({
+    ...(typeof search.variant === "string" && search.variant ? { variant: search.variant } : {}),
+    ...(typeof search.account === "string" && search.account ? { account: search.account } : {}),
+  }),
   loader: async ({ params }) => {
     const raw = (params.slug || "").toLowerCase();
     let decoded = "";
@@ -116,8 +120,29 @@ const fieldClass =
 
 function Checkout() {
   const { product } = Route.useLoaderData();
+  const search = Route.useSearch();
 
-  
+  const selectedVariant: ProductVariant | undefined = useMemo(() => {
+    const variants: ProductVariant[] = product.variants || [];
+    if (variants.length === 0) return undefined;
+    if (search.variant) {
+      const matched = variants.find((v) => v.id === search.variant);
+      if (matched) return matched;
+    }
+    return variants.find((v) => v.inStock !== false) || variants[0];
+  }, [product.variants, search.variant]);
+
+  const effectivePrice =
+    selectedVariant && selectedVariant.inStock !== false && selectedVariant.price > 0
+      ? selectedVariant.price
+      : product.price;
+
+  const effectiveVariantLabel = selectedVariant
+    ? [selectedVariant.option1, selectedVariant.option2].filter(Boolean).join(" — ")
+    : undefined;
+
+  const isEffectiveOutOfStock =
+    product.inStock === false || (selectedVariant ? selectedVariant.inStock === false : false);
 
   const [copied, setCopied] = useState(false);
   const [msgCopied, setMsgCopied] = useState(false);
@@ -139,11 +164,14 @@ function Checkout() {
     pulse: false,
   });
 
+  const initialAccount = (search.account || "").trim();
+  const initialIsEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(initialAccount);
+
   const [customer, setCustomer] = useState<CustomerInfo>({
     fullName: "",
-    email: "",
+    email: initialIsEmail ? initialAccount : "",
     phone: "",
-    note: "",
+    note: initialAccount && !initialIsEmail ? `آیدی / اطلاعات تحویل: ${initialAccount}` : "",
   });
 
   const paymentCardRef = useRef<HTMLDivElement>(null);
@@ -153,7 +181,10 @@ function Checkout() {
   const hasTriggeredPaymentNotice = useRef(false);
 
   const isLifetime = isProductLifetime(product);
-  const orderMessage = buildOrderMessage(product, customer);
+  const orderMessage = buildOrderMessage(product, customer, {
+    variantLabel: effectiveVariantLabel,
+    priceOverride: effectivePrice,
+  });
 
   const nameError =
     attempted && customer.fullName.trim().length === 0
@@ -339,9 +370,9 @@ function Checkout() {
         title="پرداخت و ارسال رسید"
         subtitle={isLifetime ? `تکمیل خرید ${product.name}` : `تکمیل سفارش ${product.name}`}
       >
-        {product.inStock === false && (
+        {isEffectiveOutOfStock && (
           <div className="mb-6 rounded-2xl border border-rose-500/40 bg-rose-500/15 p-4 text-center">
-            <p className="text-sm font-bold text-rose-400 flex items-center justify-center gap-1.5"><AlertTriangle className="w-4 h-4" /><span>این محصول در حال حاضر ناموجود است</span></p>
+            <p className="text-sm font-bold text-rose-400 flex items-center justify-center gap-1.5"><AlertTriangle className="w-4 h-4" /><span>این محصول یا پلن انتخابی در حال حاضر ناموجود است</span></p>
             <p className="mt-1 text-xs text-muted-foreground">ظرفیت این سرویس تکمیل شده است و امکان ثبت سفارش یا واریز وجود ندارد. جهت اطلاعات بیشتر با پشتیبانی در ارتباط باشید.</p>
           </div>
         )}
@@ -354,23 +385,31 @@ function Checkout() {
                     slug={product.slug}
                     iconUrl={product.iconUrl}
                     imageFit={product.imageFit}
-                    className="h-16 w-16 sm:h-20 sm:w-20 shrink-0 aspect-square rounded-2xl sm:rounded-3xl border border-border/80 bg-secondary/60 shadow-md"
+                    className="h-16 w-16 sm:h-20 sm:w-20 shrink-0 aspect-square rounded-full border border-border/80 bg-secondary/60 shadow-md"
                   />
 
                   <div className="min-w-0 flex-1">
                     <p className="text-xs text-muted-foreground">{isLifetime ? "محصول دیجیتال (دائمی)" : "محصول / اشتراک"}</p>
-                    <h1 className="text-lg sm:text-xl font-bold text-foreground break-words">{product.name}</h1>
-                    {product.duration && (
+                    <h1 dir="rtl" style={{ unicodeBidi: "isolate" }} className="text-lg sm:text-xl font-bold text-foreground break-words">
+                      {formatRtlSafeTitle(product.name)}
+                    </h1>
+                    {effectiveVariantLabel ? (
+                      <p className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-primary/10 border border-primary/25 px-2.5 py-0.5 text-xs font-bold text-primary">
+                        {effectiveVariantLabel}
+                      </p>
+                    ) : product.duration ? (
                       <p className="mt-0.5 text-xs text-muted-foreground">
                         {isLifetime ? "دسترسی دائمی و مادام‌العمر (بدون اشتراک)" : product.duration}
                       </p>
-                    )}
+                    ) : null}
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between sm:flex-col sm:items-end border-t border-border/50 pt-3 sm:border-0 sm:pt-0">
                   <p className="text-xs text-muted-foreground">مبلغ قابل پرداخت:</p>
-                  <p className="text-lg sm:text-xl font-black text-primary">{formatPrice(product.price)}</p>
+                  <p className="text-lg sm:text-xl font-black text-primary">
+                    {isEffectiveOutOfStock ? "ناموجود" : formatPrice(effectivePrice)}
+                  </p>
                 </div>
               </div>
             </div>
@@ -452,7 +491,9 @@ function Checkout() {
 
               <div className="rounded-2xl border border-border bg-background/50 p-4">
                 <p className="text-xs text-muted-foreground">مبلغ قابل پرداخت</p>
-                <p className="mt-2 text-2xl font-bold text-neon-blue">{formatPrice(product.price)}</p>
+                <p className="mt-2 text-2xl font-bold text-neon-blue">
+                  {isEffectiveOutOfStock ? "ناموجود" : formatPrice(effectivePrice)}
+                </p>
               </div>
 
               <div className="rounded-2xl border border-border bg-background/50 p-4">
@@ -494,9 +535,9 @@ function Checkout() {
               <div className="mt-4">
                 <button
                   type="button"
-                  disabled={isSubmitting || product.inStock === false}
+                  disabled={isSubmitting || isEffectiveOutOfStock}
                   onClick={async () => {
-                    if (product.inStock === false) return;
+                    if (isEffectiveOutOfStock) return;
                     if (!validateBeforeSend()) return;
                     if (isSubmitting) return;
 
@@ -530,8 +571,8 @@ function Checkout() {
                           orderMessage,
                           product: {
                             slug: product.slug,
-                            name: product.name,
-                            price: product.price,
+                            name: effectiveVariantLabel ? `${product.name} (${effectiveVariantLabel})` : product.name,
+                            price: effectivePrice,
                           },
                         }),
                       });

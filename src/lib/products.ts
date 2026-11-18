@@ -18,6 +18,23 @@ export type ProductReview = {
   verified?: boolean | undefined; // خریدار تأیید شده
 };
 
+export type ProductVariant = {
+  id: string;
+  option1: string; // مثلاً: اختصاصی / فمیلی / گیفت رسمی
+  option2?: string | undefined; // مثلاً: ۱ ماهه / ۳ ماهه / ۵۰ استارز
+  price: number;
+  originalPrice?: number | undefined;
+  discountPercent?: number | undefined;
+  inStock?: boolean | undefined; // پیش‌فرض true
+  shortNote?: string | undefined; // توضیح کوتاه اختصاصی بالای دکمه پرداخت
+};
+
+export type ProductCustomTab = {
+  id: string;
+  title: string;
+  content: string;
+};
+
 export type Product = {
   slug: string;
   name: string;
@@ -40,7 +57,113 @@ export type Product = {
   rating?: number | undefined; // میانگین امتیاز (مثلاً 4.9)
   reviewCount?: number | undefined; // تعداد کل نظرات
   reviews?: ProductReview[] | undefined; // لیست نظرات ثبت‌شده
+  variantOption1Label?: string | undefined; // عنوان کشوی اول (مثلاً نوع اکانت)
+  variantOption2Label?: string | undefined; // عنوان کشوی دوم (مثلاً مدت زمان / بسته)
+  variants?: ProductVariant[] | undefined; // لیست ترکیب‌های دو مرحله‌ای
+  customTabs?: ProductCustomTab[] | undefined; // تب‌ها و نوارهای افقی توضیحات قابل مدیریت از پنل ادمین
+  requiredFieldLabel?: string | undefined; // برچسب فیلد ضروری مشتری در باکس خرید
+  requiredFieldPlaceholder?: string | undefined; // راهنمای داخل فیلد مشتری
 };
+
+export type ProductPricingSummary = {
+  isOutOfStock: boolean;
+  isRange: boolean;
+  minPrice: number;
+  maxPrice: number;
+  maxDiscountPercent: number;
+  singleOriginalPrice?: number | undefined;
+  activeVariantsCount: number;
+  defaultVariant?: ProductVariant | undefined;
+};
+
+export function getVariantOriginalPrice(v: ProductVariant): number | undefined {
+  const discount = Number(v.discountPercent || 0);
+  if (v.originalPrice && v.originalPrice > v.price) return v.originalPrice;
+  if (discount > 0 && discount < 100 && v.price > 0) {
+    return Math.round(v.price / (1 - discount / 100));
+  }
+  return undefined;
+}
+
+export function getProductPricingSummary(product: Product): ProductPricingSummary {
+  const hasVariants = Array.isArray(product.variants) && product.variants.length > 0;
+  if (hasVariants && product.variants) {
+    const globalOutOfStock = product.inStock === false;
+    const inStockVariants = globalOutOfStock
+      ? []
+      : product.variants.filter((v) => v.inStock !== false);
+
+    if (inStockVariants.length === 0) {
+      const priced = product.variants.filter((v) => v.price > 0);
+      const fallbackPrice =
+        priced.length > 0 ? Math.min(...priced.map((v) => v.price)) : product.price;
+      const defaultVar =
+        product.variants.find((v) => v.inStock !== false) || product.variants[0];
+      return {
+        isOutOfStock: true,
+        isRange: false,
+        minPrice: fallbackPrice,
+        maxPrice: fallbackPrice,
+        maxDiscountPercent: 0,
+        singleOriginalPrice: undefined,
+        activeVariantsCount: 0,
+        defaultVariant: defaultVar,
+      };
+    }
+
+    const prices = inStockVariants.map((v) => v.price);
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+    const isRange = inStockVariants.length >= 2 && minPrice !== maxPrice;
+    const maxDiscountPercent = Math.max(
+      0,
+      ...inStockVariants.map((v) => Math.max(0, Number(v.discountPercent || 0))),
+    );
+    const singleOriginalPrice =
+      !isRange && inStockVariants.length === 1
+        ? getVariantOriginalPrice(inStockVariants[0])
+        : undefined;
+
+    return {
+      isOutOfStock: false,
+      isRange,
+      minPrice,
+      maxPrice,
+      maxDiscountPercent,
+      singleOriginalPrice,
+      activeVariantsCount: inStockVariants.length,
+      defaultVariant: inStockVariants[0],
+    };
+  }
+
+  const isOutOfStock = product.inStock === false;
+  const discount = isOutOfStock ? 0 : Math.max(0, Number(product.discountPercent || 0));
+  const singleOriginalPrice =
+    discount > 0
+      ? product.originalPrice && product.originalPrice > product.price
+        ? product.originalPrice
+        : product.price > 0 && discount < 100
+          ? Math.round(product.price / (1 - discount / 100))
+          : undefined
+      : undefined;
+
+  return {
+    isOutOfStock,
+    isRange: false,
+    minPrice: product.price,
+    maxPrice: product.price,
+    maxDiscountPercent: discount,
+    singleOriginalPrice,
+    activeVariantsCount: isOutOfStock ? 0 : 1,
+    defaultVariant: undefined,
+  };
+}
+
+export function formatRtlSafeTitle(title: string): string {
+  if (!title) return "";
+  // ایزوله‌سازی خط تیره در عناوین ترکیبی انگلیسی و فارسی برای جلوگیری از به‌هم‌ریختگی RTL
+  return title.replace(/\s*-\s*/g, " \u200F-\u200F ");
+}
 
 export function isProductLifetime(p?: Partial<Product> | null): boolean {
   if (!p) return false;
@@ -70,19 +193,49 @@ export const DEFAULT_CATEGORY_ROWS: ProductCategoryRow[] = [
     title: "پلنرهای دیجیتال و هوشمند",
     subtitle: "نرم‌افزارهای مدیریت فردی و سبک زندگی در Google Sheets (دسترسی همیشگی بدون اشتراک)",
   },
+  {
+    id: "premium-apps",
+    title: "اشتراک‌های پرمیوم و کاربردی",
+    subtitle: "خرید قانونی و فوری اشتراک تلگرام پرمیوم، استارز تلگرام و کانوا پرو بدون نیاز به رمز عبور",
+  },
 ];
 
 export const DEFAULT_PRODUCTS: Product[] = [
   {
     "slug": "chatgpt-plus",
     "name": "ChatGPT Plus",
-    "price": 6300000,
+    "price": 6400000,
+    "discountPercent": 0,
     "duration": "۱ ماهه",
     "description": "اشتراک قانونی و اختصاصی ChatGPT Plus شرکت OpenAI (پلن رسمی ۲۰ دلاری)؛ مجهز به مدل‌های پرچمدار و جدید GPT-6.1 Sol و GPT-6 Sol، مدل سریع GPT-6 Luna، دسترسی تخصصی GPT-6 Astra در محیط‌های Codex و ChatGPT Work، بوم تعاملی Canvas، فضای کاری Prism، پژوهش عمیق Deep Research و حالت صوتی زنده Advanced Voice Mode.",
     "isLifetime": false,
     "featured": false,
     "badgeColor": "purple",
     "categoryId": "ai",
+    "variantOption1Label": "نوع اکانت",
+    "variantOption2Label": "مدت زمان",
+    "requiredFieldLabel": "ایمیل اکانت شخصی ChatGPT",
+    "requiredFieldPlaceholder": "example@gmail.com",
+    "variants": [
+      {
+        "id": "gpt-ded-1m",
+        "option1": "اختصاصی",
+        "option2": "۱ ماهه",
+        "price": 6400000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "فعال‌سازی کاملاً قانونی و اختصاصی روی ایمیل شخصی شما (نسخه ۲۰ دلاری رسمی OpenAI) با حفظ کامل حریم خصوصی گفتگوها و پروژه‌ها."
+      },
+      {
+        "id": "gpt-fam-1m",
+        "option1": "فمیلی",
+        "option2": "۱ ماهه",
+        "price": 0,
+        "discountPercent": 0,
+        "inStock": false,
+        "shortNote": "نسخه فمیلی چت‌جی‌پی‌تی در حال حاضر ناموجود است. لطفاً گزینه «اختصاصی» را انتخاب نمایید."
+      }
+    ],
     "features": [
       "مدل‌های اصلی پلن Plus: جدیدترین مدل متعادل و قدرتمند GPT-6.1 Sol به همراه GPT-6 Sol (با قابلیت استدلال Medium و High) و مدل فوق‌سریع GPT-6 Luna",
       "دسترسی به GPT-6 Astra در محیط‌های تخصصی Codex و ChatGPT Work با سهمیه ۵ ساعته چرخشی (نسخه دائمی GPT-6 Pro و ایجنت Dots مخصوص پلن Pro است)",
@@ -156,8 +309,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "slug": "vaich-life-planner",
     "name": "پلنر برنامه ریزی(استاندارد)",
     "price": 299000,
-    "originalPrice": 700000,
-    "discountPercent": 57,
+    "discountPercent": 0,
     "duration": "دائمی (بدون اشتراک)",
     "description": "نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script (بدون نیاز به پرداخت ماهانه یا شارژ دوره)؛ مجهز به Habit Tracker، ماتریس آیزنهاور، سیستم Time Boxing و هوش مالی فردی.",
     "isLifetime": true,
@@ -165,6 +317,8 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "badge": "پیشنهادی ویژه",
     "badgeColor": "fire",
     "categoryId": "row-mvampt3r",
+    "requiredFieldLabel": "جیمیل شما جهت دریافت لینک گوگل‌شیت",
+    "requiredFieldPlaceholder": "yourname@gmail.com",
     "features": [
       "نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script (بدون نیاز به پرداخت ماهانه یا شارژ دوره)",
       "ردیاب عادات مینیمال (Habit Tracker): ثبت زنجیره استمرار روزانه (Streak) با نمودار درصد موفقیت خودکار و پاداش بصری",
@@ -381,14 +535,39 @@ export const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     "slug": "gemini",
-    "name": "Gemini Pro - ۶۰ روزه",
+    "name": "جمنای پرو ۶۰ روزه",
     "price": 320000,
+    "discountPercent": 0,
     "duration": "۶۰ روزه",
     "description": "اشتراک رسمی ۶۰ روزه Google AI Pro (Gemini Pro)؛ مجهز به مدل‌های پرچمدار و نسل جدید Gemini 4 Argon و Gemini 4 Hydrogen، استدلال عمیق Deep Think و دستیار پژوهشی Deep Research، دسترسی به محیط توسعه Google Antigravity و Google AI Studio، دسترسی به پلتفرم ویدیوسازی Google Flow همراه با ۱۰۰۰ کردیت اختصاصی، ۵ ترابایت فضای ابری Google One و ادغام کامل با Google Workspace.",
     "isLifetime": false,
     "featured": false,
     "badgeColor": "purple",
     "categoryId": "ai",
+    "variantOption1Label": "نوع اکانت",
+    "variantOption2Label": "مدت زمان",
+    "requiredFieldLabel": "جیمیل شخصی شما (Gmail)",
+    "requiredFieldPlaceholder": "yourname@gmail.com",
+    "variants": [
+      {
+        "id": "gem60-fam",
+        "option1": "فمیلی",
+        "option2": "۶۰ روزه",
+        "price": 320000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "فعال‌سازی قانونی Google AI Pro از طریق عضویت فمیلی؛ شامل مدل‌های Gemini 4 Argon و Hydrogen، محیط Google Antigravity، گوگل استودیو، ۱۰۰۰ کردیت Google Flow و ۵ ترابایت فضا."
+      },
+      {
+        "id": "gem60-ded",
+        "option1": "اختصاصی",
+        "option2": "۶۰ روزه",
+        "price": 0,
+        "discountPercent": 0,
+        "inStock": false,
+        "shortNote": "نسخه اختصاصی ۶۰ روزه در حال حاضر ناموجود است. لطفاً گزینه «فمیلی» را انتخاب فرمایید."
+      }
+    ],
     "features": [
       "دسترسی رسمی Google AI Pro به مدل پرچمدار Gemini 4 Argon و مدل تخصصی Gemini 4 Hydrogen به همراه خانواده مدل‌های سریع Flash",
       "قابلیت استدلال عمیق Deep Think (با سطوح تفکر Low / Medium / High) و دستیار پژوهشی خودکار Deep Research برای تحقیقات پیشرفته",
@@ -471,12 +650,37 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "slug": "claude",
     "name": "Claude Pro",
     "price": 7800000,
+    "discountPercent": 0,
     "duration": "۱ ماهه",
     "description": "اشتراک رسمی و اختصاصی Claude Pro آنتروپیک (پلن رسمی ۲۰ دلاری)؛ دسترسی به مدل سرآمد توسعه نرم‌افزار Claude Sonnet 5.5، مدل استدلال سنگین Claude Opus 5.5، مدل سریع Claude Haiku 5.5، پنجره متنی ۱ میلیون توکنی با خروجی تا ۱۲۸ هزار توکن، سیستم تفکر تطبیقی (Adaptive Thinking)، بوم Artifacts و ابزار Claude Code.",
     "isLifetime": false,
     "featured": false,
     "badgeColor": "purple",
     "categoryId": "ai",
+    "variantOption1Label": "نوع اکانت",
+    "variantOption2Label": "مدت زمان",
+    "requiredFieldLabel": "ایمیل اکانت شخصی Claude",
+    "requiredFieldPlaceholder": "example@gmail.com",
+    "variants": [
+      {
+        "id": "cld-ded-1m",
+        "option1": "اختصاصی",
+        "option2": "۱ ماهه",
+        "price": 7800000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "فعال‌سازی کاملاً قانونی و اختصاصی روی اکانت شخصی شما با دسترسی به Sonnet 5.5، Opus 5.5، پنجره ۱ میلیون توکنی و Claude Code."
+      },
+      {
+        "id": "cld-fam-1m",
+        "option1": "فمیلی",
+        "option2": "۱ ماهه",
+        "price": 0,
+        "discountPercent": 0,
+        "inStock": false,
+        "shortNote": "نسخه فمیلی کلاد در حال حاضر ناموجود است. لطفاً گزینه «اختصاصی» را انتخاب فرمایید."
+      }
+    ],
     "features": [
       "خانواده مدل‌های ۵.۵ در پلن Pro: پرچمدار کدنویسی Claude Sonnet 5.5، مدل استدلالی عمیق Claude Opus 5.5 و مدل رعدآسای Claude Haiku 5.5 (توضیح شفاف: مدل Claude Fable 5.2 در پلن Pro فقط با اعتبار اضافی/شارژی یا در پلن‌های Max و Ultra فعال است)",
       "کانتکست عظیم ۱ میلیون توکنی (1M Context Window) با سقف خروجی تا ۱۲۸,۰۰۰ توکن برای مطالعه و تحلیل کل مخزن‌های کد و کتاب‌ها",
@@ -493,7 +697,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     ],
     "iconUrl": "/claude-icon.webp",
     "imageFit": "contain",
-    "inStock": true,
+    "inStock": false,
     "rating": 4.5,
     "reviewCount": 4,
     "reviews": [
@@ -537,10 +741,9 @@ export const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     "slug": "gemini-pro",
-    "name": "Gemini Pro - ۱۸ ماهه",
+    "name": "جمنای پرو ۱۸ ماهه",
     "price": 690000,
-    "originalPrice": 4700000,
-    "discountPercent": 81,
+    "discountPercent": 0,
     "duration": "۱۸ ماهه",
     "description": "اشتراک بلندمدت ۱۸ ماهه فوق‌اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، پژوهشگران و برنامه‌نویسان؛ شامل دسترسی به مدل‌های پرچمدار Gemini 4 Argon و Gemini 4 Hydrogen، دسترسی به Google Antigravity، Google AI Studio و Google Flow با ۱۰۰۰ کردیت، استدلال عمیق Deep Think، امکانات کامل Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه. (توجه: در حال حاضر ظرفیت این پلن تکمیل و ناموجود است).",
     "isLifetime": false,
@@ -548,6 +751,30 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "badge": "ویژه",
     "badgeColor": "purple",
     "categoryId": "ai",
+    "variantOption1Label": "نوع اکانت",
+    "variantOption2Label": "مدت زمان",
+    "requiredFieldLabel": "جیمیل شخصی شما (Gmail)",
+    "requiredFieldPlaceholder": "yourname@gmail.com",
+    "variants": [
+      {
+        "id": "gem18-fam",
+        "option1": "فمیلی",
+        "option2": "۱۸ ماهه",
+        "price": 690000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "اشتراک ۱۸ ماهه Google AI Pro (فمیلی) همراه با مدل‌های Gemini 4 Argon و Hydrogen، محیط Google Antigravity، ۱۰۰۰ کردیت Google Flow و ۵ ترابایت فضا."
+      },
+      {
+        "id": "gem18-ded",
+        "option1": "اختصاصی",
+        "option2": "۱۸ ماهه",
+        "price": 0,
+        "discountPercent": 0,
+        "inStock": false,
+        "shortNote": "نسخه اختصاصی ۱۸ ماهه در حال حاضر ناموجود است."
+      }
+    ],
     "features": [
       "وضعیت فعلی: ناموجود (اتمام موقت ظرفیت - امکان رزرو از طریق تلگرام @youneshayati)",
       "اشتراک بلندمدت ۱۸ ماهه با صرفه اقتصادی فوق‌العاده بالا ویژه دانشجویان و پژوهشگران بدون دغدغه تمدید ماهانه",
@@ -668,6 +895,329 @@ export const DEFAULT_PRODUCTS: Product[] = [
         "createdAt": "2026-10-28T18:40:00.000Z",
         "verified": true,
         "status": "approved"
+      }
+    ]
+  },
+  {
+    "slug": "telegram-premium",
+    "name": "اشتراک تلگرام پرمیوم",
+    "price": 180000,
+    "discountPercent": 0,
+    "duration": "۳، ۶ و ۱۲ ماهه",
+    "description": "فعالسازی قانونی و رسمی تلگرام پرمیوم (Telegram Premium) روی اکانت شخصی شما از طریق گیفت رسمی (بدون نیاز به رمز عبور و کد ورود)، در کمترین زمان ممکن همراه با ضمانت کامل پایداری.",
+    "isLifetime": false,
+    "featured": false,
+    "badgeColor": "blue",
+    "categoryId": "premium-apps",
+    "iconUrl": "/telegram-premium-icon.webp",
+    "imageFit": "contain",
+    "inStock": true,
+    "rating": 4.9,
+    "reviewCount": 0,
+    "reviews": [],
+    "variantOption1Label": "نوع فعال‌سازی",
+    "variantOption2Label": "مدت زمان اشتراک",
+    "requiredFieldLabel": "آیدی تلگرام شما (@Username)",
+    "requiredFieldPlaceholder": "@your_username",
+    "variants": [
+      {
+        "id": "tg-prem-3m",
+        "option1": "گیفت رسمی (بدون نیاز به رمز)",
+        "option2": "۳ ماهه",
+        "price": 180000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "فعال‌سازی قانونی ۳ ماهه تلگرام پرمیوم از طریق گیفت رسمی تلگرام صرفاً با وارد کردن آیدی (@Username) و بدون نیاز به دسترسی به حساب کاربری."
+      },
+      {
+        "id": "tg-prem-6m",
+        "option1": "گیفت رسمی (بدون نیاز به رمز)",
+        "option2": "۶ ماهه",
+        "price": 240000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "فعال‌سازی رسمی ۶ ماهه تلگرام پرمیوم با گیفت مستقیم و قانونی؛ سریع، مطمئن و بدون کوچک‌ترین ریسک پریدن یا مسدودی."
+      },
+      {
+        "id": "tg-prem-12m",
+        "option1": "گیفت رسمی (بدون نیاز به رمز)",
+        "option2": "۱۲ ماهه (یکساله)",
+        "price": 300000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "به‌صرفه‌ترین پلن یک‌ساله (۱۲ ماهه) تلگرام پرمیوم با گیفت رسمی و ضمانت کامل پایداری تا آخرین روز اشتراک."
+      }
+    ],
+    "features": [
+      "افزایش سقف آپلود فایل از ۲ گیگابایت به ۴ گیگابایت و سرعت دانلود نامحدود (بدون محدودیت سرعت)",
+      "حذف کامل تبلیغات اسپانسری آزاردهنده در کانال‌های عمومی تلگرام",
+      "تبدیل خودکار پیام‌های صوتی (Voice) و ویدیویی به متن تنها با یک لمس",
+      "ترجمه آنی و خودکار تمامی چت‌ها، گروه‌ها و کانال‌ها به زبان دلخواه",
+      "افزایش دو برابری محدودیت‌ها: عضویت تا ۱۰۰۰ کانال، ساخت ۲۰ پوشه با ۲۰۰ گفتگو، پین کردن ۱۰ چت و اتصال ۴ اکانت همزمان",
+      "نشان ویژه ستاره پرمیوم کنار نام پروفایل، ایموجی‌های متحرک اختصاصی، استیکرهای تمام‌صفحه و امکانات تلگرام بیزینس (پیام خوش‌آمدگویی، پاسخ سریع و ساعت کاری)"
+    ],
+    "purchaseInfo": [
+      "فعالسازی صرفاً با وارد کردن آیدی تلگرام (@Username) از طریق گیفت رسمی تلگرام انجام می‌شود.",
+      "هیچ نیازی به رمز عبور، شماره تلفن یا کد ورود به اکانت شما نیست.",
+      "کاملاً قانونی و ایمن، بدون کوچک‌ترین ریسک مسدودی یا پریدن اشتراک تا پایان دوره.",
+      "پشتیبانی سریع در تلگرام جهت پیگیری تا لحظه فعال‌سازی کامل روی حساب شما."
+    ],
+    "customTabs": [
+      {
+        "id": "tab-tg-desc",
+        "title": "توضیحات محصول",
+        "content": "اشتراک رسمی تلگرام پرمیوم (Telegram Premium) تجربه کاربری شما در محبوب‌ترین پیام‌رسان دنیا را به سطحی کاملاً حرفه‌ای ارتقا می‌دهد.\nدر فروشگاه وایچ، فعال‌سازی تلگرام پرمیوم به‌صورت ۱۰۰٪ قانونی و از طریق سیستم رسمی گیفت تلگرام (Fragment / Official Gift) مستقیماً روی اکانت شخصی شما انجام می‌شود؛ بدون اینکه نیازی به ارسال رمز عبور، کد ورود یا لاگین به حساب شما باشد.\nاین سرویس هم برای کاربران عادی که به دنبال سرعت دانلود نامحدود و حذف تبلیغات هستند و هم برای مدیران کانال‌ها و کسب‌وکارها (با ابزارهای Telegram Business) یک انتخاب بی‌رقیب است."
+      },
+      {
+        "id": "tab-tg-features",
+        "title": "امکانات و مقایسه",
+        "content": "• افزایش سقف آپلود فایل: امکان ارسال فایل‌های حجیم تا ۴ گیگابایت (دو برابر نسخه رایگان ۲ گیگابایتی) با حداکثر سرعت دانلود بدون محدودیت.\n• حذف کامل تبلیغات: دیگر در هیچ کانال عمومی با پیام‌های تبلیغاتی اسپانسری (Sponsored Messages) مواجه نخواهید شد.\n• تبدیل ویس و ویدیو به متن (Voice-to-Text): تبدیل دقیق پیام‌های صوتی و ویدیومسیج‌ها به متن خوانا تنها با یک لمس.\n• ترجمه همزمان و خودکار: ترجمه زنده کل چت‌ها، گروه‌ها و کانال‌های خارجی به فارسی یا هر زبان دلخواه بدون خروج از صفحه.\n• دو برابر شدن تمام محدودیت‌ها: عضویت تا ۱۰۰۰ کانال، ساخت ۲۰ پوشه چت با ظرفیت ۲۰۰ گفتگو در هر پوشه، پین کردن ۱۰ چت در صفحه اصلی و اتصال همزمان ۴ اکانت.\n• شخصی‌سازی و تلگرام بیزینس: دریافت نشان ستاره پرمیوم کنار پروفایل، استیکرهای تمام‌صفحه، ایموجی‌های متحرک اختصاصی و امکانات تلگرام بیزینس شامل پیام خوش‌آمدگویی، پاسخ سریع و نمایش ساعات کاری."
+      },
+      {
+        "id": "tab-tg-warranty",
+        "title": "شرایط فعال‌سازی و گارانتی",
+        "content": "• نحوه فعال‌سازی: پس از ثبت سفارش، کافی است آیدی تلگرام (@Username) خود را وارد کنید تا گیفت رسمی پرمیوم مستقیماً به حساب شما ارسال و فعال شود.\n• امنیت صددرصدی: بدون نیاز به رمز عبور، تایید دو مرحله‌ای یا ورود به اکانت شما؛ حریم خصوصی شما کاملاً محفوظ می‌ماند.\n• پیش‌نیاز ساده: اکانت شما باید دارای نام کاربری (@Username) عمومی فعال باشد تا امکان ارسال گیفت به آیدی وجود داشته باشد.\n• ضمانت کامل دوره: تمامی اشتراک‌ها با پرداخت رسمی و قانونی تهیه می‌شوند و تا آخرین روز دوره انتخابی (۳، ۶ یا ۱۲ ماهه) بدون هیچ‌گونه ریسک مسدودی یا لغو اشتراک تضمین می‌گردند."
+      },
+      {
+        "id": "tab-tg-faq",
+        "title": "سوالات متداول",
+        "content": "آیا برای فعال‌سازی نیاز به ورود به اکانت تلگرام من هست؟\nخیر، به هیچ عنوان. فعال‌سازی از طریق گیفت رسمی و صرفاً با آیدی تلگرام (@Username) شما انجام می‌شود و هیچ دسترسی به حسابتان لازم نیست.\n\nچقدر زمان می‌برد تا تلگرام پرمیوم فعال شود؟\nبلافاصله پس از تأیید سفارش، گیفت رسمی در کوتاه‌ترین زمان ممکن (معمولاً چند دقیقه در ساعات کاری) به آیدی شما ارسال می‌شود.\n\nاگر قبلاً اشتراک پرمیوم داشتم امکان تمدید هست؟\nبله، گیفت رسمی به مدت زمان باقی‌مانده اشتراک فعلی شما اضافه می‌شود یا بلافاصله پس از اتمام آن فعال می‌گردد."
+      }
+    ]
+  },
+  {
+    "slug": "telegram-stars",
+    "name": "استارز تلگرام",
+    "price": 150000,
+    "discountPercent": 0,
+    "duration": "شارژ آنی",
+    "description": "خرید و شارژ فوری استارز تلگرام (Telegram Stars - واحد پول رسمی درون‌برنامه‌ای تلگرام) مستقیماً به آیدی شما بدون نیاز به لاگین یا کارت بانکی بین‌المللی، با تحویل سریع و ایمن.",
+    "isLifetime": false,
+    "featured": false,
+    "badgeColor": "amber",
+    "categoryId": "premium-apps",
+    "iconUrl": "/telegram-stars-icon.webp",
+    "imageFit": "contain",
+    "inStock": true,
+    "rating": 4.9,
+    "reviewCount": 0,
+    "reviews": [],
+    "variantOption1Label": "روش شارژ",
+    "variantOption2Label": "تعداد استارز",
+    "requiredFieldLabel": "آیدی تلگرام جهت واریز استارز (@Username)",
+    "requiredFieldPlaceholder": "@your_username",
+    "variants": [
+      {
+        "id": "tg-stars-50",
+        "option1": "شارژ مستقیم با آیدی",
+        "option2": "۵۰ استارز",
+        "price": 150000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "واریز مستقیم و فوری ۵۰ استارز رسمی تلگرام به آیدی شما بدون نیاز به لاگین یا شماره مجازی."
+      },
+      {
+        "id": "tg-stars-100",
+        "option1": "شارژ مستقیم با آیدی",
+        "option2": "۱۰۰ استارز",
+        "price": 185000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "واریز آنی ۱۰۰ استارز رسمی تلگرام؛ مناسب خرید گیفت‌های ویژه و پرداخت در مینی‌اپ‌ها."
+      },
+      {
+        "id": "tg-stars-250",
+        "option1": "شارژ مستقیم با آیدی",
+        "option2": "۲۵۰ استارز",
+        "price": 220000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "شارژ مستقیم ۲۵۰ استارز رسمی روی اکانت تلگرام شما با پشتیبانی کامل تا لحظه نشستن استارز."
+      },
+      {
+        "id": "tg-stars-500",
+        "option1": "شارژ مستقیم با آیدی",
+        "option2": "۵۰۰ استارز",
+        "price": 260000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "بسته پرطرفدار ۵۰۰ استارز تلگرام برای خرید گیفت‌های کلکسیونی، حمایت از کانال‌ها و بازی‌های تلگرام."
+      },
+      {
+        "id": "tg-stars-1000",
+        "option1": "شارژ مستقیم با آیدی",
+        "option2": "۱۰۰۰ استارز",
+        "price": 300000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "بسته حرفه‌ای ۱۰۰۰ استارز رسمی تلگرام با واریز قانونی و مستقیم صرفاً از طریق آیدی شما."
+      }
+    ],
+    "features": [
+      "پرداخت درون‌برنامه‌ای سریع در تمامی ربات‌ها، مینی‌اپ‌های تلگرامی (Mini Apps) و بازی‌های تلگرام",
+      "خرید و ارسال گیفت‌های کلکسیونی و ویژه (Telegram Gifts) برای دوستان یا نمایش دائمی در پروفایل",
+      "حمایت مالی (Donate) از تولیدکنندگان محتوا و ارسال واکنش ستاره‌ای ویژه در کانال‌ها",
+      "امکان تمدید یا هدیه دادن اشتراک تلگرام پرمیوم با موجودی استارز حساب",
+      "تحویل ایمن و قانونی صرفاً با ثبت آیدی تلگرام بدون نیاز به رمز عبور، کارت بانکی خارجی یا شماره مجازی"
+    ],
+    "purchaseInfo": [
+      "شارژ استارز صرفاً با ثبت آیدی تلگرام (@Username) شما انجام می‌شود (بدون نیاز به رمز یا ورود به حساب).",
+      "استارز خریداری‌شده بلافاصله پس از واریز در بخش Telegram Stars تنظیمات تلگرام شما قابل مشاهده و استفاده است.",
+      "موجودی استارز تاریخ انقضا ندارد و هر زمان می‌توانید در مینی‌اپ‌ها یا برای خرید گیفت استفاده کنید.",
+      "پشتیبانی کامل تیم وایچ تا لحظه نشستن دقیق استارز روی حساب شما."
+    ],
+    "customTabs": [
+      {
+        "id": "tab-stars-desc",
+        "title": "توضیحات محصول",
+        "content": "استارز تلگرام (Telegram Stars) واحد پول دیجیتال و رسمی درون‌برنامه‌ای تلگرام است که برای تمامی پرداخت‌ها، خریدهای درون ربات‌ها، مینی‌اپ‌ها و ارسال گیفت‌های کلکسیونی طراحی شده است.\nبا توجه به محدودیت کارت‌های بانکی بین‌المللی در ایران، فروشگاه وایچ امکان شارژ مستقیم، قانونی و فوری استارز را تنها با وارد کردن آیدی تلگرام (@Username) برای شما فراهم کرده است."
+      },
+      {
+        "id": "tab-stars-features",
+        "title": "کاربردها و امکانات",
+        "content": "• پرداخت در مینی‌اپ‌ها و ربات‌ها: خرید آیتم‌ها، خدمات دیجیتال و اشتراک‌ها در هزاران ربات و Mini App محبوب تلگرام.\n• خرید گیفت‌های کلکسیونی (Telegram Gifts): تهیه و ارسال گیفت‌های ویژه و محدود برای دوستان یا نمایش افتخاری در صفحه پروفایل شخصی.\n• حمایت از کانال‌ها و واکنش ستاره‌ای: ارسال واکنش ستاره (Star Reaction) زیر پست‌ها و باز کردن محتواهای اختصاصی کانال‌ها.\n• هدیه و تمدید پرمیوم: قابلیت استفاده از موجودی استارز برای هدیه دادن یا تمدید امکانات ویژه تلگرام."
+      },
+      {
+        "id": "tab-stars-warranty",
+        "title": "شرایط فعال‌سازی و گارانتی",
+        "content": "• تحویل صرفاً با آیدی: بدون نیاز به رمز عبور، کد ورود یا تحویل شماره مجازی؛ فقط آیدی تلگرام (@Username) خود را دقیق وارد نمایید.\n• اصالت ۱۰۰٪ قانونی: تمام بسته‌های استارز از طریق درگاه‌های رسمی تلگرام تهیه و به حساب شما واریز می‌شوند.\n• پشتیبانی تا لحظه دریافت: تیم پشتیبانی وایچ تا زمان نشستن کامل موجودی در بخش My Stars اکانت شما همراهتان است."
+      },
+      {
+        "id": "tab-stars-faq",
+        "title": "سوالات متداول",
+        "content": "از کجا بفهمم استارز به حسابم واریز شده است؟\nپس از واریز، نوتیفیکیشن رسمی از سمت تلگرام دریافت می‌کنید و می‌توانید موجودی دقیق را در مسیر Settings > My Stars مشاهده کنید.\n\nآیا استارز تلگرام تاریخ انقضا دارد؟\nخیر، موجودی استارز روی اکانت شما باقی می‌ماند و هر زمان که بخواهید می‌توانید از آن استفاده نمایید.\n\nاگر آیدی تلگرام نداشته باشم چکار کنم؟\nکافی است در تنظیمات پروفایل تلگرام یک Username دلخواه برای خود تنظیم کنید و همان را هنگام سفارش وارد نمایید."
+      }
+    ]
+  },
+  {
+    "slug": "canva-pro",
+    "name": "اشتراک کانوا پرو",
+    "price": 150000,
+    "discountPercent": 0,
+    "duration": "۱ تا ۱۲ ماهه",
+    "description": "ارتقای اکانت شخصی کانوا به نسخه حرفه‌ای Canva Pro با فعال‌سازی مستقیم روی ایمیل شخصی شما، مناسب طراحان گرافیک، ادمین‌های اینستاگرام، یوتیوبرها، دانشجویان و صاحبان کسب‌وکار.",
+    "isLifetime": false,
+    "featured": false,
+    "badgeColor": "emerald",
+    "categoryId": "premium-apps",
+    "iconUrl": "/canva-pro-icon.webp",
+    "imageFit": "contain",
+    "inStock": true,
+    "rating": 4.9,
+    "reviewCount": 0,
+    "reviews": [],
+    "variantOption1Label": "نوع اشتراک",
+    "variantOption2Label": "مدت زمان",
+    "requiredFieldLabel": "ایمیل اکانت شخصی کانوا (Canva)",
+    "requiredFieldPlaceholder": "example@gmail.com",
+    "variants": [
+      {
+        "id": "canva-fam-1m",
+        "option1": "فمیلی (دعوت تیمی روی ایمیل شخصی)",
+        "option2": "۱ ماهه",
+        "price": 150000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "فعال‌سازی رسمی ۱ ماهه Canva Pro از طریق دعوت‌نامه تیمی روی ایمیل شخصی شما (بدون نیاز به رمز عبور). تمامی فایل‌ها و طرح‌های شما کاملاً خصوصی می‌ماند."
+      },
+      {
+        "id": "canva-fam-3m",
+        "option1": "فمیلی (دعوت تیمی روی ایمیل شخصی)",
+        "option2": "۳ ماهه",
+        "price": 200000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "اشتراک ۳ ماهه Canva Pro با فعال‌سازی روی ایمیل شخصی، دسترسی کامل به Magic Studio، حذف پس‌زمینه و بیش از ۱۰۰ میلیون المان پرمیوم."
+      },
+      {
+        "id": "canva-fam-6m",
+        "option1": "فمیلی (دعوت تیمی روی ایمیل شخصی)",
+        "option2": "۶ ماهه",
+        "price": 250000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "اشتراک ۶ ماهه Canva Pro روی ایمیل شخصی با کیت برند (Brand Kit)، فضای ابری اختصاصی و ضمانت کامل پایداری تا آخرین روز دوره."
+      },
+      {
+        "id": "canva-fam-12m",
+        "option1": "فمیلی (دعوت تیمی روی ایمیل شخصی)",
+        "option2": "۱ ساله",
+        "price": 300000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "به‌صرفه‌ترین پلن ۱ ساله Canva Pro از طریق دعوت تیمی روی ایمیل شخصی بدون نیاز به تغییر IP یا رمز عبور همراه با ضمانت ۱۲ ماهه."
+      },
+      {
+        "id": "canva-ded-1m",
+        "option1": "اختصاصی (پرسونال)",
+        "option2": "۱ ماهه",
+        "price": 0,
+        "discountPercent": 0,
+        "inStock": false,
+        "shortNote": "نسخه اختصاصی (پرسونال) کانوا در حال حاضر ناموجود است. لطفاً پلن «فمیلی (دعوت تیمی روی ایمیل شخصی)» را انتخاب نمایید."
+      },
+      {
+        "id": "canva-ded-3m",
+        "option1": "اختصاصی (پرسونال)",
+        "option2": "۳ ماهه",
+        "price": 0,
+        "discountPercent": 0,
+        "inStock": false,
+        "shortNote": "نسخه اختصاصی (پرسونال) کانوا در حال حاضر ناموجود است."
+      },
+      {
+        "id": "canva-ded-6m",
+        "option1": "اختصاصی (پرسونال)",
+        "option2": "۶ ماهه",
+        "price": 0,
+        "discountPercent": 0,
+        "inStock": false,
+        "shortNote": "نسخه اختصاصی (پرسونال) کانوا در حال حاضر ناموجود است."
+      },
+      {
+        "id": "canva-ded-12m",
+        "option1": "اختصاصی (پرسونال)",
+        "option2": "۱ ساله",
+        "price": 0,
+        "discountPercent": 0,
+        "inStock": false,
+        "shortNote": "نسخه اختصاصی (پرسونال) کانوا در حال حاضر ناموجود است."
+      }
+    ],
+    "features": [
+      "دسترسی نامحدود به بیش از ۱۰۰ میلیون تصویر، ویدیو، آیکون، المان گرافیکی و فونت پرمیوم و بیش از ۱۰۰ هزار قالب آماده حرفه‌ای",
+      "ابزار هوشمند حذف پس‌زمینه تصاویر (Background Remover) و ابزارهای هوش مصنوعی Magic Studio تنها با یک کلیک",
+      "قابلیت تغییر سایز جادویی طرح‌ها (Magic Resize) برای اینستاگرام، یوتیوب، لینکدین و فرمت‌های مختلف در چند ثانیه",
+      "کیت برند اختصاصی (Brand Kit) جهت ذخیره لوگو، پالت رنگی و فونت‌های سازمانی به همراه فضای ابری اختصاصی",
+      "خروجی با بالاترین کیفیت بدون واترمارک (PNG شفاف، PDF چاپی CMYK، SVG و ویدیو MP4)",
+      "فعال‌سازی از طریق دعوت تیمی رسمی (Team Invite) روی ایمیل شخصی بدون نیاز به رمز عبور و با حفظ کامل محرمانگی طرح‌ها"
+    ],
+    "purchaseInfo": [
+      "فعالسازی از طریق دعوت‌نامه تیمی رسمی (Team Invite) روی ایمیل شخصی شما بدون نیاز به رمز عبور انجام می‌شود.",
+      "نیازی به تغییر IP یا انتخاب ریجن خاص برای استفاده روزمره نیست.",
+      "تمامی فایل‌ها، پروژه‌ها و طرح‌های شما در فضای شخصی خودتان کاملاً خصوصی باقی می‌ماند و دیگر اعضای تیم به آن دسترسی ندارند.",
+      "دارای ضمانت کامل پایداری تا آخرین روز دوره اشتراک و پشتیبانی سریع وایچ."
+    ],
+    "customTabs": [
+      {
+        "id": "tab-canva-desc",
+        "title": "توضیحات محصول",
+        "content": "کانوا پرو (Canva Pro) محبوب‌ترین پلتفرم طراحی گرافیک ابری در جهان است که بدون نیاز به دانش پیچیده فتوشاپ یا ایلاستریتور، به شما امکان می‌دهد در چند دقیقه پست و استوری اینستاگرام، کاور یوتیوب، اسلاید ارائه، پوستر، رزومه، لوگو و ویدیوهای حرفه‌ای بسازید.\nبا تهیه اشتراک Canva Pro از وایچ، اکانت شخصی شما مستقیماً از طریق دعوت تیمی رسمی ارتقا می‌یابد و تمام قفل‌های المان‌ها، قالب‌ها و ابزارهای هوش مصنوعی Magic Studio برایتان باز می‌شود."
+      },
+      {
+        "id": "tab-canva-features",
+        "title": "امکانات و مقایسه",
+        "content": "• کتابخانه غول‌پیکر پرمیوم: دسترسی نامحدود به بیش از ۱۰۰ میلیون عکس، ویدیو، موزیک، آیکون و المان گرافیکی و بیش از ۱۰۰ هزار قالب آماده بدون واترمارک.\n• هوش مصنوعی Magic Studio: حذف پس‌زمینه عکس و ویدیو با یک کلیک (Background Remover)، پاک‌کن جادویی (Magic Eraser)، گسترش تصویر (Magic Expand) و تولید تصویر با هوش مصنوعی.\n• تغییر سایز جادویی (Magic Resize): تبدیل آنی یک طرح پست اینستاگرام به سایز استوری، بنر سایت یا کاور یوتیوب تنها با یک کلیک.\n• کیت برند (Brand Kit): تعریف لوگوها، کد رنگ‌های سازمانی و بارگذاری فونت‌های فارسی دلخواه برای حفظ یکپارچگی هویت بصری.\n• خروجی حرفه‌ای و فضای ابری: دریافت خروجی PNG با پس‌زمینه شفاف، فایل SVG وکتور، PDF استاندارد چاپ و ویدیو با کیفیت بالا."
+      },
+      {
+        "id": "tab-canva-warranty",
+        "title": "شرایط فعال‌سازی و گارانتی",
+        "content": "• فعال‌سازی مستقیم روی ایمیل شخصی: پس از سفارش، لینک دعوت تیمی رسمی (Team Invite) به ایمیل اکانت کانوای شما ارسال می‌شود و با یک کلیک اکانتتان به Pro ارتقا پیدا می‌کند.\n• بدون نیاز به رمز عبور: هیچ اطلاعات محرمانه‌ای از شما دریافت نمی‌شود و امنیت حساب شما ۱۰۰٪ تضمین است.\n• حفظ کامل حریم خصوصی طرح‌ها: تمامی پروژه‌ها و فایل‌هایی که طراحی می‌کنید به‌صورت پیش‌فرض کاملاً خصوصی (Private) هستند و هیچ عضو دیگری در تیم قادر به مشاهده آن‌ها نیست.\n• ضمانت کامل تا پایان دوره: در تمام مدت اشتراک (۱، ۳، ۶ یا ۱۲ ماهه) پایداری سرویس توسط وایچ تضمین شده است."
+      },
+      {
+        "id": "tab-canva-faq",
+        "title": "سوالات متداول",
+        "content": "آیا اعضای دیگر تیم می‌توانند طرح‌های من را ببینند؟\nخیر، طرح‌های شما تا زمانی که خودتان به‌صورت دستی دکمه Share را نزنید کاملاً شخصی و مخفی می‌ماند.\n\nآیا می‌توانم فونت فارسی به کانوا پرو اضافه کنم؟\nبله! در نسخه Canva Pro قابلیت آپلود فونت‌های فارسی (مثل ایران‌سنس، وزیرمتن، دانا و...) در بخش Brand Kit کاملاً فعال است.\n\nآیا پس از پایان اشتراک طرح‌های قبلی من پاک می‌شوند؟\nخیر، تمام طرح‌ها روی اکانت شخصی شما باقی می‌مانند و در هر زمان می‌توانید اشتراک خود را مجدداً تمدید کنید."
       }
     ]
   }
@@ -1807,6 +2357,10 @@ export function normalizePin(str: string): string {
   return res.toLowerCase();
 }
 
+export function formatPriceNumber(price: number): string {
+  return toPersianDigits(price.toLocaleString("en-US"));
+}
+
 export function formatPrice(price: number): string {
-  return `${toPersianDigits(price.toLocaleString("en-US"))} تومان`;
+  return `${formatPriceNumber(price)} تومان`;
 }
