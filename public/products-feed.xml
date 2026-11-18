@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <products>
   <product>
+    <id>chatgpt-plus</id>
+    <title><![CDATA[ChatGPT Plus]]></title>
+    <price>6400000</price>
+    <old_price>6400000</old_price>
+    <currency>IRR</currency>
+    <availability>in stock</availability>
+    <page_url>https://vaich.ir/products/chatgpt-plus</page_url>
+    <image_url>https://vaich.ir/chatgpt-logo.svg</image_url>
+    <description><![CDATA[اشتراک قانونی و اختصاصی ChatGPT Plus شرکت OpenAI (پلن رسمی ۲۰ دلاری)؛ مجهز به مدل‌های پرچمدار و جدید GPT-6.1 Sol و GPT-6 Sol، مدل سریع GPT-6 Luna، دسترسی تخصصی GPT-6 Astra در محیط‌های Codex و ChatGPT Work، بوم تعاملی Canvas، فضای کاری Prism، پژوهش عمیق Deep Research و حالت صوتی زنده Advanced Voice Mode.]]></description>
+  </product>
+  <product>
     <id>vaich-life-planner</id>
-    <title><![CDATA[پلنر برنامه‌ریزی هوشمند (Google Sheets)]]></title>
+    <title><![CDATA[پلنر برنامه ریزی(استاندارد)]]></title>
     <price>299000</price>
-    <old_price>700000</old_price>
+    <old_price>299000</old_price>
     <currency>IRR</currency>
     <availability>in stock</availability>
     <page_url>https://vaich.ir/products/vaich-life-planner</page_url>
@@ -13,36 +24,14 @@
   </product>
   <product>
     <id>gemini</id>
-    <title><![CDATA[Gemini Pro - ۶۰ روزه]]></title>
-    <price>230000</price>
-    <old_price>230000</old_price>
+    <title><![CDATA[جمنای پرو ۶۰ روزه]]></title>
+    <price>320000</price>
+    <old_price>320000</old_price>
     <currency>IRR</currency>
     <availability>in stock</availability>
     <page_url>https://vaich.ir/products/gemini</page_url>
     <image_url>https://vaich.ir/gemini-60d-icon.webp</image_url>
-    <description><![CDATA[اشتراک رسمی ۶۰ روزه Google AI Pro (Gemini Pro)؛ دسترسی به مدل پرچمدار Gemini 4 Argon و خانواده Flash، استدلال عمیق Deep Think، پیوند بومی با Google Workspace (Gmail، Docs، Drive، Vids)، ابزارهای NotebookLM و Canvas و ۵ ترابایت فضای ابری Google One با بیشترین صرفه برای تست و پروژه‌های کوتاه‌مدت.]]></description>
-  </product>
-  <product>
-    <id>gemini-pro</id>
-    <title><![CDATA[Gemini Pro - ۱۸ ماهه]]></title>
-    <price>590000</price>
-    <old_price>4700000</old_price>
-    <currency>IRR</currency>
-    <availability>out of stock</availability>
-    <page_url>https://vaich.ir/products/gemini-pro</page_url>
-    <image_url>https://vaich.ir/gemini-pro-18m-icon.webp</image_url>
-    <description><![CDATA[اشتراک بلندمدت ۱۸ ماهه اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، محققان، تریدرها و برنامه‌نویسان؛ شامل دسترسی به مدل‌های Gemini 4 Argon و Flash، استدلال Deep Think، امکانات Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه.]]></description>
-  </product>
-  <product>
-    <id>chatgpt-plus</id>
-    <title><![CDATA[ChatGPT Plus]]></title>
-    <price>6300000</price>
-    <old_price>6300000</old_price>
-    <currency>IRR</currency>
-    <availability>in stock</availability>
-    <page_url>https://vaich.ir/products/chatgpt-plus</page_url>
-    <image_url>https://vaich.ir/chatgpt-logo.svg</image_url>
-    <description><![CDATA[اشتراک قانونی و اختصاصی ChatGPT Plus شرکت OpenAI (پلن رسمی ۲۰ دلاری)؛ مجهز به مدل‌های پرچمدار و جدید GPT-6.1 Sol و GPT-6 Sol، مدل سریع GPT-6 Luna، دسترسی تخصصی GPT-6 Astra در محیط‌های Codex و ChatGPT Work، بوم تعاملی Canvas، فضای کاری Prism، پژوهش عمیق Deep Research و حالت صوتی زنده Advanced Voice Mode.]]></description>
+    <description><![CDATA[اشتراک رسمی ۶۰ روزه Google AI Pro (Gemini Pro)؛ مجهز به مدل‌های پرچمدار و نسل جدید Gemini 4 Argon و Gemini 4 Hydrogen، استدلال عمیق Deep Think و دستیار پژوهشی Deep Research، دسترسی به محیط توسعه Google Antigravity و Google AI Studio، دسترسی به پلتفرم ویدیوسازی Google Flow همراه با ۱۰۰۰ کردیت اختصاصی، ۵ ترابایت فضای ابری Google One و ادغام کامل با Google Workspace.]]></description>
   </product>
   <product>
     <id>claude</id>
@@ -50,9 +39,53 @@
     <price>7800000</price>
     <old_price>7800000</old_price>
     <currency>IRR</currency>
-    <availability>in stock</availability>
+    <availability>out of stock</availability>
     <page_url>https://vaich.ir/products/claude</page_url>
     <image_url>https://vaich.ir/claude-icon.webp</image_url>
     <description><![CDATA[اشتراک رسمی و اختصاصی Claude Pro آنتروپیک (پلن رسمی ۲۰ دلاری)؛ دسترسی به مدل سرآمد توسعه نرم‌افزار Claude Sonnet 5.5، مدل استدلال سنگین Claude Opus 5.5، مدل سریع Claude Haiku 5.5، پنجره متنی ۱ میلیون توکنی با خروجی تا ۱۲۸ هزار توکن، سیستم تفکر تطبیقی (Adaptive Thinking)، بوم Artifacts و ابزار Claude Code.]]></description>
+  </product>
+  <product>
+    <id>gemini-pro</id>
+    <title><![CDATA[جمنای پرو ۱۸ ماهه]]></title>
+    <price>690000</price>
+    <old_price>690000</old_price>
+    <currency>IRR</currency>
+    <availability>out of stock</availability>
+    <page_url>https://vaich.ir/products/gemini-pro</page_url>
+    <image_url>https://vaich.ir/gemini-pro-18m-icon.webp</image_url>
+    <description><![CDATA[اشتراک بلندمدت ۱۸ ماهه فوق‌اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، پژوهشگران و برنامه‌نویسان؛ شامل دسترسی به مدل‌های پرچمدار Gemini 4 Argon و Gemini 4 Hydrogen، دسترسی به Google Antigravity، Google AI Studio و Google Flow با ۱۰۰۰ کردیت، استدلال عمیق Deep Think، امکانات کامل Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه. (توجه: در حال حاضر ظرفیت این پلن تکمیل و ناموجود است).]]></description>
+  </product>
+  <product>
+    <id>telegram-stars</id>
+    <title><![CDATA[استارز تلگرام]]></title>
+    <price>584000</price>
+    <old_price>584000</old_price>
+    <currency>IRR</currency>
+    <availability>in stock</availability>
+    <page_url>https://vaich.ir/products/telegram-stars</page_url>
+    <image_url>https://vaich.ir/telegram-stars-icon.webp</image_url>
+    <description><![CDATA[خرید و شارژ فوری استارز تلگرام (Telegram Stars - واحد پول رسمی درون‌برنامه‌ای تلگرام) مستقیماً به آیدی شما بدون نیاز به لاگین یا کارت بانکی بین‌المللی، با تحویل سریع و ایمن.]]></description>
+  </product>
+  <product>
+    <id>telegram-premium</id>
+    <title><![CDATA[اشتراک تلگرام پرمیوم]]></title>
+    <price>2491000</price>
+    <old_price>2491000</old_price>
+    <currency>IRR</currency>
+    <availability>in stock</availability>
+    <page_url>https://vaich.ir/products/telegram-premium</page_url>
+    <image_url>https://vaich.ir/telegram-premium-icon.webp</image_url>
+    <description><![CDATA[فعالسازی قانونی و رسمی تلگرام پرمیوم (Telegram Premium) روی اکانت شخصی شما از طریق گیفت رسمی (بدون نیاز به رمز عبور و کد ورود)، در کمترین زمان ممکن همراه با ضمانت کامل پایداری.]]></description>
+  </product>
+  <product>
+    <id>canva-pro</id>
+    <title><![CDATA[اشتراک کانوا پرو]]></title>
+    <price>233000</price>
+    <old_price>233000</old_price>
+    <currency>IRR</currency>
+    <availability>in stock</availability>
+    <page_url>https://vaich.ir/products/canva-pro</page_url>
+    <image_url>https://vaich.ir/canva-pro-icon.webp</image_url>
+    <description><![CDATA[ارتقای اکانت شخصی کانوا به نسخه حرفه‌ای Canva Pro با فعال‌سازی مستقیم روی ایمیل شخصی شما، مناسب طراحان گرافیک، ادمین‌های اینستاگرام، یوتیوبرها، دانشجویان و صاحبان کسب‌وکار.]]></description>
   </product>
 </products>

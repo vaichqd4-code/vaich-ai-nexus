@@ -16,32 +16,32 @@ const SupportCta = lazy(() => import("@/components/sections/SupportCta").then((m
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "خرید اشتراک هوش مصنوعی و پلنر دیجیتال | ChatGPT، جمینای، کلود | VAICH" },
+      { title: "خرید اشتراک هوش مصنوعی، تلگرام پرمیوم، استارز و کانوا پرو | VAICH" },
       {
         name: "description",
         content:
-          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی؛ خرید اشتراک ChatGPT Plus، Claude Pro، Google AI Pro (Gemini Pro) و پلنر هوشمند گوگل‌شیت با تحویل فوری و ضمانت فعال‌سازی در وایچ.",
+          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی (ChatGPT Plus، Claude Pro، Gemini Pro)، اشتراک تلگرام پرمیوم، استارز تلگرام، کانوا پرو و پلنر هوشمند گوگل‌شیت با تحویل سریع و ضمانت فعال‌سازی در وایچ.",
       },
       {
         name: "keywords",
         content:
-          "خرید پلنر دیجیتال, پلنر برنامه ریزی گوگل شیت, ردیاب عادات فارسی, بهترین پلنر برنامه ریزی ۱۴۰۵, ماتریس آیزنهاور, تکنیک time boxing, خرید اکانت ChatGPT Plus قانونی, خرید اکانت Claude Pro, خرید اشتراک Gemini Pro, خرید هوش مصنوعی, وایچ",
+          "خرید تلگرام پرمیوم, خرید استارز تلگرام, خرید کانوا پرو, خرید اکانت ChatGPT Plus قانونی, خرید اکانت Claude Pro, خرید اشتراک Gemini Pro, خرید پلنر دیجیتال, پلنر برنامه ریزی گوگل شیت, خرید هوش مصنوعی, وایچ",
       },
-      { property: "og:title", content: "VAICH | مرجع خدمات دیجیتال و خرید اشتراک‌های هوش مصنوعی" },
+      { property: "og:title", content: "VAICH | مرجع اشتراک‌های هوش مصنوعی، تلگرام پرمیوم، استارز و کانوا پرو" },
       {
         property: "og:description",
         content:
-          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی؛ خرید اشتراک ChatGPT Plus، Claude Pro، Google AI Pro (Gemini Pro) و پلنر هوشمند گوگل‌شیت با تحویل فوری و ضمانت فعال‌سازی در وایچ.",
+          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی (ChatGPT Plus، Claude Pro، Gemini Pro)، تلگرام پرمیوم، استارز تلگرام، کانوا پرو و پلنر هوشمند با تحویل سریع در وایچ.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://vaich.ir" },
       { property: "og:image", content: "https://vaich.ir/vaich-logo.png" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "خرید اشتراک هوش مصنوعی | اکانت چت جی پی تی، جمینای، کلود | VAICH" },
+      { name: "twitter:title", content: "خرید اشتراک هوش مصنوعی، تلگرام پرمیوم، استارز و کانوا پرو | VAICH" },
       {
         name: "twitter:description",
         content:
-          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی؛ خرید اشتراک ChatGPT Plus، Claude Pro، Google AI Pro (Gemini Pro) و پلنر هوشمند گوگل‌شیت با تحویل فوری و ضمانت فعال‌سازی در وایچ.",
+          "مرجع خرید قانونی اشتراک‌های هوش مصنوعی (ChatGPT Plus، Claude Pro، Gemini Pro)، تلگرام پرمیوم، استارز تلگرام، کانوا پرو و پلنر هوشمند در وایچ.",
       },
       { name: "twitter:image", content: "https://vaich.ir/vaich-logo.png" },
     ],
@@ -224,10 +224,12 @@ function ProductRowSection({
   row,
   products,
   layout,
+  deferPaint = false,
 }: {
   row: ProductCategoryRow;
   products: Product[];
   layout: LayoutMode;
+  deferPaint?: boolean;
 }) {
   const carouselRef = useRef<HTMLDivElement>(null);
   const userInteractedRef = useRef(false);
@@ -264,7 +266,11 @@ function ProductRowSection({
   if (products.length === 0) return null;
 
   return (
-    <section id={row.id} className="relative scroll-mt-20 sm:scroll-mt-24 mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
+    <section
+      id={row.id}
+      style={deferPaint ? { contentVisibility: "auto", containIntrinsicSize: "380px" } : undefined}
+      className="relative scroll-mt-20 sm:scroll-mt-24 mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10"
+    >
       {(row.id === "row-mvampt3r" || row.title.includes("پلنر")) && (
         <span id="planners" aria-hidden="true" className="absolute -top-24 pointer-events-none" />
       )}
@@ -435,6 +441,7 @@ function Home() {
               row={row}
               products={rowProducts}
               layout={layout}
+              deferPaint={index >= 1}
             />
           );
         })

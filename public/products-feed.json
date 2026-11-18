@@ -1,174 +1,344 @@
 {
   "store": "VAICH",
   "url": "https://vaich.ir",
-  "updated_at": "2026-11-12T16:04:27.914Z",
+  "updated_at": "2026-11-18T16:34:06.385260+00:00",
   "products": [
-    {
-      "id": "vaich-life-planner",
-      "title": "پلنر برنامه ریزی(استاندارد)",
-      "price": 299000,
-      "original_price": 700000,
-      "discount_percent": 57,
-      "duration": "دائمی (بدون اشتراک)",
-      "in_stock": true,
-      "url": "https://vaich.ir/products/vaich-life-planner",
-      "checkout_url": "https://vaich.ir/checkout/vaich-life-planner",
-      "image_url": "https://vaich.ir/planner-cover.webp",
-      "description": "نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script (بدون نیاز به پرداخت ماهانه یا شارژ دوره)؛ مجهز به Habit Tracker، ماتریس آیزنهاور، سیستم Time Boxing و هوش مالی فردی."
-    },
-    {
-      "id": "gemini",
-      "title": "Gemini Pro - ۶۰ روزه",
-      "price": 230000,
-      "original_price": null,
-      "discount_percent": null,
-      "duration": "۶۰ روزه",
-      "in_stock": true,
-      "url": "https://vaich.ir/products/gemini",
-      "checkout_url": "https://vaich.ir/checkout/gemini",
-      "image_url": "https://vaich.ir/gemini-60d-icon.webp",
-      "description": "اشتراک رسمی ۶۰ روزه Google AI Pro (Gemini Pro)؛ دسترسی به مدل پرچمدار Gemini 4 Argon و خانواده Flash، استدلال عمیق Deep Think، پیوند بومی با Google Workspace (Gmail، Docs، Drive، Vids)، ابزارهای NotebookLM و Canvas و ۵ ترابایت فضای ابری Google One با بیشترین صرفه برای تست و پروژه‌های کوتاه‌مدت."
-    },
-    {
-      "id": "gemini-pro",
-      "title": "Gemini Pro - ۱۸ ماهه",
-      "price": 590000,
-      "original_price": 4700000,
-      "discount_percent": 91,
-      "duration": "۱۸ ماهه",
-      "in_stock": false,
-      "url": "https://vaich.ir/products/gemini-pro",
-      "checkout_url": "https://vaich.ir/checkout/gemini-pro",
-      "image_url": "https://vaich.ir/gemini-pro-18m-icon.webp",
-      "description": "اشتراک بلندمدت ۱۸ ماهه اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، محققان، تریدرها و برنامه‌نویسان؛ شامل دسترسی به مدل‌های Gemini 4 Argon و Flash، استدلال Deep Think، امکانات Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه."
-    },
     {
       "id": "chatgpt-plus",
       "title": "ChatGPT Plus",
-      "price": 6300000,
+      "price": 6400000,
+      "max_price": null,
       "original_price": null,
-      "discount_percent": null,
+      "discount_percent": 0,
       "duration": "۱ ماهه",
       "in_stock": true,
       "url": "https://vaich.ir/products/chatgpt-plus",
       "checkout_url": "https://vaich.ir/checkout/chatgpt-plus",
       "image_url": "https://vaich.ir/chatgpt-logo.svg",
-      "description": "اشتراک قانونی و اختصاصی ChatGPT Plus شرکت OpenAI (پلن رسمی ۲۰ دلاری)؛ مجهز به مدل‌های پرچمدار و جدید GPT-6.1 Sol و GPT-6 Sol، مدل سریع GPT-6 Luna، دسترسی تخصصی GPT-6 Astra در محیط‌های Codex و ChatGPT Work، بوم تعاملی Canvas، فضای کاری Prism، پژوهش عمیق Deep Research و حالت صوتی زنده Advanced Voice Mode."
+      "description": "اشتراک قانونی و اختصاصی ChatGPT Plus شرکت OpenAI (پلن رسمی ۲۰ دلاری)؛ مجهز به مدل‌های پرچمدار و جدید GPT-6.1 Sol و GPT-6 Sol، مدل سریع GPT-6 Luna، دسترسی تخصصی GPT-6 Astra در محیط‌های Codex و ChatGPT Work، بوم تعاملی Canvas، فضای کاری Prism، پژوهش عمیق Deep Research و حالت صوتی زنده Advanced Voice Mode.",
+      "variants": [
+        {
+          "id": "gpt-ded-1m",
+          "option1": "اختصاصی",
+          "option2": "۱ ماهه",
+          "price": 6400000,
+          "in_stock": true
+        },
+        {
+          "id": "gpt-fam-1m",
+          "option1": "فمیلی",
+          "option2": "۱ ماهه",
+          "price": 0,
+          "in_stock": false
+        }
+      ]
+    },
+    {
+      "id": "vaich-life-planner",
+      "title": "پلنر برنامه ریزی(استاندارد)",
+      "price": 299000,
+      "max_price": null,
+      "original_price": null,
+      "discount_percent": 0,
+      "duration": "دائمی (بدون اشتراک)",
+      "in_stock": true,
+      "url": "https://vaich.ir/products/vaich-life-planner",
+      "checkout_url": "https://vaich.ir/checkout/vaich-life-planner",
+      "image_url": "https://vaich.ir/planner-cover.webp",
+      "description": "نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script (بدون نیاز به پرداخت ماهانه یا شارژ دوره)؛ مجهز به Habit Tracker، ماتریس آیزنهاور، سیستم Time Boxing و هوش مالی فردی.",
+      "variants": null
+    },
+    {
+      "id": "gemini",
+      "title": "جمنای پرو ۶۰ روزه",
+      "price": 320000,
+      "max_price": null,
+      "original_price": null,
+      "discount_percent": 0,
+      "duration": "۶۰ روزه",
+      "in_stock": true,
+      "url": "https://vaich.ir/products/gemini",
+      "checkout_url": "https://vaich.ir/checkout/gemini",
+      "image_url": "https://vaich.ir/gemini-60d-icon.webp",
+      "description": "اشتراک رسمی ۶۰ روزه Google AI Pro (Gemini Pro)؛ مجهز به مدل‌های پرچمدار و نسل جدید Gemini 4 Argon و Gemini 4 Hydrogen، استدلال عمیق Deep Think و دستیار پژوهشی Deep Research، دسترسی به محیط توسعه Google Antigravity و Google AI Studio، دسترسی به پلتفرم ویدیوسازی Google Flow همراه با ۱۰۰۰ کردیت اختصاصی، ۵ ترابایت فضای ابری Google One و ادغام کامل با Google Workspace.",
+      "variants": [
+        {
+          "id": "gem60-fam",
+          "option1": "فمیلی",
+          "option2": "۶۰ روزه",
+          "price": 320000,
+          "in_stock": true
+        },
+        {
+          "id": "gem60-ded",
+          "option1": "اختصاصی",
+          "option2": "۶۰ روزه",
+          "price": 0,
+          "in_stock": false
+        }
+      ]
     },
     {
       "id": "claude",
       "title": "Claude Pro",
       "price": 7800000,
+      "max_price": null,
       "original_price": null,
-      "discount_percent": null,
+      "discount_percent": 0,
       "duration": "۱ ماهه",
-      "in_stock": true,
+      "in_stock": false,
       "url": "https://vaich.ir/products/claude",
       "checkout_url": "https://vaich.ir/checkout/claude",
       "image_url": "https://vaich.ir/claude-icon.webp",
-      "description": "اشتراک رسمی و اختصاصی Claude Pro آنتروپیک (پلن رسمی ۲۰ دلاری)؛ دسترسی به مدل سرآمد توسعه نرم‌افزار Claude Sonnet 5.5، مدل استدلال سنگین Claude Opus 5.5، مدل سریع Claude Haiku 5.5، پنجره متنی ۱ میلیون توکنی با خروجی تا ۱۲۸ هزار توکن، سیستم تفکر تطبیقی (Adaptive Thinking)، بوم Artifacts و ابزار Claude Code."
-    }
-  ],
-  "articles": [
-    {
-      "slug": "flagship-ai-models-comparison",
-      "title": "مقایسه پرچمداران AI نوامبر ۲۰۲۶: ChatGPT Plus، Claude Pro و Google AI Pro",
-      "excerpt": "کدام اشتراک برای کدنویسی، تحقیق یا کار روزانه به‌صرفه‌تر است؟ مقایسه واقعی GPT-6.1 Sol، Claude 5.5 و Gemini 4 Argon.",
-      "category": "هوش مصنوعی",
-      "read_time": "۱۴ دقیقه",
-      "url": "https://vaich.ir/blog/flagship-ai-models-comparison",
-      "cover_image": "https://vaich.ir/blog/ai-models-comparison.webp",
-      "published_at": "2026-11-12T10:00:00+03:30"
+      "description": "اشتراک رسمی و اختصاصی Claude Pro آنتروپیک (پلن رسمی ۲۰ دلاری)؛ دسترسی به مدل سرآمد توسعه نرم‌افزار Claude Sonnet 5.5، مدل استدلال سنگین Claude Opus 5.5، مدل سریع Claude Haiku 5.5، پنجره متنی ۱ میلیون توکنی با خروجی تا ۱۲۸ هزار توکن، سیستم تفکر تطبیقی (Adaptive Thinking)، بوم Artifacts و ابزار Claude Code.",
+      "variants": [
+        {
+          "id": "cld-ded-1m",
+          "option1": "اختصاصی",
+          "option2": "۱ ماهه",
+          "price": 7800000,
+          "in_stock": true
+        },
+        {
+          "id": "cld-fam-1m",
+          "option1": "فمیلی",
+          "option2": "۱ ماهه",
+          "price": 0,
+          "in_stock": false
+        }
+      ]
     },
     {
-      "slug": "ai-free-vs-plus-comparison",
-      "title": "تفاوت نسخه رایگان با ChatGPT Plus و Claude Pro در ۲۰۲۶",
-      "excerpt": "مقایسه عملی سقف مصرف، دسترسی به GPT-6.1 Sol و Claude 5.5، ابزارهای کدنویسی و ارزش خرید اشتراک قانونی.",
-      "category": "هوش مصنوعی",
-      "read_time": "۱۱ دقیقه",
-      "url": "https://vaich.ir/blog/ai-free-vs-plus-comparison",
-      "cover_image": "https://vaich.ir/blog/copilot-vs-chatgpt.webp",
-      "published_at": "2026-11-11T12:00:00+03:30"
+      "id": "gemini-pro",
+      "title": "جمنای پرو ۱۸ ماهه",
+      "price": 690000,
+      "max_price": null,
+      "original_price": null,
+      "discount_percent": 0,
+      "duration": "۱۸ ماهه",
+      "in_stock": false,
+      "url": "https://vaich.ir/products/gemini-pro",
+      "checkout_url": "https://vaich.ir/checkout/gemini-pro",
+      "image_url": "https://vaich.ir/gemini-pro-18m-icon.webp",
+      "description": "اشتراک بلندمدت ۱۸ ماهه فوق‌اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، پژوهشگران و برنامه‌نویسان؛ شامل دسترسی به مدل‌های پرچمدار Gemini 4 Argon و Gemini 4 Hydrogen، دسترسی به Google Antigravity، Google AI Studio و Google Flow با ۱۰۰۰ کردیت، استدلال عمیق Deep Think، امکانات کامل Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه. (توجه: در حال حاضر ظرفیت این پلن تکمیل و ناموجود است).",
+      "variants": [
+        {
+          "id": "gem18-fam",
+          "option1": "فمیلی",
+          "option2": "۱۸ ماهه",
+          "price": 690000,
+          "in_stock": true
+        },
+        {
+          "id": "gem18-ded",
+          "option1": "اختصاصی",
+          "option2": "۱۸ ماهه",
+          "price": 0,
+          "in_stock": false
+        }
+      ]
     },
     {
-      "slug": "how-google-sheets-planner-transforms-habits-goals",
-      "title": "چرا پلنر گوگل شیت VAICH پایدارتر از اپلیکیشن‌های پیچیده است؟",
-      "excerpt": "چرا سادگی و انعطاف گوگل‌شیت نسبت به اپلیکیشن‌های پیچیده، تعهد شما به روتین‌ها و دستیابی به اهداف را چندین برابر می‌کند.",
-      "category": "بهره‌وری فردی",
-      "read_time": "۵ دقیقه",
-      "url": "https://vaich.ir/blog/how-google-sheets-planner-transforms-habits-goals",
-      "cover_image": "https://vaich.ir/blog/google-sheets-planner.webp",
-      "published_at": "2026-11-04T10:00:00+03:30"
+      "id": "telegram-stars",
+      "title": "استارز تلگرام",
+      "price": 584000,
+      "max_price": 54859000,
+      "original_price": null,
+      "discount_percent": 0,
+      "duration": "شارژ فوری",
+      "in_stock": true,
+      "url": "https://vaich.ir/products/telegram-stars",
+      "checkout_url": "https://vaich.ir/checkout/telegram-stars",
+      "image_url": "https://vaich.ir/telegram-stars-icon.webp",
+      "description": "خرید و شارژ فوری استارز تلگرام (Telegram Stars - واحد پول رسمی درون‌برنامه‌ای تلگرام) مستقیماً به آیدی شما بدون نیاز به لاگین یا کارت بانکی بین‌المللی، با تحویل سریع و ایمن.",
+      "variants": [
+        {
+          "id": "tg-stars-100",
+          "option1": "شارژ مستقیم با آیدی",
+          "option2": "۱۰۰ استارز فوری",
+          "price": 584000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-stars-150",
+          "option1": "شارژ مستقیم با آیدی",
+          "option2": "۱۵۰ استارز فوری",
+          "price": 858000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-stars-250",
+          "option1": "شارژ مستقیم با آیدی",
+          "option2": "۲۵۰ استارز فوری",
+          "price": 1560000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-stars-350",
+          "option1": "شارژ مستقیم با آیدی",
+          "option2": "۳۵۰ استارز فوری",
+          "price": 2599000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-stars-500",
+          "option1": "شارژ مستقیم با آیدی",
+          "option2": "۵۰۰ استارز فوری",
+          "price": 3510000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-stars-750",
+          "option1": "شارژ مستقیم با آیدی",
+          "option2": "۷۵۰ استارز فوری",
+          "price": 4419000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-stars-1000",
+          "option1": "شارژ مستقیم با آیدی",
+          "option2": "۱,۰۰۰ استارز فوری",
+          "price": 6109000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-stars-2500",
+          "option1": "شارژ مستقیم با آیدی",
+          "option2": "۲,۵۰۰ استارز فوری",
+          "price": 14559000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-stars-5000",
+          "option1": "شارژ مستقیم با آیدی",
+          "option2": "۵,۰۰۰ استارز فوری",
+          "price": 29769000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-stars-10000",
+          "option1": "شارژ مستقیم با آیدی",
+          "option2": "۱۰,۰۰۰ استارز فوری",
+          "price": 54859000,
+          "in_stock": true
+        }
+      ]
     },
     {
-      "slug": "gemini-2-million-context-window-big-data-analysis",
-      "title": "بررسی Google AI Pro (Gemini Pro) در ۲۰۲۶: Gemini 4 Argon و ۵ ترابایت فضا",
-      "excerpt": "آشنایی با امکانات Google AI Pro: مدل پرچمدار Gemini 4 Argon، ادغام با جیمیل و داکس، NotebookLM و ۵ ترابایت Google One.",
-      "category": "هوش مصنوعی",
-      "read_time": "۱۰ دقیقه",
-      "url": "https://vaich.ir/blog/gemini-2-million-context-window-big-data-analysis",
-      "cover_image": "https://vaich.ir/blog/ai-tools-productivity.webp",
-      "published_at": "2026-11-12T10:30:00+03:30"
+      "id": "telegram-premium",
+      "title": "اشتراک تلگرام پرمیوم",
+      "price": 2491000,
+      "max_price": 12879000,
+      "original_price": null,
+      "discount_percent": 0,
+      "duration": "۱ تا ۱۲ ماهه",
+      "in_stock": true,
+      "url": "https://vaich.ir/products/telegram-premium",
+      "checkout_url": "https://vaich.ir/checkout/telegram-premium",
+      "image_url": "https://vaich.ir/telegram-premium-icon.webp",
+      "description": "فعالسازی قانونی و رسمی تلگرام پرمیوم (Telegram Premium) روی اکانت شخصی شما از طریق گیفت رسمی (بدون نیاز به رمز عبور و کد ورود)، در کمترین زمان ممکن همراه با ضمانت کامل پایداری.",
+      "variants": [
+        {
+          "id": "tg-prem-1m",
+          "option1": "گیفت رسمی (بدون نیاز به رمز)",
+          "option2": "پرمیوم گیفتی ۱ ماهه",
+          "price": 2491000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-prem-3m",
+          "option1": "گیفت رسمی (بدون نیاز به رمز)",
+          "option2": "پرمیوم گیفتی ۳ ماهه",
+          "price": 5599000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-prem-6m",
+          "option1": "گیفت رسمی (بدون نیاز به رمز)",
+          "option2": "پرمیوم گیفتی ۶ ماهه",
+          "price": 7279000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-prem-12m",
+          "option1": "گیفت رسمی (بدون نیاز به رمز)",
+          "option2": "پرمیوم گیفتی ۱ ساله",
+          "price": 12879000,
+          "in_stock": true
+        }
+      ]
     },
     {
-      "slug": "defeat-procrastination-google-sheets-planner",
-      "title": "شکست اهمال‌کاری با پلنر دیجیتال گوگل‌شیت",
-      "excerpt": "راهنمای کاربردی غلبه بر اهمال‌کاری و افزایش تمرکز روزانه با سیستم‌های رفتاری ساده و شفاف در گوگل‌شیت.",
-      "category": "بهره‌وری فردی",
-      "read_time": "۸ دقیقه",
-      "url": "https://vaich.ir/blog/defeat-procrastination-google-sheets-planner",
-      "cover_image": "https://vaich.ir/blog/planner-procrastination.webp",
-      "published_at": "2026-11-02T14:00:00+03:30"
-    },
-    {
-      "slug": "best-study-planning-methods-digital-vs-paper",
-      "title": "برنامه‌ریزی درسی هوشمند؛ پلنر دیجیتال بهتر است یا دفتر کاغذی؟",
-      "excerpt": "مقایسه روش‌های سنتی و دیجیتال برنامه‌ریزی درسی؛ روش‌های ثبت ساعات مطالعه، مرور فاصله‌دار و ارزیابی پیشرفت با نمودار.",
-      "category": "آموزش و یادگیری",
-      "read_time": "۹ دقیقه",
-      "url": "https://vaich.ir/blog/best-study-planning-methods-digital-vs-paper",
-      "cover_image": "https://vaich.ir/blog/study-planning.webp",
-      "published_at": "2026-10-31T09:30:00+03:30"
-    },
-    {
-      "slug": "daily-motivational-habits-powerful-routine",
-      "title": "ساخت روتین روزانه پایدار؛ جایگزینی سیستم به جای انگیزه",
-      "excerpt": "اصول ساخت روتین‌های صبحگاهی و شبانگاهی ماندگار بر مبنای خرده‌عادت‌ها و جایگزینی انضباط سیستمی به جای انگیزه لحظه‌ای.",
-      "category": "توسعه فردی",
-      "read_time": "۶ دقیقه",
-      "url": "https://vaich.ir/blog/daily-motivational-habits-powerful-routine",
-      "cover_image": "https://vaich.ir/blog/daily-habits.webp",
-      "published_at": "2026-10-29T16:00:00+03:30"
-    },
-    {
-      "slug": "habit-tracking-time-management-guide",
-      "title": "ردیابی عادت‌ها و مدیریت زمان در موبایل و لپ‌تاپ",
-      "excerpt": "آموزش اولویت‌بندی کارها با ماتریس آیزنهاور و بلوک‌بندی زمانی، به همراه داشبورد خودکار ردیابی عادت‌ها در گوگل‌شیت.",
-      "category": "مدیریت زمان",
-      "read_time": "۱۱ دقیقه",
-      "url": "https://vaich.ir/blog/habit-tracking-time-management-guide",
-      "cover_image": "https://vaich.ir/blog/habit-tracking.webp",
-      "published_at": "2026-10-27T18:00:00+03:30"
-    },
-    {
-      "slug": "ai-tools-productivity-study-guide",
-      "title": "ترفندهای کاربردی هوش مصنوعی برای افزایش سرعت کار و مطالعه",
-      "excerpt": "روش‌های عملی استفاده از هوش مصنوعی برای خلاصه‌سازی مقالات، پرامپت‌نویسی حرفه‌ای و بالا بردن سرعت انجام پروژه‌ها.",
-      "category": "هوش مصنوعی و آموزش",
-      "read_time": "۹ دقیقه",
-      "url": "https://vaich.ir/blog/ai-tools-productivity-study-guide",
-      "cover_image": "https://vaich.ir/blog/ai-productivity-study.webp",
-      "published_at": "2026-11-11T13:00:00+03:30"
-    },
-    {
-      "slug": "prevent-chatgpt-claude-account-ban",
-      "title": "چطور از بن شدن اکانت ChatGPT و Claude جلوگیری کنیم؟ (۷ اصل طلایی)",
-      "excerpt": "راهنمای عملی انتخاب IP ثابت، تنظیمات ایمن مرورگر و جلوگیری از مسدود یا محدود شدن اکانت‌های هوش مصنوعی در ایران.",
-      "category": "امنیت و نگهداری اکانت",
-      "read_time": "۷ دقیقه",
-      "url": "https://vaich.ir/blog/prevent-chatgpt-claude-account-ban",
-      "cover_image": "https://vaich.ir/blog/prevent-ai-ban.webp",
-      "published_at": "2026-11-12T11:00:00+03:30"
+      "id": "canva-pro",
+      "title": "اشتراک کانوا پرو",
+      "price": 233000,
+      "max_price": 987000,
+      "original_price": null,
+      "discount_percent": 0,
+      "duration": "۱ تا ۶ ماهه",
+      "in_stock": true,
+      "url": "https://vaich.ir/products/canva-pro",
+      "checkout_url": "https://vaich.ir/checkout/canva-pro",
+      "image_url": "https://vaich.ir/canva-pro-icon.webp",
+      "description": "ارتقای اکانت شخصی کانوا به نسخه حرفه‌ای Canva Pro با فعال‌سازی مستقیم روی ایمیل شخصی شما، مناسب طراحان گرافیک، ادمین‌های اینستاگرام، یوتیوبرها، دانشجویان و صاحبان کسب‌وکار.",
+      "variants": [
+        {
+          "id": "canva-fam-1m",
+          "option1": "فمیلی (دعوت تیمی روی ایمیل شخصی)",
+          "option2": "۱ ماهه (قابل تمدید و بدون تعویض اکانت)",
+          "price": 233000,
+          "in_stock": true
+        },
+        {
+          "id": "canva-fam-2m",
+          "option1": "فمیلی (دعوت تیمی روی ایمیل شخصی)",
+          "option2": "۲ ماهه (قابل تمدید و بدون تعویض اکانت)",
+          "price": 337000,
+          "in_stock": true
+        },
+        {
+          "id": "canva-fam-3m",
+          "option1": "فمیلی (دعوت تیمی روی ایمیل شخصی)",
+          "option2": "۳ ماهه (قابل تمدید و بدون تعویض اکانت)",
+          "price": 493000,
+          "in_stock": true
+        },
+        {
+          "id": "canva-fam-6m",
+          "option1": "فمیلی (دعوت تیمی روی ایمیل شخصی)",
+          "option2": "۶ ماهه (قابل تمدید و بدون تعویض اکانت)",
+          "price": 987000,
+          "in_stock": true
+        },
+        {
+          "id": "canva-ded-1m",
+          "option1": "اختصاصی (پرسونال)",
+          "option2": "۱ ماهه (قابل تمدید و بدون تعویض اکانت)",
+          "price": 0,
+          "in_stock": false
+        },
+        {
+          "id": "canva-ded-2m",
+          "option1": "اختصاصی (پرسونال)",
+          "option2": "۲ ماهه (قابل تمدید و بدون تعویض اکانت)",
+          "price": 0,
+          "in_stock": false
+        },
+        {
+          "id": "canva-ded-3m",
+          "option1": "اختصاصی (پرسونال)",
+          "option2": "۳ ماهه (قابل تمدید و بدون تعویض اکانت)",
+          "price": 0,
+          "in_stock": false
+        },
+        {
+          "id": "canva-ded-6m",
+          "option1": "اختصاصی (پرسونال)",
+          "option2": "۶ ماهه (قابل تمدید و بدون تعویض اکانت)",
+          "price": 0,
+          "in_stock": false
+        }
+      ]
     }
   ]
 }

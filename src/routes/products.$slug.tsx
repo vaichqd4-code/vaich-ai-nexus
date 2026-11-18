@@ -79,14 +79,43 @@ export const Route = createFileRoute("/products/$slug")({
     const { product } = loaderData;
     const isLifetime = isProductLifetime(product);
     const isPlanner = product.slug.includes("planner");
-    const title = isLifetime
-      ? (isPlanner ? `خرید ${product.name} | پلنر برنامه ریزی هوشمند گوگل شیت | VAICH` : `خرید ${product.name} | دسترسی دائمی بدون اشتراک | VAICH`)
-      : `خرید اشتراک ${product.name} (${product.duration || "قانونی"}) | VAICH`;
-    const description = isLifetime
-      ? (isPlanner
-          ? `خرید آنلاین ${product.name} در گوگل شیت با ردیاب عادات ماهانه، نمودارهای تحلیلی، نسخه‌های دوبعدی و سه‌بعدی و تحویل آنی بدون نیاز به اشتراک ماهانه.`
-          : `خرید آنلاین و دسترسی دائمی ${product.name} با تحویل فوری، گارانتی اصالت فایل‌ها و بدون نیاز به تمدید ماهانه در وایچ.`)
-      : `خرید آنلاین و قانونی اشتراک ${product.name} با تحویل سریع، ضمانت فعال‌سازی قانونی و پشتیبانی تخصصی راه‌اندازی در فروشگاه وایچ.`;
+
+    let title: string;
+    let description: string;
+    let keywords: string;
+
+    if (product.slug === "telegram-premium") {
+      title = "خرید اشتراک تلگرام پرمیوم (۱ تا ۱۲ ماهه) | گیفت رسمی بدون رمز | VAICH";
+      description =
+        "خرید قانونی و فوری اشتراک تلگرام پرمیوم (Telegram Premium) ۱، ۳، ۶ و ۱۲ ماهه از طریق گیفت رسمی تلگرام صرفاً با آیدی (@Username) بدون نیاز به رمز عبور و با ضمانت کامل در فروشگاه وایچ.";
+      keywords =
+        "خرید تلگرام پرمیوم, خرید اشتراک تلگرام پرمیوم, تلگرام پرمیوم گیفتی, خرید Telegram Premium بدون رمز, قیمت تلگرام پرمیوم, تلگرام پرمیوم ۱ ماهه, تلگرام پرمیوم ۳ ماهه, تلگرام پرمیوم ۶ ماهه, تلگرام پرمیوم یک ساله, وایچ";
+    } else if (product.slug === "telegram-stars") {
+      title = "خرید استارز تلگرام (Telegram Stars) | شارژ فوری با آیدی | VAICH";
+      description =
+        "خرید و شارژ مستقیم و فوری استارز تلگرام (۱۰۰ تا ۱۰,۰۰۰ استارز) بدون نیاز به رمز عبور و کارت بانکی خارجی؛ مناسب خرید گیفت‌های کلکسیونی تلگرام، ربات‌ها و مینی‌اپ‌ها در وایچ.";
+      keywords =
+        "خرید استارز تلگرام, قیمت استارز تلگرام, خرید Telegram Stars, شارژ فوری استارز تلگرام, خرید گیفت تلگرام, خرید ۱۰۰ استارز, خرید ۵۰۰ استارز, خرید ۱۰۰۰ استارز تلگرام, وایچ";
+    } else if (product.slug === "canva-pro") {
+      title = "خرید اشتراک کانوا پرو (Canva Pro) روی ایمیل شخصی | تحویل فوری | VAICH";
+      description =
+        "خرید اشتراک قانونی کانوا پرو (Canva Pro) ۱ تا ۶ ماهه با دعوت تیمی رسمی روی ایمیل شخصی شما، دسترسی کامل به Magic Studio، حذف پس‌زمینه، کیت برند و فونت فارسی در فروشگاه وایچ.";
+      keywords =
+        "خرید کانوا پرو, خرید اشتراک Canva Pro, اکانت کانوا پرو قانونی, قیمت کانوا پرو, کانوا پرو روی ایمیل شخصی, کانوا پرو فمیلی, ابزار هوش مصنوعی کانوا, وایچ";
+    } else if (isLifetime) {
+      title = isPlanner
+        ? `خرید ${product.name} | پلنر برنامه ریزی هوشمند گوگل شیت | VAICH`
+        : `خرید ${product.name} | دسترسی دائمی بدون اشتراک | VAICH`;
+      description = isPlanner
+        ? `خرید آنلاین ${product.name} در گوگل شیت با ردیاب عادات ماهانه، نمودارهای تحلیلی، نسخه‌های دوبعدی و سه‌بعدی و تحویل آنی بدون نیاز به اشتراک ماهانه.`
+        : `خرید آنلاین و دسترسی دائمی ${product.name} با تحویل فوری، گارانتی اصالت فایل‌ها و بدون نیاز به تمدید ماهانه در وایچ.`;
+      keywords = `خرید ${product.name}, پلنر دیجیتال, پلنر گوگل شیت, ردیاب عادات فارسی, وایچ`;
+    } else {
+      title = `خرید اشتراک ${product.name} (${product.duration || "قانونی"}) | VAICH`;
+      description = `خرید آنلاین و قانونی اشتراک ${product.name} با تحویل سریع، ضمانت فعال‌سازی قانونی و پشتیبانی تخصصی راه‌اندازی در فروشگاه وایچ.`;
+      keywords = `خرید ${product.name}, خرید اشتراک ${product.name}, قیمت ${product.name}, اشتراک هوش مصنوعی, وایچ`;
+    }
+
     const canonicalUrl = `https://vaich.ir/products/${product.slug}`;
 
     const breadcrumbLd = {
@@ -103,7 +132,7 @@ export const Route = createFileRoute("/products/$slug")({
           "@type": "ListItem",
           position: 2,
           name: "محصولات و خدمات",
-          item: "https://vaich.ir",
+          item: "https://vaich.ir/products",
         },
         {
           "@type": "ListItem",
@@ -122,6 +151,7 @@ export const Route = createFileRoute("/products/$slug")({
       meta: [
         { title },
         { name: "description", content: description },
+        { name: "keywords", content: keywords },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:url", content: canonicalUrl },
@@ -359,44 +389,84 @@ function ProductDetail() {
   const avgRating = product.rating || (isLifetime ? 4.9 : 4.8);
   const countReviews = (product.reviewCount || 0) + (reviews.length - (product.reviews?.length || 0));
 
-  // Google Search Console JSON-LD Structured Data with AggregateRating and Reviews
+  // Google Search Console JSON-LD Structured Data (Product + AggregateOffer + FAQPage)
   const productImg = product.iconUrl
     ? (product.iconUrl.startsWith("http") ? product.iconUrl : `https://vaich.ir${product.iconUrl.split("?")[0]}`)
     : "https://vaich.ir/vaich-logo.png";
 
-  const productSchema = {
+  const brandText = `${product.slug} ${product.name}`.toLowerCase();
+  const brandName = isPlanner
+    ? "VAICH"
+    : brandText.includes("telegram") || brandText.includes("تلگرام")
+      ? "Telegram"
+      : brandText.includes("canva") || brandText.includes("کانوا")
+        ? "Canva"
+        : brandText.includes("chatgpt") || brandText.includes("چت")
+          ? "OpenAI"
+          : brandText.includes("claude") || brandText.includes("کلود")
+            ? "Anthropic"
+            : brandText.includes("gemini") || brandText.includes("google") || brandText.includes("جمینای") || brandText.includes("جمنای")
+              ? "Google"
+              : "VAICH";
+
+  const effectiveOutOfStock = isOutOfStock || pricingSummary.isOutOfStock;
+  const offersSchema =
+    pricingSummary.isRange && !effectiveOutOfStock
+      ? {
+          "@type": "AggregateOffer",
+          url: `https://vaich.ir/products/${product.slug}`,
+          priceCurrency: "IRR",
+          lowPrice: pricingSummary.minPrice,
+          highPrice: pricingSummary.maxPrice,
+          offerCount: pricingSummary.activeVariantsCount,
+          availability: "https://schema.org/InStock",
+          seller: {
+            "@type": "Organization",
+            name: "VAICH",
+          },
+        }
+      : {
+          "@type": "Offer",
+          url: `https://vaich.ir/products/${product.slug}`,
+          priceCurrency: "IRR",
+          price: pricingSummary.minPrice || product.price,
+          priceValidUntil: "2027-12-31",
+          availability: effectiveOutOfStock
+            ? "https://schema.org/OutOfStock"
+            : "https://schema.org/InStock",
+          seller: {
+            "@type": "Organization",
+            name: "VAICH",
+          },
+        };
+
+  const productSchema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: isLifetime ? product.name : `اشتراک ${product.name}`,
+    name: isLifetime || product.name.includes("اشتراک") || product.slug === "telegram-stars"
+      ? product.name
+      : `اشتراک ${product.name}`,
     description: product.description,
     image: productImg,
     sku: product.slug,
     mpn: product.slug,
     brand: {
       "@type": "Brand",
-      name: isPlanner ? "VAICH" : product.name.includes("ChatGPT") ? "OpenAI" : product.name.includes("Claude") ? "Anthropic" : "Google",
+      name: brandName,
     },
-    offers: {
-      "@type": "Offer",
-      url: `https://vaich.ir/products/${product.slug}`,
-      priceCurrency: "IRR",
-      price: product.price,
-      priceValidUntil: "2027-12-31",
-      availability: isOutOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
-      seller: {
-        "@type": "Organization",
-        name: "VAICH",
-      },
-    },
-    aggregateRating: {
+    offers: offersSchema,
+  };
+
+  if (reviews.length > 0) {
+    productSchema.aggregateRating = {
       "@type": "AggregateRating",
       ratingValue: avgRating.toString(),
       bestRating: "5",
       worstRating: "1",
-      ratingCount: Math.max(countReviews, 1).toString(),
-      reviewCount: Math.max(countReviews, 1).toString(),
-    },
-    review: reviews.slice(0, 5).map((r) => ({
+      ratingCount: Math.max(countReviews, reviews.length).toString(),
+      reviewCount: Math.max(countReviews, reviews.length).toString(),
+    };
+    productSchema.review = reviews.slice(0, 5).map((r) => ({
       "@type": "Review",
       author: {
         "@type": "Person",
@@ -410,8 +480,35 @@ function ProductDetail() {
         bestRating: "5",
         worstRating: "1",
       },
-    })),
-  };
+    }));
+  }
+
+  const faqTab = product.customTabs?.find(
+    (t) => t.title.includes("سوال") || t.title.includes("پرسش")
+  );
+  const faqEntities = faqTab
+    ? faqTab.content
+        .split(/\n\s*\n/)
+        .map((block) => block.split("\n").map((line) => line.trim()).filter(Boolean))
+        .filter((lines) => lines.length >= 2)
+        .map((lines) => ({
+          "@type": "Question",
+          name: lines[0],
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: lines.slice(1).join(" "),
+          },
+        }))
+    : [];
+
+  const faqSchema =
+    faqEntities.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqEntities,
+        }
+      : null;
 
   return (
     <>
@@ -419,6 +516,12 @@ function ProductDetail() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
 
       <Section className="aurora overflow-x-hidden">
         {/* Breadcrumb Navigation */}

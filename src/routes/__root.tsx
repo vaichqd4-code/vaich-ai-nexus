@@ -4,16 +4,20 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { AiChatDrawer } from "@/components/chat/AiChatDrawer";
+
+const AiChatDrawer = lazy(() =>
+  import("@/components/chat/AiChatDrawer").then((m) => ({ default: m.AiChatDrawer }))
+);
 
 function NotFoundComponent() {
   const router = useRouter();
@@ -120,12 +124,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=5" },
-      { title: "VAICH | خرید اشتراک هوش مصنوعی و پلنر برنامه ریزی دیجیتال" },
+      { title: "VAICH | خرید اشتراک هوش مصنوعی، تلگرام پرمیوم، استارز و کانوا پرو" },
       {
         name: "description",
-        content: "خرید آنلاین، قانونی و با تحویل فوری اشتراک‌های هوش مصنوعی (ChatGPT, Gemini, Claude)، پلنرهای تخصصی دیجیتال و خدمات آنلاین در فروشگاه VAICH.",
+        content: "خرید آنلاین، قانونی و فوری اشتراک‌های هوش مصنوعی (ChatGPT، Gemini، Claude)، اشتراک تلگرام پرمیوم، استارز تلگرام، کانوا پرو و پلنرهای هوشمند گوگل‌شیت در فروشگاه VAICH.",
       },
-      { name: "keywords", content: "خرید پلنر دیجیتال, پلنر برنامه ریزی گوگل شیت, ردیاب عادات فارسی, بهترین پلنر برنامه ریزی ۱۴۰۵, ماتریس آیزنهاور, تکنیک time boxing, خرید اکانت chatgpt plus, خرید اشتراک gemini pro, خرید اکانت claude pro, خرید هوش مصنوعی, vaich, وایچ" },
+      { name: "keywords", content: "خرید تلگرام پرمیوم, خرید استارز تلگرام, خرید کانوا پرو, خرید اشتراک Canva Pro, خرید اکانت chatgpt plus, خرید اشتراک gemini pro, خرید اکانت claude pro, خرید پلنر دیجیتال, پلنر برنامه ریزی گوگل شیت, خرید هوش مصنوعی, vaich, وایچ" },
       { name: "author", content: "VAICH" },
       { name: "theme-color", content: "#2563eb" },
       { name: "language", content: "Persian" },
@@ -148,18 +152,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "/fonts/vazirmatn-arabic.woff2",
         crossOrigin: "anonymous",
       },
-                                          {
+      {
         rel: "preload",
         as: "image",
         type: "image/webp",
         href: "/promo-banner.webp",
         fetchPriority: "high",
       },
-      { rel: "preload", as: "image", type: "image/svg+xml", href: "/chatgpt-logo.svg" },
-      { rel: "preload", as: "image", type: "image/webp", href: "/gemini-60d-icon.webp" },
-      { rel: "preload", as: "image", type: "image/webp", href: "/gemini-pro-18m-icon.webp" },
-      { rel: "preload", as: "image", type: "image/webp", href: "/claude-icon.webp" },
-      { rel: "preload", as: "image", type: "image/webp", href: "/planner-cover.webp" },
       { rel: "stylesheet", href: appCss },
       {
         rel: "alternate",
@@ -221,7 +220,7 @@ function RootShell({ children }: { children: ReactNode }) {
                   "url": "https://vaich.ir",
                   "logo": "https://vaich.ir/vaich-logo.png",
                   "image": "https://vaich.ir/vaich-logo.png",
-                  "description": "فروشگاه تخصصی خرید قانونی و مستقیم اشتراک‌های هوش مصنوعی ChatGPT Plus، Gemini Pro و Claude Pro با تحویل آنی و ضمانت پایداری.",
+                  "description": "فروشگاه تخصصی خرید قانونی و مستقیم اشتراک‌های هوش مصنوعی ChatGPT Plus، Gemini Pro، Claude Pro، تلگرام پرمیوم، استارز تلگرام، کانوا پرو و پلنر هوشمند با تحویل سریع و ضمانت پایداری.",
                   "telephone": "+989193872172",
                   "priceRange": "IRR",
                   "currenciesAccepted": "IRR",
@@ -279,6 +278,31 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function DeferredAiChat() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isAdmin = pathname.startsWith("/admin");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || isAdmin || mounted) return;
+
+    if ("requestIdleCallback" in window) {
+      const id = (window as any).requestIdleCallback(() => setMounted(true), { timeout: 1500 });
+      return () => (window as any).cancelIdleCallback?.(id);
+    }
+    const timer = setTimeout(() => setMounted(true), 1200);
+    return () => clearTimeout(timer);
+  }, [isAdmin, mounted]);
+
+  if (isAdmin || !mounted) return null;
+
+  return (
+    <Suspense fallback={null}>
+      <AiChatDrawer />
+    </Suspense>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -290,7 +314,7 @@ function RootComponent() {
           <Outlet />
         </main>
         <Footer />
-        <AiChatDrawer />
+        <DeferredAiChat />
       </div>
     </QueryClientProvider>
   );

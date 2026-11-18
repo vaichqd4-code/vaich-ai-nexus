@@ -10,16 +10,16 @@ import { useDynamicProducts } from "@/lib/products";
 export const Route = createFileRoute("/products/")({
   head: () => ({
     meta: [
-      { title: "خرید انواع اشتراک‌های هوش مصنوعی و پلنرهای دیجیتال | VAICH" },
+      { title: "خرید اشتراک هوش مصنوعی، تلگرام پرمیوم، استارز، کانوا پرو و پلنر | VAICH" },
       {
         name: "description",
         content:
-          "فروشگاه رسمی VAICH؛ خرید اشتراک قانونی ChatGPT Plus، اکانت رسمی Gemini Pro، سرویس Claude Pro و کامل‌ترین پلنر هوشمند مدیریت سبک زندگی و ردیاب عادات با تحویل فوری.",
+          "فروشگاه رسمی VAICH؛ خرید اشتراک قانونی ChatGPT Plus، Gemini Pro، Claude Pro، تلگرام پرمیوم، استارز تلگرام، کانوا پرو و پلنر هوشمند گوگل‌شیت با تحویل سریع و ضمانت پایداری.",
       },
       { property: "og:title", content: "محصولات و اشتراک‌های رسمی | VAICH" },
       {
         property: "og:description",
-        content: "خرید ارزان و مطمئن اکانت‌های ChatGPT Plus، Gemini Pro، Claude Pro و پلنرهای دیجیتال با پشتیبانی ۲۴ ساعته.",
+        content: "خرید قانونی و مطمئن اکانت‌های ChatGPT Plus، Gemini Pro، Claude Pro، تلگرام پرمیوم، استارز تلگرام، کانوا پرو و پلنر دیجیتال با پشتیبانی ۲۴ ساعته.",
       },
       { property: "og:url", content: "https://vaich.ir/products" },
       { property: "og:type", content: "website" },
@@ -127,11 +127,10 @@ function ProductsPage() {
                   key={cat.id}
                   type="button"
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
-                    isActive
-                      ? "bg-primary text-white shadow-md shadow-primary/25 ring-2 ring-primary/30"
-                      : "border border-border/80 bg-card/70 text-muted-foreground hover:bg-secondary hover:text-foreground"
-                  }`}
+                  className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${isActive
+                    ? "bg-primary text-white shadow-md shadow-primary/25 ring-2 ring-primary/30"
+                    : "border border-border/80 bg-card/70 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                    }`}
                 >
                   {cat.label}
                 </button>

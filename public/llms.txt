@@ -1,17 +1,20 @@
 # VAICH
 
-> مرجع تخصصی و قانونی خرید اشتراک‌های هوش مصنوعی (ChatGPT Plus، Claude Pro، Google AI Pro / Gemini Pro) و پلنر برنامه‌ریزی هوشمند مبتنی بر Google Sheets در ایران با تحویل سریع و ضمانت فعال‌سازی قانونی.
+> مرجع تخصصی و قانونی خرید اشتراک‌های هوش مصنوعی (ChatGPT Plus، Claude Pro، Google AI Pro / Gemini Pro)، اشتراک‌های پرمیوم و کاربردی (تلگرام پرمیوم، استارز تلگرام، کانوا پرو Canva Pro) و پلنر برنامه‌ریزی هوشمند مبتنی بر Google Sheets در ایران با تحویل سریع و ضمانت فعال‌سازی قانونی.
 
-VAICH (وایچ) یک فروشگاه تخصصی خدمات دیجیتال و اشتراک‌های هوش مصنوعی است. این وب‌سایت امکان بررسی مشخصات، مشاهده قیمت به‌روز، مطالعه راهنماها و ثبت سفارش آنلاین برای اشتراک‌های قانونی هوش مصنوعی و ابزارهای بهره‌وری فردی را فراهم می‌کند.
+VAICH (وایچ) یک فروشگاه تخصصی خدمات دیجیتال، اشتراک‌های هوش مصنوعی و سرویس‌های پرمیوم است. این وب‌سایت امکان بررسی مشخصات، مشاهده قیمت به‌روز پلن‌ها، مطالعه راهنماها و ثبت سفارش آنلاین را فراهم می‌کند.
 
 ## محصولات و اشتراک‌ها
 
-- [همه محصولات و خدمات VAICH](https://vaich.ir/products): فهرست کامل اشتراک‌های هوش مصنوعی و ابزارهای بهره‌وری با قیمت و جزئیات
+- [همه محصولات و خدمات VAICH](https://vaich.ir/products): فهرست کامل اشتراک‌های هوش مصنوعی، اشتراک‌های پرمیوم و ابزارهای بهره‌وری با قیمت و جزئیات
+- [خرید اشتراک تلگرام پرمیوم (Telegram Premium)](https://vaich.ir/products/telegram-premium): فعال‌سازی قانونی و فوری تلگرام پرمیوم از طریق گیفت رسمی (۱، ۳، ۶ و ۱۲ ماهه) بدون نیاز به رمز عبور و کد ورود
+- [خرید استارز تلگرام فوری (Telegram Stars)](https://vaich.ir/products/telegram-stars): شارژ مستقیم و فوری ۱۰۰ تا ۱۰,۰۰۰ استارز رسمی تلگرام صرفاً با آیدی (@Username) جهت پرداخت در مینی‌اپ‌ها و خرید گیفت‌های تلگرام
+- [خرید اشتراک کانوا پرو (Canva Pro)](https://vaich.ir/products/canva-pro): ارتقای اکانت شخصی کانوا از طریق دعوت تیمی روی ایمیل شخصی (۱، ۲، ۳ و ۶ ماهه، قابل تمدید بدون تعویض اکانت) با دسترسی به Magic Studio و بیش از ۱۰۰ میلیون المان پرمیوم
 - [پلنر برنامه‌ریزی وایچ (استاندارد)](https://vaich.ir/products/vaich-life-planner): سیستم دائمی برنامه‌ریزی فردی، ردیاب عادات (Habit Tracker) و مدیریت مالی مبتنی بر Google Sheets
 - [اشتراک ChatGPT Plus](https://vaich.ir/products/chatgpt-plus): اشتراک ۱ ماهه قانونی و اختصاصی ChatGPT Plus روی ایمیل شخصی یا اکانت اختصاصی (GPT-6.1 Sol، GPT-6 Sol، Codex GPT-6 Astra با محدودیت ۵ ساعته)
 - [اشتراک Claude Pro](https://vaich.ir/products/claude): اشتراک قانونی و اختصاصی Claude Pro (خانواده Sonnet 5.5، Opus 5.5، Haiku 5.5 با سهمیه ۵ ساعته و هفتگی)
-- [اشتراک Google AI Pro (Gemini Pro) - ۱۸ ماهه](https://vaich.ir/products/gemini-pro): اشتراک طولانی‌مدت ۱۸ ماهه Google AI Pro (مدل Gemini 4 Argon، پنج ترابایت Google One، ادغام Workspace)
-- [اشتراک Google AI Pro (Gemini Pro) - ۶۰ روزه](https://vaich.ir/products/gemini): اشتراک ۶۰ روزه Google AI Pro برای تست و پروژه‌های کوتاه‌مدت
+- [اشتراک جمنای پرو ۱۸ ماهه (Google AI Pro)](https://vaich.ir/products/gemini-pro): اشتراک طولانی‌مدت ۱۸ ماهه Google AI Pro (مدل Gemini 4 Argon و Hydrogen، پنج ترابایت Google One، ادغام Workspace)
+- [اشتراک جمنای پرو ۶۰ روزه (Google AI Pro)](https://vaich.ir/products/gemini): اشتراک ۶۰ روزه Google AI Pro برای تست و پروژه‌های کوتاه‌مدت
 
 ## فیدها و منابع داده‌ای
 
