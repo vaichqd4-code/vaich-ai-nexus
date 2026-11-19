@@ -264,83 +264,6 @@ function QuickAccessBar() {
   );
 }
 
-// Digital Planner Spotlight Showcase (حل مشکل فضای خالی ۵۰٪)
-function PlannerSpotlightSection({
-  row,
-  plannerProduct,
-}: {
-  row: ProductCategoryRow;
-  plannerProduct: Product;
-}) {
-  return (
-    <section id={row.id} className="relative scroll-mt-20 sm:scroll-mt-24 mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
-      <span id="planners" aria-hidden="true" className="absolute -top-24 pointer-events-none" />
-
-      {/* Header */}
-      <div className="mb-5">
-        <h2 className="text-lg sm:text-2xl font-black text-foreground flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-primary" />
-          <span>{row.title}</span>
-        </h2>
-        {row.subtitle && (
-          <p className="mt-1 text-xs sm:text-sm text-muted-foreground/90 font-medium">{row.subtitle}</p>
-        )}
-      </div>
-
-      {/* 2-Column Balanced Spotlight Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
-        {/* Right Column: Feature highlights and live capabilities */}
-        <div className="lg:col-span-7 flex flex-col justify-between rounded-3xl sm:rounded-4xl border border-border/80 bg-card/70 p-5 sm:p-7 shadow-xs">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-4">
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              <span>دسترسی دائمی و مادام‌العمر (بدون نیاز به شارژ ماهانه)</span>
-            </div>
-
-            <h3 className="text-base sm:text-xl font-black text-foreground leading-snug">
-              پلنر هوشمند مدیریت سبک زندگی وایچ در Google Sheets
-            </h3>
-            <p className="mt-2.5 text-xs sm:text-sm text-muted-foreground leading-6 sm:leading-7 font-medium">
-              نرم‌افزار جامع و بومی برنامه‌ریزی شخصی، مدیریت مالی و پیگیری اهداف که روی موبایل، تبلت و کامپیوتر بدون نیاز به نصب هیچ برنامه اضافی اجرا می‌شود.
-            </p>
-
-            {/* Key feature pills */}
-            <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs font-bold text-foreground">
-              <div className="flex items-center gap-2 rounded-xl border border-border/60 bg-secondary/40 p-2.5">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">✓</span>
-                <span>ردیاب عادات ماهانه (Habit Tracker)</span>
-              </div>
-              <div className="flex items-center gap-2 rounded-xl border border-border/60 bg-secondary/40 p-2.5">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">✓</span>
-                <span>ماتریس آیزنهاور و Time Boxing</span>
-              </div>
-              <div className="flex items-center gap-2 rounded-xl border border-border/60 bg-secondary/40 p-2.5">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">✓</span>
-                <span>داشبورد جامع مالی و کنترل هزینه‌ها</span>
-              </div>
-              <div className="flex items-center gap-2 rounded-xl border border-border/60 bg-secondary/40 p-2.5">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">✓</span>
-                <span>دارای ۲ تم اختصاصی ۲ بعدی و ۳ بعدی</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 pt-4 border-t border-border/50 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
-            <span>سازگار با: گوشی‌های اندروید، آیفون، مک و ویندوز</span>
-            <Link to="/products/vaich-life-planner" className="text-primary font-bold hover:underline inline-flex items-center gap-1">
-              <span>مشاهده جزئیات کامل پلنر</span>
-              <ArrowLeft className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-        </div>
-
-        {/* Left Column: Official Product Card */}
-        <div className="lg:col-span-5 flex justify-center">
-          <ProductCard product={plannerProduct} className="w-full max-w-[340px] sm:max-w-[360px]" />
-        </div>
-      </div>
-    </section>
-  );
 }
 
 function ProductRowSection({
@@ -387,11 +310,6 @@ function ProductRowSection({
   };
 
   if (products.length === 0) return null;
-
-  // حل مشکل فضای خالی پلنر: اگر ردیف پلنر باشد و ۱ محصول داشته باشد
-  if ((row.id === "row-mvampt3r" || row.title.includes("پلنر")) && products.length === 1) {
-    return <PlannerSpotlightSection row={row} plannerProduct={products[0]} />;
-  }
 
   return (
     <section
@@ -594,30 +512,30 @@ function Home() {
         })
       )}
 
-      {/* 7. How to Buy in 3 Steps (نحوه خرید در ۳ مرحله) */}
+      {/* 4. Magazine & Articles (مجله و مقالات تخصصی - بلافاصله زیر ردیف‌های محصولات) */}
+      <BlogSection />
+
+      {/* 5. How to Buy in 3 Steps (نحوه خرید در ۳ مرحله ساده) */}
       <Suspense fallback={<div className="h-16 py-4" />}>
         <HowItWorks />
       </Suspense>
 
-      {/* 8. Why VAICH (چرا وایچ) */}
+      {/* 6. Why VAICH (چرا وایچ) */}
       <Suspense fallback={<div className="h-16 py-4" />}>
         <Features />
       </Suspense>
 
-      {/* 9. Customer Reviews & Trust Stats (نظرات مشتریان و آمار اعتماد) */}
+      {/* 7. Customer Reviews & Trust Stats (نظرات مشتریان و آمار اعتماد) */}
       <Suspense fallback={<div className="h-16 py-4" />}>
         <Trust />
       </Suspense>
 
-      {/* 10. FAQ (سوالات متداول) */}
+      {/* 8. FAQ (سوالات متداول) */}
       <Suspense fallback={<div className="h-16 py-4" />}>
         <Faq />
       </Suspense>
 
-      {/* 11. Magazine & Articles (مجله و مقالات تخصصی) */}
-      <BlogSection />
-
-      {/* 12. Support CTA */}
+      {/* 9. Support CTA */}
       <Suspense fallback={<div className="h-16 py-4" />}>
         <SupportCta />
       </Suspense>

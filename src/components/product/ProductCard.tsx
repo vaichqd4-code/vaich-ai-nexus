@@ -235,10 +235,9 @@ export function ProductCard({
           {/* Floating Max Discount Badge (only when > 0 and in stock) */}
           {!isOutOfStock && pricing.maxDiscountPercent > 0 && (
             <span
-              dir="ltr"
-              className="absolute left-2 top-2 z-10 rounded-xl bg-rose-500 font-sans text-[10px] sm:text-xs font-black text-white px-2 py-0.5 shadow-md tracking-tight"
+              className="absolute left-2 top-2 z-10 rounded-xl bg-rose-500 font-sans text-[10px] sm:text-xs font-black text-white px-2 py-0.5 shadow-md tracking-tight select-none"
             >
-              -{pricing.maxDiscountPercent}%
+              %{toPersianDigits(pricing.maxDiscountPercent)} تخفیف
             </span>
           )}
 
@@ -301,10 +300,10 @@ export function ProductCard({
             ) : null}
             {!isOutOfStock && pricing.maxDiscountPercent > 0 ? (
               <span
-                dir="ltr"
-                className="inline-flex items-center justify-center rounded-lg bg-rose-500 font-sans text-[10px] sm:text-xs font-black text-white px-1.5 py-0.5 shadow-xs tracking-tight"
+                className="inline-flex items-center gap-0.5 rounded-lg bg-rose-500/15 border border-rose-500/30 text-rose-500 dark:text-rose-400 font-sans text-[10px] sm:text-xs font-black px-1.5 py-0.5 shadow-xs"
               >
-                {pricing.isRange ? `تا -${pricing.maxDiscountPercent}%` : `-${pricing.maxDiscountPercent}%`}
+                <span>{pricing.isRange ? "تا" : ""}</span>
+                <span dir="ltr">%{toPersianDigits(pricing.maxDiscountPercent)}</span>
               </span>
             ) : null}
             {isLifetime && !isOutOfStock ? (

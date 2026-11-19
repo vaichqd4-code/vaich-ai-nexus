@@ -48,7 +48,7 @@ export function HowItWorks() {
                 <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary/80 border border-border/70 shadow-xs group-hover:scale-105 transition-transform">
                   {s.icon}
                 </span>
-                <span className="gradient-text font-mono text-3xl sm:text-4xl font-black">
+                <span className="gradient-text font-sans text-3xl sm:text-4xl font-black tracking-tight select-none">
                   ۰{toPersianDigits(s.step)}
                 </span>
               </div>
@@ -60,7 +60,7 @@ export function HowItWorks() {
               </p>
             </div>
 
-            <div className="mt-5 pt-3 border-t border-border/40 flex items-center text-xs font-bold text-primary gap-1">
+            <div className="mt-5 pt-3 border-t border-border/40 flex items-center text-xs font-bold text-primary gap-1 font-sans">
               <span>گام {toPersianDigits(s.step)} از ۳</span>
             </div>
           </div>

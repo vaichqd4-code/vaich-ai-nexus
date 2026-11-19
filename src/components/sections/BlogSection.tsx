@@ -4,6 +4,7 @@ import { Section } from "@/components/layout/Section";
 import { useBlogPosts, BLOG_POSTS, type BlogPost } from "@/lib/blog-data";
 import { BlogCoverGraphic } from "@/components/blog/BlogCoverGraphic";
 import { Clock, ArrowLeft, ChevronRight, ChevronLeft, BookOpen } from "lucide-react";
+import { toPersianDigits } from "@/lib/products";
 
 const FEATURED_BLOG_SLUGS = [
   "flagship-ai-models-comparison",
@@ -206,13 +207,13 @@ export function BlogSection() {
               {/* محتوای مقاله داخل باکس */}
               <div className="md:col-span-7 flex flex-col justify-between gap-3 p-4 sm:p-6">
                 <div className="space-y-2.5">
-                  <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-3 text-[11px] font-sans text-muted-foreground">
                     <span className="inline-flex items-center gap-1 font-medium">
                       <Clock className="h-3.5 w-3.5 text-primary/80" />
-                      <span>{post.readTime}</span>
+                      <span>{toPersianDigits(post.readTime)}</span>
                     </span>
                     <span className="opacity-40">•</span>
-                    <span>{post.date}</span>
+                    <span className="font-medium">{toPersianDigits(post.date)}</span>
                   </div>
 
                   <h3 className="text-sm sm:text-lg font-black leading-snug text-foreground">
@@ -242,8 +243,8 @@ export function BlogSection() {
                     <ArrowLeft className="h-3.5 w-3.5" />
                   </Link>
 
-                  <span className="text-[11px] font-mono text-muted-foreground tabular-nums">
-                    {idx + 1} / {featuredPosts.length}
+                  <span className="text-xs font-sans font-bold text-muted-foreground select-none">
+                    {toPersianDigits(idx + 1)} از {toPersianDigits(featuredPosts.length)}
                   </span>
                 </div>
               </div>

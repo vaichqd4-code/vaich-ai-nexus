@@ -4,25 +4,33 @@ import { Star, ShieldCheck, CheckCircle2, Clock, Users, Award, Lock } from "luci
 
 const STATS = [
   {
-    value: "+۲,۵۰۰",
+    prefix: "+",
+    number: "۲,۵۰۰",
+    unit: "",
     label: "سفارش موفق و تحویل‌شده",
-    sub: "اشتراک و پلنر",
+    sub: "اشتراک و پلنر هوشمند",
     icon: <Users className="h-5 w-5 text-primary" />,
   },
   {
-    value: "۴.۹ / ۵",
+    prefix: "",
+    number: "۴.۹",
+    unit: "از ۵",
     label: "میانگین رضایت خریداران",
     sub: "بر اساس نظرات ثبت‌شده",
     icon: <Star className="h-5 w-5 fill-amber-400 text-amber-400" />,
   },
   {
-    value: "< ۱۵ دقیقه",
+    prefix: "زیر",
+    number: "۱۵",
+    unit: "دقیقه",
     label: "میانگین زمان تحویل",
-    sub: "در ساعات کاری",
+    sub: "در تمامی ساعات کاری",
     icon: <Clock className="h-5 w-5 text-emerald-500" />,
   },
   {
-    value: "۱۰۰٪",
+    prefix: "",
+    number: "۱۰۰",
+    unit: "٪",
     label: "ضمانت پایداری و اصالت",
     sub: "پشتیبانی فعال تا پایان دوره",
     icon: <ShieldCheck className="h-5 w-5 text-blue-500" />,
@@ -34,28 +42,28 @@ const CUSTOMER_REVIEWS = [
     name: "سارا م.",
     role: "خریدار ChatGPT Plus قانونی",
     rating: 5,
-    date: "۱۴۰۵/۰۸/۲۴",
+    date: "۱۴۰۴/۰۸/۲۴",
     comment: "تحویل اکانت خیلی سریع انجام شد و بدون نیاز به هیچ اطلاعات حساسی اکانت اختصاصی برام فعال شد. پشتیبانی با حوصله نحوه اتصال رو توضیح دادن.",
   },
   {
     name: "احسان ک.",
     role: "خریدار اشتراک تلگرام پرمیوم گیفتی",
     rating: 5,
-    date: "۱۴۰۵/۰۸/۲۶",
+    date: "۱۴۰۴/۰۸/۲۶",
     comment: "گیفت تلگرام ظرف کمتر از ۵ دقیقه بعد از ثبت سفارش مستقیماً روی آیدیم نشست بدون اینکه نیاز به پسورد یا دسترسی باشه. واقعاً عالی بود.",
   },
   {
     name: "مهرداد ف.",
     role: "خریدار پلنر هوشمند گوگل‌شیت (Deluxe)",
     rating: 5,
-    date: "۱۴۰۵/۰۸/۱۹",
+    date: "۱۴۰۴/۰۸/۱۹",
     comment: "کامل‌ترین پلنری بود که تا حالا دیدم؛ بخش ردیاب عادات و داشبورد کنترل مالی واقعاً نظم روزمره‌م رو متحول کرد. دسترسی دائمیش هم عالیه.",
   },
   {
     name: "نیلوفر ر.",
     role: "خریدار اشتراک کانوا پرو (Canva Pro)",
     rating: 5,
-    date: "۱۴۰۵/۰۸/۲۷",
+    date: "۱۴۰۴/۰۸/۲۷",
     comment: "لینک دعوت تیمی روی ایمیل شخصیم اومد و تمام امکانات مجیک استودیو، فونت فارسی و دانلود طرح‌ها بدون واترمارک باز شد. ممنون از قیمت خوبتون.",
   },
 ];
@@ -67,7 +75,7 @@ export function Trust() {
       title="نظرات مشتریان و آمار اعتماد"
       subtitle="تجربه خریداران و آمار ثبت‌شده فروشگاه وایچ؛ شفافیت بالاترین اولویت ماست."
     >
-      {/* 1. Trust Stats Bar */}
+      {/* 1. Trust Stats Bar with Crisp Persian Typography */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8 sm:mb-12">
         {STATS.map((s) => (
           <div
@@ -77,9 +85,17 @@ export function Trust() {
             <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-secondary/80 border border-border/70 mb-2.5">
               {s.icon}
             </span>
-            <p className="gradient-text font-mono text-xl sm:text-2xl font-black">
-              {s.value}
-            </p>
+            <div className="flex items-baseline justify-center gap-1 font-sans font-black select-none" dir="rtl">
+              {s.prefix && (
+                <span className="text-primary text-base sm:text-lg font-bold">{s.prefix}</span>
+              )}
+              <span className="gradient-text text-2xl sm:text-3xl font-black tracking-tight">
+                {s.number}
+              </span>
+              {s.unit && (
+                <span className="text-muted-foreground text-xs sm:text-sm font-bold mr-0.5">{s.unit}</span>
+              )}
+            </div>
             <h4 className="mt-1 text-xs sm:text-sm font-bold text-foreground">
               {s.label}
             </h4>
@@ -104,7 +120,7 @@ export function Trust() {
                     <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
-                <span className="text-[10px] font-mono text-muted-foreground">
+                <span className="text-[11px] font-sans font-semibold text-muted-foreground/80">
                   {toPersianDigits(r.date)}
                 </span>
               </div>
