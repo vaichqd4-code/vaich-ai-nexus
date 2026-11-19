@@ -36,6 +36,9 @@ interface UserActivityEntry {
   responseSummary?: string;
 }
 
+const recentActivityLogs: UserActivityEntry[] = [];
+let savedAdminChatId: number | string | null = null;
+
 function generateActivityReport(): string {
   const total = recentActivityLogs.length;
   if (total === 0) {
