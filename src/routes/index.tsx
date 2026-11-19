@@ -264,8 +264,6 @@ function QuickAccessBar() {
   );
 }
 
-}
-
 function ProductRowSection({
   row,
   products,
