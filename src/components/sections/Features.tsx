@@ -1,25 +1,26 @@
 import { Section } from "@/components/layout/Section";
+import { Zap, ShieldCheck, Tag, Headphones } from "lucide-react";
 
 const features = [
   {
-    title: "تحویل سریع",
-    body: "سفارش شما در کوتاه‌ترین زمان ممکن بررسی و دسترسی مستقیم به خدمات تحویل داده می‌شود.",
-    path: "M13 2 4 14h6l-1 8 9-12h-6l1-8Z",
+    title: "تحویل سریع و آنی",
+    desc: "بررسی و فعال‌سازی فوری در کوتاه‌ترین زمان ممکن تا بدون اتلاف وقت از سرویس استفاده کنید.",
+    icon: <Zap className="h-6 w-6 text-amber-500" />,
   },
   {
-    title: "پشتیبانی",
-    body: "تیم پشتیبانی VAICH برای پاسخ به سؤال‌های شما در دسترس است.",
-    path: "M4 12a8 8 0 1 1 16 0v5a3 3 0 0 1-3 3h-3M4 12v3a3 3 0 0 0 3 3h1",
+    title: "ضمانت فعال‌سازی قانونی",
+    desc: "تمامی اشتراک‌ها با پرداخت رسمی و قانونی تهیه شده و دارای ضمانت سلامت تا پایان دوره هستند.",
+    icon: <ShieldCheck className="h-6 w-6 text-emerald-500" />,
   },
   {
-    title: "قیمت مناسب",
-    body: "قیمت‌ها شفاف اعلام می‌شوند و هزینه پنهانی وجود ندارد.",
-    path: "M12 3v18M8 7.5h6.5a2.5 2.5 0 0 1 0 5h-5a2.5 2.5 0 0 0 0 5H16",
+    title: "قیمت‌گذاری شفاف و منصفانه",
+    desc: "قیمت‌ها بدون هزینه پنهان با بیشترین تخفیف ممکن نسبت به خرید مستقیم ارزی عرضه می‌شوند.",
+    icon: <Tag className="h-6 w-6 text-blue-500" />,
   },
   {
-    title: "تجربه‌ای ساده و مطمئن",
-    body: "مسیر خرید کوتاه و روشن است؛ از انتخاب محصول تا تحویل فوری آن.",
-    path: "M12 3 4 6.5v5c0 5 3.4 8.4 8 9.5 4.6-1.1 8-4.5 8-9.5v-5L12 3Zm-3 8.8 2.2 2.2L15.4 10",
+    title: "پشتیبانی اختصاصی ۲۴ ساعته",
+    desc: "پاسخگویی دلسوزانه و راهنمای گام‌به‌گام راه‌اندازی و استفاده ایمن از طریق تلگرام و وب‌سایت.",
+    icon: <Headphones className="h-6 w-6 text-purple-500" />,
   },
 ];
 
@@ -27,32 +28,29 @@ export function Features() {
   return (
     <Section
       id="why"
-      title="چرا VAICH"
-      subtitle="چند دلیل ساده که خرید خدمات دیجیتال و اشتراک‌های هوش مصنوعی را با ما راحت‌تر می‌کند."
+      title="چرا VAICH؟"
+      subtitle="ارزش‌هایی که خرید خدمات دیجیتال و اشتراک‌های آنلاین را در وایچ متمایز و مطمئن می‌کند."
     >
-      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
         {features.map((f) => (
-          <li
+          <div
             key={f.title}
-            className="glass-panel rounded-3xl p-6 transition-transform duration-300 hover:-translate-y-1"
+            className="group rounded-3xl border border-border/80 bg-card/70 p-4 sm:p-5.5 shadow-xs hover:border-primary/50 hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
           >
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-secondary/70 text-neon-purple">
-              <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden="true">
-                <path
-                  d={f.path}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-            <h3 className="mt-5 text-base font-bold">{f.title}</h3>
-            <p className="mt-2 text-sm leading-7 text-muted-foreground">{f.body}</p>
-          </li>
+            <div>
+              <span className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-secondary/80 border border-border/70 group-hover:scale-105 transition-transform mb-3.5">
+                {f.icon}
+              </span>
+              <h3 className="text-sm sm:text-base font-black text-foreground">
+                {f.title}
+              </h3>
+              <p className="mt-1.5 text-[11px] sm:text-xs leading-5 sm:leading-6 text-muted-foreground/90 font-medium">
+                {f.desc}
+              </p>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </Section>
   );
 }

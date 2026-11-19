@@ -5,8 +5,9 @@ import { ProductCard } from "@/components/product/ProductCard";
 import { NeonLink } from "@/components/ui/NeonButton";
 import { useDynamicProducts, type LayoutMode, type ProductCategoryRow, type Product, type PromoBannerConfig } from "@/lib/products";
 import { BlogSection } from "@/components/sections/BlogSection";
+import { ArrowLeft, Sparkles, CheckCircle2, ShieldCheck, Zap, Headphones, Layers, LayoutGrid, Calendar } from "lucide-react";
 
-// Code splitting below-the-fold landing page sections for 90+ Lighthouse Performance
+// Code splitting below-the-fold landing page sections for high Lighthouse Performance
 const Features = lazy(() => import("@/components/sections/Features").then((m) => ({ default: m.Features })));
 const HowItWorks = lazy(() => import("@/components/sections/HowItWorks").then((m) => ({ default: m.HowItWorks })));
 const Trust = lazy(() => import("@/components/sections/Trust").then((m) => ({ default: m.Trust })));
@@ -53,8 +54,9 @@ export const Route = createFileRoute("/")({
 });
 
 function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
-  const bannerImage = promoBanner?.imageUrl || "/promo-banner.webp";
-  const bannerAlt = promoBanner?.altText || "خرید مستقیم و مطمئن خدمات دیجیتالی و اشتراک‌های هوش مصنوعی VAICH";
+  // Use hero-ai showcase image to prevent duplicating the planner banner 3 times
+  const bannerImage = promoBanner?.imageUrl || "/hero-ai.webp";
+  const bannerAlt = promoBanner?.altText || "خرید مستقیم و مطمئن اشتراک‌های هوش مصنوعی و خدمات دیجیتال VAICH";
   const bannerLink = promoBanner?.linkUrl?.trim() || "";
 
   const isExternal = /^https?:\/\//i.test(bannerLink);
@@ -80,16 +82,12 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
     }
   }
 
-  const onBannerClick = (_dest: string) => {};
-
   const handlePlannerScroll = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
-    onBannerClick("planners");
     const target =
-      document.getElementById("planners") ||
       document.getElementById("row-mvampt3r") ||
-      document.querySelector('[id*="planner"]') ||
-      document.querySelector('section[id*="row-"]');
+      document.getElementById("planners") ||
+      document.querySelector('[id*="planner"]');
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -97,7 +95,7 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
 
   const imageElement = (
     <div
-      className="glow-strong overflow-hidden rounded-3xl sm:rounded-4xl border border-border shadow-2xl bg-card aspect-[4/3] group"
+      className="glow-strong overflow-hidden rounded-3xl sm:rounded-4xl border border-border shadow-2xl bg-card aspect-4/3 group"
       style={{ aspectRatio: "4/3" }}
     >
       <img
@@ -115,14 +113,16 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
 
   return (
     <section className="aurora relative overflow-hidden">
-      <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-14 pb-8 sm:px-6 sm:pt-20 lg:grid-cols-2 lg:pt-24">
+      <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 pt-8 pb-6 sm:px-6 sm:pt-14 sm:pb-8 lg:grid-cols-2 lg:pt-16 lg:pb-10">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-secondary/60 px-4 py-1.5 text-xs font-semibold text-foreground shadow-xs">
+          {/* Subtle status capsule */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-secondary/70 px-3.5 py-1 text-xs font-semibold text-foreground shadow-xs">
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>مرجع تخصصی خدمات دیجیتالی و اشتراک‌های هوش مصنوعی</span>
           </div>
 
-          <h1 className="mt-4 text-2xl font-black sm:text-4xl lg:text-[2.75rem] leading-[1.35] sm:leading-[1.3] text-foreground tracking-tight">
+          {/* Shorter, balanced H1 title */}
+          <h1 className="mt-3.5 text-2xl font-black sm:text-4xl lg:text-[2.65rem] leading-[1.35] sm:leading-[1.3] text-foreground tracking-tight">
             <span>خرید مستقیم و مطمئن اشتراک‌های </span>
             <span className="text-primary font-black">
               هوش مصنوعی
@@ -133,51 +133,55 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
             </span>
           </h1>
 
-          <p className="mt-3.5 max-w-lg text-xs sm:text-sm leading-6 sm:leading-7 text-muted-foreground font-medium">
-            دسترسی سریع و قانونی به خدمات دیجیتال و اشتراک‌های هوش مصنوعی با ضمانت فعال‌سازی سالم و پشتیبانی اختصاصی.
+          {/* Max 2-line subtitle for quick reading */}
+          <p className="mt-3 max-w-lg text-xs sm:text-sm leading-6 sm:leading-7 text-muted-foreground/90 font-medium line-clamp-2">
+            دسترسی سریع و قانونی به اشتراک‌های هوش مصنوعی (ChatGPT، Claude، Gemini)، تلگرام پرمیوم، استارز و ابزارهای پربازده با ضمانت فعال‌سازی سالم و پشتیبانی اختصاصی.
           </p>
 
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <NeonLink to="/products" size="lg">
-              مشاهده محصولات و خدمات
+          {/* Primary CTA and clearly secondary Ghost CTA */}
+          <div className="mt-5 sm:mt-6 flex flex-col gap-2.5 sm:flex-row">
+            <NeonLink to="/products" size="lg" className="justify-center">
+              <span>مشاهده محصولات و خدمات</span>
+              <ArrowLeft className="h-4 w-4" />
             </NeonLink>
-            <NeonLink to="/support" variant="outline" size="lg">
-              پشتیبانی آنلاین
+            <NeonLink to="/support" variant="outline" size="lg" className="justify-center border-border/80 text-foreground hover:bg-secondary/60">
+              <span>پشتیبانی و مشاوره آنلاین</span>
             </NeonLink>
           </div>
 
-          {/* نوار اعتمادسازی مینیمال و حرفه‌ای */}
-          <div className="mt-7 flex flex-wrap items-center gap-2.5">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/30 bg-secondary/70 px-3.5 py-1.5 text-xs font-medium text-foreground backdrop-blur-md">
-              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-linear-to-r from-blue-600 to-cyan-500 text-white shadow-xs">
-                <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          {/* 3 Trust Badges in ONE unified row (3 equal columns on mobile & desktop) */}
+          <div className="mt-5 sm:mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1.5 sm:gap-2 rounded-2xl border border-sky-500/25 bg-secondary/60 p-2 sm:px-3 sm:py-2 text-center sm:text-right backdrop-blur-md">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-xl bg-linear-to-r from-blue-600 to-cyan-500 text-white shadow-xs">
+                <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" />
                 </svg>
               </span>
-              <span>تحویل سریع</span>
+              <span className="text-[11px] sm:text-xs font-bold text-foreground">تحویل سریع</span>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-secondary/70 px-3.5 py-1.5 text-xs font-medium text-foreground backdrop-blur-md">
-              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-white shadow-xs">
-                <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1.5 sm:gap-2 rounded-2xl border border-emerald-500/25 bg-secondary/60 p-2 sm:px-3 sm:py-2 text-center sm:text-right backdrop-blur-md">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-xs">
+                <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </span>
-              <span>ضمانت فعال‌سازی قانونی</span>
+              <span className="text-[11px] sm:text-xs font-bold text-foreground">ضمانت قانونی</span>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-secondary/70 px-3.5 py-1.5 text-xs font-medium text-foreground backdrop-blur-md">
-              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-linear-to-r from-purple-600 to-indigo-500 text-white shadow-xs">
-                <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1.5 sm:gap-2 rounded-2xl border border-purple-500/25 bg-secondary/60 p-2 sm:px-3 sm:py-2 text-center sm:text-right backdrop-blur-md">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-xl bg-linear-to-r from-purple-600 to-indigo-500 text-white shadow-xs">
+                <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5a9 9 0 0 1 18 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3" />
                   <path d="M21 16v2a3 3 0 0 1-3 3h-5" />
                 </svg>
               </span>
-              <span>پشتیبانی ۲۴ ساعته</span>
+              <span className="text-[11px] sm:text-xs font-bold text-foreground">پشتیبانی ۲۴ساعته</span>
             </div>
           </div>
         </div>
 
+        {/* Visual Showcase (Desktop) */}
         <div className="relative">
           {bannerLink ? (
             isExternal ? (
@@ -185,7 +189,6 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
                 href={bannerLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => onBannerClick(bannerLink)}
                 className="block cursor-pointer focus:outline-none"
               >
                 {imageElement}
@@ -203,17 +206,137 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
               <Link
                 to={internalPath as any}
                 preload="intent"
-                onClick={() => onBannerClick(internalPath)}
                 className="block cursor-pointer focus:outline-none"
               >
                 {imageElement}
               </Link>
             )
           ) : (
-            <div onClick={() => onBannerClick("banner_click")} className="cursor-pointer">
+            <div className="cursor-pointer">
               {imageElement}
             </div>
           )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Quick Access Bar (نوار دسترسی سریع - جدید)
+const QUICK_SERVICES = [
+  { slug: "chatgpt-plus", name: "ChatGPT Plus", icon: "/chatgpt-logo.svg", isSvg: true, target: "/products/chatgpt-plus" },
+  { slug: "claude", name: "Claude Pro", icon: "/claude-icon.webp", target: "/products/claude" },
+  { slug: "gemini-pro", name: "Gemini Pro", icon: "/gemini-pro-18m-icon.webp", target: "/products/gemini-pro" },
+  { slug: "telegram-premium", name: "تلگرام پرمیوم", icon: "/telegram-premium-icon.webp", target: "/products/telegram-premium" },
+  { slug: "telegram-stars", name: "استارز تلگرام", icon: "/telegram-stars-icon.webp", target: "/products/telegram-stars" },
+  { slug: "canva-pro", name: "کانوا پرو", icon: "/canva-pro-icon.webp", target: "/products/canva-pro" },
+  { slug: "vaich-life-planner", name: "پلنر گوگل‌شیت", icon: "/planner-cover.webp", target: "/products/vaich-life-planner" },
+];
+
+function QuickAccessBar() {
+  return (
+    <section aria-label="دسترسی سریع به سرویس‌ها" className="mx-auto max-w-6xl px-4 pt-3 pb-5 sm:px-6 sm:pt-4 sm:pb-7">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none snap-x snap-proximity justify-start sm:justify-center">
+        {QUICK_SERVICES.map((s) => (
+          <Link
+            key={s.slug}
+            to={s.target as any}
+            preload="intent"
+            className="group flex flex-col items-center gap-1.5 shrink-0 snap-start p-2 sm:px-3 sm:py-2.5 rounded-2xl border border-border/70 bg-card/60 hover:bg-card hover:border-primary/50 hover:shadow-md transition-all active:scale-95 focus:outline-none min-w-[78px] sm:min-w-[96px] text-center"
+          >
+            <div className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-secondary/80 border border-border/80 p-1.5 group-hover:scale-105 group-hover:border-primary/40 transition-transform">
+              <img
+                src={s.icon}
+                alt={s.name}
+                width={36}
+                height={36}
+                loading="lazy"
+                className="h-full w-full object-contain"
+              />
+            </div>
+            <span className="text-[11px] sm:text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate max-w-[84px] sm:max-w-[94px]">
+              {s.name}
+            </span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// Digital Planner Spotlight Showcase (حل مشکل فضای خالی ۵۰٪)
+function PlannerSpotlightSection({
+  row,
+  plannerProduct,
+}: {
+  row: ProductCategoryRow;
+  plannerProduct: Product;
+}) {
+  return (
+    <section id={row.id} className="relative scroll-mt-20 sm:scroll-mt-24 mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10">
+      <span id="planners" aria-hidden="true" className="absolute -top-24 pointer-events-none" />
+
+      {/* Header */}
+      <div className="mb-5">
+        <h2 className="text-lg sm:text-2xl font-black text-foreground flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-primary" />
+          <span>{row.title}</span>
+        </h2>
+        {row.subtitle && (
+          <p className="mt-1 text-xs sm:text-sm text-muted-foreground/90 font-medium">{row.subtitle}</p>
+        )}
+      </div>
+
+      {/* 2-Column Balanced Spotlight Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
+        {/* Right Column: Feature highlights and live capabilities */}
+        <div className="lg:col-span-7 flex flex-col justify-between rounded-3xl sm:rounded-4xl border border-border/80 bg-card/70 p-5 sm:p-7 shadow-xs">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-4">
+              <CheckCircle2 className="h-3.5 w-3.5" />
+              <span>دسترسی دائمی و مادام‌العمر (بدون نیاز به شارژ ماهانه)</span>
+            </div>
+
+            <h3 className="text-base sm:text-xl font-black text-foreground leading-snug">
+              پلنر هوشمند مدیریت سبک زندگی وایچ در Google Sheets
+            </h3>
+            <p className="mt-2.5 text-xs sm:text-sm text-muted-foreground leading-6 sm:leading-7 font-medium">
+              نرم‌افزار جامع و بومی برنامه‌ریزی شخصی، مدیریت مالی و پیگیری اهداف که روی موبایل، تبلت و کامپیوتر بدون نیاز به نصب هیچ برنامه اضافی اجرا می‌شود.
+            </p>
+
+            {/* Key feature pills */}
+            <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs font-bold text-foreground">
+              <div className="flex items-center gap-2 rounded-xl border border-border/60 bg-secondary/40 p-2.5">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">✓</span>
+                <span>ردیاب عادات ماهانه (Habit Tracker)</span>
+              </div>
+              <div className="flex items-center gap-2 rounded-xl border border-border/60 bg-secondary/40 p-2.5">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">✓</span>
+                <span>ماتریس آیزنهاور و Time Boxing</span>
+              </div>
+              <div className="flex items-center gap-2 rounded-xl border border-border/60 bg-secondary/40 p-2.5">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">✓</span>
+                <span>داشبورد جامع مالی و کنترل هزینه‌ها</span>
+              </div>
+              <div className="flex items-center gap-2 rounded-xl border border-border/60 bg-secondary/40 p-2.5">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">✓</span>
+                <span>دارای ۲ تم اختصاصی ۲ بعدی و ۳ بعدی</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-border/50 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
+            <span>سازگار با: گوشی‌های اندروید، آیفون، مک و ویندوز</span>
+            <Link to="/products/vaich-life-planner" className="text-primary font-bold hover:underline inline-flex items-center gap-1">
+              <span>مشاهده جزئیات کامل پلنر</span>
+              <ArrowLeft className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Left Column: Official Product Card */}
+        <div className="lg:col-span-5 flex justify-center">
+          <ProductCard product={plannerProduct} className="w-full max-w-[340px] sm:max-w-[360px]" />
         </div>
       </div>
     </section>
@@ -265,35 +388,37 @@ function ProductRowSection({
 
   if (products.length === 0) return null;
 
+  // حل مشکل فضای خالی پلنر: اگر ردیف پلنر باشد و ۱ محصول داشته باشد
+  if ((row.id === "row-mvampt3r" || row.title.includes("پلنر")) && products.length === 1) {
+    return <PlannerSpotlightSection row={row} plannerProduct={products[0]} />;
+  }
+
   return (
     <section
       id={row.id}
       style={deferPaint ? { contentVisibility: "auto", containIntrinsicSize: "380px" } : undefined}
       className="relative scroll-mt-20 sm:scroll-mt-24 mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10"
     >
-      {(row.id === "row-mvampt3r" || row.title.includes("پلنر")) && (
-        <span id="planners" aria-hidden="true" className="absolute -top-24 pointer-events-none" />
-      )}
       {/* Title & Navigation Arrows Header */}
-      <div className="flex items-center justify-between gap-3 mb-3">
+      <div className="flex items-center justify-between gap-3 mb-3 sm:mb-4">
         <div>
           <h2 className="text-lg sm:text-2xl font-black text-foreground flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-primary" />
             <span>{row.title}</span>
           </h2>
           {row.subtitle && (
-            <p className="mt-0.5 text-[11px] sm:text-xs text-muted-foreground">{row.subtitle}</p>
+            <p className="mt-0.5 text-[11px] sm:text-xs text-muted-foreground font-medium">{row.subtitle}</p>
           )}
         </div>
 
-        {layout !== "grid" && products.length >= 4 && (
+        {layout !== "grid" && products.length >= 3 && (
           <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={() => scrollCarousel("right")}
               aria-label="محصول قبلی"
               title="مشاهده موارد قبلی"
-              className="grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-xl border border-purple-500/40 bg-card/90 text-purple-600 dark:text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)] transition-all hover:border-purple-500 hover:bg-purple-500/10 active:scale-95"
+              className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl border border-purple-500/40 bg-card/90 text-purple-600 dark:text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.2)] transition-all hover:border-purple-500 hover:bg-purple-500/10 active:scale-95"
             >
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="m9 18 6-6-6-6" strokeLinecap="round" strokeLinejoin="round"/>
@@ -304,7 +429,7 @@ function ProductRowSection({
               onClick={() => scrollCarousel("left")}
               aria-label="محصول بعدی"
               title="مشاهده موارد بعدی"
-              className="grid h-10 w-10 sm:h-11 sm:w-11 place-items-center rounded-xl border border-purple-500/40 bg-card/90 text-purple-600 dark:text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)] transition-all hover:border-purple-500 hover:bg-purple-500/10 active:scale-95"
+              className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-xl border border-purple-500/40 bg-card/90 text-purple-600 dark:text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.2)] transition-all hover:border-purple-500 hover:bg-purple-500/10 active:scale-95"
             >
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
@@ -315,7 +440,7 @@ function ProductRowSection({
       </div>
 
       <div className="relative">
-        {/* 1-Row Carousel */}
+        {/* 1-Row Carousel with mobile peek */}
         {layout === "1-row" && (
           <div
             ref={carouselRef}
@@ -324,7 +449,7 @@ function ProductRowSection({
             onTouchStart={markInteracted}
             onWheel={markInteracted}
             style={{ overflowAnchor: "none", WebkitOverflowScrolling: "touch" }}
-            className="flex gap-3 sm:gap-6 overflow-x-auto snap-x snap-proximity py-2 scrollbar-none overscroll-x-contain"
+            className="flex gap-3 sm:gap-5 overflow-x-auto snap-x snap-proximity py-2 scrollbar-none overscroll-x-contain"
           >
             {products.map((p) => (
               <ProductCard key={p.slug} product={p} />
@@ -341,7 +466,7 @@ function ProductRowSection({
             onTouchStart={markInteracted}
             onWheel={markInteracted}
             style={{ overflowAnchor: "none", WebkitOverflowScrolling: "touch" }}
-            className="grid grid-rows-2 grid-flow-col auto-cols-[185px] xs:auto-cols-[210px] sm:auto-cols-[285px] gap-3 sm:gap-6 overflow-x-auto snap-x snap-proximity py-2 scrollbar-none overscroll-x-contain"
+            className="grid grid-rows-2 grid-flow-col auto-cols-[185px] xs:auto-cols-[210px] sm:auto-cols-[285px] gap-3 sm:gap-5 overflow-x-auto snap-x snap-proximity py-2 scrollbar-none overscroll-x-contain"
           >
             {products.map((p) => (
               <ProductCard key={p.slug} product={p} />
@@ -351,7 +476,7 @@ function ProductRowSection({
 
         {/* Grid View */}
         {layout === "grid" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 py-2 justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 py-2 justify-items-center">
             {products.map((p) => (
               <ProductCard key={p.slug} product={p} className="w-full max-w-[320px]" />
             ))}
@@ -379,7 +504,7 @@ function Home() {
     };
   }, []);
 
-  // Ensure homepage always opens cleanly at the top and clean any leftover planner hash from previous sessions
+  // Ensure homepage always opens cleanly at the top
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (window.location.hash && window.location.hash.includes("planner")) {
@@ -402,13 +527,35 @@ function Home() {
     );
   }, [products, searchQuery]);
 
-  // Effective rows: if searching, show single search results section; otherwise render custom category rows
+  // Sort rows strictly according to user-requested order:
+  // 1. AI Subscriptions ('ai')
+  // 2. Premium Apps ('premium-apps')
+  // 3. Digital Planners ('row-mvampt3r')
+  const sortedRows = useMemo(() => {
+    const orderPriority: Record<string, number> = {
+      ai: 1,
+      "premium-apps": 2,
+      "row-mvampt3r": 3,
+    };
+    return [...rows].sort((a, b) => {
+      const prioA = orderPriority[a.id] ?? 99;
+      const prioB = orderPriority[b.id] ?? 99;
+      return prioA - prioB;
+    });
+  }, [rows]);
+
   const isSearching = Boolean(searchQuery.trim());
 
   return (
     <>
+      {/* 1. Header (Sticky in layout) */}
+      {/* 2. Hero Section (Compact & High Impact) */}
       <Hero promoBanner={promoBanner} />
 
+      {/* 3. Quick Access Bar (نوار دسترسی سریع - جدید) */}
+      {!isSearching && <QuickAccessBar />}
+
+      {/* Product Rows / Search Results */}
       {isSearching ? (
         <Section
           id="search-results"
@@ -430,8 +577,8 @@ function Home() {
           )}
         </Section>
       ) : (
-        rows.map((row, index) => {
-          // If product categoryId matches, or for the first row, products without categoryId
+        /* 4. AI Subscriptions, 5. Premium Apps, 6. Digital Planners */
+        sortedRows.map((row, index) => {
           const rowProducts = filteredProducts.filter((p) =>
             p.categoryId ? p.categoryId === row.id : index === 0
           );
@@ -447,48 +594,33 @@ function Home() {
         })
       )}
 
-      {/* اسلایدر مجله و مقالات بلافاصله بعد از آخرین ردیف محصولات */}
+      {/* 7. How to Buy in 3 Steps (نحوه خرید در ۳ مرحله) */}
+      <Suspense fallback={<div className="h-16 py-4" />}>
+        <HowItWorks />
+      </Suspense>
+
+      {/* 8. Why VAICH (چرا وایچ) */}
+      <Suspense fallback={<div className="h-16 py-4" />}>
+        <Features />
+      </Suspense>
+
+      {/* 9. Customer Reviews & Trust Stats (نظرات مشتریان و آمار اعتماد) */}
+      <Suspense fallback={<div className="h-16 py-4" />}>
+        <Trust />
+      </Suspense>
+
+      {/* 10. FAQ (سوالات متداول) */}
+      <Suspense fallback={<div className="h-16 py-4" />}>
+        <Faq />
+      </Suspense>
+
+      {/* 11. Magazine & Articles (مجله و مقالات تخصصی) */}
       <BlogSection />
 
-      {/* Below-the-fold landing sections mounted on idle */}
-      <BelowFoldSections />
+      {/* 12. Support CTA */}
+      <Suspense fallback={<div className="h-16 py-4" />}>
+        <SupportCta />
+      </Suspense>
     </>
-  );
-}
-
-function BelowFoldSections() {
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (window.location.hash === "#blog" || window.location.hash.includes("blog")) {
-      setShow(true);
-      setTimeout(() => {
-        const el = document.getElementById("blog");
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-      return;
-    }
-    if ("requestIdleCallback" in window) {
-      const id = (window as any).requestIdleCallback(() => setShow(true), { timeout: 3500 });
-      return () => (window as any).cancelIdleCallback?.(id);
-    } else {
-      const t = setTimeout(() => setShow(true), 1500);
-      return () => clearTimeout(t);
-    }
-  }, []);
-
-  if (!show) {
-    return <div className="h-16 py-4" />;
-  }
-
-  return (
-    <Suspense fallback={<div className="h-16 py-4" />}>
-      <Features />
-      <HowItWorks />
-      <Trust />
-      <Faq />
-      <SupportCta />
-    </Suspense>
   );
 }

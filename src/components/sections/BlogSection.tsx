@@ -178,12 +178,12 @@ export function BlogSection() {
               className="group relative w-full shrink-0 grid grid-cols-1 md:grid-cols-12 items-stretch"
             >
               {/* تصویر کاور داخل باکس */}
-              <div className="relative md:col-span-5 aspect-[16/10] md:aspect-auto md:min-h-[270px] overflow-hidden bg-neutral-950">
+              <div className="relative md:col-span-5 aspect-16/10 md:aspect-auto md:min-h-[210px] overflow-hidden bg-neutral-950">
                 <img
                   src={post.coverImage.includes("?") ? post.coverImage : `${post.coverImage}?v=20261113`}
                   alt={post.title}
-                  width={800}
-                  height={500}
+                  width={600}
+                  height={375}
                   loading={idx === 0 ? "eager" : "lazy"}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   onError={(e) => {
@@ -204,8 +204,8 @@ export function BlogSection() {
               </div>
 
               {/* محتوای مقاله داخل باکس */}
-              <div className="md:col-span-7 flex flex-col justify-between gap-4 p-5 sm:p-7 lg:p-8">
-                <div className="space-y-3">
+              <div className="md:col-span-7 flex flex-col justify-between gap-3 p-4 sm:p-6">
+                <div className="space-y-2.5">
                   <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
                     <span className="inline-flex items-center gap-1 font-medium">
                       <Clock className="h-3.5 w-3.5 text-primary/80" />
@@ -215,7 +215,7 @@ export function BlogSection() {
                     <span>{post.date}</span>
                   </div>
 
-                  <h3 className="text-base sm:text-xl font-black leading-snug text-foreground">
+                  <h3 className="text-sm sm:text-lg font-black leading-snug text-foreground">
                     <Link
                       to="/blog/$slug"
                       params={{ slug: post.slug }}
@@ -226,19 +226,19 @@ export function BlogSection() {
                     </Link>
                   </h3>
 
-                  <p className="text-xs sm:text-sm text-muted-foreground leading-6 sm:leading-7 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-muted-foreground/90 leading-6 line-clamp-2">
                     {post.excerpt}
                   </p>
                 </div>
 
-                <div className="pt-3 border-t border-border/50 flex items-center justify-between gap-3">
+                <div className="pt-2.5 border-t border-border/50 flex items-center justify-between gap-3">
                   <Link
                     to="/blog/$slug"
                     params={{ slug: post.slug }}
                     preload="intent"
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow-sm shadow-primary/20 transition-all hover:opacity-90 active:scale-95"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-xs font-bold text-primary-foreground shadow-sm shadow-primary/20 transition-all hover:opacity-90 active:scale-95"
                   >
-                    <span>مطالعه کامل مقاله</span>
+                    <span>مطالعه مقاله</span>
                     <ArrowLeft className="h-3.5 w-3.5" />
                   </Link>
 

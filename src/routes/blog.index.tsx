@@ -14,10 +14,17 @@ type BlogSearch = {
 
 export const Route = createFileRoute("/blog/")({
   validateSearch: (search: Record<string, unknown>): BlogSearch => {
+    const rawPage = Number(search.page);
+    const validPage = Number.isInteger(rawPage) && rawPage > 1 ? rawPage : undefined;
+    const cat = typeof search.category === "string" && search.category.trim() && search.category !== "همه"
+      ? search.category.trim()
+      : undefined;
+    const query = typeof search.q === "string" && search.q.trim() ? search.q.trim() : undefined;
+
     return {
-      page: Number(search.page) || 1,
-      category: typeof search.category === "string" ? search.category : undefined,
-      q: typeof search.q === "string" ? search.q : undefined,
+      ...(validPage ? { page: validPage } : {}),
+      ...(cat ? { category: cat } : {}),
+      ...(query ? { q: query } : {}),
     };
   },
   head: () => ({
@@ -130,7 +137,7 @@ function BlogArchivePage() {
     navigate({
       search: (prev) => ({
         ...prev,
-        page: 1,
+        page: undefined,
         q: searchInput.trim() || undefined,
       }),
     });
@@ -140,7 +147,7 @@ function BlogArchivePage() {
     navigate({
       search: (prev) => ({
         ...prev,
-        page: 1,
+        page: undefined,
         category: cat === "همه" ? undefined : cat,
       }),
     });
@@ -334,7 +341,7 @@ function BlogArchivePage() {
             {currentPage > 1 ? (
               <Link
                 to="/blog"
-                search={{ page: currentPage - 1, category, q }}
+                search={{ page: currentPage - 1 > 1 ? currentPage - 1 : undefined, category, q }}
                 className="flex items-center gap-1 rounded-xl border border-border/80 bg-secondary/50 px-3 py-2 text-xs font-bold text-foreground hover:bg-secondary transition-colors"
                 aria-label="صفحه قبلی"
               >
@@ -350,7 +357,7 @@ function BlogArchivePage() {
                 <Link
                   key={pNum}
                   to="/blog"
-                  search={{ page: pNum, category, q }}
+                  search={{ page: pNum > 1 ? pNum : undefined, category, q }}
                   className={cn(
                     "grid h-9 w-9 place-items-center rounded-xl text-xs font-bold transition-all",
                     isCurrent

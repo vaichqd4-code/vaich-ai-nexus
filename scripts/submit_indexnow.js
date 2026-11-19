@@ -8,7 +8,7 @@ fs.writeFileSync(`public/${KEY}.txt`, KEY, "utf8");
 console.log(`Created public/${KEY}.txt for IndexNow verification.`);
 
 const urlList = [
-  "https://vaich.ir/",
+  "https://vaich.ir",
   "https://vaich.ir/products",
   "https://vaich.ir/products/telegram-premium",
   "https://vaich.ir/products/telegram-stars",
@@ -18,14 +18,6 @@ const urlList = [
   "https://vaich.ir/products/claude",
   "https://vaich.ir/products/gemini-pro",
   "https://vaich.ir/products/gemini",
-  "https://vaich.ir/checkout/telegram-premium",
-  "https://vaich.ir/checkout/telegram-stars",
-  "https://vaich.ir/checkout/canva-pro",
-  "https://vaich.ir/checkout/vaich-life-planner",
-  "https://vaich.ir/checkout/chatgpt-plus",
-  "https://vaich.ir/checkout/claude",
-  "https://vaich.ir/checkout/gemini-pro",
-  "https://vaich.ir/checkout/gemini",
   "https://vaich.ir/blog",
   "https://vaich.ir/blog/flagship-ai-models-comparison",
   "https://vaich.ir/blog/ai-free-vs-plus-comparison",
@@ -36,6 +28,7 @@ const urlList = [
   "https://vaich.ir/blog/daily-motivational-habits-powerful-routine",
   "https://vaich.ir/blog/habit-tracking-time-management-guide",
   "https://vaich.ir/blog/ai-tools-productivity-study-guide",
+  "https://vaich.ir/blog/prevent-chatgpt-claude-account-ban",
   "https://vaich.ir/why",
   "https://vaich.ir/faq",
   "https://vaich.ir/support",

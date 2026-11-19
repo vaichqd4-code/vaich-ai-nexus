@@ -23,6 +23,103 @@ const GEMINI_MODELS = [
 let cachedLiveConfig: any = null;
 let lastLiveConfigReadTime = 0;
 
+// نگهداری لاگ فعالیت کاربران در حافظه و ثبت تاریخچه تعاملات جهت ارائه گزارش و بریف روزانه به مدیریت
+interface UserActivityEntry {
+  id: string;
+  time: string;
+  timestamp: number;
+  chatId: number | string;
+  username?: string;
+  firstName?: string;
+  type: "text" | "voice" | "photo" | "command";
+  content: string;
+  responseSummary?: string;
+}
+
+function generateActivityReport(): string {
+  const total = recentActivityLogs.length;
+  if (total === 0) {
+    return "📊 <b>گزارش فعالیت کاربران ربات وایچ:</b>\n\nهنوز فعالیتی در حافظه ثبت نشده است.";
+  }
+
+  const uniqueUsers = new Set(recentActivityLogs.map((l) => String(l.chatId))).size;
+  const photoCount = recentActivityLogs.filter((l) => l.type === "photo").length;
+  const voiceCount = recentActivityLogs.filter((l) => l.type === "voice").length;
+  const textCount = recentActivityLogs.filter((l) => l.type === "text").length;
+
+  const recentList = recentActivityLogs.slice(0, 8).map((l, i) => {
+    const userLabel = l.username ? `@${l.username}` : l.firstName || "کاربر";
+    const snippet = l.content.length > 50 ? l.content.slice(0, 48) + "..." : l.content;
+    return `${i + 1}. [${l.time}] <b>${userLabel}</b> (${l.type}):\n   «${snippet}»`;
+  }).join("\n\n");
+
+  return `📊 <b>گزارش دقیق فعالیت کاربران وایچ (VAICH):</b>
+
+👥 <b>تعداد کل پیام‌ها:</b> ${total} پیام
+👤 <b>کاربران منحصربه‌فرد:</b> ${uniqueUsers} نفر
+💬 <b>پیام‌های متنی:</b> ${textCount}
+📸 <b>تصاویر و فیش‌ها:</b> ${photoCount}
+🎙 <b>پیام‌های صوتی:</b> ${voiceCount}
+
+📋 <b>آخرین تعاملات کاربران:</b>
+${recentList}
+
+💡 جهت دریافت بریف هوشمند تحلیلی، دستور <code>/brief</code> را ارسال فرمایید.`;
+}
+
+async function generateDailyBrief(): Promise<string> {
+  const total = recentActivityLogs.length;
+  if (total === 0) {
+    return "📑 <b>بریف روزانه پشتیبانی وایچ:</b>\n\nامروز هنوز گفتگوی فعالی ثبت نشده است.";
+  }
+
+  const sampleLogs = recentActivityLogs.slice(0, 25).map((l) =>
+    `[${l.time}] کاربر ${l.firstName || ""} (@${l.username || "ندارد"}): ${l.content} -> پاسخ داده شد: ${l.responseSummary || ""}`
+  ).join("\n");
+
+  const prompt = `شما تحلیلگر فروش و پشتیبانی فروشگاه اینترنتی VAICH (اشتراک‌های هوش مصنوعی، تلگرام پرمیوم، استارز و پلنر دیجیتال) هستید.
+بر اساس لاگ تعاملات اخیر کاربران در تلگرام، یک «بریف روزانه مدیریتی جامع، دقیق و اجرایی» برای آقای یونس حیاتی (مدیر وایچ) بنویسید.
+
+لاگ تعاملات اخیر:
+${sampleLogs}
+
+ساختار بریف:
+۱. خلاصه وضعیت تعاملات و روحیه کلی مراجعین
+۲. بیشترین موضوعات و محصولات استعلام‌شده (مثلاً تلگرام پرمیوم، استارز، ChatGPT، جمینای، پلنر)
+۳. سوالات یا مواردی که منجر به خرید شده یا ابهامی برای مشتریان وجود داشته (مانند روش فعال‌سازی، قیمت‌ها، روش پرداخت)
+۴. پیشنهادات کاربردی و فوری به مدیریت جهت افزایش فروش و رفع ابهام مشتریان`;
+
+  const contents = [{ role: "user" as const, parts: [{ text: prompt }] }];
+  const briefText = await callGeminiApi(contents, "شما دستیار ارشد هوش مصنوعی و تحلیلگر عملکرد کسب‌وکار فروشگاه وایچ هستید. گزارش را کاملاً مرتب، با ایموجی، سرفصل‌بندی دقیق و زبان فارسی روان بنویسید.");
+
+  return `📑 <b>بریف تحلیلی و روزانه مدیریت وایچ (VAICH.ir):</b>\n\n${briefText}`;
+}
+
+function logUserActivity(entry: Omit<UserActivityEntry, "id" | "time" | "timestamp">) {
+  const now = new Date();
+  const timeStr = new Intl.DateTimeFormat("fa-IR", {
+    timeZone: "Asia/Tehran",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+
+  const fullEntry: UserActivityEntry = {
+    id: `act-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    time: timeStr,
+    timestamp: Date.now(),
+    ...entry,
+  };
+
+  recentActivityLogs.unshift(fullEntry);
+  if (recentActivityLogs.length > 250) {
+    recentActivityLogs.pop();
+  }
+}
+
 /**
  * خواندن زنده‌ی کاتالوگ، قیمت‌ها و وضعیت موجودی محصولات از public/site-config.json
  */
@@ -106,31 +203,40 @@ function getLiveSiteCatalogContext(): string {
 function buildSystemPrompt(userName?: string): string {
   const catalog = getLiveSiteCatalogContext();
   const nameDirective = userName
-    ? `نام مخاطب در تلگرام: «${userName}» است. می‌توانید با احترام ایشان را صدا بزنید.`
-    : `نام مخاطب مشخص نیست؛ با احترام عمومی (دوست گرامی، کاربر عزیز) صحبت کنید.`;
+    ? `نام مخاطب در تلگرام: «${userName}» است.`
+    : `نام مخاطب در تلگرام مشخص نیست.`;
 
   return `شما «دستیار هوشمند، بسیار صمیمی، دلسوز و رسمی پشتیبانی فروشگاه اینترنتی وایچ (VAICH.ir)» هستید.
-ماموریت شما: پاسخگویی سریع، مشاوره‌ای، دقیق و باحوصله به تمامی مشتریان، کاربران و خریداران سایت درباره کلیه محصولات دیجیتال، پلنر هوشمند گوگل‌شیت، اشتراک‌های هوش مصنوعی، قیمت‌ها و راهنمای ثبت سفارش.
+ماموریت شما: پاسخگویی سریع، مشاوره‌ای، دقیق و باحوصله به تمامی مشتریان و خریداران سایت درباره کلیه محصولات دیجیتال، اشتراک‌های هوش مصنوعی، تلگرام پرمیوم، استارز تلگرام، کانوا پرو، پلنر هوشمند گوگل‌شیت، قیمت‌ها و راهنمای ثبت سفارش.
 
 ${nameDirective}
 
-قوانین کلیدی پاسخگویی به مشتریان:
-۱. پاسخگویی دقیق و بدون قالب آماده:
-   - به سوالات مشتری با روی باز و تسلط کامل پاسخ بده. به هیچ وجه از پاسخ‌های کلیشه‌ای کپی‌پیس یا بی‌ربط استفاده نکن.
-   - اگر مشتری درباره ابزارهایی پرسید که فعلاً در سایت موجود نیستند (مانند Grok - گراک، میدجورنی، پرپلکسیتی، سورا و...):
-     با کمال ادب بگو این اشتراک در حال حاضر در سبد محصولات سایت موجود نیست اما تقاضای ایشان ثبت شد، و برای بررسی امکان تهیه اختصاصی یا رزرو سفارشی می‌توانند مستقیماً به تلگرام مدیریت (@youneshayati) پیام دهند. سپس اشتراک‌های پرچمدار موجود (ChatGPT Plus، Gemini Pro و Claude Pro) را متناسب با نیازشان پیشنهاد کن.
+قوانین بسیار مهم و الزامی پاسخگویی:
 
-۲. وضعیت موجودی محصولات سایت:
+۱. قانون قطعی احوالپرسی و پاسخ مستقیم (بسیار مهم - جلوگیری از سلام‌های تکراری):
+   - فقط و فقط زمانی که پیام مخاطب حاوی سلام، درود، وقت بخیر، صبح بخیر، عصر بخیر، چطوری یا آغاز مکالمه باشد، در ابتدای پیامت خیلی کوتاه و مؤدبانه احوالپرسی کن.
+   - اگر مخاطب بدون سلام سوالی پرسید، درخواستی داشت یا استعلام قیمت گرفت (مثلاً نوشت: «قیمت استارز چنده؟»، «اکانت گراک موجود شد؟»، «فرق پلن‌ها چیه؟»، «تلگرام پرمیوم گیفتی چجوریه؟»)، اکیداً و تحت هیچ شرایطی در اول پیامت سلام، احوالپرسی، تعارفات یا جملات تشریفاتی نیاور! بلافاصله و مستقیماً برو سراغ پاسخ کامل و دقیق به همان سوال یا درخواست مخاطب.
+   - از پرگویی، تشریفات زائد و تکرار نام در هر پیام خودداری کن. پاسخ‌ها باید مختصر، دقیق، کاربردی و کاملاً بجا باشند.
+
+۲. پاسخگویی هوشمند و بدون قالب‌های کلیشه‌ای:
+   - به سوالات مشتری با تسلط کامل پاسخ بده. به هیچ وجه از پاسخ‌های تکراری کپی‌پیس یا بی‌ربط استفاده نکن.
+   - اگر مشتری درباره ابزارهایی پرسید که فعلاً در سایت موجود نیستند (مانند Grok - گراک، میدجورنی، پرپلکسیتی، سورا و...): با کمال ادب بگو این سرویس در حال حاضر در سبد محصولات سایت موجود نیست اما تقاضای ایشان ثبت شد، و برای بررسی امکان تهیه اختصاصی یا رزرو سفارشی می‌توانند مستقیماً به تلگرام مدیریت (@youneshayati) پیام دهند. سپس سرویس‌های پرچمدار و مرتبط موجود را متناسب با نیازشان پیشنهاد کن.
+
+۳. وضعیت محصولات و کاتالوگ فروشگاه:
+   - قیمت‌ها، پلن‌ها، تخفیف‌ها و وضعیت موجودی را مستقیماً از بخش «اطلاعات زنده کاتالوگ فروشگاه» در انتهای همین دستورالعمل بخوان و ارائه بده.
+   - تلگرام پرمیوم: فعال‌سازی ۱۰۰٪ قانونی گیفتی صرفاً با آیدی (@Username) بدون نیاز به رمز یا ورود به اکانت (پلن‌های ۱، ۳، ۶ و ۱۲ ماهه).
+   - استارز تلگرام: شارژ سریع و مستقیم با آیدی (@Username) بدون نیاز به پسورد، از ۱۰۰ تا ۱۰,۰۰۰ استارز.
+   - کانوا پرو: دعوت تیمی رسمی روی ایمیل شخصی کاربر بدون رمز با دسترسی به Magic Studio و فونت فارسی.
    - پلن ۱۸ ماهه جمینای پرو (۶۹۰,۰۰۰ تومان): در حال حاضر 🔴 ناموجود است (ظرفیت تکمیل شده). صراحتاً بگو تکمیل ظرفیت است و پلن ۶۰ روزه موجود است یا برای رزرو دوره بعد به @youneshayati پیام دهند.
-   - پلن ۶۰ روزه جمینای: 🟢 موجود و فعال است (۳۲۰,۰۰۰ تومان) همراه با دسترسی به مدل‌های هیدروژن و آرگون نسل ۴، Google Antigravity IDE، گوگل استودیو و Google Flow با ۱۰۰۰ کردیت ویدیو.
-   - چت جی پی تی پلاس قانونی: 🟢 موجود و فعال است (۱,۷۹۰,۰۰۰ تومان).
+   - پلن ۶۰ روزه جمینای: 🟢 موجود و فعال است همراه با دسترسی به مدل‌های هیدروژن و آرگون نسل ۴، Google Antigravity IDE، گوگل استودیو و Google Flow با ۱۰۰۰ کردیت ویدیو.
+   - چت جی پی تی پلاس قانونی: 🟢 موجود و فعال است.
    - پلنر هوشمند Google Sheets: 🟢 موجود و لایف‌تایم با تخفیف ویژه (۲۹۹,۰۰۰ تومان).
 
-۳. روش‌های پرداخت:
+۴. روش‌های پرداخت:
    - هم خرید آنلاین از سایت (https://vaich.ir) و هم پرداخت کارت‌به‌کارت امکان‌پذیر است.
    - برای کارت‌به‌کارت: شماره کارت را از مدیریت (@youneshayati) دریافت کنند یا پس از واریز، عکس فیش را مستقیماً در همین ربات ارسال نمایند تا بررسی و تایید شود.
 
-۴. اطلاعات مدیریت و تماس:
+۵. اطلاعات مدیریت و تماس:
    - آیدی تلگرام مدیریت و فروش: @youneshayati
    - شماره تماس و واتساپ: 09193872172
    - ساعات پاسخگویی پشتیبانی انسانی: همه‌روزه از ساعت ۱۴:۰۰ الی ۲۲:۰۰
@@ -287,12 +393,30 @@ function getMainReplyKeyboard() {
 export const Route = createFileRoute("/api/telegram-webhook")({
   server: {
     handlers: {
-      GET: async () => {
+      GET: async ({ request }) => {
+        const url = new URL(request.url);
+        const action = url.searchParams.get("action");
+        if (action === "report") {
+          return Response.json({
+            ok: true,
+            totalLogs: recentActivityLogs.length,
+            report: generateActivityReport(),
+            logs: recentActivityLogs.slice(0, 50),
+          });
+        }
+        if (action === "daily_brief") {
+          const brief = await generateDailyBrief();
+          if (savedAdminChatId) {
+            await sendTelegramMessage(savedAdminChatId, brief);
+          }
+          return Response.json({ ok: true, brief, sentToAdmin: Boolean(savedAdminChatId) });
+        }
         return Response.json({
           status: "active",
           service: "VAICH Telegram Cloud AI Support Bot",
           engine: "Google AI Studio (Gemini Flash Cloud Edge)",
           webhook: "https://vaich.ir/api/telegram-webhook",
+          totalActivitiesLogged: recentActivityLogs.length,
         });
       },
 
@@ -312,6 +436,46 @@ export const Route = createFileRoute("/api/telegram-webhook")({
           const messageId = message.message_id;
           const rawText = (message.text || message.caption || "").trim();
           const senderName = message.from?.first_name || "";
+          const senderUsername = message.from?.username || "";
+
+          // ثبت خودکار شناسه مدیریت در صورت پیام مستقیم @youneshayati
+          if (senderUsername.toLowerCase() === "youneshayati" && !savedAdminChatId) {
+            savedAdminChatId = chatId;
+          }
+
+          // دستورات اختصاصی مدیریت و گزارش‌گیری
+          if (rawText === "/setadmin") {
+            savedAdminChatId = chatId;
+            await sendTelegramMessage(
+              chatId,
+              "✅ <b>تنظیمات مدیریت ثبت شد.</b>\nشناسه کاربری شما ثبت گردید. از این پس گزارش‌ها و بریف‌های روزانه به این چت ارسال می‌شود.",
+              getMainReplyKeyboard(),
+              messageId,
+            );
+            return Response.json({ ok: true });
+          }
+
+          if (
+            rawText === "/report" ||
+            rawText === "/stats" ||
+            rawText === "گزارش فعالیت" ||
+            rawText === "/activity"
+          ) {
+            const report = generateActivityReport();
+            await sendTelegramMessage(chatId, report, getMainReplyKeyboard(), messageId);
+            return Response.json({ ok: true });
+          }
+
+          if (
+            rawText === "/brief" ||
+            rawText === "بریف روزانه" ||
+            rawText.startsWith("/brief")
+          ) {
+            await sendChatAction(chatId, "typing");
+            const brief = await generateDailyBrief();
+            await sendTelegramMessage(chatId, brief, getMainReplyKeyboard(), messageId);
+            return Response.json({ ok: true });
+          }
 
           // ۱. مسدودسازی ویدیوهای سنگین
           if (message.video || message.video_note) {
@@ -329,8 +493,9 @@ export const Route = createFileRoute("/api/telegram-webhook")({
             const welcome = `سلام ${senderName || "دوست"} عزیز! به پشتیبانی رسمی فروشگاه اینترنتی <b>وایچ (VAICH.ir)</b> خوش آمدید. 👋
 
 من دستیار هوشمند و ۲۴ ساعته فروشگاه هستم. در تمامی زمینه‌های زیر در خدمت شما هستم:
-🔹 <b>پلنر هوشمند مدیریت زندگی گوگل‌شیت</b> (دائمی، بدون نیاز به شارژ ماهانه)
 🔹 <b>اشتراک‌های قانونی هوش مصنوعی</b> (ChatGPT Plus، Gemini Pro، Claude Pro)
+🔹 <b>اشتراک‌های پرمیوم</b> (تلگرام پرمیوم گیفتی، استارز تلگرام، کانوا پرو)
+🔹 <b>پلنر هوشمند مدیریت زندگی گوگل‌شیت</b> (دائمی، بدون نیاز به شارژ ماهانه)
 🔹 <b>استعلام قیمت‌های روز، موجودی و مشاوره خرید</b>
 🔹 <b>راهنمای ثبت سفارش، پرداخت کارت‌به‌کارت و تایید فوری فیش</b>
 
@@ -340,6 +505,14 @@ export const Route = createFileRoute("/api/telegram-webhook")({
 ⏰ ساعات پاسخگویی پشتیبانی انسانی: همه‌روزه از ساعت ۱۴:۰۰ الی ۲۲:۰۰`;
 
             await sendTelegramMessage(chatId, welcome, getMainReplyKeyboard(), messageId);
+            logUserActivity({
+              chatId,
+              username: senderUsername,
+              firstName: senderName,
+              type: "command",
+              content: "/start",
+              responseSummary: "ارسال پیام خوش‌آمدگویی",
+            });
             return Response.json({ ok: true });
           }
 
@@ -426,6 +599,14 @@ export const Route = createFileRoute("/api/telegram-webhook")({
 
             const reply = await callGeminiApi(contents, buildSystemPrompt(senderName));
             await sendTelegramMessage(chatId, reply, getMainReplyKeyboard(), messageId);
+            logUserActivity({
+              chatId,
+              username: senderUsername,
+              firstName: senderName,
+              type: "photo",
+              content: rawText || "ارسال تصویر / فیش واریز",
+              responseSummary: reply.slice(0, 100),
+            });
             return Response.json({ ok: true });
           }
 
@@ -448,6 +629,14 @@ export const Route = createFileRoute("/api/telegram-webhook")({
 
             const reply = await callGeminiApi(contents, buildSystemPrompt(senderName));
             await sendTelegramMessage(chatId, reply, getMainReplyKeyboard(), messageId);
+            logUserActivity({
+              chatId,
+              username: senderUsername,
+              firstName: senderName,
+              type: "voice",
+              content: "ارسال ویس صوتی (Voice)",
+              responseSummary: reply.slice(0, 100),
+            });
             return Response.json({ ok: true });
           }
 
@@ -463,6 +652,14 @@ export const Route = createFileRoute("/api/telegram-webhook")({
 
             const reply = await callGeminiApi(contents, buildSystemPrompt(senderName));
             await sendTelegramMessage(chatId, reply, getMainReplyKeyboard(), messageId);
+            logUserActivity({
+              chatId,
+              username: senderUsername,
+              firstName: senderName,
+              type: "text",
+              content: rawText,
+              responseSummary: reply.slice(0, 100),
+            });
             return Response.json({ ok: true });
           }
 

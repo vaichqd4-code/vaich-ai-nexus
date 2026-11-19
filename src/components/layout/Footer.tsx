@@ -13,17 +13,20 @@ const navigationColumns = [
   {
     title: "محصولات و اشتراک‌ها",
     links: [
-      { to: "/products/vaich-life-planner", label: "خرید پلنر دیجیتال هوشمند" },
-      { to: "/products/gemini-pro", label: "خرید اشتراک Gemini Pro ۱۸ ماهه" },
-      { to: "/products/gemini", label: "خرید اشتراک Gemini Pro ۶۰ روزه" },
+      { to: "/products/telegram-premium", label: "خرید اشتراک تلگرام پرمیوم" },
+      { to: "/products/telegram-stars", label: "خرید استارز تلگرام فوری" },
+      { to: "/products/canva-pro", label: "خرید اشتراک کانوا پرو (Canva Pro)" },
       { to: "/products/chatgpt-plus", label: "خرید اکانت قانونی ChatGPT Plus" },
       { to: "/products/claude", label: "خرید اکانت قانونی Claude Pro" },
+      { to: "/products/gemini-pro", label: "خرید اشتراک Gemini Pro ۱۸ ماهه" },
+      { to: "/products/vaich-life-planner", label: "خرید پلنر دیجیتال هوشمند" },
     ],
   },
   {
     title: "دسترسی سریع و آموزش",
     links: [
-      { to: "/blog", label: "مجله و مقالات آموزشی" },
+      { to: "/products", label: "کاتالوگ کامل محصولات و قیمت‌ها" },
+      { to: "/blog", label: "مجله و مقالات تخصصی AI" },
       { to: "/why", label: "راهنمای خرید و چرا VAICH" },
       { to: "/faq", label: "سوالات متداول مشتریان" },
       { to: "/support", label: "پشتیبانی آنلاین و مشاوره" },
@@ -126,21 +129,32 @@ export function Footer() {
         </div>
 
         {navigationColumns.map((col) => (
-          <nav key={col.title} aria-label={col.title}>
-            <h2 className="mb-4 text-sm font-bold text-foreground">{col.title}</h2>
-            <ul className="space-y-3">
+          <details
+            key={col.title}
+            open
+            className="group md:open border-b border-border/50 md:border-none py-3 md:py-0"
+          >
+            <summary className="flex cursor-pointer md:cursor-default list-none items-center justify-between text-sm font-bold text-foreground">
+              <span>{col.title}</span>
+              <span className="md:hidden text-muted-foreground transition-transform duration-200 group-open:rotate-180">
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            </summary>
+            <ul className="space-y-2.5 pt-2.5 md:pt-4">
               {col.links.map((l) => (
                 <li key={l.to}>
                   <Link
                     to={l.to as any}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-xs sm:text-sm text-muted-foreground transition-colors hover:text-foreground inline-block py-0.5"
                   >
                     {l.label}
                   </Link>
                 </li>
               ))}
             </ul>
-          </nav>
+          </details>
         ))}
       </div>
 

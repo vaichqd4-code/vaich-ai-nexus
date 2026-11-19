@@ -256,44 +256,46 @@ export function ProductCard({
         </div>
 
         {/* Card Content: RTL-safe Title & Subtitle & Rating */}
-        <div className="flex flex-col gap-0.5 px-0.5">
+        <div className="flex flex-col gap-1 px-0.5">
           <h3
             dir="rtl"
             style={{ unicodeBidi: "isolate" }}
-            className="truncate text-xs sm:text-sm font-bold tracking-tight text-foreground group-hover/link:text-primary transition-colors"
+            className="line-clamp-2 min-h-[2.5rem] text-xs sm:text-sm font-black tracking-tight text-foreground group-hover/link:text-primary transition-colors leading-5"
             title={product.name}
           >
             {safeTitle}
           </h3>
-          <p className="line-clamp-1 text-[10px] sm:text-xs text-muted-foreground">
+          <p className="line-clamp-2 min-h-[2.25rem] text-[11px] sm:text-xs text-muted-foreground/90 leading-4.5">
             {getProductCardSubtitle(product, isLifetime)}
           </p>
 
           {product.rating ? (
-            <div className="mt-0.5 flex items-center gap-1 text-[10px] sm:text-xs">
+            <div className="mt-0.5 flex items-center gap-1.5 text-[11px] sm:text-xs">
               <span className="text-amber-400 font-bold inline-flex items-center gap-1">
-                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                 <span>{toPersianDigits(product.rating.toFixed(1))}</span>
               </span>
               {totalReviewsCount > 0 ? (
-                <span className="text-muted-foreground text-[9px] sm:text-[10px]">
-                  ({toPersianDigits(totalReviewsCount)} نظر)
+                <span className="text-muted-foreground text-[10px]">
+                  ({toPersianDigits(totalReviewsCount)} نظر ثبت‌شده)
                 </span>
               ) : null}
             </div>
-          ) : null}
+          ) : (
+            <div className="min-h-[1.25rem]" />
+          )}
         </div>
       </Link>
 
       {/* Pricing Block: Dynamic Range vs Single Price vs Out of Stock */}
-      <div className="rounded-xl sm:rounded-2xl border border-border/60 bg-secondary/30 p-2 sm:p-2.5 mt-auto">
+      <div className="rounded-xl sm:rounded-2xl border border-border/70 bg-secondary/35 p-2.5 sm:p-3 mt-auto flex flex-col justify-between gap-1">
         <div className="flex items-center justify-between gap-1">
-          <span className="text-[10px] sm:text-xs text-muted-foreground">
+          <span className="text-[11px] sm:text-xs font-medium text-muted-foreground">
             {pricing.isRange ? "بازه قیمت:" : "قیمت:"}
           </span>
           <div className="flex items-center gap-1">
             {!isOutOfStock && !pricing.isRange && pricing.singleOriginalPrice ? (
-              <span className="text-[10px] sm:text-xs text-muted-foreground line-through">
+              <span className="text-[11px] sm:text-xs text-muted-foreground/80 line-through">
                 {formatPrice(pricing.singleOriginalPrice)}
               </span>
             ) : null}
@@ -306,38 +308,38 @@ export function ProductCard({
               </span>
             ) : null}
             {isLifetime && !isOutOfStock ? (
-              <span className="text-[9px] sm:text-[10px] text-emerald-500 font-bold truncate">
+              <span className="rounded-md bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 text-[10px] text-emerald-600 dark:text-emerald-400 font-bold truncate">
                 دسترسی دائمی
               </span>
             ) : !pricing.isRange && product.duration && !isOutOfStock ? (
-              <span className="text-[9px] sm:text-[10px] text-muted-foreground font-medium truncate">
+              <span className="rounded-md bg-secondary border border-border/80 px-1.5 py-0.5 text-[10px] text-muted-foreground font-semibold truncate">
                 {product.duration}
               </span>
             ) : null}
           </div>
         </div>
 
-        <div className="mt-1 flex items-baseline justify-between gap-1">
+        <div className="mt-0.5 flex items-baseline justify-between gap-1">
           {isOutOfStock ? (
             <p className="text-xs sm:text-sm font-black text-rose-500">
-              ناموجود
+              ناموجود (تکمیل ظرفیت)
             </p>
           ) : pricing.isRange ? (
             <p
               dir="rtl"
-              className="gradient-text text-[11px] xs:text-xs sm:text-sm font-extrabold tracking-tight leading-snug"
+              className="gradient-text text-xs xs:text-[13px] sm:text-[15px] font-black tracking-tight leading-snug"
             >
               از {formatPriceNumber(pricing.minPrice)} تا {formatPrice(pricing.maxPrice)}
             </p>
           ) : (
-            <p className="gradient-text text-sm sm:text-base font-extrabold tracking-tight">
+            <p className="gradient-text text-sm sm:text-base font-black tracking-tight">
               {formatPrice(pricing.minPrice)}
             </p>
           )}
         </div>
       </div>
 
-      {/* Unified Modern CTA Button (BodoCP / License-Market Inspired) */}
+      {/* Unified Modern CTA Button (min-h-[44px] for standard mobile touch target) */}
       <Link
         to="/products/$slug"
         params={{ slug: product.slug }}
@@ -350,20 +352,20 @@ export function ProductCard({
               : `مشاهده و خرید ${product.name}`
         }
         className={cn(
-          "group/cta w-full inline-flex items-center justify-center gap-1.5 rounded-xl sm:rounded-2xl py-2 sm:py-2.5 px-3 text-[11px] sm:text-xs font-extrabold transition-all duration-200 touch-manipulation cursor-pointer active:scale-[0.98]",
+          "group/cta w-full min-h-[44px] inline-flex items-center justify-center gap-1.5 rounded-xl sm:rounded-2xl py-2.5 px-3.5 text-xs sm:text-sm font-black transition-all duration-200 touch-manipulation cursor-pointer active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-primary",
           isOutOfStock
             ? "bg-secondary/90 text-muted-foreground border border-border hover:border-primary/40 hover:text-foreground"
-            : "bg-linear-to-r from-primary via-purple-600 to-indigo-600 text-white shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/35 hover:brightness-110"
+            : "bg-linear-to-r from-primary via-purple-600 to-indigo-600 text-white shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/40 hover:brightness-110"
         )}
       >
         <span>
           {isOutOfStock
-            ? "مشاهده جزئیات (ناموجود)"
+            ? "مشاهده جزئیات"
             : hasVariants
               ? "انتخاب پلن و خرید"
               : "مشاهده و خرید"}
         </span>
-        <ArrowLeft className="h-3.5 w-3.5 transition-transform duration-200 group-hover/cta:-translate-x-0.5" />
+        <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover/cta:-translate-x-1" />
       </Link>
     </article>
   );

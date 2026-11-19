@@ -80,7 +80,8 @@ export const Route = createFileRoute("/checkout/$slug")({
 
     const { product } = loaderData;
     const isLifetime = isProductLifetime(product);
-    const canonicalUrl = `https://vaich.ir/checkout/${product.slug}`;
+    const productCanonicalUrl = `https://vaich.ir/products/${product.slug}`;
+    const checkoutPageUrl = `https://vaich.ir/checkout/${product.slug}`;
     const title = isLifetime
       ? `پرداخت و دریافت مستقیم ${product.name} | وایچ`
       : `پرداخت و خرید آنلاین اشتراک ${product.name} (${product.duration || "قانونی"}) | وایچ`;
@@ -96,9 +97,10 @@ export const Route = createFileRoute("/checkout/$slug")({
       meta: [
         { title },
         { name: "description", content: description },
+        { name: "robots", content: "noindex, follow" },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
-        { property: "og:url", content: canonicalUrl },
+        { property: "og:url", content: checkoutPageUrl },
         { property: "og:type", content: "website" },
         { property: "og:image", content: ogImg },
         { name: "twitter:card", content: "summary_large_image" },
@@ -107,7 +109,7 @@ export const Route = createFileRoute("/checkout/$slug")({
         { name: "twitter:image", content: ogImg },
       ],
       links: [
-        { rel: "canonical", href: canonicalUrl },
+        { rel: "canonical", href: productCanonicalUrl },
       ],
     };
   },
