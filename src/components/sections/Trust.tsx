@@ -39,32 +39,32 @@ const STATS = [
 
 const CUSTOMER_REVIEWS = [
   {
-    name: "علیرضا رضایی",
-    role: "خریدار ChatGPT Plus",
+    name: ".",
+    role: "خریدار پلنر گوگل‌شیت",
     rating: 5,
-    date: "۱۴۰۴/۰۸/۲۴",
-    comment: "تحویل اکانت خیلی سریع انجام شد و بدون نیاز به اطلاعات حساس، اکانت اختصاصی برام فعال شد. پشتیبانی با حوصله نحوه اتصال رو توضیح دادن.",
+    date: "۱۴۰۴/۰۸/۲۸",
+    comment: "عالیه",
   },
   {
-    name: "کاربر وایچ",
+    name: "مهدی",
     role: "خریدار تلگرام پرمیوم",
     rating: 5,
     date: "۱۴۰۴/۰۸/۲۶",
-    comment: "گیفت تلگرام ظرف چند دقیقه مستقیماً روی آیدیم فعال شد بدون پسورد. ممنون از سرعت عملتون.",
+    comment: "اولش شک داشتم چون بدون پسورد بود، ولی به ۵ دقیقه نکشید دیدم گیفت روی آیدیم فعال شد. دمتون گرم واقعا پشتیبانی تلگرامتون خیلی سریع و باحوصله راه انداخت.",
   },
   {
-    name: "محمدامین",
-    role: "خریدار پلنر گوگل‌شیت",
-    rating: 5,
-    date: "۱۴۰۴/۰۸/۱۹",
-    comment: "کامل‌ترین پلنری بود که تا حالا دیدم؛ بخش ردیاب عادات و داشبورد کنترل مالی واقعاً نظم روزمره‌م رو بهتر کرد. دسترسی همیشگیش عالیه.",
-  },
-  {
-    name: "مشتری کانوا پرو",
+    name: "Ali.R",
     role: "خریدار Canva Pro",
     rating: 4,
-    date: "۱۴۰۴/۰۸/۲۷",
-    comment: "دعوت‌نامه روی ایمیل خودم فعال شد و امکانات مجیک استودیو کامل باز شد. قیمت مناسب و پشتیبانی پاسخگو بود.",
+    date: "۱۴۰۴/۰۸/۲۴",
+    comment: "خوب بود، دعوت‌نامه اومد رو ایمیلم و مجیک استودیو فعال شد. قیمتش هم مناسب بود.",
+  },
+  {
+    name: "علیرضا",
+    role: "خریدار ChatGPT Plus",
+    rating: 5,
+    date: "۱۴۰۴/۰۸/۲۱",
+    comment: "من برای کدنویسی نیاز داشتم، رو جیمیل شخصیم بدون پسورد فعال شد و مدل‌ها بدون قطعی کار میکنن. ممنون از تحویل سریعتون.",
   },
 ];
 
@@ -108,13 +108,13 @@ export function Trust() {
 
       {/* 2. Customer Reviews Carousel / Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
-        {CUSTOMER_REVIEWS.map((r) => (
+        {CUSTOMER_REVIEWS.map((r, idx) => (
           <div
-            key={r.name + r.role}
+            key={r.name + r.role + idx}
             className="flex flex-col justify-between rounded-3xl border border-border/80 bg-card/60 p-4 sm:p-5 shadow-xs hover:border-primary/40 hover:shadow-lg transition-all"
           >
-            <div>
-              <div className="flex items-center justify-between gap-2 mb-2">
+            <div className="flex-1 flex flex-col">
+              <div className="flex items-center justify-between gap-2 mb-2.5">
                 <div className="flex items-center gap-1">
                   {Array.from({ length: r.rating }).map((_, i) => (
                     <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
@@ -124,14 +124,14 @@ export function Trust() {
                   {toPersianDigits(r.date)}
                 </span>
               </div>
-              <p className="text-xs sm:text-[13px] leading-6 text-foreground/90 font-medium line-clamp-4">
+              <p className="text-xs sm:text-[13px] leading-6 text-foreground/90 font-medium my-auto py-1">
                 «{r.comment}»
               </p>
             </div>
 
             <div className="mt-4 pt-3 border-t border-border/50 flex items-center justify-between gap-2">
               <div>
-                <span className="text-xs sm:text-sm font-black text-foreground block">
+                <span className="text-xs sm:text-sm font-black text-foreground block font-sans">
                   {r.name}
                 </span>
                 <span className="text-[10px] text-muted-foreground block truncate max-w-[170px]">
