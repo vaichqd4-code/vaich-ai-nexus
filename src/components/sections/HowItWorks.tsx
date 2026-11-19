@@ -48,8 +48,8 @@ export function HowItWorks() {
                 <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary/80 border border-border/70 shadow-xs group-hover:scale-105 transition-transform">
                   {s.icon}
                 </span>
-                <span className="gradient-text font-sans text-3xl sm:text-4xl font-black tracking-tight select-none">
-                  ۰{toPersianDigits(s.step)}
+                <span dir="ltr" className="font-mono text-2xl sm:text-3xl font-black tracking-wider text-muted-foreground/30 group-hover:text-primary transition-colors select-none">
+                  0{s.step}
                 </span>
               </div>
               <h3 className="text-base sm:text-lg font-black text-foreground">

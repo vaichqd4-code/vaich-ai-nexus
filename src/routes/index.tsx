@@ -3,6 +3,8 @@ import { useEffect, useState, useRef, useMemo, lazy, Suspense } from "react";
 import { Section } from "@/components/layout/Section";
 import { ProductCard } from "@/components/product/ProductCard";
 import { NeonLink } from "@/components/ui/NeonButton";
+import { getProductLogo } from "@/components/brand/ServiceIcon";
+import { cn } from "@/lib/utils";
 import { useDynamicProducts, type LayoutMode, type ProductCategoryRow, type Product, type PromoBannerConfig } from "@/lib/products";
 import { BlogSection } from "@/components/sections/BlogSection";
 import { ArrowLeft, Sparkles, CheckCircle2, ShieldCheck, Zap, Headphones, Layers, LayoutGrid, Calendar } from "lucide-react";
@@ -139,12 +141,21 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
           </p>
 
           {/* Primary CTA and clearly secondary Ghost CTA */}
-          <div className="mt-5 sm:mt-6 flex flex-col gap-2.5 sm:flex-row">
-            <NeonLink to="/products" size="lg" className="justify-center">
+          <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 max-w-lg">
+            <NeonLink
+              to="/products"
+              size="md"
+              className="h-12 sm:h-13 px-5 sm:px-6 text-sm sm:text-base font-bold justify-center rounded-2xl sm:rounded-full shrink-0 shadow-lg shadow-primary/20"
+            >
               <span>مشاهده محصولات و خدمات</span>
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-4 w-4 shrink-0 transition-transform group-hover:-translate-x-1" />
             </NeonLink>
-            <NeonLink to="/support" variant="outline" size="lg" className="justify-center border-border/80 text-foreground hover:bg-secondary/60">
+            <NeonLink
+              to="/support"
+              variant="outline"
+              size="md"
+              className="h-12 sm:h-13 px-5 sm:px-6 text-sm sm:text-base font-semibold justify-center rounded-2xl sm:rounded-full border-border/80 bg-secondary/50 hover:bg-secondary/80 text-foreground shrink-0 backdrop-blur-xs"
+            >
               <span>پشتیبانی و مشاوره آنلاین</span>
             </NeonLink>
           </div>
@@ -222,43 +233,109 @@ function Hero({ promoBanner }: { promoBanner?: PromoBannerConfig }) {
   );
 }
 
-// Quick Access Bar (نوار دسترسی سریع - جدید)
-const QUICK_SERVICES = [
-  { slug: "chatgpt-plus", name: "ChatGPT Plus", icon: "/chatgpt-logo.svg", isSvg: true, target: "/products/chatgpt-plus" },
-  { slug: "claude", name: "Claude Pro", icon: "/claude-icon.webp", target: "/products/claude" },
-  { slug: "gemini-pro", name: "Gemini Pro", icon: "/gemini-pro-18m-icon.webp", target: "/products/gemini-pro" },
-  { slug: "telegram-premium", name: "تلگرام پرمیوم", icon: "/telegram-premium-icon.webp", target: "/products/telegram-premium" },
-  { slug: "telegram-stars", name: "استارز تلگرام", icon: "/telegram-stars-icon.webp", target: "/products/telegram-stars" },
-  { slug: "canva-pro", name: "کانوا پرو", icon: "/canva-pro-icon.webp", target: "/products/canva-pro" },
-  { slug: "vaich-life-planner", name: "پلنر گوگل‌شیت", icon: "/planner-cover.webp", target: "/products/vaich-life-planner" },
-];
+// Quick Access Bar (نوار دسترسی سریع - پویا و هماهنگ با پنل ادمین)
+const QUICK_ORDER_PRIORITY: Record<string, number> = {
+  "chatgpt-plus": 1,
+  "claude": 2,
+  "gemini": 3,
+  "gemini-pro": 4,
+  "telegram-premium": 5,
+  "telegram-stars": 6,
+  "canva-pro": 7,
+  "vaich-life-planner": 8,
+};
 
-function QuickAccessBar() {
+function getQuickAccessName(p: Product): string {
+  if (p.slug === "vaich-life-planner") return "پلنر گوگل‌شیت";
+  if (p.slug === "gemini") return "جمنای دوماهه";
+  if (p.slug === "gemini-pro") return "جمنای ۱۸ ماهه";
+  if (p.slug === "chatgpt-plus") return "ChatGPT Plus";
+  if (p.slug === "claude") return "Claude Pro";
+  if (p.slug === "telegram-premium") return "تلگرام پرمیوم";
+  if (p.slug === "telegram-stars") return "استارز تلگرام";
+  if (p.slug === "canva-pro") return "کانوا پرو";
+  return p.name.replace(/^اشتراک\s+/i, "");
+}
+
+function QuickAccessBar({ products }: { products?: Product[] }) {
+  const displayItems = useMemo(() => {
+    if (!products || products.length === 0) return [];
+    return [...products].sort((a, b) => {
+      const prioA = QUICK_ORDER_PRIORITY[a.slug] ?? 999;
+      const prioB = QUICK_ORDER_PRIORITY[b.slug] ?? 999;
+      return prioA - prioB;
+    });
+  }, [products]);
+
+  if (displayItems.length === 0) return null;
+
   return (
     <section aria-label="دسترسی سریع به سرویس‌ها" className="mx-auto max-w-6xl px-4 pt-3 pb-5 sm:px-6 sm:pt-4 sm:pb-7">
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none snap-x snap-proximity justify-start sm:justify-center">
-        {QUICK_SERVICES.map((s) => (
-          <Link
-            key={s.slug}
-            to={s.target as any}
-            preload="intent"
-            className="group flex flex-col items-center gap-1.5 shrink-0 snap-start p-2 sm:px-3 sm:py-2.5 rounded-2xl border border-border/70 bg-card/60 hover:bg-card hover:border-primary/50 hover:shadow-md transition-all active:scale-95 focus:outline-none min-w-[78px] sm:min-w-[96px] text-center"
-          >
-            <div className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-secondary/80 border border-border/80 p-1.5 group-hover:scale-105 group-hover:border-primary/40 transition-transform">
-              <img
-                src={s.icon}
-                alt={s.name}
-                width={36}
-                height={36}
-                loading="lazy"
-                className="h-full w-full object-contain"
-              />
-            </div>
-            <span className="text-[11px] sm:text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate max-w-[84px] sm:max-w-[94px]">
-              {s.name}
-            </span>
-          </Link>
-        ))}
+        {displayItems.map((p) => {
+          const logo = getProductLogo(p.slug, p.iconUrl) || p.iconUrl || "/vaich-logo.png";
+          const shortName = getQuickAccessName(p);
+          const isCover = p.imageFit === "cover" || p.slug === "vaich-life-planner";
+
+          return (
+            <Link
+              key={p.slug}
+              to="/products/$slug"
+              params={{ slug: p.slug }}
+              preload="intent"
+              className="group flex flex-col items-center gap-1.5 shrink-0 snap-start p-2 sm:px-3 sm:py-2.5 rounded-2xl border border-border/70 bg-card/60 hover:bg-card hover:border-primary/50 hover:shadow-md transition-all active:scale-95 focus:outline-none min-w-[78px] sm:min-w-[96px] text-center"
+            >
+              <div
+                className={cn(
+                  "flex h-11 w-11 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl border border-border/80 bg-secondary/80 group-hover:scale-105 group-hover:border-primary/50 transition-all overflow-hidden shadow-xs relative",
+                  isCover ? "p-0" : "p-1.5"
+                )}
+                style={{
+                  WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+                  maskImage: "radial-gradient(white, black)",
+                  transform: "translateZ(0)",
+                }}
+              >
+                {isCover ? (
+                  <img
+                    src={logo}
+                    alt={p.name}
+                    width={48}
+                    height={48}
+                    loading="lazy"
+                    className="h-full w-full object-cover object-center rounded-2xl transition-transform"
+                  />
+                ) : (
+                  <div
+                    className="h-full w-full rounded-xl overflow-hidden flex items-center justify-center"
+                    style={{
+                      WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+                      maskImage: "radial-gradient(white, black)",
+                      transform: "translateZ(0)",
+                    }}
+                  >
+                    <img
+                      src={logo}
+                      alt={p.name}
+                      width={44}
+                      height={44}
+                      loading="lazy"
+                      className="h-full w-full object-contain object-center rounded-xl transition-transform drop-shadow-xs"
+                      style={{
+                        WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+                        maskImage: "radial-gradient(white, black)",
+                        transform: "translateZ(0)",
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+              <span className="text-[11px] sm:text-xs font-bold text-foreground group-hover:text-primary transition-colors truncate max-w-[84px] sm:max-w-[94px]">
+                {shortName}
+              </span>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );
@@ -468,8 +545,8 @@ function Home() {
       {/* 2. Hero Section (Compact & High Impact) */}
       <Hero promoBanner={promoBanner} />
 
-      {/* 3. Quick Access Bar (نوار دسترسی سریع - جدید) */}
-      {!isSearching && <QuickAccessBar />}
+      {/* 3. Quick Access Bar (نوار دسترسی سریع - جدید و پویا) */}
+      {!isSearching && <QuickAccessBar products={products} />}
 
       {/* Product Rows / Search Results */}
       {isSearching ? (

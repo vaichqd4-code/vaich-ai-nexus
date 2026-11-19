@@ -24,10 +24,10 @@ function getProductCardSubtitle(p: Product, isLifetime: boolean): string {
     return "دسترسی به Claude Sonnet 5.5 و Opus 5.5، کدنویسی، Artifacts و پنجره میلیونی";
   }
   if (p.slug === "gemini") {
-    return "اکانت Google AI Pro (مدل Gemini 4 Argon) با ۵ ترابایت فضا و ۱۰۰۰ کردیت Flow";
+    return "اکانت Google AI Pro (مدل‌های Gemini 4 Hydrogen و Neon) با ۵ ترابایت فضا و کردیت Flow";
   }
   if (p.slug === "gemini-pro") {
-    return "دسترسی بلندمدت Google AI Pro با Gemini 4 Argon و ۵ ترابایت فضای گوگل‌وان";
+    return "دسترسی ۱۸ ماهه Google AI Pro با Gemini 4 Hydrogen و ۵ ترابایت فضای گوگل‌وان";
   }
   if (p.slug === "telegram-premium") {
     return "گیفت رسمی بدون رمز • آپلود ۴ گیگ، حذف تبلیغات و ترجمه آنی";
@@ -306,11 +306,11 @@ export function ProductCard({
                 <span dir="ltr">%{toPersianDigits(pricing.maxDiscountPercent)}</span>
               </span>
             ) : null}
-            {isLifetime && !isOutOfStock ? (
+            {isLifetime ? (
               <span className="rounded-md bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 text-[10px] text-emerald-600 dark:text-emerald-400 font-bold truncate">
                 دسترسی دائمی
               </span>
-            ) : !pricing.isRange && product.duration && !isOutOfStock ? (
+            ) : product.duration ? (
               <span className="rounded-md bg-secondary border border-border/80 px-1.5 py-0.5 text-[10px] text-muted-foreground font-semibold truncate">
                 {product.duration}
               </span>
@@ -320,8 +320,8 @@ export function ProductCard({
 
         <div className="mt-0.5 flex items-baseline justify-between gap-1">
           {isOutOfStock ? (
-            <p className="text-xs sm:text-sm font-black text-rose-500">
-              ناموجود (تکمیل ظرفیت)
+            <p className="text-xs sm:text-sm font-black text-rose-500 dark:text-rose-400">
+              ناموجود
             </p>
           ) : pricing.isRange ? (
             <p

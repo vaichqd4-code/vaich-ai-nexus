@@ -166,6 +166,11 @@ export function BlogSection() {
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         className="relative overflow-hidden rounded-3xl border border-border/80 bg-card/85 backdrop-blur-md shadow-sm select-none cursor-grab active:cursor-grabbing"
+        style={{
+          WebkitMaskImage: "-webkit-radial-gradient(white, black)",
+          maskImage: "radial-gradient(white, black)",
+          transform: "translateZ(0)",
+        }}
       >
         <div
           dir="ltr"
@@ -176,17 +181,17 @@ export function BlogSection() {
             <article
               key={post.slug}
               dir="rtl"
-              className="group relative w-full shrink-0 grid grid-cols-1 md:grid-cols-12 items-stretch"
+              className="group relative w-full min-w-full max-w-full shrink-0 overflow-hidden grid grid-cols-1 md:grid-cols-12 items-stretch"
             >
               {/* تصویر کاور داخل باکس */}
-              <div className="relative md:col-span-5 aspect-16/10 md:aspect-auto md:min-h-[210px] overflow-hidden bg-neutral-950">
+              <div className="relative md:col-span-5 aspect-16/10 md:aspect-auto md:min-h-[210px] overflow-hidden bg-neutral-950 w-full">
                 <img
                   src={post.coverImage.includes("?") ? post.coverImage : `${post.coverImage}?v=20261113`}
                   alt={post.title}
                   width={600}
                   height={375}
                   loading={idx === 0 ? "eager" : "lazy"}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 block"
                   onError={(e) => {
                     (e.currentTarget as HTMLElement).style.display = "none";
                     const fallback = e.currentTarget.parentElement?.querySelector(".blog-fallback-cover");

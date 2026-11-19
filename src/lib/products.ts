@@ -535,11 +535,11 @@ export const DEFAULT_PRODUCTS: Product[] = [
   },
   {
     "slug": "gemini",
-    "name": "جمنای پرو ۶۰ روزه",
-    "price": 320000,
+    "name": "جمنای پرو دوماهه",
+    "price": 290000,
     "discountPercent": 0,
-    "duration": "۶۰ روزه",
-    "description": "اشتراک رسمی ۶۰ روزه Google AI Pro (Gemini Pro)؛ مجهز به مدل‌های پرچمدار و نسل جدید Gemini 4 Argon و Gemini 4 Hydrogen، استدلال عمیق Deep Think و دستیار پژوهشی Deep Research، دسترسی به محیط توسعه Google Antigravity و Google AI Studio، دسترسی به پلتفرم ویدیوسازی Google Flow همراه با ۱۰۰۰ کردیت اختصاصی، ۵ ترابایت فضای ابری Google One و ادغام کامل با Google Workspace.",
+    "duration": "دوماهه",
+    "description": "اشتراک رسمی دوماهه Google AI Pro (Gemini Pro)؛ مجهز به مدل‌های پرچمدار نسل جدید Gemini 4 Hydrogen و Gemini 4 Neon، دسترسی تخصصی به Gemini 4 Argon در Google AI Studio، استدلال عمیق و مدل‌های تصمیم‌گیری Deep Reasoning & Decision، دسترسی به محیط برنامه‌نویسی و توسعه Google Antigravity IDE / CLI، پلتفرم ویدیوسازی Google Flow همراه با ۱۰۰۰ کردیت اختصاصی، ۵ ترابایت فضای ابری عظیم Google One و ادغام کامل با Google Workspace.",
     "isLifetime": false,
     "featured": false,
     "badgeColor": "purple",
@@ -550,33 +550,42 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "requiredFieldPlaceholder": "yourname@gmail.com",
     "variants": [
       {
-        "id": "gem60-fam",
+        "id": "gem60-fam-1m",
         "option1": "فمیلی",
-        "option2": "۶۰ روزه",
-        "price": 320000,
+        "option2": "۱ ماهه",
+        "price": 290000,
         "discountPercent": 0,
         "inStock": true,
-        "shortNote": "فعال‌سازی قانونی Google AI Pro از طریق عضویت فمیلی؛ شامل مدل‌های Gemini 4 Argon و Hydrogen، محیط Google Antigravity، گوگل استودیو، ۱۰۰۰ کردیت Google Flow و ۵ ترابایت فضا."
+        "shortNote": "فعال‌سازی قانونی ۱ ماهه Google AI Pro از طریق عضویت فمیلی؛ مجهز به مدل‌های پرچمدار Gemini 4 Hydrogen و Neon، استدلال عمیق، Google Antigravity و ۵ ترابایت فضا."
+      },
+      {
+        "id": "gem60-fam-2m",
+        "option1": "فمیلی",
+        "option2": "۲ ماهه",
+        "price": 420000,
+        "discountPercent": 0,
+        "inStock": true,
+        "shortNote": "به‌صرفه‌ترین پلن ۲ ماهه کامل Google AI Pro از طریق فمیلی؛ دسترسی نامحدود به مدل‌های Gemini 4 Hydrogen و Neon، محیط توسعه Antigravity، ۱۰۰۰ کردیت Flow و ۵ ترابایت فضا."
       },
       {
         "id": "gem60-ded",
         "option1": "اختصاصی",
-        "option2": "۶۰ روزه",
+        "option2": "دوماهه",
         "price": 0,
         "discountPercent": 0,
         "inStock": false,
-        "shortNote": "نسخه اختصاصی ۶۰ روزه در حال حاضر ناموجود است. لطفاً گزینه «فمیلی» را انتخاب فرمایید."
+        "shortNote": "اکانت اختصاصی جمنای در حال حاضر موقتاً ناموجود است. لطفاً پلن‌های فمیلی را انتخاب فرمایید."
       }
     ],
     "features": [
-      "دسترسی رسمی Google AI Pro به مدل پرچمدار Gemini 4 Argon و مدل تخصصی Gemini 4 Hydrogen به همراه خانواده مدل‌های سریع Flash",
-      "قابلیت استدلال عمیق Deep Think (با سطوح تفکر Low / Medium / High) و دستیار پژوهشی خودکار Deep Research برای تحقیقات پیشرفته",
+      "دسترسی رسمی Google AI Pro به مدل پرچمدار Gemini 4 Hydrogen و مدل سریع و چندوجهی Gemini 4 Neon",
+      "دسترسی تخصصی به مدل پژوهشی Gemini 4 Argon در محیط Google AI Studio جهت تحلیل داده و پژوهش‌های سنگین",
+      "قابلیت استدلال عمیق و مدل‌های تصمیم‌گیری پیشرفته (Deep Reasoning & Decision Models) برای حل مسائل پیچیده منطقی و برنامه‌نویسی",
       "دسترسی کامل و یکپارچه به پلتفرم توسعه هوش مصنوعی Google AI Studio و محیط برنامه‌نویسی نسل جدید Google Antigravity IDE / CLI",
       "دسترسی به پلتفرم ویدیوسازی هوش مصنوعی Google Flow به همراه ۱۰۰۰ کردیت اختصاصی (1000 Flow Credits)",
       "۵ ترابایت فضای ابری عظیم Google One (مشترک در Google Drive، Gmail و Google Photos) به همراه امکانات کامل Google Workspace",
       "دسترسی نامحدود به ابزار تحقیقاتی NotebookLM با قابلیت Audio Overviews، بوم تعاملی Canvas و سفارشی‌سازی دستیارهای هوشمند Gems",
-      "۱۰ دلار اعتبار ماهانه توسعه‌دهندگان Google Cloud و پردازش اسناد و ویدیوهای فوق‌حجیم",
-      "پلن اقتصادی ۶۰ روزه قانونی با ضمانت فعال‌سازی سالم اولیه و پشتیبانی سریع در تلگرام"
+      "پلن اقتصادی دوماهه قانونی با ضمانت فعال‌سازی سالم اولیه و پشتیبانی سریع در تلگرام"
     ],
     "purchaseInfo": [
       "اشتراک رسمی Google AI Pro (Gemini Pro) به مدت ۶۰ روز کامل ارائه می‌شود.",
@@ -745,7 +754,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "price": 690000,
     "discountPercent": 0,
     "duration": "۱۸ ماهه",
-    "description": "اشتراک بلندمدت ۱۸ ماهه فوق‌اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، پژوهشگران و برنامه‌نویسان؛ شامل دسترسی به مدل‌های پرچمدار Gemini 4 Argon و Gemini 4 Hydrogen، دسترسی به Google Antigravity، Google AI Studio و Google Flow با ۱۰۰۰ کردیت، استدلال عمیق Deep Think، امکانات کامل Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه. (توجه: در حال حاضر ظرفیت این پلن تکمیل و ناموجود است).",
+    "description": "اشتراک بلندمدت ۱۸ ماهه فوق‌اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، پژوهشگران و برنامه‌نویسان؛ شامل دسترسی به مدل‌های پرچمدار Gemini 4 Hydrogen و Gemini 4 Neon، مدل تخصصی Gemini 4 Argon در Google AI Studio، مدل‌های تصمیم‌گیری و استدلال عمیق (Deep Reasoning & Decision)، دسترسی به Google Antigravity، Google Flow با ۱۰۰۰ کردیت، امکانات کامل Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه. (توجه: در حال حاضر ظرفیت این پلن تکمیل و ناموجود است).",
     "isLifetime": false,
     "featured": true,
     "badge": "ویژه",
@@ -778,10 +787,10 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "features": [
       "وضعیت فعلی: ناموجود (اتمام موقت ظرفیت - امکان رزرو از طریق تلگرام @youneshayati)",
       "اشتراک بلندمدت ۱۸ ماهه با صرفه اقتصادی فوق‌العاده بالا ویژه دانشجویان و پژوهشگران بدون دغدغه تمدید ماهانه",
-      "دسترسی رسمی Google AI Pro به مدل پرچمدار Gemini 4 Argon و مدل تخصصی Gemini 4 Hydrogen و خانواده Flash",
+      "دسترسی رسمی Google AI Pro به مدل‌های پرچمدار نسل جدید Gemini 4 Hydrogen و Gemini 4 Neon و دسترسی به Gemini 4 Argon در AI Studio",
       "دسترسی به پلتفرم توسعه هوش مصنوعی Google AI Studio و محیط برنامه‌نویسی هوشمند Google Antigravity IDE / CLI",
       "دسترسی به پلتفرم ویدیوسازی هوش مصنوعی Google Flow به همراه ۱۰۰۰ کردیت اختصاصی (1000 Flow Credits)",
-      "قابلیت استدلال عمیق Deep Think و دستیار پژوهشی خودکار Deep Research برای تحلیل داده‌های سنگین",
+      "مدل‌های تصمیم‌گیری و استدلال عمیق (Deep Reasoning & Decision Models) برای تحلیل داده‌های سنگین و خودکارسازی فرآیندها",
       "۵ ترابایت فضای ابری عظیم Google One (در Drive، Gmail و Photos) به همراه یکپارچگی با Google Workspace (Gmail، Docs، Drive، Vids)",
       "دسترسی کامل به NotebookLM، Canvas، Gems و ۱۰ دلار اعتبار ماهانه توسعه‌دهندگان Google Cloud"
     ],
@@ -903,7 +912,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "name": "اشتراک تلگرام پرمیوم",
     "price": 2500000,
     "discountPercent": 0,
-    "duration": "۱ تا ۱۲ ماهه",
+    "duration": "۱ ساله",
     "description": "فعالسازی قانونی و رسمی تلگرام پرمیوم (Telegram Premium) روی اکانت شخصی شما از طریق گیفت رسمی (بدون نیاز به رمز عبور و کد ورود)، در کمترین زمان ممکن همراه با ضمانت کامل پایداری.",
     "isLifetime": false,
     "featured": false,
@@ -999,7 +1008,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "name": "استارز تلگرام",
     "price": 590000,
     "discountPercent": 0,
-    "duration": "شارژ فوری",
+    "duration": "تحویل فوری",
     "description": "خرید و شارژ فوری استارز تلگرام (Telegram Stars - واحد پول رسمی درون‌برنامه‌ای تلگرام) مستقیماً به آیدی شما بدون نیاز به لاگین یا کارت بانکی بین‌المللی، با تحویل سریع و ایمن.",
     "isLifetime": false,
     "featured": false,
@@ -1148,7 +1157,7 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "name": "اشتراک کانوا پرو",
     "price": 240000,
     "discountPercent": 0,
-    "duration": "۱ تا ۶ ماهه",
+    "duration": "۶ ماهه",
     "description": "ارتقای اکانت شخصی کانوا به نسخه حرفه‌ای Canva Pro با فعال‌سازی مستقیم روی ایمیل شخصی شما، مناسب طراحان گرافیک، ادمین‌های اینستاگرام، یوتیوبرها، دانشجویان و صاحبان کسب‌وکار.",
     "isLifetime": false,
     "featured": false,
