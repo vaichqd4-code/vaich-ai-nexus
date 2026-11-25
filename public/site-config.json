@@ -335,7 +335,7 @@
     {
       "slug": "gemini",
       "name": "جمنای پرو دوماهه",
-      "price": 290000,
+      "price": 390000,
       "discountPercent": 0,
       "duration": "دوماهه",
       "description": "اشتراک رسمی دوماهه Google AI Pro (Gemini Pro)؛ مجهز به مدل‌های پرچمدار نسل جدید Gemini 4 Hydrogen و Gemini 4 Neon، دسترسی تخصصی به Gemini 4 Argon در Google AI Studio، استدلال عمیق و مدل‌های تصمیم‌گیری Deep Reasoning & Decision، دسترسی به محیط برنامه‌نویسی و توسعه Google Antigravity IDE / CLI، پلتفرم ویدیوسازی Google Flow همراه با ۱۰۰۰ کردیت اختصاصی، ۵ ترابایت فضای ابری عظیم Google One و ادغام کامل با Google Workspace.",
@@ -352,7 +352,7 @@
           "id": "gem60-fam-1m",
           "option1": "فمیلی",
           "option2": "۱ ماهه",
-          "price": 290000,
+          "price": 390000,
           "discountPercent": 0,
           "inStock": true,
           "shortNote": "فعال‌سازی قانونی ۱ ماهه Google AI Pro از طریق عضویت فمیلی؛ مجهز به مدل‌های پرچمدار Gemini 4 Hydrogen و Neon، استدلال عمیق، Google Antigravity و ۵ ترابایت فضا."
@@ -361,7 +361,7 @@
           "id": "gem60-fam-2m",
           "option1": "فمیلی",
           "option2": "۲ ماهه",
-          "price": 420000,
+          "price": 520000,
           "discountPercent": 0,
           "inStock": true,
           "shortNote": "به‌صرفه‌ترین پلن ۲ ماهه کامل Google AI Pro از طریق فمیلی؛ دسترسی نامحدود به مدل‌های Gemini 4 Hydrogen و Neon، محیط توسعه Antigravity، ۱۰۰۰ کردیت Flow و ۵ ترابایت فضا."
@@ -1940,5 +1940,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-19T13:52:22.137Z"
+  "updatedAt": "2026-11-25T16:00:56.926Z"
 }
