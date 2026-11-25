@@ -24,6 +24,19 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {
+    const rawSlug = (params.slug || "").trim().toLowerCase();
+    if (
+      rawSlug === "telegram-bot-development-custom-order-guide" ||
+      rawSlug === "telegram-bot-development" ||
+      rawSlug === "order-telegram-bot" ||
+      rawSlug === "sakht-robot-telegram"
+    ) {
+      throw redirect({
+        to: "/blog/$slug",
+        params: { slug: "telegram-stars-guide-buy-uses-iran" },
+        statusCode: 301,
+      });
+    }
     const post = getBlogPostBySlug(params.slug);
     if (!post) {
       throw notFound();
@@ -334,7 +347,7 @@ function BlogPostPage() {
           </div>
 
           {/* Telegram Bot Development & Collaboration Promo Block */}
-          {(post.includeBotCollabBanner || post.targetProductType === "telegram-bot") && (
+          {post.includeBotCollabBanner && (
             <TelegramBotServiceBanner />
           )}
 
@@ -428,21 +441,6 @@ function getArticlePromoDetails(post: BlogPost) {
       accentBg: "from-amber-950/20 via-background to-card",
       badgeClass: "bg-amber-500/15 text-amber-500 dark:text-amber-400 border-amber-500/30",
       btnClass: "bg-amber-500 hover:bg-amber-400 text-slate-950 font-black shadow-amber-500/20",
-    };
-  }
-
-  // 0.5. Telegram Bot Development -> cross-sell Telegram Stars or AI tools alongside bot CTA
-  if (post.targetProductType === "telegram-bot") {
-    return {
-      badge: "مکمل ربات‌ها و مینی‌اپ‌ها",
-      title: "شارژ فوری استارز تلگرام و اشتراک‌های هوش مصنوعی (ChatGPT & Gemini)",
-      description: "اگر برای تست و استفاده در ربات‌ها یا خرید گیفت به استارز تلگرام، تلگرام پرمیوم یا اشتراک‌های رسمی هوش مصنوعی نیاز دارید، با تحویل فوری از وایچ تهیه کنید.",
-      linkUrl: "/products/telegram-stars",
-      buttonText: "مشاهده و خرید استارز تلگرام",
-      accentBorder: "border-cyan-500/35",
-      accentBg: "from-cyan-950/20 via-background to-card",
-      badgeClass: "bg-cyan-500/15 text-cyan-500 dark:text-cyan-400 border-cyan-500/30",
-      btnClass: "bg-cyan-600 hover:bg-cyan-500 text-white shadow-cyan-600/20",
     };
   }
 
@@ -682,7 +680,7 @@ function TelegramBotServiceBanner() {
         </div>
 
         <p className="text-xs sm:text-sm leading-7 text-slate-800 dark:text-slate-200 font-medium">
-          نیاز به ربات فروشگاهی تلگرام، ربات پشتیبانی هوشمند (متصل به ChatGPT و Gemini)، ربات تایید خودکار فیش بانکی، مینی‌اپ پرداخت با استارز یا مدیریت کانال و گروه دارید؟ پیاده‌سازی دقیق، سریع و کاملاً اختصاصی با <strong>قیمت منصفانه و امکان همکاری بلندمدت</strong> انجام می‌شود.
+          نیاز به ربات فروشگاهی تلگرام، ربات ثبت سفارش و دریافت فیش، ربات مدیریت کانال و گروه، عضویت VIP یا مینی‌اپ پرداخت با استارز دارید؟ طراحی و ساخت ربات تلگرام اختصاصی با <strong>قیمت مناسب و امکان همکاری مستقیم</strong> انجام می‌شود.
         </p>
 
         <div className="flex flex-wrap items-center gap-2.5 pt-1">
