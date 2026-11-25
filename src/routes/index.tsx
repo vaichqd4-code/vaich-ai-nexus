@@ -12,7 +12,6 @@ import { ArrowLeft, Sparkles, CheckCircle2, ShieldCheck, Zap, Headphones, Layers
 // Code splitting below-the-fold landing page sections for high Lighthouse Performance
 const Features = lazy(() => import("@/components/sections/Features").then((m) => ({ default: m.Features })));
 const HowItWorks = lazy(() => import("@/components/sections/HowItWorks").then((m) => ({ default: m.HowItWorks })));
-const Trust = lazy(() => import("@/components/sections/Trust").then((m) => ({ default: m.Trust })));
 const Faq = lazy(() => import("@/components/sections/Faq").then((m) => ({ default: m.Faq })));
 const SupportCta = lazy(() => import("@/components/sections/SupportCta").then((m) => ({ default: m.SupportCta })));
 
@@ -600,17 +599,12 @@ function Home() {
         <Features />
       </Suspense>
 
-      {/* 7. Customer Reviews & Trust Stats (نظرات مشتریان و آمار اعتماد) */}
-      <Suspense fallback={<div className="h-16 py-4" />}>
-        <Trust />
-      </Suspense>
-
-      {/* 8. FAQ (سوالات متداول) */}
+      {/* 7. FAQ (سوالات متداول) */}
       <Suspense fallback={<div className="h-16 py-4" />}>
         <Faq />
       </Suspense>
 
-      {/* 9. Support CTA */}
+      {/* 8. Support CTA */}
       <Suspense fallback={<div className="h-16 py-4" />}>
         <SupportCta />
       </Suspense>
