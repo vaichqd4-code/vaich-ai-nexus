@@ -472,6 +472,27 @@ export function BlogCoverGraphic({
         </div>
       );
 
+    case "telegram-bot-development-custom-order-guide":
+      return (
+        <div
+          className={`relative overflow-hidden bg-gradient-to-br from-neutral-900 via-cyan-950/35 to-neutral-950 flex flex-col justify-between p-5 border border-cyan-500/25 select-none ${className}`}
+        >
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-wider uppercase text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
+              CUSTOM BOT DEV
+            </span>
+            <span className="text-[9px] font-mono text-cyan-300/80">AI &amp; PAYMENTS</span>
+          </div>
+          <div className="relative z-10 my-auto flex items-center justify-center py-2">
+            <img src="/vaich-logo.png" alt="Custom Telegram Bot" className="w-20 h-20 rounded-2xl object-cover shadow-lg" />
+          </div>
+          <div className="relative z-10 flex items-center justify-between text-[11px] text-neutral-400 border-t border-cyan-500/20 pt-2 font-mono">
+            <span>TELEGRAM AUTOMATION</span>
+            <span className="text-cyan-400 font-bold">CUSTOM BUILD</span>
+          </div>
+        </div>
+      );
+
     case "telegram-premium-features-gift-activation-guide":
       return (
         <div

@@ -9,11 +9,12 @@ import { toPersianDigits } from "@/lib/products";
 const FEATURED_BLOG_SLUGS = [
   "telegram-stars-guide-buy-uses-iran",
   "flagship-ai-models-comparison",
-  "telegram-premium-features-gift-activation-guide",
+  "telegram-bot-development-custom-order-guide",
   "prevent-chatgpt-claude-account-ban",
   "ai-free-vs-plus-comparison",
   "gemini-2-million-context-window-big-data-analysis",
   "how-google-sheets-planner-transforms-habits-goals",
+  "defeat-procrastination-google-sheets-planner",
 ];
 
 function selectFeaturedPosts(allPosts: BlogPost[]): BlogPost[] {
@@ -24,12 +25,12 @@ function selectFeaturedPosts(allPosts: BlogPost[]): BlogPost[] {
     if (found) picked.push(found);
   }
   for (const post of allPosts) {
-    if (picked.length >= 7) break;
+    if (picked.length >= 8) break;
     if (!picked.some((p) => p.slug === post.slug)) {
       picked.push(post);
     }
   }
-  return picked.length > 0 ? picked : allPosts.slice(0, 7);
+  return picked.length > 0 ? picked : allPosts.slice(0, 8);
 }
 
 export function BlogSection() {

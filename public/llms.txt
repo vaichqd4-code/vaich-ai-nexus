@@ -16,9 +16,9 @@ VAICH (وایچ) یک فروشگاه تخصصی خدمات دیجیتال، اش
 - [اشتراک جمنای پرو ۱۸ ماهه (Google AI Pro)](https://vaich.ir/products/gemini-pro): اشتراک طولانی‌مدت ۱۸ ماهه Google AI Pro (مدل‌های Gemini 4 Hydrogen و Neon، پنج ترابایت Google One، ادغام Workspace)
 - [اشتراک جمنای پرو دوماهه (Google AI Pro)](https://vaich.ir/products/gemini): اشتراک فمیلی ۱ و ۲ ماهه Google AI Pro برای پروژه‌ها و دسترسی به Gemini 4 Hydrogen، Neon و Google Antigravity
 
-## خدمات طراحی و ساخت ربات تلگرام اختصاصی
+## خدمات توسعه و ساخت ربات تلگرام اختصاصی
 
-- سفارش ساخت ربات تلگرام فروشگاهی، ثبت سفارش و رسید، مدیریت کانال و گروه و پرداخت با استارز با قیمت مناسب و امکان همکاری مستقیم (تلگرام: @youneshayati | تلفن: 09193872172)
+- [سفارش ساخت ربات تلگرام اختصاصی](https://vaich.ir/blog/telegram-bot-development-custom-order-guide): طراحی ربات‌های فروشگاهی، مدیریت کانال و گروه VIP، ثبت سفارش، تایید فیش بانکی و پرداخت با استارز با قیمت مناسب (تلگرام: @youneshayati | تلفن: 09193872172)
 
 ## فیدها و منابع داده‌ای
 
@@ -33,6 +33,7 @@ VAICH (وایچ) یک فروشگاه تخصصی خدمات دیجیتال، اش
 
 - [مجله تخصصی وایچ](https://vaich.ir/blog): آرشیو مقالات مقایسه و آموزش ابزارهای هوش مصنوعی و مدیریت زمان
 - [استارز تلگرام چیست و چگونه بخریم](https://vaich.ir/blog/telegram-stars-guide-buy-uses-iran): راهنمای خرید فوری و قانونی استارز تلگرام با آیدی و کاربرد در گیفت و مینی‌اپ‌ها
+- [ساخت ربات تلگرام اختصاصی با قیمت مناسب](https://vaich.ir/blog/telegram-bot-development-custom-order-guide): طراحی ربات فروشگاهی و مدیریت کانال تلگرام و همکاری مستقیم
 - [تلگرام پرمیوم گیفتی بدون رمز](https://vaich.ir/blog/telegram-premium-features-gift-activation-guide): بررسی امکانات، امنیت و راهنمای خرید تلگرام پرمیوم ۱ تا ۱۲ ماهه
 - [آموزش کانوا پرو و Magic Studio](https://vaich.ir/blog/canva-pro-ai-magic-studio-design-guide): طراحی حرفه‌ای روی ایمیل شخصی با Canva Pro
 - [مقایسه پرچمداران AI نوامبر ۲۰۲۶](https://vaich.ir/blog/flagship-ai-models-comparison): بررسی ChatGPT Plus، Claude Pro و Google AI Pro

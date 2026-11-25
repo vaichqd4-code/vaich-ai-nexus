@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { getBlogPostBySlug, getRelatedBlogPosts, type BlogPost } from "@/lib/blog-data";
 import { BlogCoverGraphic } from "@/components/blog/BlogCoverGraphic";
+import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { useDynamicProducts, type InArticleBannerConfig } from "@/lib/products";
 import {
   Calendar,
@@ -24,19 +25,6 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {
-    const rawSlug = (params.slug || "").trim().toLowerCase();
-    if (
-      rawSlug === "telegram-bot-development-custom-order-guide" ||
-      rawSlug === "telegram-bot-development" ||
-      rawSlug === "order-telegram-bot" ||
-      rawSlug === "sakht-robot-telegram"
-    ) {
-      throw redirect({
-        to: "/blog/$slug",
-        params: { slug: "telegram-stars-guide-buy-uses-iran" },
-        statusCode: 301,
-      });
-    }
     const post = getBlogPostBySlug(params.slug);
     if (!post) {
       throw notFound();
@@ -347,7 +335,7 @@ function BlogPostPage() {
           </div>
 
           {/* Telegram Bot Development & Collaboration Promo Block */}
-          {post.includeBotCollabBanner && (
+          {(post.includeBotCollabBanner || post.targetProductType === "telegram-bot") && (
             <TelegramBotServiceBanner />
           )}
 
@@ -357,10 +345,12 @@ function BlogPostPage() {
           </div>
         </article>
 
-        {/* Bottom CTA Banner */}
-        <div className="my-10">
-          <ProductRecommendationBanner post={post} isFullWidth />
-        </div>
+        {/* Bottom CTA Banner (Shown only when Bot Banner isn't already displayed at the end) */}
+        {!(post.includeBotCollabBanner || post.targetProductType === "telegram-bot") && (
+          <div className="my-10">
+            <ProductRecommendationBanner post={post} isFullWidth />
+          </div>
+        )}
 
         {/* Related Articles Carousel / Grid */}
         {relatedPosts.length > 0 && (
@@ -432,119 +422,152 @@ function getArticlePromoDetails(post: BlogPost) {
   // 0. Telegram Stars
   if (post.targetProductType === "telegram-stars" || post.targetProductSlug === "telegram-stars" || slug.includes("telegram-stars")) {
     return {
-      badge: "شارژ فوری و قانونی استارز",
-      title: "خرید استارز تلگرام (۱۰۰ تا ۱۰,۰۰۰ استارز) فقط با آیدی",
-      description: "واریز مستقیم و قانونی استارز به اکانت تلگرام شما (@Username) بدون نیاز به رمز عبور و کارت خارجی؛ مناسب خرید گیفت‌های کلکسیونی، ربات‌ها و مینی‌اپ‌ها.",
+      productSlug: "telegram-stars",
+      iconUrl: "/telegram-stars-icon.webp",
+      imageFit: "contain" as const,
+      badge: "شارژ فوری با آیدی",
+      priceHint: "از ۵۹۰,۰۰۰ تومان",
+      title: "خرید استارز تلگرام (۱۰۰ تا ۱۰,۰۰۰ استارز)",
+      description: "واریز قانونی و مستقیم روی آیدی تلگرام شما (@Username) بدون رمز عبور؛ مناسب خرید گیفت و پرداخت مینی‌اپ‌ها.",
       linkUrl: "/products/telegram-stars",
-      buttonText: "خرید فوری استارز تلگرام",
-      accentBorder: "border-amber-500/35",
-      accentBg: "from-amber-950/20 via-background to-card",
-      badgeClass: "bg-amber-500/15 text-amber-500 dark:text-amber-400 border-amber-500/30",
-      btnClass: "bg-amber-500 hover:bg-amber-400 text-slate-950 font-black shadow-amber-500/20",
+      buttonText: "مشاهده و خرید استارز",
+      borderAccent: "border-r-amber-500",
+      badgeClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+    };
+  }
+
+  // 0.5. Telegram Bot Development -> clean Telegram Stars / Premium companion offer
+  if (post.targetProductType === "telegram-bot") {
+    return {
+      productSlug: "telegram-stars",
+      iconUrl: "/telegram-stars-icon.webp",
+      imageFit: "contain" as const,
+      badge: "خدمات تلگرام وایچ",
+      priceHint: "تحویل فوری",
+      title: "شارژ استارز تلگرام و فعال‌سازی تلگرام پرمیوم",
+      description: "تکمیل امکانات تلگرام کسب‌وکار شما با شارژ فوری Telegram Stars و تلگرام پرمیوم گیفتی بدون نیاز به رمز عبور.",
+      linkUrl: "/products/telegram-stars",
+      buttonText: "خرید استارز تلگرام",
+      borderAccent: "border-r-sky-500",
+      badgeClass: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
     };
   }
 
   // 0.7. Telegram Premium
   if (post.targetProductType === "telegram-premium" || post.targetProductSlug === "telegram-premium" || slug.includes("telegram-premium")) {
     return {
+      productSlug: "telegram-premium",
+      iconUrl: "/telegram-premium-icon.webp",
+      imageFit: "contain" as const,
       badge: "گیفت رسمی بدون رمز",
-      title: "خرید اشتراک تلگرام پرمیوم (۱، ۳، ۶ و ۱۲ ماهه)",
-      description: "فعال‌سازی کاملاً قانونی روی آیدی شخصی شما (@Username) بدون نیاز به شماره یا کد ورود؛ همراه با دانلود نامحدود، حذف تبلیغات، تبدیل ویس به متن و ابزارهای تلگرام بیزینس.",
+      priceHint: "۱ تا ۱۲ ماهه",
+      title: "خرید اشتراک تلگرام پرمیوم (Telegram Premium)",
+      description: "فعال‌سازی کاملاً قانونی روی آیدی شخصی بدون نیاز به کد ورود؛ دانلود نامحدود، آپلود ۴ گیگ و ابزارهای بیزینس.",
       linkUrl: "/products/telegram-premium",
-      buttonText: "خرید تلگرام پرمیوم گیفتی",
-      accentBorder: "border-blue-500/35",
-      accentBg: "from-blue-950/20 via-background to-card",
-      badgeClass: "bg-blue-500/15 text-blue-500 dark:text-blue-400 border-blue-500/30",
-      btnClass: "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/20",
+      buttonText: "مشاهده پلن‌ها و خرید",
+      borderAccent: "border-r-blue-500",
+      badgeClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
     };
   }
 
   // 0.8. Canva Pro
   if (post.targetProductType === "canva-pro" || post.targetProductSlug === "canva-pro" || slug.includes("canva")) {
     return {
-      badge: "قابل تمدید روی ایمیل شخصی",
-      title: "خرید اشتراک کانوا پرو (Canva Pro) ۱ تا ۶ ماهه",
-      description: "ارتقای رسمی اکانت شخصی شما با دعوت تیمی بدون تعویض حساب؛ دسترسی کامل به هوش مصنوعی Magic Studio، حذف پس‌زمینه و ۱۰۰ میلیون المان بدون واترمارک.",
+      productSlug: "canva-pro",
+      iconUrl: "/canva-pro-icon.webp",
+      imageFit: "contain" as const,
+      badge: "روی ایمیل شخصی",
+      priceHint: "۱ تا ۶ ماهه",
+      title: "خرید اشتراک کانوا پرو (Canva Pro) قابل تمدید",
+      description: "ارتقای رسمی اکانت شخصی با دعوت تیمی بدون تعویض حساب؛ دسترسی کامل به Magic Studio و میلیون‌ها قالب پرمیوم.",
       linkUrl: "/products/canva-pro",
       buttonText: "مشاهده و خرید کانوا پرو",
-      accentBorder: "border-teal-500/35",
-      accentBg: "from-teal-950/20 via-background to-card",
-      badgeClass: "bg-teal-500/15 text-teal-500 dark:text-teal-400 border-teal-500/30",
-      btnClass: "bg-teal-600 hover:bg-teal-500 text-white shadow-teal-600/20",
+      borderAccent: "border-r-teal-500",
+      badgeClass: "bg-teal-500/10 text-teal-600 dark:text-teal-400",
     };
   }
 
   // 1. Gemini articles
   if (slug.includes("gemini")) {
     return {
-      badge: "پیشنهاد ویژه اشتراک هوش مصنوعی",
-      title: "خرید قانونی اشتراک Google AI Pro (Gemini Pro)",
-      description: "دسترسی رسمی به مدل پرچمدار Gemini 4 Argon با استدلال عمیق Deep Think، یکپارچگی مستقیم با Google Workspace و ۵ ترابایت فضای ابری Google One با فعال‌سازی قانونی و تست تحویل سالم اولیه.",
+      productSlug: "gemini",
+      iconUrl: "/gemini-60d-icon.webp",
+      imageFit: "contain" as const,
+      badge: "پیشنهاد وایچ",
+      priceHint: "از ۳۹۰,۰۰۰ تومان",
+      title: "خرید اشتراک Google AI Pro (Gemini Pro)",
+      description: "دسترسی رسمی به مدل‌های Gemini 4 Hydrogen و Neon، ۵ ترابایت فضای Google One و ۱۰۰۰ کردیت ویدیوسازی Flow.",
       linkUrl: "/products/gemini",
-      buttonText: "مشاهده پلن‌های Gemini Pro",
-      accentBorder: "border-purple-500/35",
-      accentBg: "from-purple-950/20 via-background to-card",
-      badgeClass: "bg-purple-500/15 text-purple-400 border-purple-500/30",
-      btnClass: "bg-purple-600 hover:bg-purple-500 text-white shadow-purple-600/20",
+      buttonText: "مشاهده پلن‌های جمنای",
+      borderAccent: "border-r-purple-500",
+      badgeClass: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
     };
   }
 
   // 2. Claude articles
   if (slug.includes("claude") && !slug.includes("comparison") && !slug.includes("flagship")) {
     return {
-      badge: "پرچمدار کدنویسی و استدلال",
+      productSlug: "claude",
+      iconUrl: "/claude-icon.webp",
+      imageFit: "contain" as const,
+      badge: "محبوب برنامه‌نویسان",
+      priceHint: "اکانت اختصاصی",
       title: "خرید قانونی اکانت Claude Pro آنتروپیک",
-      description: "مجهز به Claude Sonnet 5.5، مدل استدلال عمیق Opus 5.5، بوم تعاملی Artifacts، ابزار پیشرفته Claude Code و کانتکست ۱ میلیون توکنی با ضمانت فعال‌سازی اختصاصی روی ایمیل شما.",
+      description: "دسترسی رسمی به Claude Sonnet 5.5، Opus 5.5، ابزار Claude Code و کانتکست ۱ میلیون توکنی روی ایمیل شما.",
       linkUrl: "/products/claude",
       buttonText: "مشاهده اشتراک Claude Pro",
-      accentBorder: "border-amber-500/35",
-      accentBg: "from-amber-950/20 via-background to-card",
-      badgeClass: "bg-amber-500/15 text-amber-400 border-amber-500/30",
-      btnClass: "bg-amber-600 hover:bg-amber-500 text-white shadow-amber-600/20",
+      borderAccent: "border-r-amber-500",
+      badgeClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
     };
   }
 
   // 3. ChatGPT Plus / Free vs Plus / Ban Prevention
   if (slug.includes("ai-free-vs-plus") || slug.includes("prevent-chatgpt")) {
     return {
-      badge: "پلن رسمی ۲۰ دلاری OpenAI",
-      title: "خرید اکانت قانونی و اختصاصی ChatGPT Plus",
-      description: "دسترسی نامحدود به GPT-6.1 Sol، فضای کاری نوین Prism، بوم تعاملی Canvas، حالت صوتی زنده و Deep Research روی ایمیل شخصی شما با ضمانت فعال‌سازی قانونی.",
+      productSlug: "chatgpt-plus",
+      iconUrl: "/chatgpt-logo.svg",
+      imageFit: "contain" as const,
+      badge: "نسخه رسمی ۲۰ دلاری",
+      priceHint: "فعال‌سازی اختصاصی",
+      title: "خرید اشتراک قانونی ChatGPT Plus روی ایمیل شخصی",
+      description: "دسترسی کامل به GPT-6.1 Sol، محیط Canvas و Prism، حالت صوتی زنده و Deep Research با ضمانت فعال‌سازی سالم.",
       linkUrl: "/products/chatgpt-plus",
-      buttonText: "مشاهده اشتراک ChatGPT Plus",
-      accentBorder: "border-emerald-500/35",
-      accentBg: "from-emerald-950/20 via-background to-card",
-      badgeClass: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-      btnClass: "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20",
+      buttonText: "مشاهده و خرید ChatGPT Plus",
+      borderAccent: "border-r-emerald-500",
+      badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
     };
   }
 
   // 4. Comparison / General AI
   if (post.targetProductType === "ai") {
     return {
-      badge: "ضمانت فعال‌سازی قانونی",
-      title: "خرید قانونی اشتراک‌های هوش مصنوعی (ChatGPT, Claude, Gemini)",
-      description: "فعال‌سازی اختصاصی روی ایمیل شما با ضمانت تحویل سالم اولیه و راهنمایی تنظیمات ایمن در پشتیبانی ۲۴ ساعته وایچ.",
+      productSlug: "chatgpt-plus",
+      iconUrl: "/chatgpt-logo.svg",
+      imageFit: "contain" as const,
+      badge: "تحویل سریع و قانونی",
+      priceHint: "کاتالوگ وایچ",
+      title: "مقایسه و خرید اشتراک‌های هوش مصنوعی (ChatGPT, Gemini, Claude)",
+      description: "فعال‌سازی اختصاصی روی ایمیل شخصی شما با ضمانت تحویل سالم اولیه و پشتیبانی پاسخگو در راه‌اندازی.",
       linkUrl: "/products",
-      buttonText: "مشاهده و مقایسه پلن‌های AI",
-      accentBorder: "border-primary/35",
-      accentBg: "from-primary/10 via-background to-card",
-      badgeClass: "bg-primary/15 text-primary border-primary/30",
-      btnClass: "bg-primary text-primary-foreground hover:opacity-90 shadow-primary/20",
+      buttonText: "مشاهده همه اشتراک‌ها",
+      borderAccent: "border-r-primary",
+      badgeClass: "bg-primary/10 text-primary",
     };
   }
 
   // 5. Default: Planner & Productivity
   return {
-    badge: "دسترسی همیشگی بدون اشتراک",
+    productSlug: "vaich-life-planner",
+    iconUrl: "/planner-cover.webp",
+    imageFit: "cover" as const,
+    badge: "دسترسی دائمی بدون اشتراک",
+    priceHint: "۲۹۹,۰۰۰ تومان",
     title: "پلنر جامع و هوشمند گوگل‌شیت وایچ (Life Planner)",
-    description: "سیستم ردیابی روزانه، نمودارهای خودکار پیشرفت، فرمول‌های پیشرفته، Habit Tracker، ماتریس آیزنهاور و سازگاری کامل در موبایل و لپ‌تاپ.",
+    description: "سیستم ردیابی عادات، نمودارهای پیشرفت، ماتریس آیزنهاور و بودجه‌بندی مالی با دسترسی همیشگی در موبایل و لپ‌تاپ.",
     linkUrl: "/products/vaich-life-planner",
     buttonText: "مشاهده و دریافت پلنر",
-    accentBorder: "border-emerald-500/35",
-    accentBg: "from-emerald-950/20 via-background to-card",
-    badgeClass: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-    btnClass: "bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20",
+    borderAccent: "border-r-emerald-500",
+    badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
   };
 }
 
@@ -556,35 +579,67 @@ function ProductRecommendationBanner({
   isFullWidth?: boolean;
 }) {
   const promo = getArticlePromoDetails(post);
+  const isCoverThumb = promo.imageFit === "cover";
 
   return (
-    <div
-      className={`my-6 rounded-3xl border ${promo.accentBorder} bg-gradient-to-r ${promo.accentBg} p-5 sm:p-6 shadow-md transition-all ${
-        isFullWidth ? "w-full" : ""
-      }`}
-    >
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="space-y-1.5 text-center sm:text-right">
-          <div className="flex items-center justify-center sm:justify-start gap-2">
-            <span className={`rounded-full border text-xs px-2.5 py-0.5 font-bold ${promo.badgeClass}`}>
-              {promo.badge}
-            </span>
-            <span className="text-sm sm:text-base font-bold text-foreground">
-              {promo.title}
-            </span>
-          </div>
-          <p className="text-xs text-neutral-700 dark:text-slate-300 max-w-xl leading-relaxed">
-            {promo.description}
-          </p>
-        </div>
-        <Link
-          to={promo.linkUrl as any}
-          className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-xs sm:text-sm font-bold shadow-lg transition-all shrink-0 hover:scale-105 ${promo.btnClass}`}
+    <div className={cn("my-8 not-prose", isFullWidth ? "w-full" : "")}>
+      <Link to={promo.linkUrl as any} className="block group no-underline">
+        <div
+          className={cn(
+            "relative overflow-hidden rounded-2xl border border-border/80 border-r-4 bg-card/90 p-4 sm:p-5 shadow-xs transition-all duration-200 hover:border-primary/45 hover:shadow-md",
+            promo.borderAccent
+          )}
         >
-          <ShoppingBag className="h-4 w-4" />
-          <span>{promo.buttonText}</span>
-        </Link>
-      </div>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-5">
+            {isCoverThumb ? (
+              <div className="relative w-full sm:w-36 aspect-[4/3] shrink-0 overflow-hidden rounded-xl border border-border/60 bg-secondary/40">
+                <img
+                  src={promo.iconUrl}
+                  alt={promo.title}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                />
+              </div>
+            ) : (
+              <div className="flex items-center justify-start sm:justify-center shrink-0">
+                <ServiceIcon
+                  slug={promo.productSlug}
+                  iconUrl={promo.iconUrl}
+                  imageFit={promo.imageFit}
+                  className="h-16 w-16 sm:h-20 sm:w-20 group-hover:scale-[1.03]"
+                />
+              </div>
+            )}
+
+            <div className="flex-1 min-w-0 space-y-1.5 text-right">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className={cn("inline-block rounded-md px-2.5 py-0.5 text-[11px] font-bold", promo.badgeClass)}>
+                  {promo.badge}
+                </span>
+                {promo.priceHint && (
+                  <span className="text-[11px] font-semibold text-muted-foreground">
+                    • {promo.priceHint}
+                  </span>
+                )}
+              </div>
+              <h3 className="text-sm sm:text-base font-extrabold text-foreground leading-snug group-hover:text-primary transition-colors">
+                {promo.title}
+              </h3>
+              <p className="text-xs sm:text-[13px] text-muted-foreground leading-6 line-clamp-2">
+                {promo.description}
+              </p>
+            </div>
+
+            <div className="pt-1 sm:pt-0 shrink-0">
+              <span className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-xl bg-primary px-4 py-2.5 text-xs font-bold text-primary-foreground shadow-xs transition-all group-hover:bg-primary/90">
+                <ShoppingBag className="h-3.5 w-3.5" />
+                <span>{promo.buttonText}</span>
+                <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
+              </span>
+            </div>
+          </div>
+        </div>
+      </Link>
     </div>
   );
 }
@@ -661,57 +716,59 @@ function InArticlePromoWidget({ config }: { config: InArticleBannerConfig }) {
 
 function TelegramBotServiceBanner() {
   return (
-    <div className="my-8 rounded-3xl border border-cyan-500/35 bg-gradient-to-br from-cyan-950/25 via-card to-indigo-950/20 p-5 sm:p-7 shadow-lg">
-      <div className="flex flex-col gap-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400">
-              <Bot className="h-5 w-5" />
-            </span>
-            <div>
-              <span className="inline-block rounded-full bg-cyan-500/15 border border-cyan-500/30 px-2.5 py-0.5 text-[10px] font-bold text-cyan-500 dark:text-cyan-400 mb-1">
-                سفارش طراحی ربات و همکاری مستقیم
-              </span>
-              <h3 className="text-sm sm:text-lg font-black text-foreground">
-                ساخت ربات تلگرام اختصاصی با قیمت مناسب و پشتیبانی کامل
-              </h3>
-            </div>
-          </div>
+    <div className="my-8 not-prose rounded-2xl border border-border/80 border-r-4 border-r-sky-500 bg-card/90 p-4 sm:p-5 shadow-xs transition-colors">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-4 sm:gap-5">
+        <div className="flex h-16 w-16 sm:h-20 sm:w-20 shrink-0 items-center justify-center rounded-2xl border border-sky-500/25 bg-sky-500/10 text-sky-500">
+          <Bot className="h-8 w-8" />
         </div>
 
-        <p className="text-xs sm:text-sm leading-7 text-slate-800 dark:text-slate-200 font-medium">
-          نیاز به ربات فروشگاهی تلگرام، ربات ثبت سفارش و دریافت فیش، ربات مدیریت کانال و گروه، عضویت VIP یا مینی‌اپ پرداخت با استارز دارید؟ طراحی و ساخت ربات تلگرام اختصاصی با <strong>قیمت مناسب و امکان همکاری مستقیم</strong> انجام می‌شود.
-        </p>
+        <div className="flex-1 space-y-2.5 text-right">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-block rounded-md bg-sky-500/10 px-2.5 py-0.5 text-[11px] font-bold text-sky-600 dark:text-sky-400">
+              طراحی ربات تلگرام و همکاری مستقیم
+            </span>
+            <span className="text-[11px] font-semibold text-muted-foreground">
+              • قیمت مناسب و پشتیبانی کامل
+            </span>
+          </div>
 
-        <div className="flex flex-wrap items-center gap-2.5 pt-1">
-          <a
-            href="https://t.me/youneshayati"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-sky-500 hover:bg-sky-400 px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-sky-500/20 transition-all hover:scale-[1.02]"
-          >
-            <Send className="h-4 w-4" />
-            <span>پیام در تلگرام (@youneshayati)</span>
-          </a>
+          <h3 className="text-sm sm:text-base font-extrabold text-foreground leading-snug">
+            ساخت ربات تلگرام اختصاصی (فروشگاهی، مدیریت کانال و اتوماسیون)
+          </h3>
 
-          <a
-            href="tel:09193872172"
-            className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/15 hover:bg-emerald-500/25 px-4 py-2.5 text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400 transition-all hover:scale-[1.02]"
-          >
-            <Phone className="h-4 w-4" />
-            <span dir="ltr">09193872172</span>
-            <span>(تماس مستقیم)</span>
-          </a>
+          <p className="text-xs sm:text-[13px] text-muted-foreground leading-6">
+            سفارش ساخت ربات فروشگاهی تلگرام، ربات مدیریت کانال و اشتراک VIP، ثبت سفارش و تایید رسید بانکی، ارسال خودکار فایل و پرداخت با استارز با قیمت منصفانه و امکان همکاری.
+          </p>
 
-          <a
-            href="https://wa.me/989193872172"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-secondary/70 hover:bg-secondary px-4 py-2.5 text-xs sm:text-sm font-bold text-foreground transition-all"
-          >
-            <MessageCircle className="h-4 w-4 text-emerald-500" />
-            <span>واتساپ همکاری</span>
-          </a>
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            <a
+              href="https://t.me/youneshayati"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 px-3.5 py-2 text-xs font-bold text-white shadow-xs transition-colors"
+            >
+              <Send className="h-3.5 w-3.5" />
+              <span>تلگرام (@youneshayati)</span>
+            </a>
+
+            <a
+              href="tel:09193872172"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/35 bg-emerald-500/10 hover:bg-emerald-500/20 px-3.5 py-2 text-xs font-bold text-emerald-600 dark:text-emerald-400 transition-colors"
+            >
+              <Phone className="h-3.5 w-3.5" />
+              <span dir="ltr">09193872172</span>
+            </a>
+
+            <a
+              href="https://wa.me/989193872172"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-border/80 bg-secondary/60 hover:bg-secondary px-3.5 py-2 text-xs font-bold text-foreground transition-colors"
+            >
+              <MessageCircle className="h-3.5 w-3.5 text-emerald-500" />
+              <span>واتساپ</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>

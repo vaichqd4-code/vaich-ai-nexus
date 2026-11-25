@@ -30,6 +30,7 @@ const urlList = [
   "https://vaich.ir/blog/ai-tools-productivity-study-guide",
   "https://vaich.ir/blog/prevent-chatgpt-claude-account-ban",
   "https://vaich.ir/blog/telegram-stars-guide-buy-uses-iran",
+  "https://vaich.ir/blog/telegram-bot-development-custom-order-guide",
   "https://vaich.ir/blog/telegram-premium-features-gift-activation-guide",
   "https://vaich.ir/blog/canva-pro-ai-magic-studio-design-guide",
   "https://vaich.ir/why",
