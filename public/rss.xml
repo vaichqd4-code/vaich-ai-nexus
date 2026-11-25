@@ -5,13 +5,49 @@
     <link>https://vaich.ir/blog</link>
     <description>راهنمای جامع هوش مصنوعی، مقایسه تخصصی مدل‌ها و ابزارهای بهره‌وری فردی در فروشگاه VAICH</description>
     <language>fa-IR</language>
-    <lastBuildDate>Thu, 12 Nov 2026 15:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 25 Nov 2026 17:30:00 GMT</lastBuildDate>
     <atom:link href="https://vaich.ir/rss.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://vaich.ir/vaich-logo.png</url>
       <title>VAICH Magazine</title>
       <link>https://vaich.ir/blog</link>
     </image>
+    <item>
+      <title><![CDATA[استارز تلگرام (Telegram Stars) چیست؟ راهنمای کامل کاربردها و خرید فوری با آیدی در ایران]]></title>
+      <link>https://vaich.ir/blog/telegram-stars-guide-buy-uses-iran</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/telegram-stars-guide-buy-uses-iran</guid>
+      <pubDate>Wed, 25 Nov 2026 06:30:00 GMT</pubDate>
+      <category><![CDATA[تلگرام و استارز]]></category>
+      <description><![CDATA[آشنایی کامل با واحد پول رسمی تلگرام (استارز)، خرید گیفت‌های کلکسیونی، پرداخت در مینی‌اپ‌ها و ربات‌ها و روش شارژ قانونی صرفاً با آیدی بدون نیاز به رمز.]]></description>
+      <enclosure url="https://vaich.ir/blog/telegram-stars-guide.webp" length="0" type="image/webp" />
+    </item>
+    <item>
+      <title><![CDATA[ساخت ربات تلگرام اختصاصی و هوشمند (متصل به هوش مصنوعی و درگاه پرداخت) با قیمت مناسب]]></title>
+      <link>https://vaich.ir/blog/telegram-bot-development-custom-order-guide</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/telegram-bot-development-custom-order-guide</guid>
+      <pubDate>Wed, 25 Nov 2026 07:00:00 GMT</pubDate>
+      <category><![CDATA[طراحی و ساخت ربات تلگرام]]></category>
+      <description><![CDATA[راهنمای کامل طراحی و سفارش ربات تلگرام فروشگاهی، پشتیبانی هوش مصنوعی، مینی‌اپ و سیستم مدیریت خودکار با قیمت منصفانه و امکان همکاری مستقیم.]]></description>
+      <enclosure url="https://vaich.ir/blog/telegram-bot-dev.webp" length="0" type="image/webp" />
+    </item>
+    <item>
+      <title><![CDATA[تلگرام پرمیوم گیفتی چیست؟ بررسی تمام امکانات، امنیت بدون رمز و راهنمای خرید در ایران]]></title>
+      <link>https://vaich.ir/blog/telegram-premium-features-gift-activation-guide</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/telegram-premium-features-gift-activation-guide</guid>
+      <pubDate>Wed, 25 Nov 2026 07:30:00 GMT</pubDate>
+      <category><![CDATA[تلگرام و استارز]]></category>
+      <description><![CDATA[بررسی کامل امکانات نسخه پولی تلگرام (دانلود نامحدود، آپلود ۴ گیگ، حذف تبلیغات، تبدیل ویس به متن و ابزار بیزینس) و مقایسه پلن‌های ۱ تا ۱۲ ماهه.]]></description>
+      <enclosure url="https://vaich.ir/blog/telegram-premium-guide.webp" length="0" type="image/webp" />
+    </item>
+    <item>
+      <title><![CDATA[آموزش استفاده از کانوا پرو (Canva Pro) و هوش مصنوعی Magic Studio روی ایمیل شخصی]]></title>
+      <link>https://vaich.ir/blog/canva-pro-ai-magic-studio-design-guide</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/canva-pro-ai-magic-studio-design-guide</guid>
+      <pubDate>Wed, 25 Nov 2026 08:00:00 GMT</pubDate>
+      <category><![CDATA[طراحی و گرافیک]]></category>
+      <description><![CDATA[چطور بدون نیاز به فتوشاپ، با دعوت‌نامه رسمی کانوا پرو روی ایمیل شخصی خودتان پوستر، استوری، کاور یوتیوب و پرزنتیشن حرفه‌ای بسازید؟]]></description>
+      <enclosure url="https://vaich.ir/blog/canva-pro-guide.webp" length="0" type="image/webp" />
+    </item>
     <item>
       <title><![CDATA[مقایسه پرچمداران AI نوامبر ۲۰۲۶: ChatGPT Plus، Claude Pro و Google AI Pro]]></title>
       <link>https://vaich.ir/blog/flagship-ai-models-comparison</link>

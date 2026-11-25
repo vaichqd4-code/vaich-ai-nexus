@@ -13,8 +13,12 @@ VAICH (وایچ) یک فروشگاه تخصصی خدمات دیجیتال، اش
 - [پلنر برنامه‌ریزی وایچ (استاندارد)](https://vaich.ir/products/vaich-life-planner): سیستم دائمی برنامه‌ریزی فردی، ردیاب عادات (Habit Tracker) و مدیریت مالی مبتنی بر Google Sheets
 - [اشتراک ChatGPT Plus](https://vaich.ir/products/chatgpt-plus): اشتراک ۱ ماهه قانونی و اختصاصی ChatGPT Plus روی ایمیل شخصی یا اکانت اختصاصی (GPT-6.1 Sol، GPT-6 Sol، Codex GPT-6 Astra با محدودیت ۵ ساعته)
 - [اشتراک Claude Pro](https://vaich.ir/products/claude): اشتراک قانونی و اختصاصی Claude Pro (خانواده Sonnet 5.5، Opus 5.5، Haiku 5.5 با سهمیه ۵ ساعته و هفتگی)
-- [اشتراک جمنای پرو ۱۸ ماهه (Google AI Pro)](https://vaich.ir/products/gemini-pro): اشتراک طولانی‌مدت ۱۸ ماهه Google AI Pro (مدل Gemini 4 Argon و Hydrogen، پنج ترابایت Google One، ادغام Workspace)
-- [اشتراک جمنای پرو ۶۰ روزه (Google AI Pro)](https://vaich.ir/products/gemini): اشتراک ۶۰ روزه Google AI Pro برای تست و پروژه‌های کوتاه‌مدت
+- [اشتراک جمنای پرو ۱۸ ماهه (Google AI Pro)](https://vaich.ir/products/gemini-pro): اشتراک طولانی‌مدت ۱۸ ماهه Google AI Pro (مدل‌های Gemini 4 Hydrogen و Neon، پنج ترابایت Google One، ادغام Workspace)
+- [اشتراک جمنای پرو دوماهه (Google AI Pro)](https://vaich.ir/products/gemini): اشتراک فمیلی ۱ و ۲ ماهه Google AI Pro برای پروژه‌ها و دسترسی به Gemini 4 Hydrogen، Neon و Google Antigravity
+
+## خدمات توسعه و ساخت ربات تلگرام اختصاصی
+
+- [سفارش ساخت ربات تلگرام اختصاصی](https://vaich.ir/blog/telegram-bot-development-custom-order-guide): طراحی ربات‌های فروشگاهی، پشتیبانی متصل به هوش مصنوعی (ChatGPT و Gemini)، مینی‌اپ پرداخت با استارز و سیستم تایید خودکار فیش با قیمت مناسب (تلگرام: @youneshayati | تلفن: 09193872172)
 
 ## فیدها و منابع داده‌ای
 
@@ -28,6 +32,10 @@ VAICH (وایچ) یک فروشگاه تخصصی خدمات دیجیتال، اش
 ## مجله و راهنماهای تخصصی
 
 - [مجله تخصصی وایچ](https://vaich.ir/blog): آرشیو مقالات مقایسه و آموزش ابزارهای هوش مصنوعی و مدیریت زمان
+- [استارز تلگرام چیست و چگونه بخریم](https://vaich.ir/blog/telegram-stars-guide-buy-uses-iran): راهنمای خرید فوری و قانونی استارز تلگرام با آیدی و کاربرد در گیفت و مینی‌اپ‌ها
+- [ساخت ربات تلگرام اختصاصی با قیمت مناسب](https://vaich.ir/blog/telegram-bot-development-custom-order-guide): طراحی ربات فروشگاهی و هوش مصنوعی تلگرام و همکاری مستقیم
+- [تلگرام پرمیوم گیفتی بدون رمز](https://vaich.ir/blog/telegram-premium-features-gift-activation-guide): بررسی امکانات، امنیت و راهنمای خرید تلگرام پرمیوم ۱ تا ۱۲ ماهه
+- [آموزش کانوا پرو و Magic Studio](https://vaich.ir/blog/canva-pro-ai-magic-studio-design-guide): طراحی حرفه‌ای روی ایمیل شخصی با Canva Pro
 - [مقایسه پرچمداران AI نوامبر ۲۰۲۶](https://vaich.ir/blog/flagship-ai-models-comparison): بررسی ChatGPT Plus، Claude Pro و Google AI Pro
 - [تفاوت نسخه رایگان با ChatGPT Plus و Claude Pro](https://vaich.ir/blog/ai-free-vs-plus-comparison): چه زمانی ارتقا به اشتراک پولی ارزشمند است
 - [جلوگیری از بن شدن اکانت ChatGPT و Claude](https://vaich.ir/blog/prevent-chatgpt-claude-account-ban): راهنمای ۷ اصل انتخاب IP ثابت و نگهداری ایمن اکانت

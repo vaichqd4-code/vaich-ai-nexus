@@ -24,14 +24,14 @@
   </product>
   <product>
     <id>gemini</id>
-    <title><![CDATA[جمنای پرو ۶۰ روزه]]></title>
-    <price>320000</price>
-    <old_price>320000</old_price>
+    <title><![CDATA[جمنای پرو دوماهه]]></title>
+    <price>390000</price>
+    <old_price>390000</old_price>
     <currency>IRR</currency>
     <availability>in stock</availability>
     <page_url>https://vaich.ir/products/gemini</page_url>
     <image_url>https://vaich.ir/gemini-60d-icon.webp</image_url>
-    <description><![CDATA[اشتراک رسمی ۶۰ روزه Google AI Pro (Gemini Pro)؛ مجهز به مدل‌های پرچمدار و نسل جدید Gemini 4 Argon و Gemini 4 Hydrogen، استدلال عمیق Deep Think و دستیار پژوهشی Deep Research، دسترسی به محیط توسعه Google Antigravity و Google AI Studio، دسترسی به پلتفرم ویدیوسازی Google Flow همراه با ۱۰۰۰ کردیت اختصاصی، ۵ ترابایت فضای ابری Google One و ادغام کامل با Google Workspace.]]></description>
+    <description><![CDATA[اشتراک رسمی دوماهه Google AI Pro (Gemini Pro)؛ مجهز به مدل‌های پرچمدار نسل جدید Gemini 4 Hydrogen و Gemini 4 Neon، دسترسی تخصصی به Gemini 4 Argon در Google AI Studio، استدلال عمیق و مدل‌های تصمیم‌گیری Deep Reasoning & Decision، دسترسی به محیط برنامه‌نویسی و توسعه Google Antigravity IDE / CLI، پلتفرم ویدیوسازی Google Flow همراه با ۱۰۰۰ کردیت اختصاصی، ۵ ترابایت فضای ابری عظیم Google One و ادغام کامل با Google Workspace.]]></description>
   </product>
   <product>
     <id>claude</id>
@@ -53,18 +53,7 @@
     <availability>out of stock</availability>
     <page_url>https://vaich.ir/products/gemini-pro</page_url>
     <image_url>https://vaich.ir/gemini-pro-18m-icon.webp</image_url>
-    <description><![CDATA[اشتراک بلندمدت ۱۸ ماهه فوق‌اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، پژوهشگران و برنامه‌نویسان؛ شامل دسترسی به مدل‌های پرچمدار Gemini 4 Argon و Gemini 4 Hydrogen، دسترسی به Google Antigravity، Google AI Studio و Google Flow با ۱۰۰۰ کردیت، استدلال عمیق Deep Think، امکانات کامل Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه. (توجه: در حال حاضر ظرفیت این پلن تکمیل و ناموجود است).]]></description>
-  </product>
-  <product>
-    <id>telegram-stars</id>
-    <title><![CDATA[استارز تلگرام]]></title>
-    <price>590000</price>
-    <old_price>590000</old_price>
-    <currency>IRR</currency>
-    <availability>in stock</availability>
-    <page_url>https://vaich.ir/products/telegram-stars</page_url>
-    <image_url>https://vaich.ir/telegram-stars-icon.webp</image_url>
-    <description><![CDATA[خرید و شارژ فوری استارز تلگرام (Telegram Stars - واحد پول رسمی درون‌برنامه‌ای تلگرام) مستقیماً به آیدی شما بدون نیاز به لاگین یا کارت بانکی بین‌المللی، با تحویل سریع و ایمن.]]></description>
+    <description><![CDATA[اشتراک بلندمدت ۱۸ ماهه فوق‌اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، پژوهشگران و برنامه‌نویسان؛ شامل دسترسی به مدل‌های پرچمدار Gemini 4 Hydrogen و Gemini 4 Neon، مدل تخصصی Gemini 4 Argon در Google AI Studio، مدل‌های تصمیم‌گیری و استدلال عمیق (Deep Reasoning & Decision)، دسترسی به Google Antigravity، Google Flow با ۱۰۰۰ کردیت، امکانات کامل Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه. (توجه: در حال حاضر ظرفیت این پلن تکمیل و ناموجود است).]]></description>
   </product>
   <product>
     <id>telegram-premium</id>
@@ -76,6 +65,17 @@
     <page_url>https://vaich.ir/products/telegram-premium</page_url>
     <image_url>https://vaich.ir/telegram-premium-icon.webp</image_url>
     <description><![CDATA[فعالسازی قانونی و رسمی تلگرام پرمیوم (Telegram Premium) روی اکانت شخصی شما از طریق گیفت رسمی (بدون نیاز به رمز عبور و کد ورود)، در کمترین زمان ممکن همراه با ضمانت کامل پایداری.]]></description>
+  </product>
+  <product>
+    <id>telegram-stars</id>
+    <title><![CDATA[استارز تلگرام]]></title>
+    <price>590000</price>
+    <old_price>590000</old_price>
+    <currency>IRR</currency>
+    <availability>in stock</availability>
+    <page_url>https://vaich.ir/products/telegram-stars</page_url>
+    <image_url>https://vaich.ir/telegram-stars-icon.webp</image_url>
+    <description><![CDATA[خرید و شارژ فوری استارز تلگرام (Telegram Stars) به‌صورت ۱۰۰٪ قانونی و رسمی مستقیماً روی آیدی تلگرام شما (@Username) بدون نیاز به رمز عبور، شماره مجازی یا کارت بانکی بین‌المللی؛ قابل استفاده برای خرید گیفت‌های کلکسیونی (Telegram Gifts)، پرداخت درون‌برنامه‌ای ربات‌ها و مینی‌اپ‌ها، حمایت از کانال‌ها و فعال‌سازی یا هدیه تلگرام پرمیوم.]]></description>
   </product>
   <product>
     <id>canva-pro</id>

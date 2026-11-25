@@ -451,6 +451,90 @@ export function BlogCoverGraphic({
         </div>
       );
 
+    case "telegram-stars-guide-buy-uses-iran":
+      return (
+        <div
+          className={`relative overflow-hidden bg-gradient-to-br from-neutral-900 via-amber-950/35 to-neutral-950 flex flex-col justify-between p-5 border border-amber-500/25 select-none ${className}`}
+        >
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-wider uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+              TELEGRAM STARS
+            </span>
+            <span className="text-[9px] font-mono text-amber-300/80">INSTANT TOP-UP</span>
+          </div>
+          <div className="relative z-10 my-auto flex items-center justify-center py-2">
+            <img src="/telegram-stars-icon.webp" alt="Telegram Stars" className="w-20 h-20 rounded-2xl object-cover shadow-lg" />
+          </div>
+          <div className="relative z-10 flex items-center justify-between text-[11px] text-neutral-400 border-t border-amber-500/20 pt-2 font-mono">
+            <span>OFFICIAL FRAGMENT</span>
+            <span className="text-amber-400 font-bold">100 – 10,000 STARS</span>
+          </div>
+        </div>
+      );
+
+    case "telegram-bot-development-custom-order-guide":
+      return (
+        <div
+          className={`relative overflow-hidden bg-gradient-to-br from-neutral-900 via-cyan-950/35 to-neutral-950 flex flex-col justify-between p-5 border border-cyan-500/25 select-none ${className}`}
+        >
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-wider uppercase text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
+              CUSTOM BOT DEV
+            </span>
+            <span className="text-[9px] font-mono text-cyan-300/80">AI &amp; PAYMENTS</span>
+          </div>
+          <div className="relative z-10 my-auto flex items-center justify-center py-2">
+            <img src="/vaich-logo.png" alt="Custom Telegram Bot" className="w-20 h-20 rounded-2xl object-cover shadow-lg" />
+          </div>
+          <div className="relative z-10 flex items-center justify-between text-[11px] text-neutral-400 border-t border-cyan-500/20 pt-2 font-mono">
+            <span>TELEGRAM AUTOMATION</span>
+            <span className="text-cyan-400 font-bold">CUSTOM BUILD</span>
+          </div>
+        </div>
+      );
+
+    case "telegram-premium-features-gift-activation-guide":
+      return (
+        <div
+          className={`relative overflow-hidden bg-gradient-to-br from-neutral-900 via-blue-950/40 to-neutral-950 flex flex-col justify-between p-5 border border-blue-500/25 select-none ${className}`}
+        >
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-wider uppercase text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">
+              TELEGRAM PREMIUM
+            </span>
+            <span className="text-[9px] font-mono text-blue-300/80">OFFICIAL GIFT</span>
+          </div>
+          <div className="relative z-10 my-auto flex items-center justify-center py-2">
+            <img src="/telegram-premium-icon.webp" alt="Telegram Premium" className="w-20 h-20 rounded-2xl object-cover shadow-lg" />
+          </div>
+          <div className="relative z-10 flex items-center justify-between text-[11px] text-neutral-400 border-t border-blue-500/20 pt-2 font-mono">
+            <span>NO PASSWORD NEEDED</span>
+            <span className="text-blue-400 font-bold">1 – 12 MONTHS</span>
+          </div>
+        </div>
+      );
+
+    case "canva-pro-ai-magic-studio-design-guide":
+      return (
+        <div
+          className={`relative overflow-hidden bg-gradient-to-br from-neutral-900 via-teal-950/35 to-neutral-950 flex flex-col justify-between p-5 border border-teal-500/25 select-none ${className}`}
+        >
+          <div className="relative z-10 flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-wider uppercase text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20">
+              CANVA PRO + AI
+            </span>
+            <span className="text-[9px] font-mono text-teal-300/80">MAGIC STUDIO</span>
+          </div>
+          <div className="relative z-10 my-auto flex items-center justify-center py-2">
+            <img src="/canva-pro-icon.webp" alt="Canva Pro" className="w-20 h-20 rounded-2xl object-cover shadow-lg" />
+          </div>
+          <div className="relative z-10 flex items-center justify-between text-[11px] text-neutral-400 border-t border-teal-500/20 pt-2 font-mono">
+            <span>PERSONAL EMAIL</span>
+            <span className="text-teal-400 font-bold">100M+ ASSETS</span>
+          </div>
+        </div>
+      );
+
     case "ai-tools-productivity-study-guide":
     default:
       return (

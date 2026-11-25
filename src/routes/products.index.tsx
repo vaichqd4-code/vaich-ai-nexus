@@ -1,13 +1,29 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { ProductCard } from "@/components/product/ProductCard";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { SupportCta } from "@/components/sections/SupportCta";
-import { useDynamicProducts } from "@/lib/products";
+import { DEFAULT_PRODUCTS, useDynamicProducts } from "@/lib/products";
+
+type ProductsSearch = {
+  q?: string;
+  category?: string;
+};
 
 export const Route = createFileRoute("/products/")({
+  validateSearch: (search: Record<string, unknown>): ProductsSearch => {
+    const q = typeof search.q === "string" && search.q.trim() ? search.q.trim() : undefined;
+    const category =
+      typeof search.category === "string" && search.category.trim() && search.category !== "all"
+        ? search.category.trim()
+        : undefined;
+    return {
+      ...(q ? { q } : {}),
+      ...(category ? { category } : {}),
+    };
+  },
   head: () => ({
     meta: [
       { title: "خرید اشتراک هوش مصنوعی، تلگرام پرمیوم، استارز، کانوا پرو و پلنر | VAICH" },
@@ -15,6 +31,11 @@ export const Route = createFileRoute("/products/")({
         name: "description",
         content:
           "فروشگاه رسمی VAICH؛ خرید اشتراک قانونی ChatGPT Plus، Gemini Pro، Claude Pro، تلگرام پرمیوم، استارز تلگرام، کانوا پرو و پلنر هوشمند گوگل‌شیت با تحویل سریع و ضمانت پایداری.",
+      },
+      {
+        name: "keywords",
+        content:
+          "خرید استارز تلگرام, خرید تلگرام پرمیوم, خرید کانوا پرو, خرید ChatGPT Plus, خرید Claude Pro, خرید Gemini Pro, پلنر دیجیتال گوگل شیت, فروشگاه وایچ",
       },
       { property: "og:title", content: "محصولات و اشتراک‌های رسمی | VAICH" },
       {
@@ -27,14 +48,43 @@ export const Route = createFileRoute("/products/")({
     links: [
       { rel: "canonical", href: "https://vaich.ir/products" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "کاتالوگ محصولات و اشتراک‌های VAICH",
+          url: "https://vaich.ir/products",
+          mainEntity: {
+            "@type": "ItemList",
+            itemListElement: DEFAULT_PRODUCTS.map((p, idx) => ({
+              "@type": "ListItem",
+              position: idx + 1,
+              name: p.name,
+              url: `https://vaich.ir/products/${p.slug}`,
+            })),
+          },
+        }),
+      },
+    ],
   }),
   component: ProductsPage,
 });
 
 function ProductsPage() {
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const { q, category } = Route.useSearch();
+  const [search, setSearch] = useState(q || "");
+  const [selectedCategory, setSelectedCategory] = useState<string>(category || "all");
   const { products } = useDynamicProducts();
+
+  useEffect(() => {
+    if (q !== undefined) setSearch(q);
+  }, [q]);
+
+  useEffect(() => {
+    if (category !== undefined) setSelectedCategory(category);
+  }, [category]);
 
   const categories = [
     { id: "all", label: "همه محصولات" },

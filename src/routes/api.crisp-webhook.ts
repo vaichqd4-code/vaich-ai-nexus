@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DEFAULT_PRODUCTS, DEFAULT_CATEGORY_ROWS } from "@/lib/products";
+import { BLOG_POSTS } from "@/lib/blog-data";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -72,7 +73,11 @@ function getLiveSiteCatalogContext(): string {
   try {
     const siteConfig = getLiveSiteConfig();
     const prods = siteConfig.products || DEFAULT_PRODUCTS;
-    const blogs = siteConfig.blogPosts || [];
+    const rawBlogs = Array.isArray(siteConfig.blogPosts) ? siteConfig.blogPosts : [];
+    const blogMap = new Map<string, any>();
+    for (const b of BLOG_POSTS) blogMap.set(b.slug, b);
+    for (const b of rawBlogs) if (b?.slug) blogMap.set(b.slug, b);
+    const blogs = Array.from(blogMap.values());
 
     const categories = (siteConfig.categoryRows || DEFAULT_CATEGORY_ROWS).map(
       (c: any) => `• دسته‌بندی: ${c.title} (${c.subtitle || ""})`,
@@ -191,9 +196,17 @@ ${conversationModeDirective}
    - Claude Pro (کلود پرو قانونی):
      • دسترسی رسمی پلن Pro به مدل‌های Claude Sonnet 5.5، Claude Opus 5.5 و Claude Haiku 5.5 با پنجره متنی ۱ میلیون توکنی و خروجی تا ۱۲۸ هزار توکن، Artifacts، Projects و Claude Code (سقف مصرف ۵ ساعته و هفتگی متناسب با پلن ۲۰ دلاری Pro؛ توجه: مدل Claude Fable 5.2 در پلن Pro با مصرف اعتبار جداگانه/شارژی یا در پلن‌های Max و Ultra در دسترس است).
      • بهترین گزینه برای: برنامه‌نویسان، توسعه‌دهندگان نرم‌افزار، نویسندگان، مترجمان و تحلیل‌گران اسناد طولانی.
-   - Google AI Pro / Gemini Pro (پلن‌های ۶۰ روزه و ۱۸ ماهه):
-     • دسترسی رسمی به اشتراک Google AI Pro با مدل پرچمدار Gemini 4 Argon، مدل استدلال عمیق Deep Think و مدل‌های سریع Flash، یکپارچگی با ابزارهای گوگل (Gmail, Docs, Drive, Vids)، ابزارهای NotebookLM و Canvas، و تا ۵ ترابایت فضای ابری Google One.
-     • پلن ۱۸ ماهه Google AI Pro (Gemini Pro) به‌صرفه‌ترین گزینه بلندمدت بدون دغدغه تمدید ماهانه است.
+   - Google AI Pro / Gemini Pro (پلن‌های دوماهه موجود و ۱۸ ماهه ناموجود):
+     • دسترسی رسمی به اشتراک Google AI Pro با مدل‌های پرچمدار نسل جدید Gemini 4 Hydrogen و Gemini 4 Neon، دسترسی تخصصی به Gemini 4 Argon در Google AI Studio، استدلال عمیق و مدل‌های تصمیم‌گیری (Deep Reasoning & Decision)، محیط Google Antigravity IDE، ابزارهای NotebookLM و Canvas، و تا ۵ ترابایت فضای ابری Google One.
+     • پلن دوماهه (فمیلی ۱ ماهه و ۲ ماهه) 🟢 موجود و فعال است؛ پلن ۱۸ ماهه در حال حاضر 🔴 ناموجود است.
+   - استارز تلگرام، تلگرام پرمیوم و کانوا پرو:
+     • استارز تلگرام (۱۰۰ تا ۱۰,۰۰۰ استارز): شارژ فوری و ۱۰۰٪ قانونی صرفاً با آیدی (@Username) بدون رمز عبور.
+     • تلگرام پرمیوم (۱ تا ۱۲ ماهه): گیفت رسمی بدون نیاز به رمز یا کد ورود.
+     • کانوا پرو (۱ تا ۶ ماهه): دعوت تیمی رسمی روی ایمیل شخصی و قابل تمدید روی همان اکانت.
+   - طراحی و ساخت ربات تلگرام اختصاصی با قیمت مناسب:
+     • اگر مشتری درباره ساخت ربات تلگرام (فروشگاهی، پشتیبانی هوش مصنوعی، تایید فیش، مینی‌اپ یا پرداخت با استارز) یا همکاری فنی پرسید، با خوش‌رویی اعلام کنید تیم وایچ طراحی و ساخت ربات تلگرام اختصاصی را با قیمت مناسب و منصفانه انجام می‌دهد و برای مشاوره و سفارش مستقیماً با آیدی تلگرام @youneshayati (https://t.me/youneshayati) یا شماره تماس 09193872172 ارتباط بگیرند.
+   - پیشنهاد مقالات آموزشی مجله وایچ هنگام راهنمایی کاربر:
+     • هرگاه کاربر درباره مقایسه هوش مصنوعی، جلوگیری از بن شدن، خرید استارز، تلگرام پرمیوم، کانوا پرو، پلنر گوگل‌شیت یا ساخت ربات تلگرام سوال داشت، در کنار پاسخ شفاف، لینک مقاله مرتبط از فهرست مقالات وبلاگ وایچ را نیز برای مطالعه بیشتر به او پیشنهاد دهید!
    - پلنر برنامه ریزی VAICH Life Planner:
      • نرم‌افزار دائمی بدون اشتراک ماهانه مبتنی بر فرمول‌ها و اسکریپت‌های گوگل شیتس (بدون نیاز به آفیس و اکسل، فقط با یک اکانت جیمیل در گوشی و کامپیوتر باز می‌شود).
      • مجهز به Habit Tracker، ماتریس آیزنهاور، متد Time Boxing و هوش مالی و مدیریت مخارج.

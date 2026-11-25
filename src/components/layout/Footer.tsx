@@ -18,6 +18,7 @@ const navigationColumns = [
       { to: "/products/canva-pro", label: "خرید اشتراک کانوا پرو (Canva Pro)" },
       { to: "/products/chatgpt-plus", label: "خرید اکانت قانونی ChatGPT Plus" },
       { to: "/products/claude", label: "خرید اکانت قانونی Claude Pro" },
+      { to: "/products/gemini", label: "خرید اشتراک Gemini Pro دوماهه" },
       { to: "/products/gemini-pro", label: "خرید اشتراک Gemini Pro ۱۸ ماهه" },
       { to: "/products/vaich-life-planner", label: "خرید پلنر دیجیتال هوشمند" },
     ],

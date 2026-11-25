@@ -14,6 +14,10 @@ import {
   BookOpen,
   ShoppingBag,
   ExternalLink,
+  Bot,
+  Phone,
+  Send,
+  MessageCircle,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -107,6 +111,9 @@ export const Route = createFileRoute("/blog/$slug")({
       meta: [
         { title: `${post.title} | مجله وایچ` },
         { name: "description", content: metaDesc },
+        ...(post.keywords && post.keywords.length > 0
+          ? [{ name: "keywords", content: post.keywords.join(", ") }]
+          : []),
         { name: "author", content: "یونس حیاتی" },
         { property: "og:title", content: post.title },
         { property: "og:description", content: metaDesc },
@@ -326,6 +333,11 @@ function BlogPostPage() {
             </p>
           </div>
 
+          {/* Telegram Bot Development & Collaboration Promo Block */}
+          {(post.includeBotCollabBanner || post.targetProductType === "telegram-bot") && (
+            <TelegramBotServiceBanner />
+          )}
+
           {/* Minimal, Discreet Author Signature as Requested */}
           <div className="mt-8 pt-4 border-t border-border/50 text-[12px] text-slate-500 dark:text-slate-400 font-medium text-center sm:text-right">
             نویسنده: یونس حیاتی
@@ -403,6 +415,66 @@ function BlogPostPage() {
 
 function getArticlePromoDetails(post: BlogPost) {
   const slug = post.slug.toLowerCase();
+
+  // 0. Telegram Stars
+  if (post.targetProductType === "telegram-stars" || post.targetProductSlug === "telegram-stars" || slug.includes("telegram-stars")) {
+    return {
+      badge: "شارژ فوری و قانونی استارز",
+      title: "خرید استارز تلگرام (۱۰۰ تا ۱۰,۰۰۰ استارز) فقط با آیدی",
+      description: "واریز مستقیم و قانونی استارز به اکانت تلگرام شما (@Username) بدون نیاز به رمز عبور و کارت خارجی؛ مناسب خرید گیفت‌های کلکسیونی، ربات‌ها و مینی‌اپ‌ها.",
+      linkUrl: "/products/telegram-stars",
+      buttonText: "خرید فوری استارز تلگرام",
+      accentBorder: "border-amber-500/35",
+      accentBg: "from-amber-950/20 via-background to-card",
+      badgeClass: "bg-amber-500/15 text-amber-500 dark:text-amber-400 border-amber-500/30",
+      btnClass: "bg-amber-500 hover:bg-amber-400 text-slate-950 font-black shadow-amber-500/20",
+    };
+  }
+
+  // 0.5. Telegram Bot Development -> cross-sell Telegram Stars or AI tools alongside bot CTA
+  if (post.targetProductType === "telegram-bot") {
+    return {
+      badge: "مکمل ربات‌ها و مینی‌اپ‌ها",
+      title: "شارژ فوری استارز تلگرام و اشتراک‌های هوش مصنوعی (ChatGPT & Gemini)",
+      description: "اگر برای تست و استفاده در ربات‌ها یا خرید گیفت به استارز تلگرام، تلگرام پرمیوم یا اشتراک‌های رسمی هوش مصنوعی نیاز دارید، با تحویل فوری از وایچ تهیه کنید.",
+      linkUrl: "/products/telegram-stars",
+      buttonText: "مشاهده و خرید استارز تلگرام",
+      accentBorder: "border-cyan-500/35",
+      accentBg: "from-cyan-950/20 via-background to-card",
+      badgeClass: "bg-cyan-500/15 text-cyan-500 dark:text-cyan-400 border-cyan-500/30",
+      btnClass: "bg-cyan-600 hover:bg-cyan-500 text-white shadow-cyan-600/20",
+    };
+  }
+
+  // 0.7. Telegram Premium
+  if (post.targetProductType === "telegram-premium" || post.targetProductSlug === "telegram-premium" || slug.includes("telegram-premium")) {
+    return {
+      badge: "گیفت رسمی بدون رمز",
+      title: "خرید اشتراک تلگرام پرمیوم (۱، ۳، ۶ و ۱۲ ماهه)",
+      description: "فعال‌سازی کاملاً قانونی روی آیدی شخصی شما (@Username) بدون نیاز به شماره یا کد ورود؛ همراه با دانلود نامحدود، حذف تبلیغات، تبدیل ویس به متن و ابزارهای تلگرام بیزینس.",
+      linkUrl: "/products/telegram-premium",
+      buttonText: "خرید تلگرام پرمیوم گیفتی",
+      accentBorder: "border-blue-500/35",
+      accentBg: "from-blue-950/20 via-background to-card",
+      badgeClass: "bg-blue-500/15 text-blue-500 dark:text-blue-400 border-blue-500/30",
+      btnClass: "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/20",
+    };
+  }
+
+  // 0.8. Canva Pro
+  if (post.targetProductType === "canva-pro" || post.targetProductSlug === "canva-pro" || slug.includes("canva")) {
+    return {
+      badge: "قابل تمدید روی ایمیل شخصی",
+      title: "خرید اشتراک کانوا پرو (Canva Pro) ۱ تا ۶ ماهه",
+      description: "ارتقای رسمی اکانت شخصی شما با دعوت تیمی بدون تعویض حساب؛ دسترسی کامل به هوش مصنوعی Magic Studio، حذف پس‌زمینه و ۱۰۰ میلیون المان بدون واترمارک.",
+      linkUrl: "/products/canva-pro",
+      buttonText: "مشاهده و خرید کانوا پرو",
+      accentBorder: "border-teal-500/35",
+      accentBg: "from-teal-950/20 via-background to-card",
+      badgeClass: "bg-teal-500/15 text-teal-500 dark:text-teal-400 border-teal-500/30",
+      btnClass: "bg-teal-600 hover:bg-teal-500 text-white shadow-teal-600/20",
+    };
+  }
 
   // 1. Gemini articles
   if (slug.includes("gemini")) {
@@ -585,6 +657,65 @@ function InArticlePromoWidget({ config }: { config: InArticleBannerConfig }) {
           </div>
         </div>
       </ContentWrapper>
+    </div>
+  );
+}
+
+function TelegramBotServiceBanner() {
+  return (
+    <div className="my-8 rounded-3xl border border-cyan-500/35 bg-gradient-to-br from-cyan-950/25 via-card to-indigo-950/20 p-5 sm:p-7 shadow-lg">
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400">
+              <Bot className="h-5 w-5" />
+            </span>
+            <div>
+              <span className="inline-block rounded-full bg-cyan-500/15 border border-cyan-500/30 px-2.5 py-0.5 text-[10px] font-bold text-cyan-500 dark:text-cyan-400 mb-1">
+                سفارش طراحی ربات و همکاری مستقیم
+              </span>
+              <h3 className="text-sm sm:text-lg font-black text-foreground">
+                ساخت ربات تلگرام اختصاصی با قیمت مناسب و پشتیبانی کامل
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <p className="text-xs sm:text-sm leading-7 text-slate-800 dark:text-slate-200 font-medium">
+          نیاز به ربات فروشگاهی تلگرام، ربات پشتیبانی هوشمند (متصل به ChatGPT و Gemini)، ربات تایید خودکار فیش بانکی، مینی‌اپ پرداخت با استارز یا مدیریت کانال و گروه دارید؟ پیاده‌سازی دقیق، سریع و کاملاً اختصاصی با <strong>قیمت منصفانه و امکان همکاری بلندمدت</strong> انجام می‌شود.
+        </p>
+
+        <div className="flex flex-wrap items-center gap-2.5 pt-1">
+          <a
+            href="https://t.me/youneshayati"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full bg-sky-500 hover:bg-sky-400 px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-sky-500/20 transition-all hover:scale-[1.02]"
+          >
+            <Send className="h-4 w-4" />
+            <span>پیام در تلگرام (@youneshayati)</span>
+          </a>
+
+          <a
+            href="tel:09193872172"
+            className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/15 hover:bg-emerald-500/25 px-4 py-2.5 text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400 transition-all hover:scale-[1.02]"
+          >
+            <Phone className="h-4 w-4" />
+            <span dir="ltr">09193872172</span>
+            <span>(تماس مستقیم)</span>
+          </a>
+
+          <a
+            href="https://wa.me/989193872172"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-secondary/70 hover:bg-secondary px-4 py-2.5 text-xs sm:text-sm font-bold text-foreground transition-all"
+          >
+            <MessageCircle className="h-4 w-4 text-emerald-500" />
+            <span>واتساپ همکاری</span>
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

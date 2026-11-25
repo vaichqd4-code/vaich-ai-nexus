@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DEFAULT_PRODUCTS, DEFAULT_CATEGORY_ROWS } from "@/lib/products";
+import { BLOG_POSTS } from "@/lib/blog-data";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -157,7 +158,11 @@ function getLiveSiteCatalogContext(): string {
   try {
     const siteConfig = getLiveSiteConfig();
     const prods = siteConfig.products || DEFAULT_PRODUCTS;
-    const blogs = siteConfig.blogPosts || [];
+    const rawBlogs = Array.isArray(siteConfig.blogPosts) ? siteConfig.blogPosts : [];
+    const blogMap = new Map<string, any>();
+    for (const b of BLOG_POSTS) blogMap.set(b.slug, b);
+    for (const b of rawBlogs) if (b?.slug) blogMap.set(b.slug, b);
+    const blogs = Array.from(blogMap.values());
 
     const productsInfo = prods.map((p: any) => {
       const priceFormatted =
@@ -230,8 +235,10 @@ ${nameDirective}
    - تلگرام پرمیوم: فعال‌سازی ۱۰۰٪ قانونی گیفتی صرفاً با آیدی (@Username) بدون نیاز به رمز یا ورود به اکانت (پلن‌های ۱، ۳، ۶ و ۱۲ ماهه).
    - استارز تلگرام: شارژ سریع و مستقیم با آیدی (@Username) بدون نیاز به پسورد، از ۱۰۰ تا ۱۰,۰۰۰ استارز.
    - کانوا پرو: دعوت تیمی رسمی روی ایمیل شخصی کاربر بدون رمز با دسترسی به Magic Studio و فونت فارسی.
-   - پلن ۱۸ ماهه جمینای پرو (۶۹۰,۰۰۰ تومان): در حال حاضر 🔴 ناموجود است (ظرفیت تکمیل شده). صراحتاً بگو تکمیل ظرفیت است و پلن ۶۰ روزه موجود است یا برای رزرو دوره بعد به @youneshayati پیام دهند.
-   - پلن ۶۰ روزه جمینای: 🟢 موجود و فعال است همراه با دسترسی به مدل‌های هیدروژن و آرگون نسل ۴، Google Antigravity IDE، گوگل استودیو و Google Flow با ۱۰۰۰ کردیت ویدیو.
+   - پلن ۱۸ ماهه جمینای پرو (۶۹۰,۰۰۰ تومان): در حال حاضر 🔴 ناموجود است (ظرفیت تکمیل شده). صراحتاً بگو تکمیل ظرفیت است و پلن دوماهه موجود است یا برای رزرو دوره بعد به @youneshayati پیام دهند.
+   - پلن دوماهه جمینای (فمیلی ۱ ماهه و ۲ ماهه): 🟢 موجود و فعال است همراه با دسترسی به مدل‌های پرچمدار Gemini 4 Hydrogen و Neon، دسترسی به Argon در AI Studio، محیط Google Antigravity IDE و ۱۰۰۰ کردیت ویدیو Google Flow.
+   - ساخت ربات تلگرام اختصاصی (فروشگاهی، هوش مصنوعی، مینی‌اپ و پرداخت استارز) با قیمت مناسب: در صورت سوال کاربر درباره طراحی یا سفارش ربات تلگرام و همکاری، توضیح بده که تیم وایچ این خدمات را با قیمت منصفانه انجام می‌دهد و برای مشاوره و استعلام قیمت به @youneshayati پیام دهند یا با 09193872172 تماس بگیرند.
+   - پیشنهاد مقالات مجله: در سوالات مشاوره‌ای یا راهنمایی کاربران، در صورت مرتبط بودن، لینک مقاله آموزشی مناسب از بخش «مقالات آموزشی» را برای مطالعه کامل‌تر پیشنهاد کن.
    - چت جی پی تی پلاس قانونی: 🟢 موجود و فعال است.
    - پلنر هوشمند Google Sheets: 🟢 موجود و لایف‌تایم با تخفیف ویژه (۲۹۹,۰۰۰ تومان).
 

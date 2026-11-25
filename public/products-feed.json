@@ -1,7 +1,7 @@
 {
   "store": "VAICH",
   "url": "https://vaich.ir",
-  "updated_at": "2026-11-18T17:08:12.507924+00:00",
+  "updated_at": "2026-11-25T17:53:02.779Z",
   "products": [
     {
       "id": "chatgpt-plus",
@@ -50,29 +50,36 @@
     },
     {
       "id": "gemini",
-      "title": "جمنای پرو ۶۰ روزه",
-      "price": 320000,
-      "max_price": null,
+      "title": "جمنای پرو دوماهه",
+      "price": 390000,
+      "max_price": 520000,
       "original_price": null,
       "discount_percent": 0,
-      "duration": "۶۰ روزه",
+      "duration": "دوماهه",
       "in_stock": true,
       "url": "https://vaich.ir/products/gemini",
       "checkout_url": "https://vaich.ir/checkout/gemini",
       "image_url": "https://vaich.ir/gemini-60d-icon.webp",
-      "description": "اشتراک رسمی ۶۰ روزه Google AI Pro (Gemini Pro)؛ مجهز به مدل‌های پرچمدار و نسل جدید Gemini 4 Argon و Gemini 4 Hydrogen، استدلال عمیق Deep Think و دستیار پژوهشی Deep Research، دسترسی به محیط توسعه Google Antigravity و Google AI Studio، دسترسی به پلتفرم ویدیوسازی Google Flow همراه با ۱۰۰۰ کردیت اختصاصی، ۵ ترابایت فضای ابری Google One و ادغام کامل با Google Workspace.",
+      "description": "اشتراک رسمی دوماهه Google AI Pro (Gemini Pro)؛ مجهز به مدل‌های پرچمدار نسل جدید Gemini 4 Hydrogen و Gemini 4 Neon، دسترسی تخصصی به Gemini 4 Argon در Google AI Studio، استدلال عمیق و مدل‌های تصمیم‌گیری Deep Reasoning & Decision، دسترسی به محیط برنامه‌نویسی و توسعه Google Antigravity IDE / CLI، پلتفرم ویدیوسازی Google Flow همراه با ۱۰۰۰ کردیت اختصاصی، ۵ ترابایت فضای ابری عظیم Google One و ادغام کامل با Google Workspace.",
       "variants": [
         {
-          "id": "gem60-fam",
+          "id": "gem60-fam-1m",
           "option1": "فمیلی",
-          "option2": "۶۰ روزه",
-          "price": 320000,
+          "option2": "۱ ماهه",
+          "price": 390000,
+          "in_stock": true
+        },
+        {
+          "id": "gem60-fam-2m",
+          "option1": "فمیلی",
+          "option2": "۲ ماهه",
+          "price": 520000,
           "in_stock": true
         },
         {
           "id": "gem60-ded",
           "option1": "اختصاصی",
-          "option2": "۶۰ روزه",
+          "option2": "دوماهه",
           "price": 0,
           "in_stock": false
         }
@@ -120,7 +127,7 @@
       "url": "https://vaich.ir/products/gemini-pro",
       "checkout_url": "https://vaich.ir/checkout/gemini-pro",
       "image_url": "https://vaich.ir/gemini-pro-18m-icon.webp",
-      "description": "اشتراک بلندمدت ۱۸ ماهه فوق‌اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، پژوهشگران و برنامه‌نویسان؛ شامل دسترسی به مدل‌های پرچمدار Gemini 4 Argon و Gemini 4 Hydrogen، دسترسی به Google Antigravity، Google AI Studio و Google Flow با ۱۰۰۰ کردیت، استدلال عمیق Deep Think، امکانات کامل Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه. (توجه: در حال حاضر ظرفیت این پلن تکمیل و ناموجود است).",
+      "description": "اشتراک بلندمدت ۱۸ ماهه فوق‌اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، پژوهشگران و برنامه‌نویسان؛ شامل دسترسی به مدل‌های پرچمدار Gemini 4 Hydrogen و Gemini 4 Neon، مدل تخصصی Gemini 4 Argon در Google AI Studio، مدل‌های تصمیم‌گیری و استدلال عمیق (Deep Reasoning & Decision)، دسترسی به Google Antigravity، Google Flow با ۱۰۰۰ کردیت، امکانات کامل Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه. (توجه: در حال حاضر ظرفیت این پلن تکمیل و ناموجود است).",
       "variants": [
         {
           "id": "gem18-fam",
@@ -139,18 +146,62 @@
       ]
     },
     {
+      "id": "telegram-premium",
+      "title": "اشتراک تلگرام پرمیوم",
+      "price": 2500000,
+      "max_price": 12900000,
+      "original_price": null,
+      "discount_percent": 0,
+      "duration": "۱ ساله",
+      "in_stock": true,
+      "url": "https://vaich.ir/products/telegram-premium",
+      "checkout_url": "https://vaich.ir/checkout/telegram-premium",
+      "image_url": "https://vaich.ir/telegram-premium-icon.webp",
+      "description": "فعالسازی قانونی و رسمی تلگرام پرمیوم (Telegram Premium) روی اکانت شخصی شما از طریق گیفت رسمی (بدون نیاز به رمز عبور و کد ورود)، در کمترین زمان ممکن همراه با ضمانت کامل پایداری.",
+      "variants": [
+        {
+          "id": "tg-prem-1m",
+          "option1": "گیفت رسمی (بدون نیاز به رمز)",
+          "option2": "پرمیوم گیفتی ۱ ماهه",
+          "price": 2500000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-prem-3m",
+          "option1": "گیفت رسمی (بدون نیاز به رمز)",
+          "option2": "پرمیوم گیفتی ۳ ماهه",
+          "price": 5600000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-prem-6m",
+          "option1": "گیفت رسمی (بدون نیاز به رمز)",
+          "option2": "پرمیوم گیفتی ۶ ماهه",
+          "price": 7300000,
+          "in_stock": true
+        },
+        {
+          "id": "tg-prem-12m",
+          "option1": "گیفت رسمی (بدون نیاز به رمز)",
+          "option2": "پرمیوم گیفتی ۱ ساله",
+          "price": 12900000,
+          "in_stock": true
+        }
+      ]
+    },
+    {
       "id": "telegram-stars",
       "title": "استارز تلگرام",
       "price": 590000,
       "max_price": 54900000,
       "original_price": null,
       "discount_percent": 0,
-      "duration": "شارژ فوری",
+      "duration": "تحویل فوری",
       "in_stock": true,
       "url": "https://vaich.ir/products/telegram-stars",
       "checkout_url": "https://vaich.ir/checkout/telegram-stars",
       "image_url": "https://vaich.ir/telegram-stars-icon.webp",
-      "description": "خرید و شارژ فوری استارز تلگرام (Telegram Stars - واحد پول رسمی درون‌برنامه‌ای تلگرام) مستقیماً به آیدی شما بدون نیاز به لاگین یا کارت بانکی بین‌المللی، با تحویل سریع و ایمن.",
+      "description": "خرید و شارژ فوری استارز تلگرام (Telegram Stars) به‌صورت ۱۰۰٪ قانونی و رسمی مستقیماً روی آیدی تلگرام شما (@Username) بدون نیاز به رمز عبور، شماره مجازی یا کارت بانکی بین‌المللی؛ قابل استفاده برای خرید گیفت‌های کلکسیونی (Telegram Gifts)، پرداخت درون‌برنامه‌ای ربات‌ها و مینی‌اپ‌ها، حمایت از کانال‌ها و فعال‌سازی یا هدیه تلگرام پرمیوم.",
       "variants": [
         {
           "id": "tg-stars-100",
@@ -225,57 +276,13 @@
       ]
     },
     {
-      "id": "telegram-premium",
-      "title": "اشتراک تلگرام پرمیوم",
-      "price": 2500000,
-      "max_price": 12900000,
-      "original_price": null,
-      "discount_percent": 0,
-      "duration": "۱ تا ۱۲ ماهه",
-      "in_stock": true,
-      "url": "https://vaich.ir/products/telegram-premium",
-      "checkout_url": "https://vaich.ir/checkout/telegram-premium",
-      "image_url": "https://vaich.ir/telegram-premium-icon.webp",
-      "description": "فعالسازی قانونی و رسمی تلگرام پرمیوم (Telegram Premium) روی اکانت شخصی شما از طریق گیفت رسمی (بدون نیاز به رمز عبور و کد ورود)، در کمترین زمان ممکن همراه با ضمانت کامل پایداری.",
-      "variants": [
-        {
-          "id": "tg-prem-1m",
-          "option1": "گیفت رسمی (بدون نیاز به رمز)",
-          "option2": "پرمیوم گیفتی ۱ ماهه",
-          "price": 2500000,
-          "in_stock": true
-        },
-        {
-          "id": "tg-prem-3m",
-          "option1": "گیفت رسمی (بدون نیاز به رمز)",
-          "option2": "پرمیوم گیفتی ۳ ماهه",
-          "price": 5600000,
-          "in_stock": true
-        },
-        {
-          "id": "tg-prem-6m",
-          "option1": "گیفت رسمی (بدون نیاز به رمز)",
-          "option2": "پرمیوم گیفتی ۶ ماهه",
-          "price": 7300000,
-          "in_stock": true
-        },
-        {
-          "id": "tg-prem-12m",
-          "option1": "گیفت رسمی (بدون نیاز به رمز)",
-          "option2": "پرمیوم گیفتی ۱ ساله",
-          "price": 12900000,
-          "in_stock": true
-        }
-      ]
-    },
-    {
       "id": "canva-pro",
       "title": "اشتراک کانوا پرو",
       "price": 240000,
       "max_price": 990000,
       "original_price": null,
       "discount_percent": 0,
-      "duration": "۱ تا ۶ ماهه",
+      "duration": "۶ ماهه",
       "in_stock": true,
       "url": "https://vaich.ir/products/canva-pro",
       "checkout_url": "https://vaich.ir/checkout/canva-pro",

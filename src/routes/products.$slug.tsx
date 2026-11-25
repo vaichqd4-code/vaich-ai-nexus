@@ -1,4 +1,5 @@
 import { ProductRichContent } from "@/components/product/ProductRichContent";
+import { ProductCard } from "@/components/product/ProductCard";
 import { createFileRoute, notFound, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
@@ -147,6 +148,107 @@ export const Route = createFileRoute("/products/$slug")({
       ? (product.iconUrl.startsWith("http") ? product.iconUrl : `https://vaich.ir${product.iconUrl.split("?")[0]}`)
       : "https://vaich.ir/vaich-logo.png";
 
+    const pricing = getProductPricingSummary(product);
+    const brandName = product.slug.includes("chatgpt")
+      ? "OpenAI"
+      : product.slug.includes("claude")
+        ? "Anthropic"
+        : product.slug.includes("gemini")
+          ? "Google"
+          : product.slug.includes("telegram")
+            ? "Telegram"
+            : product.slug.includes("canva")
+              ? "Canva"
+              : "VAICH";
+
+    const approvedReviews = Array.isArray(product.reviews)
+      ? product.reviews.filter((r) => r.status !== "pending")
+      : [];
+    const schemaReviewCount = Math.max(product.reviewCount || 0, approvedReviews.length);
+
+    const productLd: Record<string, any> = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: product.name,
+      description,
+      image: ogImg,
+      sku: product.slug,
+      brand: { "@type": "Brand", name: brandName },
+      offers: pricing.isRange
+        ? {
+            "@type": "AggregateOffer",
+            url: canonicalUrl,
+            priceCurrency: "IRR",
+            lowPrice: String(Math.round(pricing.minPrice * 10)),
+            highPrice: String(Math.round(pricing.maxPrice * 10)),
+            offerCount: String(pricing.activeVariantsCount || product.variants?.length || 1),
+            availability: pricing.isOutOfStock
+              ? "https://schema.org/OutOfStock"
+              : "https://schema.org/InStock",
+          }
+        : {
+            "@type": "Offer",
+            url: canonicalUrl,
+            priceCurrency: "IRR",
+            price: String(Math.round(pricing.minPrice * 10)),
+            priceValidUntil: "2027-12-31",
+            availability: pricing.isOutOfStock
+              ? "https://schema.org/OutOfStock"
+              : "https://schema.org/InStock",
+            itemCondition: "https://schema.org/NewCondition",
+          },
+    };
+
+    if (schemaReviewCount > 0 && product.rating) {
+      productLd.aggregateRating = {
+        "@type": "AggregateRating",
+        ratingValue: String(product.rating),
+        reviewCount: String(schemaReviewCount),
+        bestRating: "5",
+        worstRating: "1",
+      };
+    }
+
+    const faqTab = product.customTabs?.find(
+      (t) => t.title.includes("سوال") || t.title.includes("پرسش"),
+    );
+    const faqEntities = faqTab
+      ? faqTab.content
+          .split(/\n\s*\n/)
+          .map((b) => b.trim().split("\n").map((l) => l.trim()).filter(Boolean))
+          .filter((lines) => lines.length >= 2)
+          .map((lines) => ({
+            "@type": "Question",
+            name: lines[0],
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: lines.slice(1).join(" "),
+            },
+          }))
+      : [];
+
+    const scripts: Array<{ type: string; children: string }> = [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(breadcrumbLd),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(productLd),
+      },
+    ];
+
+    if (faqEntities.length > 0) {
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqEntities,
+        }),
+      });
+    }
+
     return {
       meta: [
         { title },
@@ -165,12 +267,7 @@ export const Route = createFileRoute("/products/$slug")({
       links: [
         { rel: "canonical", href: canonicalUrl },
       ],
-      scripts: [
-        {
-          type: "application/ld+json",
-          children: JSON.stringify(breadcrumbLd),
-        },
-      ],
+      scripts,
     };
   },
   component: ProductDetail,
@@ -1090,6 +1187,57 @@ function ProductDetail() {
               </div>
             </div>
           </section>
+
+          {/* Related & Popular VAICH Products for Stronger Internal SEO & Discovery */}
+          {(() => {
+            const relatedProducts = [...liveProducts]
+              .filter((p) => p.slug !== product.slug)
+              .sort((a, b) => {
+                const aStock = a.inStock !== false ? 1 : 0;
+                const bStock = b.inStock !== false ? 1 : 0;
+                if (aStock !== bStock) return bStock - aStock;
+                const priority: Record<string, number> = {
+                  "telegram-stars": 1,
+                  "telegram-premium": 2,
+                  "canva-pro": 3,
+                  "gemini": 4,
+                  "chatgpt-plus": 5,
+                  "vaich-life-planner": 6,
+                };
+                return (priority[a.slug] ?? 99) - (priority[b.slug] ?? 99);
+              })
+              .slice(0, 4);
+
+            if (relatedProducts.length === 0) return null;
+
+            return (
+              <section className="mt-14 border-t border-border/80 pt-8" aria-label="سایر محصولات و اشتراک‌های پرطرفدار">
+                <div className="flex items-center justify-between gap-3 mb-5">
+                  <div>
+                    <h2 className="text-lg sm:text-xl font-extrabold text-foreground">
+                      سایر اشتراک‌ها و سرویس‌های پرطرفدار وایچ
+                    </h2>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      خرید مستقیم با تحویل سریع و ضمانت فعال‌سازی قانونی
+                    </p>
+                  </div>
+                  <Link
+                    to="/products"
+                    preload="intent"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline shrink-0"
+                  >
+                    <span>مشاهده همه محصولات</span>
+                    <ArrowLeft className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+                <div className="flex gap-4 overflow-x-auto pb-3 snap-x snap-proximity md:grid md:grid-cols-2 lg:grid-cols-4 md:overflow-visible">
+                  {relatedProducts.map((rp) => (
+                    <ProductCard key={rp.slug} product={rp} className="md:w-full" />
+                  ))}
+                </div>
+              </section>
+            );
+          })()}
         </div>
       </Section>
     </>
