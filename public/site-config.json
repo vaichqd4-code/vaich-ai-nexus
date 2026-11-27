@@ -137,8 +137,8 @@
       ],
       "iconUrl": "/images/lifestyle-planner-thumb.webp",
       "gallery": [
-        "/images/lifestyle-planner-cover.webp",
-        "/planner-cover.webp"
+        "/planner-cover.webp",
+        "/images/lifestyle-planner-cover.webp"
       ],
       "enableFullscreenGallery": true,
       "imageFit": "cover",
@@ -2616,5 +2616,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-27T16:34:33.483Z"
+  "updatedAt": "2026-11-27T16:34:43.572Z"
 }
