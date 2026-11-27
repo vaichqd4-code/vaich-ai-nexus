@@ -113,7 +113,7 @@
       "description": "نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script (بدون نیاز به پرداخت ماهانه یا شارژ دوره)؛ مجهز به Habit Tracker، ماتریس آیزنهاور، سیستم Time Boxing و هوش مالی فردی.",
       "isLifetime": true,
       "featured": true,
-      "badge": "پیشنهادی ویژه",
+      "badge": "پیشنهادی",
       "badgeColor": "fire",
       "categoryId": "row-mvampt3r",
       "requiredFieldLabel": "جیمیل شما جهت دریافت لینک گوگل‌شیت",
@@ -335,7 +335,9 @@
           "verified": true,
           "status": "approved"
         }
-      ]
+      ],
+      "variantOption1Label": "نوع اکانت / اشتراک",
+      "variantOption2Label": "مدت زمان / بسته"
     },
     {
       "slug": "vaich-study-planner",
@@ -2614,5 +2616,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-27T16:33:36.868Z"
+  "updatedAt": "2026-11-27T16:34:33.483Z"
 }
