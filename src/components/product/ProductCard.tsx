@@ -14,6 +14,9 @@ import {
 import { cn } from "@/lib/utils";
 
 function getProductCardSubtitle(p: Product, isLifetime: boolean): string {
+  if (p.slug === "vaich-study-planner") {
+    return "باغچه رشد مطالعه، بودجه‌بندی دروس و تحلیل آزمون • دسترسی دائمی";
+  }
   if (p.slug.includes("planner")) {
     return "نرم‌افزار هوشمند در گوگل‌شیت • ردیاب عادات و اهداف بدون اشتراک";
   }

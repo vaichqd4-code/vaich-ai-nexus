@@ -51,6 +51,8 @@ export type Product = {
   categoryId?: string | undefined;
   service?: string | undefined;
   iconUrl?: string | undefined;
+  gallery?: string[] | undefined; // تصاویر گالری محصول (اولین تصویر اصلی و تصاویر بعدی برای اسلاید تمام‌صفحه)
+  enableFullscreenGallery?: boolean | undefined; // فعال‌سازی حالت گالری تمام‌صفحه (مناسب پلنرها)
   imageFit?: ("contain" | "cover") | undefined;
   inStock?: boolean | undefined; // موجود بودن (پیش‌فرض true، اگر false باشد ناموجود است)
   isLifetime?: boolean | undefined; // نوع دسترسی: دائمی و مادام‌العمر (true) یا اشتراکی زمان‌دار (false)
@@ -336,7 +338,12 @@ export const DEFAULT_PRODUCTS: Product[] = [
       "برای استفاده و ذخیره شیت، تنها به یک حساب جیمیل (Google Account) فعال نیاز دارید (بدون نیاز به نرم‌افزار آفیس یا اکسل).",
       "پشتیبانی اختصاصی در تلگرام برای راهنمایی راه‌اندازی، کپی فایل و نحوه استفاده روزانه."
     ],
-    "iconUrl": "/planner-cover.webp",
+    "iconUrl": "/images/lifestyle-planner-thumb.webp",
+    "gallery": [
+      "/images/lifestyle-planner-cover.webp",
+      "/planner-cover.webp"
+    ],
+    "enableFullscreenGallery": true,
     "imageFit": "cover",
     "inStock": true,
     "rating": 4.9,
@@ -532,6 +539,48 @@ export const DEFAULT_PRODUCTS: Product[] = [
         "status": "approved"
       }
     ]
+  },
+  {
+    "slug": "vaich-study-planner",
+    "name": "پلنر تحصیلی وایچ",
+    "price": 399000,
+    "originalPrice": 900000,
+    "discountPercent": 56,
+    "duration": "دائمی (بدون اشتراک)",
+    "description": "سیستم هوشمند برنامه‌ریزی مطالعاتی، عادت‌سازی و باغچه رشد مطالعه (نسخه جامع و همه‌کاره مبتنی بر Google Sheets)؛ طراحی‌شده برای کنکوری‌ها، دانشجویان، زبان‌آموزان و علاقه‌مندان به مطالعه و رشد فردی. بدون نیاز به تمدید اشتراک، قابل اجرا به‌صورت آنلاین و آفلاین در موبایل، تبلت و لپ‌تاپ همراه با تحویل آنی و فایل صوتی راهنمای راه‌اندازی.",
+    "isLifetime": true,
+    "featured": true,
+    "badge": "نسخه جامع و جدید",
+    "badgeColor": "emerald",
+    "categoryId": "row-mvampt3r",
+    "requiredFieldLabel": "جیمیل شما جهت دریافت لینک گوگل‌شیت",
+    "requiredFieldPlaceholder": "yourname@gmail.com",
+    "features": [
+      "باغچه رشد مطالعه: تکامل زنده و مرحله‌به‌مرحله گیاه مطالعه از بذر تا شکوفایی با تیک زدن اهداف روزانه",
+      "جدول ۲۰ عادت و برنامه مطالعاتی ۳۱ روزه (هفته ۱ تا ۵) همراه با آمار زنده پیشرفت و تداوم (Streak)",
+      "داشبورد آمار لحظه‌ای: محاسبه خودکار مجموع مطالعه، مجموع تست‌ها، میانگین خواب، بهترین تداوم و حال‌وهوای غالب",
+      "تفکیک و بودجه‌بندی دروس اصلی: ثبت هدف ساعت، ساعت مطالعه‌شده، باقیمانده و نوار پیشرفت بصری برای هر درس",
+      "کارنامه و تحلیل آزمون‌های آزمایشی: مقایسه تراز/نمره هدف با کسب‌شده، محاسبه اختلاف و وضعیت عملکرد خودکار",
+      "تب اختصاصی نسخه موبایل (بدون نیاز به اسکرول افقی) + همگام‌سازی آنلاین و آفلاین در گوشی، تبلت و لپ‌تاپ",
+      "دکمه‌های ریست هوشمند با یک کلیک: ریست داده‌های نوشتنی و روزانه یا بازگشت به تنظیمات کارخانه بدون آسیب به فرمول‌ها",
+      "نسخه جامع و همه‌کاره با دسترسی دائمی و مادام‌العمر، تحویل آنی و فایل صوتی راهنمای گام‌به‌گام فارسی"
+    ],
+    "purchaseInfo": [
+      "تحویل آنی بلافاصله پس از پرداخت به‌صورت لینک اختصاصی کپی (Make a copy) در گوگل درایو شخصی شما.",
+      "دسترسی دائمی و مادام‌العمر بدون نیاز به تمدید اشتراک ماهانه؛ برای همیشه و در تمام دوره‌های مطالعاتی قابل استفاده است.",
+      "همراه با فایل صوتی راهنمای راه‌اندازی گام‌به‌گام فارسی برای شروع سریع در کمتر از ۲ دقیقه.",
+      "قابل استفاده هم‌زمان در موبایل، تبلت و لپ‌تاپ (به‌صورت آنلاین و آفلاین در اپلیکیشن Google Sheets)."
+    ],
+    "iconUrl": "/images/study-planner-thumb.webp",
+    "gallery": [
+      "/images/study-planner-cover.webp"
+    ],
+    "enableFullscreenGallery": true,
+    "imageFit": "cover",
+    "inStock": true,
+    "rating": 5.0,
+    "reviewCount": 0,
+    "reviews": []
   },
   {
     "slug": "gemini",

@@ -1028,6 +1028,16 @@ export function AdminPage() {
     setEditProduct({
       ...product,
       imageFit: product.imageFit || "contain",
+      enableFullscreenGallery: Boolean(
+        product.enableFullscreenGallery ??
+          (product.slug === "vaich-life-planner" || product.slug === "vaich-study-planner")
+      ),
+      gallery:
+        Array.isArray(product.gallery) && product.gallery.length > 0
+          ? [...product.gallery]
+          : product.iconUrl
+            ? [product.iconUrl]
+            : [],
       inStock: product.inStock !== false,
       isLifetime: isProductLifetime(product),
       variantOption1Label: product.variantOption1Label || "نوع اکانت / اشتراک",
@@ -1061,6 +1071,8 @@ export function AdminPage() {
       badgeColor: "purple",
       categoryId: rows[0]?.id || "ai",
       imageFit: "contain",
+      enableFullscreenGallery: false,
+      gallery: [],
       inStock: true,
       rating: 5.0,
       reviewCount: 0,
@@ -1262,6 +1274,11 @@ export function AdminPage() {
       features: parsedFeatures.length > 0 ? parsedFeatures : undefined,
       purchaseInfo: parsedPurchaseInfo.length > 0 ? parsedPurchaseInfo : ["اطلاعات پس از خرید ارسال می‌شود."],
       iconUrl: editProduct.iconUrl?.trim() || undefined,
+      gallery: (() => {
+        const cleaned = (editProduct.gallery || []).map((g) => g.trim()).filter(Boolean);
+        return cleaned.length > 0 ? cleaned : undefined;
+      })(),
+      enableFullscreenGallery: Boolean(editProduct.enableFullscreenGallery),
       imageFit: editProduct.imageFit || "contain",
       inStock: editProduct.inStock !== false,
       rating: editProduct.rating || existingProd?.rating || 5.0,
@@ -3770,6 +3787,120 @@ export function AdminPage() {
                       <p className="text-[10px] text-muted-foreground leading-4">
                         💡 حالت «غیرمتمرکز» دقیقاً همان قاب مربعی گوشه‌گرد و نوار سه‌بعدی اکانت‌های جمنای و کلاد است؛ حالت «متمرکز / بنری» تصویر را تمام‌عرض (مشابه پلنرهای گوگل‌شیت) نمایش می‌دهد.
                       </p>
+                    </div>
+
+                    {/* Fullscreen Gallery Toggle */}
+                    <div className="rounded-xl border border-border/70 bg-background/60 p-2.5 space-y-2">
+                      <span className="text-[11px] font-bold text-foreground block">
+                        حالت نمایش گالری تمام‌صفحه (مناسب پلنرها و محصولات بصری):
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setEditProduct({ ...editProduct, enableFullscreenGallery: true })}
+                          className={`rounded-xl py-2 px-2.5 text-xs font-bold transition-all border cursor-pointer flex items-center justify-center gap-1.5 ${
+                            editProduct.enableFullscreenGallery
+                              ? "bg-emerald-600 text-white border-emerald-500 shadow-xs"
+                              : "bg-card border-border text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          <span>فعال (نمایش تمام‌صفحه و اسلاید گالری تصاویر)</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setEditProduct({ ...editProduct, enableFullscreenGallery: false })}
+                          className={`rounded-xl py-2 px-2.5 text-xs font-bold transition-all border cursor-pointer flex items-center justify-center gap-1.5 ${
+                            !editProduct.enableFullscreenGallery
+                              ? "bg-primary text-white border-primary shadow-xs"
+                              : "bg-card border-border text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          <span>غیرفعال (نمایش استاندارد محصولات عادی)</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Multi-Image Gallery Manager */}
+                    <div className="rounded-xl border border-border/70 bg-background/60 p-2.5 space-y-2.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[11px] font-bold text-foreground">
+                          گالری تصاویر محصول (برای اسلاید تمام‌صفحه):
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const current = Array.isArray(editProduct.gallery) ? editProduct.gallery : [];
+                            setEditProduct({ ...editProduct, gallery: [...current, ""] });
+                          }}
+                          className="rounded-lg bg-primary/15 hover:bg-primary/25 text-primary px-2.5 py-1 text-[11px] font-bold transition-colors cursor-pointer"
+                        >
+                          + افزودن تصویر به گالری
+                        </button>
+                      </div>
+                      {Array.isArray(editProduct.gallery) && editProduct.gallery.length > 0 ? (
+                        <div className="space-y-2">
+                          {editProduct.gallery.map((gUrl, gIdx) => (
+                            <div key={gIdx} className="flex items-center gap-1.5">
+                              <span className="text-[10px] font-bold text-muted-foreground w-5 text-center shrink-0">
+                                {gIdx + 1}
+                              </span>
+                              <input
+                                type="text"
+                                dir="ltr"
+                                value={gUrl}
+                                onChange={(e) => {
+                                  const next = [...(editProduct.gallery || [])];
+                                  next[gIdx] = e.target.value;
+                                  setEditProduct({ ...editProduct, gallery: next });
+                                }}
+                                placeholder="/images/... یا https://..."
+                                className="flex-1 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground outline-none focus:border-primary"
+                              />
+                              <button
+                                type="button"
+                                disabled={gIdx === 0}
+                                title="انتقال به بالا"
+                                onClick={() => {
+                                  const next = [...(editProduct.gallery || [])];
+                                  [next[gIdx - 1], next[gIdx]] = [next[gIdx], next[gIdx - 1]];
+                                  setEditProduct({ ...editProduct, gallery: next });
+                                }}
+                                className="rounded-lg border border-border bg-card px-2 py-1 text-[10px] font-bold disabled:opacity-30 cursor-pointer"
+                              >
+                                ▲
+                              </button>
+                              <button
+                                type="button"
+                                disabled={gIdx === (editProduct.gallery?.length || 1) - 1}
+                                title="انتقال به پایین"
+                                onClick={() => {
+                                  const next = [...(editProduct.gallery || [])];
+                                  [next[gIdx], next[gIdx + 1]] = [next[gIdx + 1], next[gIdx]];
+                                  setEditProduct({ ...editProduct, gallery: next });
+                                }}
+                                className="rounded-lg border border-border bg-card px-2 py-1 text-[10px] font-bold disabled:opacity-30 cursor-pointer"
+                              >
+                                ▼
+                              </button>
+                              <button
+                                type="button"
+                                title="حذف از گالری"
+                                onClick={() => {
+                                  const next = (editProduct.gallery || []).filter((_, i) => i !== gIdx);
+                                  setEditProduct({ ...editProduct, gallery: next });
+                                }}
+                                className="rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-500 px-2 py-1 text-[10px] font-bold cursor-pointer"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-[10px] text-muted-foreground">
+                          در صورت خالی بودن، تصویر اصلی محصول نمایش داده می‌شود. برای چند تصویر (اسلاید)، دکمه بالا را بزنید.
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>

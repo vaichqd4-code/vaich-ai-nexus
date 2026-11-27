@@ -1,5 +1,6 @@
 import { ProductRichContent } from "@/components/product/ProductRichContent";
 import { ProductCard } from "@/components/product/ProductCard";
+import { FullscreenGalleryModal } from "@/components/product/FullscreenGalleryModal";
 import { createFileRoute, notFound, Link, redirect } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
@@ -30,6 +31,8 @@ import {
   Info,
   ArrowLeft,
   ShieldCheck,
+  Maximize2,
+  Images,
 } from "lucide-react";
 
 export const Route = createFileRoute("/products/$slug")({
@@ -103,6 +106,12 @@ export const Route = createFileRoute("/products/$slug")({
         "خرید اشتراک قانونی کانوا پرو (Canva Pro) ۱ تا ۶ ماهه با دعوت تیمی رسمی روی ایمیل شخصی شما، دسترسی کامل به Magic Studio، حذف پس‌زمینه، کیت برند و فونت فارسی در فروشگاه وایچ.";
       keywords =
         "خرید کانوا پرو, خرید اشتراک Canva Pro, اکانت کانوا پرو قانونی, قیمت کانوا پرو, کانوا پرو روی ایمیل شخصی, کانوا پرو فمیلی, ابزار هوش مصنوعی کانوا, وایچ";
+    } else if (product.slug === "vaich-study-planner") {
+      title = "خرید پلنر تحصیلی وایچ | باغچه رشد مطالعه و برنامه‌ریزی هوشمند | VAICH";
+      description =
+        "خرید پلنر تحصیلی وایچ (نسخه جامع و همه‌کاره مبتنی بر گوگل‌شیت)؛ مجهز به باغچه رشد مطالعه، جدول ۲۰ عادت ۳۱ روزه، بودجه‌بندی دروس، کارنامه تحلیل آزمون و فایل صوتی راهنما با دسترسی دائمی.";
+      keywords =
+        "پلنر تحصیلی وایچ, خرید پلنر تحصیلی دیجیتال, پلنر مطالعاتی گوگل شیت, باغچه رشد مطالعه, پلنر کنکور و دانشگاه, جدول برنامه ریزی مطالعه, وایچ";
     } else if (isLifetime) {
       title = isPlanner
         ? `خرید ${product.name} | پلنر برنامه ریزی هوشمند گوگل شیت | VAICH`
@@ -182,7 +191,7 @@ export const Route = createFileRoute("/products/$slug")({
             lowPrice: String(Math.round(pricing.minPrice * 10)),
             highPrice: String(Math.round(pricing.maxPrice * 10)),
             offerCount: String(pricing.activeVariantsCount || product.variants?.length || 1),
-            validFrom: "2026-01-01T00:00:00+03:30",
+            validFrom: product.slug === "vaich-study-planner" ? "2026-11-27T00:00:00+03:30" : "2026-01-01T00:00:00+03:30",
             priceValidUntil: "2027-12-31",
             availability: pricing.isOutOfStock
               ? "https://schema.org/OutOfStock"
@@ -193,7 +202,7 @@ export const Route = createFileRoute("/products/$slug")({
             url: canonicalUrl,
             priceCurrency: "IRR",
             price: String(Math.round(pricing.minPrice * 10)),
-            validFrom: "2026-01-01T00:00:00+03:30",
+            validFrom: product.slug === "vaich-study-planner" ? "2026-11-27T00:00:00+03:30" : "2026-01-01T00:00:00+03:30",
             priceValidUntil: "2027-12-31",
             availability: pricing.isOutOfStock
               ? "https://schema.org/OutOfStock"
@@ -320,6 +329,19 @@ function ProductDetail() {
   const [selectedOption1, setSelectedOption1] = useState<string>(initialVariant?.option1 || "");
   const [selectedOption2, setSelectedOption2] = useState<string>(initialVariant?.option2 || "");
   const [customerAccount, setCustomerAccount] = useState<string>("");
+  const [activeGalleryIdx, setActiveGalleryIdx] = useState(0);
+  const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
+
+  const hasFullscreenGallery =
+    Boolean(product.enableFullscreenGallery) ||
+    product.slug === "vaich-life-planner" ||
+    product.slug === "vaich-study-planner";
+
+  const galleryImages = useMemo(() => {
+    const raw = Array.isArray(product.gallery) ? product.gallery.filter((x) => Boolean(x && x.trim())) : [];
+    if (raw.length > 0) return raw;
+    return product.iconUrl ? [product.iconUrl] : [];
+  }, [product.gallery, product.iconUrl]);
 
   // بازنشانی انتخابگر هنگام جابه‌جایی بین محصولات
   useEffect(() => {
@@ -327,6 +349,8 @@ function ProductDetail() {
     setSelectedOption1(def?.option1 || "");
     setSelectedOption2(def?.option2 || "");
     setCustomerAccount("");
+    setActiveGalleryIdx(0);
+    setIsFullscreenOpen(false);
   }, [product.slug, variants.length]);
 
   const option2List = useMemo(() => {
@@ -643,13 +667,67 @@ function ProductDetail() {
           <div className="grid gap-6 sm:gap-8 lg:grid-cols-[1.35fr_1fr] items-start">
             <div className="min-w-0">
               <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-right gap-4 sm:gap-5">
-                {/* Unified 3D Rounded Square Product Icon */}
-                <ServiceIcon
-                  slug={product.slug}
-                  {...(product.iconUrl ? { iconUrl: product.iconUrl } : {})}
-                  {...(product.imageFit ? { imageFit: product.imageFit } : {})}
-                  className="h-20 w-20 sm:h-24 sm:w-24 shrink-0 aspect-square rounded-2xl sm:rounded-3xl border border-border/90 shadow-md bg-secondary/60"
-                />
+                {hasFullscreenGallery && galleryImages.length > 0 ? (
+                  <div className="flex flex-col items-center gap-2 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setIsFullscreenOpen(true)}
+                      title="مشاهده تصویر تمام‌صفحه"
+                      className="group/img relative h-24 w-24 sm:h-28 sm:w-28 overflow-hidden rounded-2xl sm:rounded-3xl border border-border/90 shadow-md bg-secondary/60 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    >
+                      <img
+                        src={galleryImages[activeGalleryIdx] || galleryImages[0]}
+                        alt={product.name}
+                        width={112}
+                        height={112}
+                        decoding="async"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover/img:scale-105"
+                      />
+                      <span className="absolute bottom-1.5 left-1.5 inline-flex items-center justify-center rounded-lg bg-black/65 backdrop-blur-xs p-1 text-white/90 border border-white/20 shadow-xs transition-transform group-hover/img:scale-110">
+                        <Maximize2 className="h-3 w-3" />
+                      </span>
+                    </button>
+
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setIsFullscreenOpen(true)}
+                        className="inline-flex items-center gap-1 rounded-lg border border-border/70 bg-secondary/50 hover:bg-secondary hover:border-primary/40 px-2 py-1 text-[10px] font-bold text-foreground transition-colors cursor-pointer"
+                      >
+                        <Maximize2 className="h-2.5 w-2.5 text-primary" />
+                        <span>مشاهده تمام‌صفحه</span>
+                      </button>
+                      {galleryImages.length > 1 && (
+                        <div className="flex items-center gap-1">
+                          {galleryImages.map((imgSrc, idx) => (
+                            <button
+                              key={imgSrc + idx}
+                              type="button"
+                              onClick={() => setActiveGalleryIdx(idx)}
+                              aria-label={`تصویر ${idx + 1}`}
+                              className={cn(
+                                "h-6 w-6 rounded-md overflow-hidden border transition-all cursor-pointer",
+                                idx === activeGalleryIdx
+                                  ? "border-primary ring-1 ring-primary/40"
+                                  : "border-border/70 opacity-60 hover:opacity-100"
+                              )}
+                            >
+                              <img src={imgSrc} alt={`${product.name} ${idx + 1}`} className="h-full w-full object-cover" />
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  /* Unified 3D Rounded Square Product Icon */
+                  <ServiceIcon
+                    slug={product.slug}
+                    {...(product.iconUrl ? { iconUrl: product.iconUrl } : {})}
+                    {...(product.imageFit ? { imageFit: product.imageFit } : {})}
+                    className="h-20 w-20 sm:h-24 sm:w-24 shrink-0 aspect-square rounded-2xl sm:rounded-3xl border border-border/90 shadow-md bg-secondary/60"
+                  />
+                )}
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                     <h1
@@ -722,6 +800,25 @@ function ProductDetail() {
 
             {/* Unified Purchase & Plan Selector Box (BodoCP / License-Market Style) */}
             <aside className="h-fit rounded-3xl border border-border bg-card/85 p-4 sm:p-6 shadow-xl min-w-0 space-y-4">
+              {hasFullscreenGallery && galleryImages.length > 0 && (
+                <div className="flex items-center justify-between gap-2 rounded-2xl border border-border/70 bg-secondary/25 px-3 py-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Images className="h-4 w-4 text-primary shrink-0" />
+                    <span className="text-[11px] font-bold text-foreground truncate">
+                      پیش‌نمایش واقعی فایل پلنر
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsFullscreenOpen(true)}
+                    className="inline-flex items-center gap-1 rounded-xl border border-primary/30 bg-primary/10 hover:bg-primary/20 px-2.5 py-1 text-[11px] font-bold text-primary transition-colors shrink-0 cursor-pointer"
+                  >
+                    <Maximize2 className="h-3 w-3" />
+                    <span>مشاهده تصویر تمام‌صفحه</span>
+                  </button>
+                </div>
+              )}
+
               {/* Overall Out of Stock Notice Banner */}
               {isGlobalOutOfStock && (
                 <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-3 text-center">
@@ -1243,6 +1340,16 @@ function ProductDetail() {
           })()}
         </div>
       </Section>
+
+      {hasFullscreenGallery && galleryImages.length > 0 && (
+        <FullscreenGalleryModal
+          images={galleryImages}
+          initialIndex={activeGalleryIdx}
+          title={product.name}
+          isOpen={isFullscreenOpen}
+          onClose={() => setIsFullscreenOpen(false)}
+        />
+      )}
     </>
   );
 }

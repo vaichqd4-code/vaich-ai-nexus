@@ -206,6 +206,7 @@ export function ProductRichContent({
   const isClaude = product.slug.includes("claude");
   const isGemini = product.slug.includes("gemini");
   const is18Month = product.slug === "gemini-pro";
+  const isStudyPlanner = product.slug === "vaich-study-planner";
   const hasLegacyRich = isChatGPT || isClaude || isGemini || isPlanner;
 
   const toggleFaq = (idx: number) => {
@@ -345,14 +346,20 @@ export function ProductRichContent({
               />
             )}
 
-            {isPlanner && (
+            {isStudyPlanner ? (
+              <StudyPlannerDetailContent
+                activeTab={activeTab}
+                openFaqIndex={openFaqIndex}
+                toggleFaq={toggleFaq}
+              />
+            ) : isPlanner ? (
               <PlannerDetailContent
                 product={product}
                 activeTab={activeTab}
                 openFaqIndex={openFaqIndex}
                 toggleFaq={toggleFaq}
               />
-            )}
+            ) : null}
           </>
         )}
       </div>
@@ -697,295 +704,6 @@ function ChatGPTDetailContent({
             {
               q: "آیا امکان استفاده همزمان روی گوشی و لپ‌تاپ وجود دارد؟",
               a: "بله، روی اپلیکیشن‌های iOS، اندروید، دسکتاپ و وب قابل استفاده است؛ فقط توصیه می‌شود روی همه دستگاه‌ها از IP یکسان و پایدار استفاده کنید.",
-            },
-          ].map((item, idx) => (
-            <div
-              key={idx}
-              className="rounded-2xl border border-border/80 bg-secondary/20 overflow-hidden transition-all"
-            >
-              <button
-                onClick={() => toggleFaq(idx)}
-                className="w-full flex items-center justify-between p-4 text-right text-xs sm:text-sm font-bold text-foreground hover:bg-secondary/40 transition-colors"
-              >
-                <span>{item.q}</span>
-                <ChevronDown
-                  className={cn(
-                    "h-4 w-4 text-muted-foreground shrink-0 transition-transform duration-300",
-                    openFaqIndex === idx && "rotate-180 text-primary"
-                  )}
-                />
-              </button>
-              {openFaqIndex === idx && (
-                <div className="px-4 pb-4 pt-1 text-xs leading-6 text-muted-foreground border-t border-border/50">
-                  {item.a}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* =========================================================================
-   Claude Pro (Anthropic) - Claude Sonnet 5.5 & Adaptive Thinking
-   ========================================================================= */
-function ClaudeDetailContent({
-  product,
-  activeTab,
-  openFaqIndex,
-  toggleFaq,
-}: {
-  product: Product;
-  activeTab: TabKey;
-  openFaqIndex: number | null;
-  toggleFaq: (i: number) => void;
-}) {
-  return (
-    <div className="space-y-6">
-      {/* 1. Features */}
-      {activeTab === "features" && (
-        <div className="space-y-6">
-          <div className="space-y-2">
-            <h3 className="text-lg font-black text-foreground flex items-center gap-2">
-              <Cpu className="h-5 w-5 text-primary" />
-              مدل‌ها و مشخصات رسمی پلن Claude Pro (۲۰ دلاری Anthropic)
-            </h3>
-            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
-              اشتراک رسمی <strong>Claude Pro</strong> دسترسی مستقیم به خانواده ۵.۵ آنتروپیک شامل پرچمدار کدنویسی <strong>Claude Sonnet 5.5</strong>، مدل استدلالی عمیق <strong>Claude Opus 5.5</strong> و مدل فوق‌سریع <strong>Claude Haiku 5.5</strong> را با پنجره متنی ۱ میلیون توکنی و خروجی تا ۱۲۸ هزار توکن فراهم می‌کند؛ به همراه <strong>Adaptive Thinking</strong>، بوم <strong>Artifacts</strong>، پروژه‌ها و ابزار <strong>Claude Code</strong> (توضیح شفاف: مدل Claude Fable 5.2 در پلن Pro با اعتبار مصرفی جداگانه یا در پلن‌های Max و Ultra ارائه می‌شود).
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-3xl border border-primary/40 bg-primary/5 p-5 space-y-2.5 hover:border-primary transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 text-primary">
-                <Code className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">پرچمدار مهندسی: Claude Sonnet 5.5</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                رتبه نخست بنچمارک SWE-bench در دنیا، با تسلط حیرت‌انگیز بر ریفکتورینگ پروژه‌های چند ده‌هزار خطی، درک معماری میکروسرویس و طراحی کامپوننت‌های مدرن.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-purple-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
-                <Brain className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">سیستم تفکر تطبیقی (Adaptive Thinking)</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                امکان تنظیم هوشمند بودجه تفکر مدل پیش از پاسخ‌دهی؛ مدل با بازبینی مرحله‌به‌مرحله فرضیه‌ها، ضریب خطای کد و منطق را به صفر نزدیک می‌کند.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-cyan-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
-                <Layers3 className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">محیط تعاملی Claude Artifacts</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                رندر بلادرنگ وب‌اپلیکیشن‌های کامل (React, Tailwind)، نمودارهای تعاملی SVG و شبیه‌سازها در پنل کناری بدون نیاز به کامپایل یا لوکال هاست.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-amber-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
-                <FolderGit2 className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">کانتکست ۱ میلیون توکنی (128K Output)</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                توانایی خواندن همزمان کل سورس‌کد یک پروژه عظیم گیت‌هاب یا یک کتاب مرجع دانشگاهی در یک درخواست و ارائه خروجی فوق‌العاده تا ۱۲۸,۰۰۰ توکن.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-emerald-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                <Terminal className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">دستیار کدهای ترمینال (Claude Code CLI)</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                اجرای مستقیم دستورات در خط فرمان سیستم‌عامل، اجرای تست‌های واحد، رفع خودکار خطاهای کامپایلر و پوش مستقیم روی گیت‌هاب.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-border/80 bg-secondary/30 p-5 space-y-2.5 hover:border-pink-500/50 transition-all">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400">
-                <BookOpen className="h-5 w-5" />
-              </div>
-              <h4 className="text-sm font-bold text-foreground">پروژه‌های تیمی (Claude Projects)</h4>
-              <p className="text-xs leading-6 text-muted-foreground">
-                آپلود راهنماهای معماری، استایل‌گایدها و پایگاه‌های دانش سازمانی جهت پایبندی دائمی به استانداردهای نرم‌افزاری و حفظ لحن برند.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 2. Usecases */}
-      {activeTab === "usecases" && (
-        <div className="space-y-5">
-          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
-            <Briefcase className="h-5 w-5 text-purple-400" />
-            موارد استفاده تخصصی اشتراک Claude Pro
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
-              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <Code className="h-4 w-4 text-primary" />
-                توسعه‌دهندگان فرانت‌اند و فول‌استک
-              </h4>
-              <p className="text-xs text-muted-foreground leading-6">
-                ساخت پروتوتایپ‌های زنده با کامپوننت‌های React و Tailwind در محیط Artifacts و مشاهده فوری عملکرد دکمه‌ها و فرم‌ها بدون راه‌اندازی سرور لوکال.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
-              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <FolderGit2 className="h-4 w-4 text-emerald-400" />
-                مهندسان ارشد معماری نرم‌افزار
-              </h4>
-              <p className="text-xs text-muted-foreground leading-6">
-                تحلیل سورس‌کدهای قدیمی (Legacy Code)، ریفکتورینگ و مهاجرت معماری به فریم‌ورک‌های مدرن با حفظ کامل منطق برنامه و پوشش تست‌ها.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
-              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <FileText className="h-4 w-4 text-amber-400" />
-                نویسندگان و ویراستاران تخصصی
-              </h4>
-              <p className="text-xs text-muted-foreground leading-6">
-                طبیعی‌ترین، فصیح‌ترین و ادبی‌ترین لحن زبان فارسی میان تمام هوش‌های مصنوعی جهان بدون جمله‌بندی ماشینی و ترجمه‌های تحت‌اللفظی.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-border/70 bg-secondary/20 p-4 space-y-2">
-              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <Brain className="h-4 w-4 text-cyan-400" />
-                محققان داده و هوش مصنوعی
-              </h4>
-              <p className="text-xs text-muted-foreground leading-6">
-                تحلیل مقالات چندصدصفحه‌ای arXiv، بررسی فرضیات با حالت Adaptive Thinking و استخراج دقیق اطلاعات از هزاران ردیف دیتا.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 3. Comparison Table */}
-      {activeTab === "comparison" && (
-        <div className="space-y-4">
-          <div className="space-y-1">
-            <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
-              <Layers className="h-5 w-5 text-cyan-400" />
-              مقایسه نسخه Free، اشتراک Claude Pro (این محصول) و Claude Max / Ultra
-            </h3>
-            <p className="text-xs text-muted-foreground">
-              بررسی دقیق مدل‌ها، سهمیه ۵ ساعته و هفتگی و دسترسی به Fable 5.2 در نوامبر ۲۰۲۶
-            </p>
-          </div>
-
-          <div className="overflow-x-auto rounded-2xl border border-border/80 bg-secondary/20">
-            <table className="w-full text-right text-xs sm:text-sm">
-              <thead className="border-b border-border/80 bg-secondary/60 text-muted-foreground">
-                <tr>
-                  <th className="p-3.5 sm:p-4 font-bold text-foreground">شاخص</th>
-                  <th className="p-3.5 sm:p-4 font-bold text-muted-foreground">نسخه رایگان (Free)</th>
-                  <th className="p-3.5 sm:p-4 font-bold text-primary">Claude Pro (همین محصول)</th>
-                  <th className="p-3.5 sm:p-4 font-bold text-muted-foreground">Claude Max / Ultra (۱۰۰ / ۲۰۰ دلار)</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/60">
-                <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل‌های فعال</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">محدود (Haiku / سهمیه کم Sonnet)</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">Sonnet 5.5، Opus 5.5 و Haiku 5.5</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">همان مدل‌ها + سهمیه بومی Fable 5.2</td>
-                </tr>
-                <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">ظرفیت مصرف و سهمیه</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">سقف بسیار محدود ۵ ساعته</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">~۵ برابر نسخه رایگان (۵ ساعته + هفتگی)</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">۵ تا ۱۰ برابر ظرفیت Pro + اعتبار API</td>
-                </tr>
-                <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">مدل Claude Fable 5.2</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">غیرفعال</td>
-                  <td className="p-3.5 sm:p-4 text-amber-400 font-medium">فقط با اعتبار اضافی (Pay-as-you-go)</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">شامل‌شده در اشتراک (تا ۵۰٪ سقف هفتگی)</td>
-                </tr>
-                <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">ابزارهای کدنویسی و ترمینال</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">Claude Code مسدود</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">Claude Code، Artifacts و Projects کامل</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">کامل با سقف نشست طولانی‌تر</td>
-                </tr>
-                <tr>
-                  <td className="p-3.5 sm:p-4 font-semibold text-foreground">پنجره متنی و سقف خروجی</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">محدود بر اساس حجم سرور</td>
-                  <td className="p-3.5 sm:p-4 font-bold text-emerald-400">۱ میلیون کانتکست با خروجی تا ۱۲۸K</td>
-                  <td className="p-3.5 sm:p-4 text-muted-foreground">۱ میلیون کانتکست + ۱۲۸K خروجی</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* 4. Delivery */}
-      {activeTab === "delivery" && (
-        <div className="space-y-4">
-          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2">
-            <ShieldCheck className="h-5 w-5 text-emerald-400" />
-            نحوه فعال‌سازی، ضمانت قانونی و نکات مهم ایمنی Claude Pro
-          </h3>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
-              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                فعال‌سازی قانونی و اختصاصی
-              </h4>
-              <p className="text-xs text-muted-foreground leading-6">
-                فعال‌سازی قانونی روی ایمیل کاربر یا اکانت اختصاصی با پرداخت رسمی انجام شده و هنگام تحویل از صحت عملکرد اشتراک اطمینان حاصل می‌شود.
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-2">
-              <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <Award className="h-4 w-4 text-amber-400" />
-                ضمانت فعال‌سازی + پیشگیری از بن شدن
-              </h4>
-              <p className="text-xs text-muted-foreground leading-6">
-                ما <strong>فعال‌سازی قانونی و تحویل سالم اولیه</strong> را ضمانت می‌کنیم. با توجه به سخت‌گیری بالای آنتروپیک روی آی‌پی، برای جلوگیری از مسدودیت بعد از تحویل حتماً از VPN با IP ثابت و اختصاصی (پرهیز از پروکسی‌های عمومی و تغییر مکرر IP) و به‌صورت تک‌کاربره استفاده کنید.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 5. FAQ */}
-      {activeTab === "faq" && (
-        <div className="space-y-3">
-          <h3 className="text-base sm:text-lg font-black text-foreground flex items-center gap-2 mb-4">
-            <HelpCircle className="h-5 w-5 text-primary" />
-            پرسش‌های متداول درباره Claude Pro
-          </h3>
-          {[
-            {
-              q: "کدام مدل‌ها در اکانت Claude Pro باز هستند؟",
-              a: "مدل‌های Claude Sonnet 5.5، Claude Opus 5.5 و Claude Haiku 5.5 با کانتکست ۱ میلیونی و ابزارهایی مثل Artifacts و Claude Code در پلن ۲۰ دلاری Pro فعال‌اند. مدل Claude Fable 5.2 نیاز به اعتبار مصرفی جداگانه یا پلن‌های Max/Ultra دارد.",
-            },
-            {
-              q: "ضمانت کلود چگونه است و چطور جلوی بن شدن را بگیریم؟",
-              a: "فروشگاه وایچ فعال‌سازی قانونی و سلامت اولیه اکانت را تضمین می‌کند و راهنمای تنظیمات ایمن را در اختیارتان می‌گذارد. حفظ سلامت پس از تحویل (استفاده با IP ثابت غیرآلوده و عدم اشتراک‌گذاری اکانت) بر عهده کاربر است.",
-            },
-            {
-              q: "آیا ابزار Claude Code روی سیستم‌های ویندوز و مک کار می‌کند؟",
-              a: "بله، ابزار خط فرمان Claude Code از طریق ترمینال (Terminal / PowerShell / Bash) مستقیماً به مخزن پروژه شما متصل شده و کدها و تست‌ها را اجرا می‌کند.",
-            },
-            {
-              q: "نحوه تحویل اکانت کلود پرو به چه صورت است؟",
-              a: "پس از ثبت سفارش و ارسال رسید در ربات تلگرام، اطلاعات ورود یا فعال‌سازی اکانت اختصاصی شما در اولین فرصت و سریع‌ترین زمان ممکن در تلگرام ارسال می‌شود.",
             },
           ].map((item, idx) => (
             <div
@@ -1552,6 +1270,250 @@ function PlannerDetailContent({
               <button
                 onClick={() => toggleFaq(idx)}
                 className="w-full flex items-center justify-between p-4 text-right text-xs sm:text-sm font-bold text-foreground hover:bg-secondary/40 transition-colors"
+              >
+                <span>{item.q}</span>
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 text-muted-foreground shrink-0 transition-transform duration-300",
+                    openFaqIndex === idx && "rotate-180 text-primary"
+                  )}
+                />
+              </button>
+              {openFaqIndex === idx && (
+                <div className="px-4 pb-4 pt-1 text-xs leading-6 text-muted-foreground border-t border-border/50">
+                  {item.a}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function StudyPlannerDetailContent({
+  activeTab,
+  openFaqIndex,
+  toggleFaq,
+}: {
+  activeTab: TabKey;
+  openFaqIndex: number | null;
+  toggleFaq: (idx: number) => void;
+}) {
+  return (
+    <div className="space-y-6">
+      {activeTab === "features" && (
+        <div className="space-y-6">
+          {/* Hero Overview */}
+          <div className="rounded-2xl border border-emerald-500/35 bg-emerald-500/5 p-4 sm:p-5 space-y-2.5">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-lg bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-0.5 text-[11px] font-bold text-emerald-500">
+                نسخه جامع و همه‌کاره
+              </span>
+              <span className="text-[11px] font-semibold text-muted-foreground">
+                • دسترسی دائمی و مادام‌العمر بدون نیاز به تمدید اشتراک
+              </span>
+            </div>
+            <h3 className="text-base sm:text-lg font-black text-foreground">
+              معرفی جامع و ارزش ماندگار پلنر تحصیلی وایچ
+            </h3>
+            <p className="text-xs sm:text-sm leading-7 text-muted-foreground">
+              پلنر تحصیلی وایچ (مبتنی بر Google Sheets) یک سیستم یکپارچه و هوشمند است که مطالعه روزانه، عادت‌سازی و تحلیل آزمون را به تجربه‌ای بصری، خودکار و انگیزه‌بخش تبدیل می‌کند. با یک‌بار تهیه این نسخه جامع و همه‌کاره، فایل اختصاصی برای همیشه در گوگل‌درایو شما می‌ماند و به‌صورت <strong>آنلاین و آفلاین</strong> در موبایل، تبلت و لپ‌تاپ همراه با <strong>فایل صوتی راهنمای راه‌اندازی</strong> در اختیارتان است.
+            </p>
+          </div>
+
+          {/* 6-Card Feature Grid */}
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-4 space-y-2">
+              <div className="flex items-center gap-2 text-emerald-500 font-bold text-sm">
+                <Sparkles className="h-4 w-4 shrink-0" />
+                <span>باغچه رشد مطالعه (تکامل زنده)</span>
+              </div>
+              <p className="text-xs leading-6 text-muted-foreground">
+                با تیک زدن اهداف روزانه و عادت‌های مطالعاتی، گیاه اختصاصی شما مرحله‌به‌مرحله از بذر تا شکوفایی رشد می‌کند و تداوم شما را به پاداش بصری تبدیل می‌کند.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+              <div className="flex items-center gap-2 text-primary font-bold text-sm">
+                <CalendarCheck className="h-4 w-4 shrink-0" />
+                <span>جدول ۲۰ عادت و برنامه ۳۱ روزه</span>
+              </div>
+              <p className="text-xs leading-6 text-muted-foreground">
+                پشتیبانی کامل از هفته ۱ تا ۵ با قابلیت ثبت تا ۲۰ عادت و برنامه مطالعاتی قابل شخصی‌سازی و محاسبه خودکار <strong>آمار زنده پیشرفت و تداوم</strong>.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+              <div className="flex items-center gap-2 text-cyan-500 font-bold text-sm">
+                <Activity className="h-4 w-4 shrink-0" />
+                <span>داشبورد آمار لحظه‌ای و روزانه</span>
+              </div>
+              <p className="text-xs leading-6 text-muted-foreground">
+                کارت‌های KPI خودکار در بالای صفحه شامل <strong>مجموع مطالعه</strong>، <strong>مجموع تست‌ها</strong>، <strong>میانگین خواب</strong>، <strong>بهترین تداوم</strong> و <strong>حال‌وهوای غالب</strong>.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+              <div className="flex items-center gap-2 text-purple-400 font-bold text-sm">
+                <Target className="h-4 w-4 shrink-0" />
+                <span>تفکیک و بودجه‌بندی دروس اصلی</span>
+              </div>
+              <p className="text-xs leading-6 text-muted-foreground">
+                تعریف <strong>هدف ساعت</strong> برای هر درس، ثبت ساعت مطالعه‌شده، محاسبه دقیق <strong>باقیمانده</strong> و نمایش نوار پیشرفت بصری برای تعادل مطالعه.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+              <div className="flex items-center gap-2 text-amber-400 font-bold text-sm">
+                <BarChart3 className="h-4 w-4 shrink-0" />
+                <span>کارنامه و تحلیل آزمون‌های آزمایشی</span>
+              </div>
+              <p className="text-xs leading-6 text-muted-foreground">
+                ثبت آزمون‌ها و مقایسه خودکار <strong>تراز/نمره هدف</strong> با <strong>تراز/نمره کسب‌شده</strong>، محاسبه <strong>اختلاف با هدف</strong> و نمایش وضعیت عملکرد.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+              <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                <Smartphone className="h-4 w-4 shrink-0" />
+                <span>تب موبایل + دکمه‌های ریست هوشمند</span>
+              </div>
+              <p className="text-xs leading-6 text-muted-foreground">
+                تب اختصاصی نسخه موبایل بدون اسکرول افقی، همگام‌سازی ابری و دکمه‌های یک‌کلیکی <strong>ریست داده‌های نوشتنی و روزانه</strong> و <strong>بازگشت به تنظیمات کارخانه</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "usecases" && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+            <h4 className="font-bold text-sm text-foreground flex items-center gap-2">
+              <GraduationCap className="h-4 w-4 text-primary" />
+              داوطلبان کنکور و آزمون‌های جامع
+            </h4>
+            <p className="text-xs leading-6 text-muted-foreground">
+              مدیریت دقیق بودجه‌بندی دروس، ثبت روزانه تعداد تست‌ها و ساعات مطالعه، و تحلیل تراز هدف در کارنامه آزمون‌های آزمایشی برای اصلاح سریع مسیر مطالعه.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+            <h4 className="font-bold text-sm text-foreground flex items-center gap-2">
+              <BookOpen className="h-4 w-4 text-emerald-500" />
+              دانشجویان و پژوهشگران
+            </h4>
+            <p className="text-xs leading-6 text-muted-foreground">
+              برنامه‌ریزی پروژه‌ها، مقالات و امتحانات پایان ترم با پیگیری ساعت باقی‌مانده هر درس و حفظ تعادل خواب و انرژی در طول ترم.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+            <h4 className="font-bold text-sm text-foreground flex items-center gap-2">
+              <Compass className="h-4 w-4 text-amber-400" />
+              زبان‌آموزان و یادگیرندگان مهارت جدید
+            </h4>
+            <p className="text-xs leading-6 text-muted-foreground">
+              تبدیل تمرین روزانه زبان یا یادگیری مهارت‌های تخصصی به زنجیره تداوم (Streak) همراه با رشد گیاه باغچه مطالعه بدون نیاز به اشتراک اپ‌های خارجی.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-border/80 bg-secondary/20 p-4 space-y-2">
+            <h4 className="font-bold text-sm text-foreground flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-cyan-400" />
+              علاقه‌مندان به مطالعه و رشد فردی
+            </h4>
+            <p className="text-xs leading-6 text-muted-foreground">
+              ایجاد نظم پایدار در مطالعه کتاب، مرور روزانه و پایش حال‌وهوا و میانگین خواب با یک سیستم سبک و قابل استفاده در موبایل و لپ‌تاپ.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "comparison" && (
+        <div className="overflow-x-auto">
+          <table className="w-full text-right text-xs border-collapse">
+            <thead>
+              <tr className="border-b border-border text-foreground bg-secondary/40">
+                <th className="p-3 font-bold">معیار مقایسه</th>
+                <th className="p-3 font-bold text-emerald-500">پلنر تحصیلی هوشمند وایچ</th>
+                <th className="p-3 font-bold text-muted-foreground">دفتر برنامه‌ریزی کاغذی</th>
+                <th className="p-3 font-bold text-muted-foreground">اپلیکیشن‌های اشتراکی ماهانه</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/50">
+              <tr>
+                <td className="p-3 font-semibold text-foreground">مالکیت و هزینه</td>
+                <td className="p-3 text-emerald-500 font-bold">خرید یک‌بار و دسترسی دائمی</td>
+                <td className="p-3 text-muted-foreground">نیاز به خرید مجدد هر فصل</td>
+                <td className="p-3 text-rose-400">پرداخت اشتراک ماهانه / دلاری</td>
+              </tr>
+              <tr>
+                <td className="p-3 font-semibold text-foreground">نمودار خودکار و گیمیفیکیشن</td>
+                <td className="p-3 text-emerald-500 font-bold">باغچه رشد زنده + آمار لحظه‌ای</td>
+                <td className="p-3 text-muted-foreground">فاقد محاسبه و نمودار خودکار</td>
+                <td className="p-3 text-muted-foreground">محدود در نسخه رایگان</td>
+              </tr>
+              <tr>
+                <td className="p-3 font-semibold text-foreground">تحلیل آزمون و بودجه‌بندی دروس</td>
+                <td className="p-3 text-emerald-500 font-bold">کارنامه اختلاف هدف + پیشرفت هر درس</td>
+                <td className="p-3 text-muted-foreground">محاسبه دستی و زمان‌بر</td>
+                <td className="p-3 text-muted-foreground">نبود بخش تخصصی آزمون و درس</td>
+              </tr>
+              <tr>
+                <td className="p-3 font-semibold text-foreground">همگام‌سازی آنلاین و آفلاین</td>
+                <td className="p-3 text-emerald-500 font-bold">بله (موبایل، تبلت و لپ‌تاپ)</td>
+                <td className="p-3 text-muted-foreground">وابسته به حمل فیزیکی دفتر</td>
+                <td className="p-3 text-muted-foreground">نیازمند اینترنت یا محدودیت تحریم</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {activeTab === "delivery" && (
+        <div className="space-y-4">
+          <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-4 space-y-2">
+            <h4 className="font-bold text-sm text-emerald-500 flex items-center gap-2">
+              <Zap className="h-4 w-4" />
+              مراحل دریافت و راه‌اندازی سریع در کمتر از ۲ دقیقه
+            </h4>
+            <ul className="space-y-2 text-xs text-muted-foreground leading-6">
+              <li>۱. بلافاصله پس از پرداخت، لینک اختصاصی فایل Google Sheets و <strong>فایل صوتی راهنمای راه‌اندازی</strong> در اختیارتان قرار می‌گیرد.</li>
+              <li>۲. با زدن دکمه <strong>Make a copy</strong>، فایل مستقیماً در گوگل درایو شخصی شما کپی می‌شود و هیچ فرد دیگری به اطلاعات شما دسترسی ندارد.</li>
+              <li>۳. در اپلیکیشن Google Sheets گوشی با فعال کردن گزینه «Available offline»، حتی بدون اینترنت هم تیک‌های روزانه را ثبت کنید تا پس از اتصال همگام شوند.</li>
+            </ul>
+          </div>
+        </div>
+      )}
+
+      {activeTab === "faq" && (
+        <div className="space-y-3">
+          {[
+            {
+              q: "آیا برای استفاده از پلنر تحصیلی وایچ نیاز به پرداخت اشتراک ماهانه است؟",
+              a: "خیر؛ با یک‌بار خرید، دسترسی شما کاملاً دائمی و مادام‌العمر است و با دکمه‌های ریست هوشمند می‌توانید فایل را برای ماه‌ها و سال‌های متوالی بدون هزینه مجدد استفاده کنید.",
+            },
+            {
+              q: "آیا اطلاعات مطالعه و نمرات من کاملاً خصوصی می‌ماند؟",
+              a: "بله، ۱۰۰٪. از طریق قابلیت Make a copy نسخه اختصاصی وارد گوگل درایو شخصی خودتان می‌شود و فقط خودتان به آن دسترسی دارید.",
+            },
+            {
+              q: "آیا روی گوشی بدون نیاز به اکسل یا آفیس و حتی آفلاین کار می‌کند؟",
+              a: "بله؛ کافی است اپلیکیشن رایگان Google Sheets را روی گوشی اندروید یا آیفون نصب داشته باشید. همچنین با فعال‌سازی دسترسی آفلاین گوگل‌شیت، بدون اینترنت هم قابل ویرایش است و تب اختصاصی موبایل بدون اسکرول افقی برایتان آماده شده است.",
+            },
+            {
+              q: "اگر کار با فرمول‌ها یا راه‌اندازی اولیه برایم سخت بود چطور راهنمایی بگیرم؟",
+              a: "همراه فایل، صوت آموزشی کامل و گام‌به‌گام فارسی دریافت می‌کنید و پشتیبانی اختصاصی وایچ هم در تمام مراحل همراه شماست.",
+            },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className="rounded-2xl border border-border/80 bg-secondary/20 overflow-hidden transition-all"
+            >
+              <button
+                type="button"
+                onClick={() => toggleFaq(idx)}
+                className="w-full flex items-center justify-between p-4 text-right text-xs sm:text-sm font-bold text-foreground hover:bg-secondary/40 transition-colors cursor-pointer"
               >
                 <span>{item.q}</span>
                 <ChevronDown

@@ -1,7 +1,7 @@
 {
   "store": "VAICH",
   "url": "https://vaich.ir",
-  "updated_at": "2026-11-25T18:09:25.292Z",
+  "updated_at": "2026-11-27T16:10:23.343Z",
   "products": [
     {
       "id": "chatgpt-plus",
@@ -44,8 +44,23 @@
       "in_stock": true,
       "url": "https://vaich.ir/products/vaich-life-planner",
       "checkout_url": "https://vaich.ir/checkout/vaich-life-planner",
-      "image_url": "https://vaich.ir/planner-cover.webp",
+      "image_url": "https://vaich.ir/images/lifestyle-planner-thumb.webp",
       "description": "نرم‌افزار مدیریت فردی دائمی مبتنی بر فرمول‌های پیشرفته Google Sheets و اسکریپت‌های اتوماسیون Apps Script (بدون نیاز به پرداخت ماهانه یا شارژ دوره)؛ مجهز به Habit Tracker، ماتریس آیزنهاور، سیستم Time Boxing و هوش مالی فردی.",
+      "variants": null
+    },
+    {
+      "id": "vaich-study-planner",
+      "title": "پلنر تحصیلی وایچ",
+      "price": 399000,
+      "max_price": null,
+      "original_price": 900000,
+      "discount_percent": 56,
+      "duration": "دائمی (بدون اشتراک)",
+      "in_stock": true,
+      "url": "https://vaich.ir/products/vaich-study-planner",
+      "checkout_url": "https://vaich.ir/checkout/vaich-study-planner",
+      "image_url": "https://vaich.ir/images/study-planner-thumb.webp",
+      "description": "سیستم هوشمند برنامه‌ریزی مطالعاتی، عادت‌سازی و باغچه رشد مطالعه (نسخه جامع و همه‌کاره مبتنی بر Google Sheets)؛ طراحی‌شده برای کنکوری‌ها، دانشجویان، زبان‌آموزان و علاقه‌مندان به مطالعه و رشد فردی. بدون نیاز به تمدید اشتراک، قابل اجرا به‌صورت آنلاین و آفلاین در موبایل، تبلت و لپ‌تاپ همراه با تحویل آنی و فایل صوتی راهنمای راه‌اندازی.",
       "variants": null
     },
     {

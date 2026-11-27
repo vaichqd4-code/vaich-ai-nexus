@@ -5,13 +5,40 @@
     <link>https://vaich.ir/blog</link>
     <description>راهنمای جامع هوش مصنوعی، مقایسه تخصصی مدل‌ها و ابزارهای بهره‌وری فردی در فروشگاه VAICH</description>
     <language>fa-IR</language>
-    <lastBuildDate>Wed, 25 Nov 2026 17:30:00 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 27 Nov 2026 08:30:00 GMT</lastBuildDate>
     <atom:link href="https://vaich.ir/rss.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://vaich.ir/vaich-logo.png</url>
       <title>VAICH Magazine</title>
       <link>https://vaich.ir/blog</link>
     </image>
+    <item>
+      <title><![CDATA[راهنمای جامع برنامه‌ریزی مطالعاتی، مدیریت زمان و افزایش تمرکز برای جهش در آزمون‌ها و یادگیری عمیق]]></title>
+      <link>https://vaich.ir/blog/study-planning-time-management-deep-focus-guide</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/study-planning-time-management-deep-focus-guide</guid>
+      <pubDate>Fri, 27 Nov 2026 05:30:00 GMT</pubDate>
+      <category><![CDATA[آموزش و یادگیری]]></category>
+      <description><![CDATA[چطور با بودجه‌بندی ساعت دروس، بازیابی فعال (Active Recall)، مرور فاصله‌دار و ثبت دقیق ساعات مطالعه و تست، بدون فرسودگی به اوج بازدهی برسیم؟]]></description>
+      <enclosure url="https://vaich.ir/blog/study-planning-deep-focus.webp" length="0" type="image/webp" />
+    </item>
+    <item>
+      <title><![CDATA[علم عادت‌سازی پایدار و غلبه بر اهمال‌کاری: چطور با سیستم‌های بصری و گیمیفیکیشن انگیزه روزانه بسازیم؟]]></title>
+      <link>https://vaich.ir/blog/habit-building-science-overcome-procrastination-gamification</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/habit-building-science-overcome-procrastination-gamification</guid>
+      <pubDate>Fri, 27 Nov 2026 06:00:00 GMT</pubDate>
+      <category><![CDATA[توسعه فردی]]></category>
+      <description><![CDATA[چرا تکیه بر انگیزه لحظه‌ای جواب نمی‌دهد؟ آشنایی با روانشناسی زنجیره تداوم، گیمیفیکیشن، خرده‌عادت‌ها و تعادل خواب و حال‌وهوا برای شکست همیشگی اهمال‌کاری.]]></description>
+      <enclosure url="https://vaich.ir/blog/habit-science-gamification.webp" length="0" type="image/webp" />
+    </item>
+    <item>
+      <title><![CDATA[آموزش گام‌به‌گام تحلیل آزمون‌های آزمایشی و هدف‌گذاری هوشمند برای اصلاح مسیر مطالعه]]></title>
+      <link>https://vaich.ir/blog/mock-exam-analysis-smart-goal-setting-guide</link>
+      <guid isPermaLink="true">https://vaich.ir/blog/mock-exam-analysis-smart-goal-setting-guide</guid>
+      <pubDate>Fri, 27 Nov 2026 06:30:00 GMT</pubDate>
+      <category><![CDATA[آموزش و یادگیری]]></category>
+      <description><![CDATA[آزمون دادن بدون تحلیل دقیق، تکرار اشتباهات قبلی است! یاد بگیرید چطور با مقایسه تراز هدف و تراز کسب‌شده، شکاف‌های درسی را کشف کرده و بودجه مطالعه را اصلاح کنید.]]></description>
+      <enclosure url="https://vaich.ir/blog/exam-analysis-smart-goals.webp" length="0" type="image/webp" />
+    </item>
     <item>
       <title><![CDATA[استارز تلگرام (Telegram Stars) چیست؟ راهنمای کامل کاربردها و خرید فوری با آیدی در ایران]]></title>
       <link>https://vaich.ir/blog/telegram-stars-guide-buy-uses-iran</link>

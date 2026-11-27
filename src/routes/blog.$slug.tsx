@@ -347,8 +347,43 @@ function BlogPostPage() {
 
         {/* Bottom CTA Banner (Shown only when Bot Banner isn't already displayed at the end) */}
         {!(post.includeBotCollabBanner || post.targetProductType === "telegram-bot") && (
-          <div className="my-10">
+          <div className="my-10 space-y-4">
             <ProductRecommendationBanner post={post} isFullWidth />
+            {post.targetProductType === "study-planner" && (
+              <div className="not-prose">
+                <Link to="/products/vaich-life-planner" className="block group no-underline">
+                  <div className="relative overflow-hidden rounded-2xl border border-border/80 border-r-4 border-r-purple-500 bg-card/85 p-4 sm:p-5 shadow-xs transition-all duration-200 hover:border-purple-500/50 hover:shadow-md">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                      <div className="relative w-full sm:w-32 aspect-[4/3] shrink-0 overflow-hidden rounded-xl border border-border/60 bg-secondary/40">
+                        <img
+                          src="/images/lifestyle-planner-thumb.webp"
+                          alt="پلنر لایفاستایل سه‌بعدی وایچ"
+                          loading="lazy"
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0 space-y-1 text-right">
+                        <span className="inline-block rounded-md bg-purple-500/10 px-2.5 py-0.5 text-[11px] font-bold text-purple-600 dark:text-purple-400">
+                          پیشنهاد مکمل برای نظم جامع زندگی
+                        </span>
+                        <h4 className="text-sm sm:text-base font-extrabold text-foreground group-hover:text-purple-500 transition-colors">
+                          پلنر لایفاستایل سه‌بعدی وایچ (مدیریت عادت، مالی و اهداف)
+                        </h4>
+                        <p className="text-xs text-muted-foreground leading-6 line-clamp-2">
+                          اگر در کنار برنامه‌ریزی مطالعاتی می‌خواهید امور مالی، روتین‌های روزانه و اهداف زندگی خود را هم در قالب سه‌بعدی و دو‌بعدی مدیریت کنید، این نسخه مکمل ایده‌آل شماست.
+                        </p>
+                      </div>
+                      <div className="shrink-0">
+                        <span className="inline-flex w-full sm:w-auto items-center justify-center gap-1.5 rounded-xl border border-purple-500/35 bg-purple-500/10 px-4 py-2 text-xs font-bold text-purple-600 dark:text-purple-400 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                          <span>مشاهده پلنر لایفاستایل</span>
+                          <ArrowLeft className="h-3.5 w-3.5" />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            )}
           </div>
         )}
 
@@ -418,6 +453,23 @@ function BlogPostPage() {
 
 function getArticlePromoDetails(post: BlogPost) {
   const slug = post.slug.toLowerCase();
+
+  // -1. Study Planner (پلنر تحصیلی وایچ)
+  if (post.targetProductType === "study-planner" || post.targetProductSlug === "vaich-study-planner" || slug.includes("study-planning") || slug.includes("habit-building-science") || slug.includes("mock-exam-analysis")) {
+    return {
+      productSlug: "vaich-study-planner",
+      iconUrl: "/images/study-planner-thumb.webp",
+      imageFit: "cover" as const,
+      badge: "نسخه جامع با باغچه رشد مطالعه",
+      priceHint: "۳۹۹,۰۰۰ تومان (به‌جای ۹۰۰,۰۰۰)",
+      title: "پلنر تحصیلی وایچ (دسترسی دائمی + فایل صوتی راهنما)",
+      description: "باغچه رشد مطالعه، جدول ۲۰ عادت ۳۱ روزه، بودجه‌بندی دروس و کارنامه تحلیل آزمون؛ اجرا به‌صورت آنلاین و آفلاین در موبایل و لپ‌تاپ.",
+      linkUrl: "/products/vaich-study-planner",
+      buttonText: "مشاهده و دریافت پلنر تحصیلی",
+      borderAccent: "border-r-emerald-500",
+      badgeClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+    };
+  }
 
   // 0. Telegram Stars
   if (post.targetProductType === "telegram-stars" || post.targetProductSlug === "telegram-stars" || slug.includes("telegram-stars")) {

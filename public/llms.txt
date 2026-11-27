@@ -10,7 +10,8 @@ VAICH (وایچ) یک فروشگاه تخصصی خدمات دیجیتال، اش
 - [خرید اشتراک تلگرام پرمیوم (Telegram Premium)](https://vaich.ir/products/telegram-premium): فعال‌سازی قانونی و فوری تلگرام پرمیوم از طریق گیفت رسمی (۱، ۳، ۶ و ۱۲ ماهه) بدون نیاز به رمز عبور و کد ورود
 - [خرید استارز تلگرام فوری (Telegram Stars)](https://vaich.ir/products/telegram-stars): شارژ مستقیم و فوری ۱۰۰ تا ۱۰,۰۰۰ استارز رسمی تلگرام صرفاً با آیدی (@Username) جهت پرداخت در مینی‌اپ‌ها و خرید گیفت‌های تلگرام
 - [خرید اشتراک کانوا پرو (Canva Pro)](https://vaich.ir/products/canva-pro): ارتقای اکانت شخصی کانوا از طریق دعوت تیمی روی ایمیل شخصی (۱، ۲، ۳ و ۶ ماهه، قابل تمدید بدون تعویض اکانت) با دسترسی به Magic Studio و بیش از ۱۰۰ میلیون المان پرمیوم
-- [پلنر برنامه‌ریزی وایچ (استاندارد)](https://vaich.ir/products/vaich-life-planner): سیستم دائمی برنامه‌ریزی فردی، ردیاب عادات (Habit Tracker) و مدیریت مالی مبتنی بر Google Sheets
+- [پلنر لایفاستایل وایچ (استاندارد)](https://vaich.ir/products/vaich-life-planner): سیستم دائمی برنامه‌ریزی فردی، ردیاب عادات (Habit Tracker) و مدیریت مالی مبتنی بر Google Sheets
+- [پلنر تحصیلی وایچ (باغچه رشد مطالعه)](https://vaich.ir/products/vaich-study-planner): نسخه جامع و دائمی برنامه‌ریزی مطالعاتی، جدول ۲۰ عادت ۳۱ روزه، بودجه‌بندی دروس، کارنامه تحلیل آزمون و فایل صوتی راهنما (۳۹۹,۰۰۰ تومان)
 - [اشتراک ChatGPT Plus](https://vaich.ir/products/chatgpt-plus): اشتراک ۱ ماهه قانونی و اختصاصی ChatGPT Plus روی ایمیل شخصی یا اکانت اختصاصی (GPT-6.1 Sol، GPT-6 Sol، Codex GPT-6 Astra با محدودیت ۵ ساعته)
 - [اشتراک Claude Pro](https://vaich.ir/products/claude): اشتراک قانونی و اختصاصی Claude Pro (خانواده Sonnet 5.5، Opus 5.5، Haiku 5.5 با سهمیه ۵ ساعته و هفتگی)
 - [اشتراک جمنای پرو ۱۸ ماهه (Google AI Pro)](https://vaich.ir/products/gemini-pro): اشتراک طولانی‌مدت ۱۸ ماهه Google AI Pro (مدل‌های Gemini 4 Hydrogen و Neon، پنج ترابایت Google One، ادغام Workspace)
@@ -34,6 +35,9 @@ VAICH (وایچ) یک فروشگاه تخصصی خدمات دیجیتال، اش
 - [مجله تخصصی وایچ](https://vaich.ir/blog): آرشیو مقالات مقایسه و آموزش ابزارهای هوش مصنوعی و مدیریت زمان
 - [استارز تلگرام چیست و چگونه بخریم](https://vaich.ir/blog/telegram-stars-guide-buy-uses-iran): راهنمای خرید فوری و قانونی استارز تلگرام با آیدی و کاربرد در گیفت و مینی‌اپ‌ها
 - [ساخت ربات تلگرام اختصاصی با قیمت مناسب](https://vaich.ir/blog/telegram-bot-development-custom-order-guide): طراحی ربات فروشگاهی و مدیریت کانال تلگرام و همکاری مستقیم
+- [راهنمای جامع برنامه‌ریزی مطالعاتی و تمرکز عمیق](https://vaich.ir/blog/study-planning-time-management-deep-focus-guide): بودجه‌بندی دروس، Active Recall و مرور فاصله‌دار
+- [علم عادت‌سازی پایدار و غلبه بر اهمال‌کاری](https://vaich.ir/blog/habit-building-science-overcome-procrastination-gamification): گیمیفیکیشن، باغچه رشد مطالعه و زنجیره تداوم
+- [تحلیل آزمون‌های آزمایشی و هدف‌گذاری هوشمند](https://vaich.ir/blog/mock-exam-analysis-smart-goal-setting-guide): کشف شکاف تراز هدف و اصلاح برنامه هفتگی
 - [تلگرام پرمیوم گیفتی بدون رمز](https://vaich.ir/blog/telegram-premium-features-gift-activation-guide): بررسی امکانات، امنیت و راهنمای خرید تلگرام پرمیوم ۱ تا ۱۲ ماهه
 - [آموزش کانوا پرو و Magic Studio](https://vaich.ir/blog/canva-pro-ai-magic-studio-design-guide): طراحی حرفه‌ای روی ایمیل شخصی با Canva Pro
 - [مقایسه پرچمداران AI نوامبر ۲۰۲۶](https://vaich.ir/blog/flagship-ai-models-comparison): بررسی ChatGPT Plus، Claude Pro و Google AI Pro

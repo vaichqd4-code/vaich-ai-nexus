@@ -242,10 +242,12 @@ const QUICK_ORDER_PRIORITY: Record<string, number> = {
   "telegram-stars": 6,
   "canva-pro": 7,
   "vaich-life-planner": 8,
+  "vaich-study-planner": 9,
 };
 
 function getQuickAccessName(p: Product): string {
-  if (p.slug === "vaich-life-planner") return "پلنر گوگل‌شیت";
+  if (p.slug === "vaich-life-planner") return "پلنر لایفاستایل";
+  if (p.slug === "vaich-study-planner") return "پلنر تحصیلی";
   if (p.slug === "gemini") return "جمنای دوماهه";
   if (p.slug === "gemini-pro") return "جمنای ۱۸ ماهه";
   if (p.slug === "chatgpt-plus") return "ChatGPT Plus";
@@ -274,7 +276,7 @@ function QuickAccessBar({ products }: { products?: Product[] }) {
         {displayItems.map((p) => {
           const logo = getProductLogo(p.slug, p.iconUrl) || p.iconUrl || "/vaich-logo.png";
           const shortName = getQuickAccessName(p);
-          const isCover = p.imageFit === "cover" || p.slug === "vaich-life-planner";
+          const isCover = p.imageFit === "cover" || p.slug.includes("planner");
 
           return (
             <Link

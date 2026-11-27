@@ -20,7 +20,8 @@ const navigationColumns = [
       { to: "/products/claude", label: "خرید اکانت قانونی Claude Pro" },
       { to: "/products/gemini", label: "خرید اشتراک Gemini Pro دوماهه" },
       { to: "/products/gemini-pro", label: "خرید اشتراک Gemini Pro ۱۸ ماهه" },
-      { to: "/products/vaich-life-planner", label: "خرید پلنر دیجیتال هوشمند" },
+      { to: "/products/vaich-life-planner", label: "خرید پلنر لایفاستایل هوشمند" },
+      { to: "/products/vaich-study-planner", label: "خرید پلنر تحصیلی وایچ (جدید)" },
     ],
   },
   {
