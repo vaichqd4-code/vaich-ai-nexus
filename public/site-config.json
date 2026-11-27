@@ -19,7 +19,7 @@
         {
           "id": "gpt-ded-1m",
           "option1": "اختصاصی",
-          "option2": "۱ ماهه",
+          "option2": "1 ماهه",
           "price": 6400000,
           "discountPercent": 0,
           "inStock": true,
@@ -28,7 +28,7 @@
         {
           "id": "gpt-fam-1m",
           "option1": "فمیلی",
-          "option2": "۱ ماهه",
+          "option2": "1 ماهه",
           "price": 0,
           "discountPercent": 0,
           "inStock": false,
@@ -2301,5 +2301,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-27T10:04:29.820Z"
+  "updatedAt": "2026-11-27T10:05:12.911Z"
 }
