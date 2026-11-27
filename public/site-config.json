@@ -711,7 +711,7 @@
       "name": "اشتراک تلگرام پرمیوم",
       "price": 2500000,
       "discountPercent": 0,
-      "duration": "۱ ساله",
+      "duration": "1 ساله",
       "description": "فعالسازی قانونی و رسمی تلگرام پرمیوم (Telegram Premium) روی اکانت شخصی شما از طریق گیفت رسمی (بدون نیاز به رمز عبور و کد ورود)، در کمترین زمان ممکن همراه با ضمانت کامل پایداری.",
       "isLifetime": false,
       "featured": false,
@@ -731,7 +731,7 @@
         {
           "id": "tg-prem-1m",
           "option1": "گیفت رسمی (بدون نیاز به رمز)",
-          "option2": "پرمیوم گیفتی ۱ ماهه",
+          "option2": "پرمیوم گیفتی 1 ماهه",
           "price": 2500000,
           "discountPercent": 0,
           "inStock": true,
@@ -740,7 +740,7 @@
         {
           "id": "tg-prem-3m",
           "option1": "گیفت رسمی (بدون نیاز به رمز)",
-          "option2": "پرمیوم گیفتی ۳ ماهه",
+          "option2": "پرمیوم گیفتی 3 ماهه",
           "price": 5600000,
           "discountPercent": 0,
           "inStock": true,
@@ -749,7 +749,7 @@
         {
           "id": "tg-prem-6m",
           "option1": "گیفت رسمی (بدون نیاز به رمز)",
-          "option2": "پرمیوم گیفتی ۶ ماهه",
+          "option2": "پرمیوم گیفتی 6 ماهه",
           "price": 7300000,
           "discountPercent": 0,
           "inStock": true,
@@ -758,7 +758,7 @@
         {
           "id": "tg-prem-12m",
           "option1": "گیفت رسمی (بدون نیاز به رمز)",
-          "option2": "پرمیوم گیفتی ۱ ساله",
+          "option2": "پرمیوم گیفتی 1 ساله",
           "price": 12900000,
           "discountPercent": 0,
           "inStock": true,
@@ -2301,5 +2301,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-27T10:06:29.058Z"
+  "updatedAt": "2026-11-27T10:07:38.459Z"
 }
