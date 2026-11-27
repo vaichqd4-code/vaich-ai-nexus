@@ -337,7 +337,7 @@
       "name": "جمنای پرو دوماهه",
       "price": 390000,
       "discountPercent": 0,
-      "duration": "دوماهه",
+      "duration": "2ماهه",
       "description": "اشتراک رسمی دوماهه Google AI Pro (Gemini Pro)؛ مجهز به مدل‌های پرچمدار نسل جدید Gemini 4 Hydrogen و Gemini 4 Neon، دسترسی تخصصی به Gemini 4 Argon در Google AI Studio، استدلال عمیق و مدل‌های تصمیم‌گیری Deep Reasoning & Decision، دسترسی به محیط برنامه‌نویسی و توسعه Google Antigravity IDE / CLI، پلتفرم ویدیوسازی Google Flow همراه با ۱۰۰۰ کردیت اختصاصی، ۵ ترابایت فضای ابری عظیم Google One و ادغام کامل با Google Workspace.",
       "isLifetime": false,
       "featured": false,
@@ -2301,5 +2301,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-25T18:09:25.285Z"
+  "updatedAt": "2026-11-27T10:01:42.697Z"
 }
