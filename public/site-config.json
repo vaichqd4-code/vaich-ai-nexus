@@ -334,7 +334,7 @@
     },
     {
       "slug": "gemini",
-      "name": "جمنای پرو دوماهه",
+      "name": "جمنای پرو",
       "price": 390000,
       "discountPercent": 0,
       "duration": "2ماهه",
@@ -351,7 +351,7 @@
         {
           "id": "gem60-fam-1m",
           "option1": "فمیلی",
-          "option2": "۱ ماهه",
+          "option2": "1 ماهه",
           "price": 390000,
           "discountPercent": 0,
           "inStock": true,
@@ -360,7 +360,7 @@
         {
           "id": "gem60-fam-2m",
           "option1": "فمیلی",
-          "option2": "۲ ماهه",
+          "option2": "2 ماهه",
           "price": 520000,
           "discountPercent": 0,
           "inStock": true,
@@ -369,7 +369,7 @@
         {
           "id": "gem60-ded",
           "option1": "اختصاصی",
-          "option2": "دوماهه",
+          "option2": "2 ماهه",
           "price": 0,
           "discountPercent": 0,
           "inStock": false,
@@ -2301,5 +2301,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-27T10:01:42.697Z"
+  "updatedAt": "2026-11-27T10:03:35.867Z"
 }
