@@ -1,33 +1,44 @@
 # robots.txt for https://vaich.ir
-# Generated for Google Search Console compliance (2026-11-09)
+# Optimized for Google Search Console & clean crawling
 
 User-agent: Googlebot
 Allow: /
 Disallow: /admin
+Disallow: /checkout/
+Disallow: /cart
+Disallow: /account
 Disallow: /api/
 Disallow: /overview
 
 User-agent: Bingbot
 Allow: /
 Disallow: /admin
+Disallow: /checkout/
+Disallow: /cart
+Disallow: /account
 Disallow: /api/
 Disallow: /overview
 
 User-agent: Twitterbot
 Allow: /
 Disallow: /admin
+Disallow: /checkout/
 Disallow: /api/
 Disallow: /overview
 
 User-agent: facebookexternalhit
 Allow: /
 Disallow: /admin
+Disallow: /checkout/
 Disallow: /api/
 Disallow: /overview
 
 User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /checkout/
+Disallow: /cart
+Disallow: /account
 Disallow: /api/
 Disallow: /overview
 

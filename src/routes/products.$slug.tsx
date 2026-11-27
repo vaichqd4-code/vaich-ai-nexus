@@ -182,6 +182,8 @@ export const Route = createFileRoute("/products/$slug")({
             lowPrice: String(Math.round(pricing.minPrice * 10)),
             highPrice: String(Math.round(pricing.maxPrice * 10)),
             offerCount: String(pricing.activeVariantsCount || product.variants?.length || 1),
+            validFrom: "2026-01-01T00:00:00+03:30",
+            priceValidUntil: "2027-12-31",
             availability: pricing.isOutOfStock
               ? "https://schema.org/OutOfStock"
               : "https://schema.org/InStock",
@@ -191,6 +193,7 @@ export const Route = createFileRoute("/products/$slug")({
             url: canonicalUrl,
             priceCurrency: "IRR",
             price: String(Math.round(pricing.minPrice * 10)),
+            validFrom: "2026-01-01T00:00:00+03:30",
             priceValidUntil: "2027-12-31",
             availability: pricing.isOutOfStock
               ? "https://schema.org/OutOfStock"

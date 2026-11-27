@@ -353,22 +353,32 @@ export function AiChatDrawer() {
         >
           {/* هدر مینیمال، لوکس، شیشه‌ای و هماهنگ با تم */}
           <div className="flex items-center justify-between border-b border-border/40 dark:border-white/10 bg-secondary/35 dark:bg-white/[0.03] backdrop-blur-md px-4 py-3.5">
-            <div className="flex items-center gap-2.5">
-              <div className="relative grid h-8 w-8 place-items-center rounded-xl bg-primary/15 text-primary border border-primary/25 shadow-xs">
-                <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+            <div className="flex items-center gap-3">
+              <div className="relative h-10 w-10 shrink-0 rounded-full ring-2 ring-cyan-400/60 dark:ring-purple-500/60 shadow-[0_0_16px_-4px_rgba(34,211,238,0.5)] bg-slate-950">
+                <picture>
+                  <source srcSet="/images/ai-support-avatar.webp" type="image/webp" />
+                  <img
+                    src="/images/ai-support-avatar.png"
+                    alt="پشتیبانی هوشمند VAICH"
+                    width={40}
+                    height={40}
+                    decoding="async"
+                    className="h-full w-full rounded-full object-cover"
+                  />
+                </picture>
+                <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 ring-2 ring-background dark:ring-[#0b0f19]"></span>
+                </span>
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs sm:text-sm font-bold text-foreground">
                     پشتیبانی هوشمند VAICH
                   </span>
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                  </span>
                 </div>
-                <span className="text-[10px] text-muted-foreground mt-0.5">
-                  پاسخگویی آنی ۲۴ ساعته
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium mt-0.5">
+                  آنلاین • پاسخگویی آنی ۲۴ ساعته
                 </span>
               </div>
             </div>
@@ -401,42 +411,84 @@ export function AiChatDrawer() {
             </div>
           </div>
 
-          {/* محتوای پیام‌ها با انیمیشن فنری و هماهنگی تم تاریک و روشن */}
+          {/* محتوای پیام‌ها با انیمیشن فنری و آواتار تلگرامی کنار پیام‌های دستیار */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs sm:text-[13px] scroll-smooth">
-            {messages.map((m) => (
-              <div
-                key={m.id}
-                className={`animate-vaich-msg flex flex-col ${
-                  m.role === "user" ? "items-end" : "items-start"
-                }`}
-              >
+            {messages.map((m, mIdx) => {
+              const isUser = m.role === "user";
+              const nextMsg = messages[mIdx + 1];
+              const isLastInBotGroup = !isUser && (!nextMsg || nextMsg.role !== "model");
+
+              return (
                 <div
-                  className={`max-w-[86%] rounded-2xl px-4 py-2.5 transition-all leading-relaxed ${
-                    m.role === "user"
-                      ? "rounded-br-xs bg-primary text-primary-foreground font-medium self-end shadow-sm shadow-primary/20"
-                      : "rounded-bl-xs bg-secondary/70 dark:bg-white/[0.06] text-foreground border border-border/50 dark:border-white/10 backdrop-blur-md self-start shadow-2xs"
+                  key={m.id}
+                  className={`animate-vaich-msg flex flex-col ${
+                    isUser ? "items-end" : "items-start"
                   }`}
                 >
-                  {renderMessageContent(m.text)}
+                  {isUser ? (
+                    <div className="max-w-[85%] rounded-2xl rounded-br-xs bg-primary px-4 py-2.5 text-primary-foreground font-medium self-end shadow-sm shadow-primary/20 transition-all leading-relaxed">
+                      {renderMessageContent(m.text)}
+                    </div>
+                  ) : (
+                    <div className="flex items-end gap-2 max-w-[92%] self-start">
+                      <div className="w-7 shrink-0">
+                        {isLastInBotGroup && (
+                          <div className="h-7 w-7 rounded-full overflow-hidden ring-1 ring-cyan-400/50 dark:ring-purple-400/50 shadow-xs bg-slate-950">
+                            <picture>
+                              <source srcSet="/images/ai-support-avatar.webp" type="image/webp" />
+                              <img
+                                src="/images/ai-support-avatar.png"
+                                alt="آواتار دستیار VAICH"
+                                width={28}
+                                height={28}
+                                loading="lazy"
+                                decoding="async"
+                                className="h-full w-full object-cover"
+                              />
+                            </picture>
+                          </div>
+                        )}
+                      </div>
+                      <div className="rounded-2xl rounded-bl-xs bg-secondary/70 dark:bg-white/[0.06] text-foreground border border-border/50 dark:border-white/10 backdrop-blur-md px-4 py-2.5 shadow-2xs transition-all leading-relaxed">
+                        {renderMessageContent(m.text)}
+                      </div>
+                    </div>
+                  )}
+                  <span className={`text-[9px] text-muted-foreground/60 mt-1 ${isUser ? "px-1" : "pr-9 pl-1"}`}>
+                    {new Date(m.timestamp).toLocaleTimeString("fa-IR", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
                 </div>
-                <span className="text-[9px] text-muted-foreground/60 mt-1 px-1">
-                  {new Date(m.timestamp).toLocaleTimeString("fa-IR", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-              </div>
-            ))}
+              );
+            })}
 
             {loading && (
-              <div className="animate-vaich-msg flex items-center gap-2 self-start rounded-2xl rounded-bl-xs border border-border/50 dark:border-white/10 bg-secondary/60 dark:bg-white/[0.05] backdrop-blur-md px-4 py-2 text-xs text-muted-foreground shadow-2xs">
-                <Sparkles className="h-3.5 w-3.5 text-primary animate-spin" />
-                <span className="font-medium">دستیار در حال تنظیم پاسخ...</span>
-                <span className="flex gap-1 mr-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce"></span>
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce [animation-delay:0.15s]"></span>
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce [animation-delay:0.3s]"></span>
-                </span>
+              <div className="animate-vaich-msg flex items-end gap-2 self-start max-w-[92%]">
+                <div className="h-7 w-7 shrink-0 rounded-full overflow-hidden ring-1 ring-cyan-400/50 dark:ring-purple-400/50 shadow-xs bg-slate-950">
+                  <picture>
+                    <source srcSet="/images/ai-support-avatar.webp" type="image/webp" />
+                    <img
+                      src="/images/ai-support-avatar.png"
+                      alt="آواتار دستیار VAICH"
+                      width={28}
+                      height={28}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover"
+                    />
+                  </picture>
+                </div>
+                <div className="flex items-center gap-2 rounded-2xl rounded-bl-xs border border-border/50 dark:border-white/10 bg-secondary/60 dark:bg-white/[0.05] backdrop-blur-md px-4 py-2 text-xs text-muted-foreground shadow-2xs">
+                  <Sparkles className="h-3.5 w-3.5 text-primary animate-spin" />
+                  <span className="font-medium">دستیار در حال تنظیم پاسخ...</span>
+                  <span className="flex gap-1 mr-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce"></span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce [animation-delay:0.15s]"></span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce [animation-delay:0.3s]"></span>
+                  </span>
+                </div>
               </div>
             )}
 
