@@ -19,7 +19,7 @@
         {
           "id": "gpt-ded-1m",
           "option1": "اختصاصی",
-          "option2": "1 ماهه",
+          "option2": "۱ ماهه",
           "price": 6400000,
           "discountPercent": 0,
           "inStock": true,
@@ -28,7 +28,7 @@
         {
           "id": "gpt-fam-1m",
           "option1": "فمیلی",
-          "option2": "1 ماهه",
+          "option2": "۱ ماهه",
           "price": 0,
           "discountPercent": 0,
           "inStock": false,
@@ -549,11 +549,11 @@
     },
     {
       "slug": "gemini-pro",
-      "name": "جمنای پرو ۱۸ ماهه",
+      "name": "جمنای پرو 18 ماهه",
       "price": 690000,
       "discountPercent": 0,
-      "duration": "۱۸ ماهه",
-      "description": "اشتراک بلندمدت ۱۸ ماهه فوق‌اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، پژوهشگران و برنامه‌نویسان؛ شامل دسترسی به مدل‌های پرچمدار Gemini 4 Hydrogen و Gemini 4 Neon، مدل تخصصی Gemini 4 Argon در Google AI Studio، مدل‌های تصمیم‌گیری و استدلال عمیق (Deep Reasoning & Decision)، دسترسی به Google Antigravity، Google Flow با ۱۰۰۰ کردیت، امکانات کامل Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه. (توجه: در حال حاضر ظرفیت این پلن تکمیل و ناموجود است).",
+      "duration": "18 ماهه",
+      "description": "اشتراک بلندمدت 18 ماهه فوق‌اقتصادی Google AI Pro (Gemini Pro) ویژه دانشجویان، پژوهشگران و برنامه‌نویسان؛ شامل دسترسی به مدل‌های پرچمدار Gemini 4 Hydrogen و Gemini 4 Neon، مدل تخصصی Gemini 4 Argon در Google AI Studio، مدل‌های تصمیم‌گیری و استدلال عمیق (Deep Reasoning & Decision)، دسترسی به Google Antigravity، Google Flow با ۱۰۰۰ کردیت، امکانات کامل Google Workspace و ۵ ترابایت فضای ابری Google One بدون دغدغه تمدید ماهانه. (توجه: در حال حاضر ظرفیت این پلن تکمیل و ناموجود است).",
       "isLifetime": false,
       "featured": true,
       "badge": "ویژه",
@@ -567,7 +567,7 @@
         {
           "id": "gem18-fam",
           "option1": "فمیلی",
-          "option2": "۱۸ ماهه",
+          "option2": "18 ماهه",
           "price": 690000,
           "discountPercent": 0,
           "inStock": true,
@@ -576,7 +576,7 @@
         {
           "id": "gem18-ded",
           "option1": "اختصاصی",
-          "option2": "۱۸ ماهه",
+          "option2": "18 ماهه",
           "price": 0,
           "discountPercent": 0,
           "inStock": false,
@@ -2301,5 +2301,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-27T10:05:12.911Z"
+  "updatedAt": "2026-11-27T10:06:29.058Z"
 }
