@@ -97,6 +97,20 @@ export function AiChatDrawer() {
         }
       };
 
+      // اگر کاربر پیش از بارگذاری کامل چت روی دکمه پشتیبانی کلیک کرده باشد، بلافاصله باز شود
+      const pending = (window as any).__vaichPendingChatOpen;
+      if (pending?.active) {
+        (window as any).__vaichPendingChatOpen = null;
+        setIsClosing(false);
+        setIsOpen(true);
+        setIsMinimized(false);
+        if (pending.text) {
+          setTimeout(() => {
+            handleSendMessageRef.current?.(pending.text);
+          }, 120);
+        }
+      }
+
       window.addEventListener("vaich:open-chat", handleCustomOpen);
       return () => {
         window.removeEventListener("vaich:open-chat", handleCustomOpen);
@@ -332,15 +346,25 @@ export function AiChatDrawer() {
         <button
           type="button"
           onClick={() => setIsMinimized(false)}
-          className="animate-vaich-pill flex items-center gap-2.5 rounded-full border border-white/20 dark:border-white/10 bg-background/90 dark:bg-[#0b0f19]/90 px-4 py-2.5 text-xs font-semibold text-foreground shadow-2xl backdrop-blur-3xl hover:border-primary/50 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer group ring-1 ring-black/5 dark:ring-white/5"
+          className="animate-vaich-pill flex items-center gap-2.5 rounded-full border border-white/20 dark:border-white/10 bg-background/90 dark:bg-[#0b0f19]/90 pl-2.5 pr-3.5 py-2 text-xs font-semibold text-foreground shadow-2xl backdrop-blur-3xl hover:border-primary/50 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer group ring-1 ring-black/5 dark:ring-white/5"
         >
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
           </span>
           <span className="font-medium">پشتیبانی آنلاین VAICH</span>
-          <div className="grid h-5 w-5 place-items-center rounded-full bg-primary/15 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-200">
-            <Headphones className="h-3 w-3" />
+          <div className="h-6 w-6 shrink-0 rounded-full overflow-hidden ring-1 ring-cyan-400/60 dark:ring-purple-500/60 bg-slate-950 shadow-xs">
+            <picture>
+              <source srcSet="/images/ai-support-avatar.webp" type="image/webp" />
+              <img
+                src="/images/ai-support-avatar.png"
+                alt="پشتیبان VAICH"
+                width={24}
+                height={24}
+                decoding="async"
+                className="h-full w-full object-cover"
+              />
+            </picture>
           </div>
         </button>
       ) : (

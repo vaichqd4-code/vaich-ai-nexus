@@ -284,13 +284,31 @@ function DeferredAiChat() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    if (typeof window === "undefined" || isAdmin) return;
+
+    const handleEarlyOpen = (e: Event) => {
+      const detail = (e as CustomEvent)?.detail;
+      (window as any).__vaichPendingChatOpen = {
+        active: true,
+        text: typeof detail?.text === "string" ? detail.text : undefined,
+      };
+      setMounted(true);
+    };
+
+    window.addEventListener("vaich:open-chat", handleEarlyOpen);
+    return () => {
+      window.removeEventListener("vaich:open-chat", handleEarlyOpen);
+    };
+  }, [isAdmin]);
+
+  useEffect(() => {
     if (typeof window === "undefined" || isAdmin || mounted) return;
 
     if ("requestIdleCallback" in window) {
-      const id = (window as any).requestIdleCallback(() => setMounted(true), { timeout: 1500 });
+      const id = (window as any).requestIdleCallback(() => setMounted(true), { timeout: 600 });
       return () => (window as any).cancelIdleCallback?.(id);
     }
-    const timer = setTimeout(() => setMounted(true), 1200);
+    const timer = setTimeout(() => setMounted(true), 400);
     return () => clearTimeout(timer);
   }, [isAdmin, mounted]);
 
