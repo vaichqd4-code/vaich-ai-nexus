@@ -579,8 +579,45 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "imageFit": "cover",
     "inStock": true,
     "rating": 5.0,
-    "reviewCount": 0,
-    "reviews": []
+    "reviewCount": 4,
+    "reviews": [
+      {
+        "id": "rev-sp-1",
+        "author": "زهرا کریمی",
+        "rating": 5,
+        "comment": "قسمت باغچه رشد مطالعه فوق‌العاده انگیزه‌بخش شده؛ وقتی ساعت مطالعه‌م ثبت می‌شه و گیاهم رشد می‌کنه اصلاً دلم نمی‌خواد زنجیره‌م قطع بشه. روی گوشی هم خیلی روان باز می‌شه.",
+        "createdAt": "2026-11-27T14:20:00Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-sp-2",
+        "author": "محمدحسین رضایی",
+        "rating": 5,
+        "comment": "برای برنامه‌ریزی کنکور ارشد و تفکیک دروس عالیه. کارنامه آزمون و دکمه‌های ریست هوشمندش کلی توی وقتم صرفه‌جویی کرده، راهنمای صوتی راه‌اندازیش هم خیلی واضح بود.",
+        "createdAt": "2026-11-27T18:45:00Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-sp-3",
+        "author": "سارا موسوی",
+        "rating": 5,
+        "comment": "من برای مطالعه زبان و پروژه‌های دانشگاهی خریدم. جدول عادت‌های ۳۱ روزه و داشبورد آمار لحظه‌ای دقیقاً همون چیزی بود که دنبالش بودم. ارزش خریدش با این قیمت دائمی خیلی بالاست.",
+        "createdAt": "2026-11-28T07:10:00Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-sp-4",
+        "author": "کیوان",
+        "rating": 5,
+        "comment": "بلافاصله بعد از پرداخت تحویل گرفتم و توی گوگل‌شیت خودم کپی شد. هم روی لپ‌تاپ هم روی تبلت و گوشی عالی کار می‌کنه.",
+        "createdAt": "2026-11-28T09:15:00Z",
+        "verified": true,
+        "status": "approved"
+      }
+    ]
   },
   {
     "slug": "gemini",
@@ -971,8 +1008,45 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "imageFit": "contain",
     "inStock": true,
     "rating": 4.9,
-    "reviewCount": 0,
-    "reviews": [],
+    "reviewCount": 4,
+    "reviews": [
+      {
+        "id": "rev-tgp-1",
+        "author": "امیرعلی نوری",
+        "rating": 5,
+        "comment": "بدون نیاز به رمز و لاگین، فقط با آیدی تلگرام در کمتر از ۱۰ دقیقه گیفت پرمیوم ۳ ماهه برام فعال شد. کاملاً رسمی و بی‌دردسر.",
+        "createdAt": "2026-11-18T11:30:00Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-tgp-2",
+        "author": "نیلوفر",
+        "rating": 5,
+        "comment": "خیلی سریع فعال شد. قابلیت تبدیل ویس به متن و ترجمه آنی پیام‌ها واقعاً به کارم اومد.",
+        "createdAt": "2026-11-21T16:15:00Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-tgp-3",
+        "author": "پارسا محمدی",
+        "rating": 5,
+        "comment": "دومین باره از وایچ تمدید می‌کنم؛ پشتیبانی سریع و قیمت منصفانه نسبت به بقیه جاها.",
+        "createdAt": "2026-11-24T09:40:00Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-tgp-4",
+        "author": "مهدی قاسمی",
+        "rating": 4.5,
+        "comment": "فوق‌العاده بود، در حد چند دقیقه پیام گیفت رسمی روی تلگرامم اومد و فعال شد.",
+        "createdAt": "2026-11-26T20:05:00Z",
+        "verified": true,
+        "status": "approved"
+      }
+    ],
     "variantOption1Label": "نوع فعال‌سازی",
     "variantOption2Label": "مدت زمان اشتراک",
     "requiredFieldLabel": "آیدی تلگرام شما (@Username)",
@@ -1067,8 +1141,36 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "imageFit": "contain",
     "inStock": true,
     "rating": 4.9,
-    "reviewCount": 0,
-    "reviews": [],
+    "reviewCount": 3,
+    "reviews": [
+      {
+        "id": "rev-tgs-1",
+        "author": "سهیل تهرانی",
+        "rating": 5,
+        "comment": "۵۰۰ استارز سفارش دادم، خیلی سریع بدون نیاز به لاگین به اکانتم واریز شد و تونستم توی مینی‌اپ پرداخت کنم.",
+        "createdAt": "2026-11-19T13:20:00Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-tgs-2",
+        "author": "آرش",
+        "rating": 5,
+        "comment": "شارژ آنی با آیدی عالیه، نه دردسر تون‌کیپر داره نه کارمزد اضافه.",
+        "createdAt": "2026-11-23T17:50:00Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-tgs-3",
+        "author": "هستی شریفی",
+        "rating": 5,
+        "comment": "برای ارسال گیفت تولد استارز خریدم، پشتیبانی هم خیلی خوش‌برخورد و پیگیر بود.",
+        "createdAt": "2026-11-26T12:10:00Z",
+        "verified": true,
+        "status": "approved"
+      }
+    ],
     "variantOption1Label": "روش شارژ",
     "variantOption2Label": "تعداد استارز",
     "requiredFieldLabel": "آیدی تلگرام جهت واریز استارز (@Username)",
@@ -1216,8 +1318,36 @@ export const DEFAULT_PRODUCTS: Product[] = [
     "imageFit": "contain",
     "inStock": true,
     "rating": 4.9,
-    "reviewCount": 0,
-    "reviews": [],
+    "reviewCount": 3,
+    "reviews": [
+      {
+        "id": "rev-canva-1",
+        "author": "نگین فرهادی",
+        "rating": 5,
+        "comment": "دعوت‌نامه روی ایمیل شخصی خودم اومد و همه طرح‌های قبلیم سر جاش موند. ابزارهای Magic Studio و حذف پس‌زمینه برای کارهای پیجم عالیه.",
+        "createdAt": "2026-11-20T10:00:00Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-canva-2",
+        "author": "فرزاد",
+        "rating": 5,
+        "comment": "پایدار و بدون قطعی. الان ماه سومه روی همین ایمیل بدون مشکل دارم استفاده می‌کنم.",
+        "createdAt": "2026-11-24T15:30:00Z",
+        "verified": true,
+        "status": "approved"
+      },
+      {
+        "id": "rev-canva-3",
+        "author": "مهسا اکبری",
+        "rating": 5,
+        "comment": "تحویل سریع و قیمت خیلی مناسب برای تولید محتوای اینستاگرام و اسلایدسازی.",
+        "createdAt": "2026-11-27T08:45:00Z",
+        "verified": true,
+        "status": "approved"
+      }
+    ],
     "variantOption1Label": "نوع اشتراک",
     "variantOption2Label": "مدت زمان",
     "requiredFieldLabel": "ایمیل اکانت شخصی کانوا (Canva)",

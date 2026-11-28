@@ -6,10 +6,10 @@ import { NeonLink } from "@/components/ui/NeonButton";
 import { getProductLogo } from "@/components/brand/ServiceIcon";
 import { cn } from "@/lib/utils";
 import { useDynamicProducts, type LayoutMode, type ProductCategoryRow, type Product, type PromoBannerConfig } from "@/lib/products";
-import { BlogSection } from "@/components/sections/BlogSection";
 import { ArrowLeft, Sparkles, CheckCircle2, ShieldCheck, Zap, Headphones, Layers, LayoutGrid, Calendar } from "lucide-react";
 
 // Code splitting below-the-fold landing page sections for high Lighthouse Performance
+const BlogSection = lazy(() => import("@/components/sections/BlogSection").then((m) => ({ default: m.BlogSection })));
 const Features = lazy(() => import("@/components/sections/Features").then((m) => ({ default: m.Features })));
 const HowItWorks = lazy(() => import("@/components/sections/HowItWorks").then((m) => ({ default: m.HowItWorks })));
 const Faq = lazy(() => import("@/components/sections/Faq").then((m) => ({ default: m.Faq })));
@@ -589,7 +589,9 @@ function Home() {
       )}
 
       {/* 4. Magazine & Articles (مجله و مقالات تخصصی - بلافاصله زیر ردیف‌های محصولات) */}
-      <BlogSection />
+      <Suspense fallback={<div className="h-16 py-4" />}>
+        <BlogSection />
+      </Suspense>
 
       {/* 5. How to Buy in 3 Steps (نحوه خرید در ۳ مرحله ساده) */}
       <Suspense fallback={<div className="h-16 py-4" />}>

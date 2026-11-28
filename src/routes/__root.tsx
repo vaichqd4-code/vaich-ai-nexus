@@ -152,13 +152,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "/fonts/vazirmatn-arabic.woff2",
         crossOrigin: "anonymous",
       },
-      {
-        rel: "preload",
-        as: "image",
-        type: "image/webp",
-        href: "/promo-banner.webp",
-        fetchPriority: "high",
-      },
       { rel: "stylesheet", href: appCss },
       {
         rel: "alternate",
@@ -305,10 +298,10 @@ function DeferredAiChat() {
     if (typeof window === "undefined" || isAdmin || mounted) return;
 
     if ("requestIdleCallback" in window) {
-      const id = (window as any).requestIdleCallback(() => setMounted(true), { timeout: 600 });
+      const id = (window as any).requestIdleCallback(() => setMounted(true), { timeout: 3000 });
       return () => (window as any).cancelIdleCallback?.(id);
     }
-    const timer = setTimeout(() => setMounted(true), 400);
+    const timer = setTimeout(() => setMounted(true), 3000);
     return () => clearTimeout(timer);
   }, [isAdmin, mounted]);
 

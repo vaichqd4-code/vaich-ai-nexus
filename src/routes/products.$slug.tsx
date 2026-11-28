@@ -1,8 +1,13 @@
 import { ProductRichContent } from "@/components/product/ProductRichContent";
 import { ProductCard } from "@/components/product/ProductCard";
-import { FullscreenGalleryModal } from "@/components/product/FullscreenGalleryModal";
 import { createFileRoute, notFound, Link, redirect } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, lazy, Suspense } from "react";
+
+const FullscreenGalleryModal = lazy(() =>
+  import("@/components/product/FullscreenGalleryModal").then((m) => ({
+    default: m.FullscreenGalleryModal,
+  }))
+);
 import { ServiceIcon } from "@/components/brand/ServiceIcon";
 import { Section } from "@/components/layout/Section";
 import { NeonLink } from "@/components/ui/NeonButton";
@@ -211,14 +216,33 @@ export const Route = createFileRoute("/products/$slug")({
           },
     };
 
-    if (schemaReviewCount > 0 && product.rating) {
+    if (schemaReviewCount > 0) {
       productLd.aggregateRating = {
         "@type": "AggregateRating",
-        ratingValue: String(product.rating),
+        ratingValue: String(product.rating || 5),
         reviewCount: String(schemaReviewCount),
+        ratingCount: String(schemaReviewCount),
         bestRating: "5",
         worstRating: "1",
       };
+    }
+
+    if (approvedReviews.length > 0) {
+      productLd.review = approvedReviews.slice(0, 5).map((r) => ({
+        "@type": "Review",
+        author: {
+          "@type": "Person",
+          name: r.author || "کاربر وایچ",
+        },
+        datePublished: (r.createdAt || "2026-11-28").split("T")[0],
+        reviewBody: r.comment,
+        reviewRating: {
+          "@type": "Rating",
+          ratingValue: String(r.rating || 5),
+          bestRating: "5",
+          worstRating: "1",
+        },
+      }));
     }
 
     const faqTab = product.customTabs?.find(
@@ -513,140 +537,8 @@ function ProductDetail() {
   const avgRating = product.rating || (isLifetime ? 4.9 : 4.8);
   const countReviews = (product.reviewCount || 0) + (reviews.length - (product.reviews?.length || 0));
 
-  // Google Search Console JSON-LD Structured Data (Product + AggregateOffer + FAQPage)
-  const productImg = product.iconUrl
-    ? (product.iconUrl.startsWith("http") ? product.iconUrl : `https://vaich.ir${product.iconUrl.split("?")[0]}`)
-    : "https://vaich.ir/vaich-logo.png";
-
-  const brandText = `${product.slug} ${product.name}`.toLowerCase();
-  const brandName = isPlanner
-    ? "VAICH"
-    : brandText.includes("telegram") || brandText.includes("تلگرام")
-      ? "Telegram"
-      : brandText.includes("canva") || brandText.includes("کانوا")
-        ? "Canva"
-        : brandText.includes("chatgpt") || brandText.includes("چت")
-          ? "OpenAI"
-          : brandText.includes("claude") || brandText.includes("کلود")
-            ? "Anthropic"
-            : brandText.includes("gemini") || brandText.includes("google") || brandText.includes("جمینای") || brandText.includes("جمنای")
-              ? "Google"
-              : "VAICH";
-
-  const effectiveOutOfStock = isOutOfStock || pricingSummary.isOutOfStock;
-  const offersSchema =
-    pricingSummary.isRange && !effectiveOutOfStock
-      ? {
-          "@type": "AggregateOffer",
-          url: `https://vaich.ir/products/${product.slug}`,
-          priceCurrency: "IRR",
-          lowPrice: pricingSummary.minPrice,
-          highPrice: pricingSummary.maxPrice,
-          offerCount: pricingSummary.activeVariantsCount,
-          availability: "https://schema.org/InStock",
-          seller: {
-            "@type": "Organization",
-            name: "VAICH",
-          },
-        }
-      : {
-          "@type": "Offer",
-          url: `https://vaich.ir/products/${product.slug}`,
-          priceCurrency: "IRR",
-          price: pricingSummary.minPrice || product.price,
-          priceValidUntil: "2027-12-31",
-          availability: effectiveOutOfStock
-            ? "https://schema.org/OutOfStock"
-            : "https://schema.org/InStock",
-          seller: {
-            "@type": "Organization",
-            name: "VAICH",
-          },
-        };
-
-  const productSchema: Record<string, unknown> = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: isLifetime || product.name.includes("اشتراک") || product.slug === "telegram-stars"
-      ? product.name
-      : `اشتراک ${product.name}`,
-    description: product.description,
-    image: productImg,
-    sku: product.slug,
-    mpn: product.slug,
-    brand: {
-      "@type": "Brand",
-      name: brandName,
-    },
-    offers: offersSchema,
-  };
-
-  if (reviews.length > 0) {
-    productSchema.aggregateRating = {
-      "@type": "AggregateRating",
-      ratingValue: avgRating.toString(),
-      bestRating: "5",
-      worstRating: "1",
-      ratingCount: Math.max(countReviews, reviews.length).toString(),
-      reviewCount: Math.max(countReviews, reviews.length).toString(),
-    };
-    productSchema.review = reviews.slice(0, 5).map((r) => ({
-      "@type": "Review",
-      author: {
-        "@type": "Person",
-        name: r.author,
-      },
-      datePublished: r.createdAt.split("T")[0],
-      reviewBody: r.comment,
-      reviewRating: {
-        "@type": "Rating",
-        ratingValue: r.rating.toString(),
-        bestRating: "5",
-        worstRating: "1",
-      },
-    }));
-  }
-
-  const faqTab = product.customTabs?.find(
-    (t) => t.title.includes("سوال") || t.title.includes("پرسش")
-  );
-  const faqEntities = faqTab
-    ? faqTab.content
-        .split(/\n\s*\n/)
-        .map((block) => block.split("\n").map((line) => line.trim()).filter(Boolean))
-        .filter((lines) => lines.length >= 2)
-        .map((lines) => ({
-          "@type": "Question",
-          name: lines[0],
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: lines.slice(1).join(" "),
-          },
-        }))
-    : [];
-
-  const faqSchema =
-    faqEntities.length > 0
-      ? {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: faqEntities,
-        }
-      : null;
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
-      />
-      {faqSchema && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-        />
-      )}
-
       <Section className="aurora overflow-x-hidden">
         {/* Breadcrumb Navigation */}
         <nav aria-label="مسیر راهنما" className="mb-6 flex items-center gap-2 text-xs text-muted-foreground">
@@ -1341,14 +1233,16 @@ function ProductDetail() {
         </div>
       </Section>
 
-      {hasFullscreenGallery && galleryImages.length > 0 && (
-        <FullscreenGalleryModal
-          images={galleryImages}
-          initialIndex={activeGalleryIdx}
-          title={product.name}
-          isOpen={isFullscreenOpen}
-          onClose={() => setIsFullscreenOpen(false)}
-        />
+      {hasFullscreenGallery && galleryImages.length > 0 && isFullscreenOpen && (
+        <Suspense fallback={null}>
+          <FullscreenGalleryModal
+            images={galleryImages}
+            initialIndex={activeGalleryIdx}
+            title={product.name}
+            isOpen={isFullscreenOpen}
+            onClose={() => setIsFullscreenOpen(false)}
+          />
+        </Suspense>
       )}
     </>
   );

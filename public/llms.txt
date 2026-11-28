@@ -43,6 +43,10 @@ VAICH (وایچ) یک فروشگاه تخصصی خدمات دیجیتال، اش
 - [مقایسه پرچمداران AI نوامبر ۲۰۲۶](https://vaich.ir/blog/flagship-ai-models-comparison): بررسی ChatGPT Plus، Claude Pro و Google AI Pro
 - [تفاوت نسخه رایگان با ChatGPT Plus و Claude Pro](https://vaich.ir/blog/ai-free-vs-plus-comparison): چه زمانی ارتقا به اشتراک پولی ارزشمند است
 - [جلوگیری از بن شدن اکانت ChatGPT و Claude](https://vaich.ir/blog/prevent-chatgpt-claude-account-ban): راهنمای ۷ اصل انتخاب IP ثابت و نگهداری ایمن اکانت
+- [روش مطالعه و برنامه‌ریزی اصولی برای کنکور و امتحانات نهایی](https://vaich.ir/blog/konkur-final-exams-study-planning-guide): افزایش ساعت مطالعه مفید، مرور فاصله‌دار و تعادل تست و تشریحی
+- [بهترین ابزارهای هوش مصنوعی سال ۱۴۰۵](https://vaich.ir/blog/best-ai-tools-productivity-learning-content-1405): انتخاب بهترین ابزار AI برای بهره‌وری، یادگیری و تولید محتوا
+- [غلبه بر اهمال‌کاری و بی‌انگیزگی](https://vaich.ir/blog/overcome-procrastination-habit-building-discipline): تکنیک‌های علمی عادت‌سازی، قانون ۲ دقیقه و نظم شخصی
+- [راهنمای جامع خرید اشتراک هوش مصنوعی در ایران](https://vaich.ir/blog/buy-use-ai-subscriptions-iran-complete-guide): مقایسه اکانت شخصی و فمیلی و اصول ضدبن
 - [چگونه پلنر Google Sheets عادت‌ها و اهداف را متحول می‌کند](https://vaich.ir/blog/how-google-sheets-planner-transforms-habits-goals): راهنمای بهره‌وری با پلنر وایچ
 
 ## پشتیبانی و اطلاعات تکمیلی

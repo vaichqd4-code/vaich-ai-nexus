@@ -108,6 +108,35 @@ export const Route = createFileRoute("/blog/$slug")({
       ],
     };
 
+    const scripts: Array<{ type: string; children: string }> = [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(jsonLd),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(breadcrumbLd),
+      },
+    ];
+
+    if (Array.isArray((post as any).faqs) && (post as any).faqs.length > 0) {
+      scripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: (post as any).faqs.map((f: { question: string; answer: string }) => ({
+            "@type": "Question",
+            name: f.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: f.answer,
+            },
+          })),
+        }),
+      });
+    }
+
     return {
       meta: [
         { title: `${post.title} | مجله وایچ` },
@@ -129,16 +158,7 @@ export const Route = createFileRoute("/blog/$slug")({
       links: [
         { rel: "canonical", href: `https://vaich.ir/blog/${post.slug}` },
       ],
-      scripts: [
-        {
-          type: "application/ld+json",
-          children: JSON.stringify(jsonLd),
-        },
-        {
-          type: "application/ld+json",
-          children: JSON.stringify(breadcrumbLd),
-        },
-      ],
+      scripts,
     };
   },
   component: BlogPostPage,
@@ -239,8 +259,26 @@ function BlogPostPage() {
 
         {/* Article Body with High Readability Contrast */}
         <article className="blog-article-body space-y-10 leading-relaxed text-sm sm:text-base">
+          {post.sections.length > 2 && (
+            <nav
+              aria-label="فهرست مطالب"
+              className="rounded-2xl border border-border/80 bg-card/60 p-4 sm:p-5 space-y-2.5"
+            >
+              <div className="text-xs sm:text-sm font-bold text-foreground">فهرست مطالب این راهنما</div>
+              <ol className="grid gap-1.5 sm:grid-cols-2 text-xs text-muted-foreground list-inside">
+                {post.sections.map((s, idx) => (
+                  <li key={idx}>
+                    <a href={`#sec-${idx}`} className="hover:text-primary transition-colors">
+                      {s.heading}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )}
+
           {post.sections.map((section, idx) => (
-            <section key={idx} className="space-y-4">
+            <section key={idx} id={`sec-${idx}`} className="space-y-4 scroll-mt-24">
               <h2 className="text-lg sm:text-xl font-bold text-foreground border-r-4 border-primary pr-3 flex items-center gap-2">
                 {section.heading}
               </h2>
@@ -333,6 +371,27 @@ function BlogPostPage() {
               {post.conclusion.text}
             </p>
           </div>
+
+          {/* FAQ Section (matched with FAQPage Schema) */}
+          {Array.isArray((post as any).faqs) && (post as any).faqs.length > 0 && (
+            <section className="rounded-3xl border border-border/80 bg-card/50 p-5 sm:p-7 space-y-4">
+              <h2 className="text-base sm:text-lg font-bold text-foreground">
+                سوالات متداول
+              </h2>
+              <div className="space-y-3">
+                {(post as any).faqs.map((faq: { question: string; answer: string }, fIdx: number) => (
+                  <div key={fIdx} className="rounded-2xl border border-border/60 bg-background/60 p-4 space-y-1.5">
+                    <h3 className="text-xs sm:text-sm font-bold text-foreground">
+                      {faq.question}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-7">
+                      {faq.answer}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Telegram Bot Development & Collaboration Promo Block */}
           {(post.includeBotCollabBanner || post.targetProductType === "telegram-bot") && (
